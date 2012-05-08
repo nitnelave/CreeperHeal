@@ -98,7 +98,7 @@ public class WorldConfig {
 
 	public boolean isRepairTimed()
 	{
-		return repairTime > -1;
+		return repairTime >= 0;
 	}
 
 }

@@ -277,5 +277,63 @@ public class CreeperUtils
 	}
 
 
+	public static String getEntityNameFromId(byte data)
+    {
+	    switch (data)
+	    {
+	    	case 50:
+	    		return "Creeper";
+	    	case 51:
+	    		return "Skeleton";
+	    	case 52:
+	    		return "Spider";
+	    	case 53:
+	    		return "Giant";
+	    	case 54:
+	    		return "Zombie";
+	    	case 55:
+	    		return "Slime";
+	    	case 56:
+	    		return "Ghast";
+	    	case 57:
+	    		return "Zombie Pigman";
+	    	case 58:
+	    		return "Enderman";
+	    	case 59:
+	    		return "Cave Spider";
+	    	case 60:
+	    		return "Silverfish";
+	    	case 61:
+	    		return "Blaze";
+	    	case 62:
+	    		return "Magma Cube";
+	    	case 63:
+	    		return "EnderDragon";
+	    	case 90:
+	    		return "Pig";
+	    	case 91:
+	    		return "Sheep";
+	    	case 92:
+	    		return "Cow";
+	    	case 93:
+	    		return "Chicken";
+	    	case 94:
+	    		return "Squid";
+	    	case 95:
+	    		return "Wolf";
+	    	case 96:
+	    		return "Mooshroom";
+	    	case 97:
+	    		return "Snow Golem";
+	    	case 98:
+	    		return "Ocelot";
+	    	case 99:
+	    		return "Iron Golem";
+	    	case 120:
+	    		return "Villager";
+	    	default:
+	    		return "Non-living Entity";
+	    }
+    }
 
 }

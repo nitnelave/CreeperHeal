@@ -52,7 +52,6 @@ public class CreeperConfig
 		plugin = instance;
 		yml =  new File(getDataFolder()+"/config.yml");
 		configFile = plugin.getConfig();
-		blockPerBlockInterval = getInt("block-per-block-interval", 20);
 
 		if (!new File(getDataFolder().toString()).exists() ) {		//create the /CreeperHeal folder
 			new File(getDataFolder().toString()).mkdir();
@@ -202,25 +201,26 @@ public class CreeperConfig
 			importFrom4();
 		else
 		{
-			waitBeforeHeal = getInt("wait-before-heal-explosions", 60);        //tries to read the value directly from the config
-			logLevel = getInt("verbose-level", 1);
-			dropReplacedBlocks = getBoolean("drop-overwritten-blocks", true);
-			blockPerBlock = getBoolean("block-per-block", true);
-			teleportOnSuffocate = getBoolean("teleport-when-buried", true);
-			waitBeforeHealBurnt = getInt("wait-before-heal-fire", 45);
-			dropDestroyedBlocks = getBoolean("drop-destroyed-blocks", true);
-			dropChance = getInt("drop-destroyed-blocks-chance", 100);
-			opEnforce = getBoolean("op-have-all-permissions", true);
-			crackDestroyedBricks = getBoolean("crack-destroyed-bricks", false);
+			blockPerBlockInterval = getInt("replacement.block-per-block.interval", 20);
+			waitBeforeHeal = getInt("replacement.wait-before-heal.explosions", 60);        //tries to read the value directly from the config
+			logLevel = getInt("advanced.verbose-level", 1);
+			dropReplacedBlocks = getBoolean("advanced.replacement-conflict.drop-overwritten-blocks", true);
+			blockPerBlock = getBoolean("replacement.block-per-block", true);
+			teleportOnSuffocate = getBoolean("advanced.teleport-when-buried", true);
+			waitBeforeHealBurnt = getInt("replacement.wait-before-heal.fire", 45);
+			dropDestroyedBlocks = getBoolean("advanced.drop-destroyed-blocks.enabled", true);
+			dropChance = getInt("advanced.drop-destroyed-blocks.chance", 100);
+			opEnforce = getBoolean("advanced.op-have-all-permissions", true);
+			crackDestroyedBricks = getBoolean("replacement.crack-destroyed-bricks", false);
 			overwriteBlocks = getBoolean("overwrite-blocks", true);
-			preventBlockFall = getBoolean("prevent-block-fall", true);
-			distanceNear = getInt("distance-near", 20);
-			lightweightMode = getBoolean("lightweight-mode", false);
-			alias = configFile.getString("command-alias", "ch");
+			preventBlockFall = getBoolean("advanced.prevent-block-fall", true);
+			distanceNear = getInt("advanced.distance-near", 20);
+			lightweightMode = getBoolean("advanced.lightweight-mode", false);
+			alias = configFile.getString("advanced.command-alias", "ch");
 
 			String tmp_str;
 			try{
-				tmp_str = configFile.getString("chest-protection", "no").trim().toLowerCase();
+				tmp_str = configFile.getString("replacement.chest-protection", "no").trim().toLowerCase();
 			}
 			catch (Exception e) {
 				log.warning("[CreeperHeal] Wrong value for chest protection field. Defaulting to no.");

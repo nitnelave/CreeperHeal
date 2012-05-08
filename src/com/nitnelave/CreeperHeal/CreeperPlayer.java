@@ -63,7 +63,7 @@ public class CreeperPlayer
 		}
 		else if(cause == WarningCause.SPAWN_EGG && spawnEggs)
 		{
-			player.sendMessage(ChatColor.RED + "Someone " + (blocked?"tried to spawn":"spawned") + " a " + material + "in world : " + loc.getWorld().getName() + " at : x=" + loc.getBlockX() + ", y=" + loc.getBlockY() + ", z=" + loc.getBlockZ());
+			player.sendMessage(ChatColor.RED + "Player " + offender + (blocked?"tried to spawn":"spawned") + " a " + material + "in world : " + loc.getWorld().getName());
 		}
 		if(cause == WarningCause.BLACKLIST && (blacklist || force))
 		{
