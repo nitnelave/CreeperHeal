@@ -19,7 +19,6 @@ public class AddTrapRunnable implements Runnable{
 		type = t;
 	}
 	
-	
 	@Override
 	public void run() {
 		BlockState tmp_state = block.getState();
