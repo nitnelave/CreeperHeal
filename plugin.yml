@@ -1,0 +1,45 @@
+name: CreeperHeal
+main: com.nitnelave.CreeperHeal.CreeperHeal
+version: 5.0
+author: nitnelave
+description: Replaces terrain destroyed by creeper explosions
+softdepend: [Vault]
+
+#commands:
+#    CreeperHeal:
+#        description: CreeperHeal commands
+#        usage: /<command> help
+
+permissions:
+    CreeperHeal.*:
+        description: Gives access to all CreeperHeal commands
+        children:
+            CreeperHeal.admin: true
+            CreeperHeal.heal: true
+            CreeperHeal.trap.*: true
+    CreeperHeal.admin:
+        description: Config and heal commands
+        default: op
+    CreeperHeal.heal:
+        description: Heal explosions (heal and healBurnt commands)
+        default: op
+    CreeperHeal.trap.*:
+        description: Manage every trap (delete/create)
+        children:
+            CreeperHeal.trap.create: true
+            CreeperHeal.trap.remove.all: true
+    CreeperHeal.trap.create:
+        description: Allows to create a trap
+        default: true
+    CreeperHeal.trap.remove.all:
+        description: Allows to remove any trap (owned by anyone)
+        default: op
+    CreeperHeal.trap.remove.own:
+        description: Allows to remove traps owned by you
+        default: true
+    CreeperHeal.healNear.self:
+        description: Heal explosions nearby (/ch healNear)
+        default: op
+    CreeperHeal.healNear.other:
+        description: Heal explosions nearby a given player (/ch healNear player)
+        default: op
