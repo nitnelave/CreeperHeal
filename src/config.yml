@@ -1,0 +1,120 @@
+######################################
+###       CreeperHeal v 5.0        ###
+######################################
+###         by nitnelave           ###
+######################################
+#Default config
+#
+#Feel free to test the settings for "replacement" and the worlds
+#but I advise against changing the "advanced" section if you don't know exactly what you're doing
+#
+#
+#
+#
+#This first section is about how the blocks are goind to get replaced
+#
+#
+replacement:
+#   How many seconds before the explosion/burnt block starts healing
+  wait-before-heal:
+    explosions: 60
+    fire: 45
+#   if block-per-block is disabled, all the blocks of an explosion will be replaced at the same time
+  block-per-block:
+    enabled: true
+    interval: 20
+#  If true, the bricks destroyed by an explosion will come back as cracked
+  crack-destroyed-bricks: false
+#  can be 'no', 'lwc', 'lockette' or 'all' : protects the concerned chests from every explosion
+  chest-protection: 'no'
+#
+#
+#
+#World specific settings
+#
+#
+#
+#
+world:
+  replace:
+# replace damage from :
+    Creepers: true
+    TNT: true
+    Ghast: true
+    Dragons: false
+    Magical: false
+    Fire: true
+    Enderman: false
+# the TNT reappears after blowing up (a bit experimental, use at you risk)
+    replace-all-TNT-blocks: false
+# limits the replacement of blocks to the surface
+    replace-above-limit-only: false
+    replace-limit: 64
+# false, whitelist or blacklist : restricts the blocks replaced after an explosion
+    use-restrict-list: 'false'
+#(list of block ID separated by commas) blacklist (or whitelist, depending on the setting above)
+#For example, to block dirt, all types of wool, normal logs and birch logs : 3, 35, 17:0, 17:2 (with restrict-blocks set to blacklist)
+    restrict-list: '0'
+#Minecraft time of the day at which everything should be healed (-1 to deactivate)
+#Sunrise is around 23000, noon 6000, sunset 13000, and midnight 18000. Day (zombies burning) starts at 0.
+    repair-time-of-day: -1
+#
+#Grief prevention part
+#
+  grief:
+#prevents players from doing these actions :
+    block:
+#emptying lava buckets
+      lava: false
+#placing TNT
+      TNT: false
+#using flint and steel (setting fire to blocks)
+      flint-and-steel: false
+#placing any of the blocks in the blacklist
+      blacklist: false
+#using a spawn egg to spawn creatures
+      spawn-eggs: false
+#warns the players who have the right permission about these actions
+    warn:
+      lava: false
+      TNT: false
+      flint-and-steel: false
+      blacklist: false
+      spawn-eggs: false
+#nerf fire
+    prevent-fire-spread:
+#block to block, simple fire spreading
+      fire: false
+#fire starting from lava
+      lava: false
+#(list of block ID separated by commas) blacklist
+#For example, to block dirt, all types of wool, normal logs and birch logs : 3, 35, 17:0, 17:2
+    blacklist: '0'
+#
+#
+#
+#Don't mess with this part unless you really need it!
+#
+#
+advanced:
+#if the /ch command conflicts with another one, change it here
+  command-alias: ch
+#if true, the block destroyed in the explosion will replace the new one
+  replacement-conflict:
+    overwrite: true
+    drop-overwritten-blocks: true
+#if you chose not to replace every block, those not replaced will drop according to the percent chance
+  drop-destroyed-blocks:
+    enabled: true
+    chance: 100
+#When an entity suffocates because it got caught in an explosion getting replaced, teleport it to the surface
+  teleport-when-buried: true
+  verbose-level: 1
+  op-have-all-permissions: true
+#Improve the replacement of areas with sand or gravel by not letting them fall
+  prevent-block-fall: true
+#range of the replace-near command
+  distance-near: 20
+#skips some tests... but degrades the quality of leaves and vines replacement
+  lightweight-mode: false
+config-version: 5.0
