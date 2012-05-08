@@ -18,8 +18,6 @@ import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -28,8 +26,10 @@ import org.bukkit.event.painting.PaintingBreakByEntityEvent;
 import org.bukkit.event.painting.PaintingBreakEvent;
 import org.bukkit.event.painting.PaintingBreakEvent.RemoveCause;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 
 
 public class CreeperListener implements Listener{
@@ -87,7 +87,7 @@ public class CreeperListener implements Listener{
 			}
 			else
 			{
-				plugin.log_info("Painting destroyed by block?", 2);
+				plugin.log_info("Painting destroyed by block?", 1);
 			}
 		}
 	}
@@ -200,22 +200,31 @@ public class CreeperListener implements Listener{
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onCreatureSpawn(CreatureSpawnEvent event)
+	public void onPlayerInteract(PlayerInteractEvent event)
 	{
 		if(event.isCancelled())
 			return;
 
-		WorldConfig world = getWorld(event.getEntity().getWorld());
+		Player player = event.getPlayer();
+		WorldConfig world = getWorld(player.getWorld());
+		
+		ItemStack item = event.getItem();
+		if(item == null)
+			return;
 
-		if(event.getSpawnReason() == SpawnReason.EGG)
+		if(item.getType() == Material.MONSTER_EGG && !plugin.getPermissionManager().checkPermissions(player, true, "spawnEgg"))
 		{
+			String entityType = CreeperUtils.getEntityNameFromId(event.getItem().getData().getData());
+			
 			boolean blocked = world.blockSpawnEggs;
 			if(blocked)
 				event.setCancelled(true);
 			if(world.warnSpawnEggs)
-				plugin.warn(CreeperPlayer.WarningCause.SPAWN_EGG, null, event.getLocation(), blocked, event.getEntityType().getName());
+				plugin.warn(CreeperPlayer.WarningCause.SPAWN_EGG, player.getName(), player.getLocation(), blocked, entityType);
 		}
 	}
+
+
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockIgnite(BlockIgniteEvent event)

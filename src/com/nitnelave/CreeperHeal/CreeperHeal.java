@@ -159,7 +159,7 @@ public class CreeperHeal extends JavaPlugin {
 
 		int tmp_period = 20;        //register the task to go every "period" second if all at once
 		if(config.blockPerBlock)                    //or every "block_interval" ticks if block_per_block
-			tmp_period = config.waitBeforeHeal;
+			tmp_period = config.blockPerBlockInterval;
 		if( getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 			public void run() {
 				check_replace(config.blockPerBlock);        //check to replace explosions/blocks
@@ -169,7 +169,7 @@ public class CreeperHeal extends JavaPlugin {
 		if( getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 			public void run() {
 				replace_burnt();
-			}}, 200, config.waitBeforeHeal) == -1)
+			}}, 200, 20) == -1)
 			log.warning("[CreeperHeal] Impossible to schedule the replace-burnt task. Burnt blocks replacement will not work");
 
 		if( getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
@@ -223,7 +223,7 @@ public class CreeperHeal extends JavaPlugin {
 	}
 
 	private void populateWarnList()
-    {
+	{
 		warnList.clear();
 		for(Player p : getServer().getOnlinePlayers())
 		{
@@ -232,7 +232,7 @@ public class CreeperHeal extends JavaPlugin {
 				warnList.add(new CreeperPlayer(p, this));
 			}
 		}
-    }
+	}
 
 	protected void scheduleTimeRepairs()
 	{
@@ -315,9 +315,9 @@ public class CreeperHeal extends JavaPlugin {
 
 
 	public void recordBlocks(List<Block> list, Location location)
-    {
-	    recordBlocks(list, location, null, loadWorld(location.getWorld()).isRepairTimed());
-    }
+	{
+		recordBlocks(list, location, null, loadWorld(location.getWorld()).isRepairTimed());
+	}
 
 	protected void recordBlocks(List<Block> list, Location location, Entity entity, boolean timed)
 	{
@@ -330,6 +330,7 @@ public class CreeperHeal extends JavaPlugin {
 
 		//record the list of blocks of an explosion, from bottom to top
 		Date now = new Date();
+
 		List<BlockState> list_state = new ArrayList<BlockState>();        //the list of blockstate we'll be keeping afterward
 		WorldConfig world = loadWorld(location.getWorld());
 		List<Block> to_add = new ArrayList<Block>();
@@ -491,9 +492,10 @@ public class CreeperHeal extends JavaPlugin {
 
 		CreeperExplosion cEx;
 		if(timed)
-			cEx = new CreeperExplosion(now, list_state, location);        //store in the global hashmap, with the time it happened as a key
-		else
-			cEx = new CreeperExplosion(new Date(now.getTime() + 1200000), list_state, location);
+			now = new Date(now.getTime() + 1200000);
+
+		cEx = new CreeperExplosion(now, list_state, location);        //store in the global hashmap, with the time it happened as a key
+
 
 		explosion_list.add(cEx);
 
@@ -519,12 +521,14 @@ public class CreeperHeal extends JavaPlugin {
 	private void check_replace(boolean block_per_block) {        //check to see if any block has to be replaced
 		Date now = new Date();
 
+
 		Iterator<CreeperExplosion> iter = explosion_list.iterator();
 		while(iter.hasNext()) {
 			CreeperExplosion cEx = iter.next();
 			Date time = cEx.getTime();
 			List<BlockState> blockList = cEx.getBlockList();
-			if(new Date(time.getTime() + config.waitBeforeHeal * 1000).before(now)) {        //if enough time went by
+			Date after = new Date(time.getTime() + config.waitBeforeHeal * 1000);
+			if(after.before(now)) {        //if enough time went by
 				if(!block_per_block){        //all blocks at once
 					replace_blocks(blockList);        //replace the blocks
 					iter.remove();                    //remove the explosion from the record
@@ -549,7 +553,6 @@ public class CreeperHeal extends JavaPlugin {
 	}
 
 	private void replace_one_block(List<BlockState> list) {        //replace one block (block per block)
-
 		replace_blocks(list.get(0));        //blocks are sorted, so get the first
 		if(!list.isEmpty())
 		{
@@ -1304,18 +1307,18 @@ public class CreeperHeal extends JavaPlugin {
 	}
 
 	protected boolean checkPermissions(Player player, boolean joker, String... nodes)
-    {
-	    return perms.checkPermissions(player, joker, nodes);
-    }
+	{
+		return perms.checkPermissions(player, joker, nodes);
+	}
 
 
 	public void warn(WarningCause cause, String offender, Location loc,boolean blocked, String material)
-    {
-	    for(CreeperPlayer cp : warnList)
-	    {
-	    	cp.warnPlayer(cause, offender, loc, blocked, material);	
-	    }
-    }
+	{
+		for(CreeperPlayer cp : warnList)
+		{
+			cp.warnPlayer(cause, offender, loc, blocked, material);	
+		}
+	}
 
 
 
