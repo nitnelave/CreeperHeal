@@ -1,5 +1,7 @@
 package com.nitnelave.CreeperHeal;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.minecraft.server.EntityPainting;
@@ -120,6 +123,7 @@ public class CreeperHeal extends JavaPlugin {
 	private CreeperPermissionManager perms;
 	protected CreeperTrap creeperTrap;
 	private CreeperEconomy cEconomy;
+	private CreeperLog warningLog;
 
 
 
@@ -152,6 +156,21 @@ public class CreeperHeal extends JavaPlugin {
 		handler = new CreeperHandler(this);
 
 		cEconomy = new CreeperEconomy(this);
+		
+		File warningLogFile = new File(getDataFolder()+"/log.txt");
+		if(!warningLogFile.exists())
+	        try
+            {
+	            warningLogFile.createNewFile();
+            }
+            catch (IOException e)
+            {
+	            log.log(Level.WARNING, e.getMessage());
+            }
+		
+		warningLog = new CreeperLog(warningLogFile);
+		
+		
 
 		/*
 		 * Recurrent tasks
@@ -1314,10 +1333,13 @@ public class CreeperHeal extends JavaPlugin {
 
 	public void warn(WarningCause cause, String offender, Location loc,boolean blocked, String material)
 	{
+		String message = CreeperUtils.getWarnMessage(cause, offender, loc, blocked, material);
 		for(CreeperPlayer cp : warnList)
 		{
-			cp.warnPlayer(cause, offender, loc, blocked, material);	
+			cp.warnPlayer(cp.getPlayer(), cause, message);	
 		}
+		if(config.logWarnings)
+			warningLog.record(message);
 	}
 
 

@@ -7,7 +7,7 @@ import java.util.Arrays;
 public class WorldConfig {
 
 	public boolean replaceTNT, enderman, replaceAbove, blockLava, blockTNT, blockIgnite, blockBlackList, 
-	blockSpawnEggs, warnLava, warnTNT, warnIgnite, warnBlackList, warnSpawnEggs, preventFireSpread, preventFireLava,
+	blockSpawnEggs, blockPvP, warnLava, warnTNT, warnIgnite, warnBlackList, warnSpawnEggs, warnPvP, preventFireSpread, preventFireLava,
 	creepers, tnt, fire, ghast, magical, dragons;
 	public String restrictBlocks, name;
 	public int repairTime, replaceLimit;
@@ -18,8 +18,8 @@ public class WorldConfig {
 
 	public WorldConfig(String name) {
 		creepers = tnt = ghast = fire = true;
-		replaceTNT = magical = dragons = replaceAbove = enderman = blockLava = blockTNT = blockIgnite = blockBlackList = blockSpawnEggs = 
-				warnLava = warnTNT = warnIgnite = warnBlackList = warnSpawnEggs = preventFireSpread = preventFireLava = false;
+		replaceTNT = magical = dragons = replaceAbove = enderman = blockLava = blockTNT = blockIgnite = blockBlackList = blockSpawnEggs = blockPvP= 
+				warnLava = warnTNT = warnIgnite = warnBlackList = warnSpawnEggs = warnPvP = preventFireSpread = preventFireLava = false;
 		restrictBlocks = "false";
 		replaceLimit = 60;
 		repairTime = -1;
@@ -51,14 +51,16 @@ public class WorldConfig {
 		blockIgnite = (Boolean) l[15];
 		blockBlackList = (Boolean) l[16];
 		blockSpawnEggs = (Boolean) l[17]; 
-		warnLava = (Boolean) l[18];
-		warnTNT = (Boolean) l[19];
-		warnIgnite = (Boolean) l[20];
-		warnBlackList = (Boolean) l[21]; 
-		warnSpawnEggs = (Boolean) l[22]; 
-		preventFireSpread = (Boolean) l[23];
-		preventFireLava = (Boolean) l[24];
-		placeList = (ArrayList<BlockId>) l[25];
+		blockPvP = (Boolean) l[18];
+		warnLava = (Boolean) l[19];
+		warnTNT = (Boolean) l[20];
+		warnIgnite = (Boolean) l[21];
+		warnBlackList = (Boolean) l[22]; 
+		warnSpawnEggs = (Boolean) l[23];
+		warnPvP = (Boolean) l[24];
+		preventFireSpread = (Boolean) l[25];
+		preventFireLava = (Boolean) l[26];
+		placeList = (ArrayList<BlockId>) l[27];
 	}
 
 	@SuppressWarnings("unchecked")
@@ -76,8 +78,8 @@ public class WorldConfig {
 		placelist = placelist.substring(0, placelist.length() - 2);
 
 		return new ArrayList<Object>(Arrays.asList(creepers, tnt, ghast, dragons, magical, fire, enderman, replaceTNT, replaceAbove,
-				replaceLimit, restrictBlocks, blocklist, repairTime, blockLava, blockTNT, blockIgnite, blockBlackList, blockSpawnEggs,
-				warnLava, warnTNT, warnIgnite, warnBlackList, warnSpawnEggs, preventFireSpread, preventFireLava, placelist));
+				replaceLimit, restrictBlocks, blocklist, repairTime, blockLava, blockTNT, blockIgnite, blockBlackList, blockSpawnEggs, blockPvP,
+				warnLava, warnTNT, warnIgnite, warnBlackList, warnSpawnEggs, warnPvP, preventFireSpread, preventFireLava, placelist));
 	}
 
 
@@ -98,7 +100,7 @@ public class WorldConfig {
 
 	public boolean isRepairTimed()
 	{
-		return repairTime >= 0;
+		return repairTime > -1;
 	}
 
 }
