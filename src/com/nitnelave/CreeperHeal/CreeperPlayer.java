@@ -10,10 +10,10 @@ public class CreeperPlayer
 
 	private CreeperHeal plugin;
 	private Player player;
-	protected boolean lava, tnt, fire, blacklist, spawnEggs;
+	protected boolean lava, tnt, fire, blacklist, spawnEggs, pvp;
 
 	public enum WarningCause {
-		LAVA, TNT, FIRE, BLACKLIST, SPAWN_EGG
+		LAVA, TNT, FIRE, BLACKLIST, SPAWN_EGG, PVP
 	}
 
 	public CreeperPlayer(Player player, CreeperHeal plugin)
@@ -30,6 +30,7 @@ public class CreeperPlayer
 		fire = plugin.checkPermissions(player, false, "warn.*", "warn.fire");
 		blacklist = plugin.checkPermissions(player, false, "warn.*", "warn.blacklist");
 		spawnEggs = plugin.checkPermissions(player, false, "warn.*", "warn.spawnEggs");
+		pvp = plugin.checkPermissions(player, false, "warn.*", "warn.pvp");
 	}
 
 	public Player getPlayer()
@@ -65,10 +66,21 @@ public class CreeperPlayer
 		{
 			player.sendMessage(ChatColor.RED + "Player " + offender + (blocked?"tried to spawn":"spawned") + " a " + material + "in world : " + loc.getWorld().getName());
 		}
+		else if(cause == WarningCause.PVP && pvp)
+		{
+			player.sendMessage(ChatColor.RED + "Player " + offender + (blocked?" tried to hit":" hit") + "another player with a " + material + " in world : " + loc.getWorld().getName());
+		}
 		if(cause == WarningCause.BLACKLIST && (blacklist || force))
 		{
 			player.sendMessage(ChatColor.RED + "Player " + offender + (blocked?" was prevented from placing ":" has placed ") + material + " in world : " + loc.getWorld().getName());
 		}
 	}
+
+	public void warnPlayer(Player player, WarningCause cause, String message)
+    {
+	    if(cause == WarningCause.BLACKLIST && blacklist || cause == WarningCause.TNT && tnt || cause == WarningCause.FIRE && fire
+	    		|| cause == WarningCause.LAVA && lava || cause == WarningCause.SPAWN_EGG && spawnEggs || cause == WarningCause.PVP && pvp)
+	    	player.sendMessage(message);
+    }
 
 }

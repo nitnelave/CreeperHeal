@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Map;
 
 import org.bukkit.Art;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -18,6 +19,8 @@ import org.bukkit.entity.Fireball;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.material.Rails;
+
+import com.nitnelave.CreeperHeal.CreeperPlayer.WarningCause;
 
 public class CreeperUtils
 {
@@ -334,6 +337,26 @@ public class CreeperUtils
 	    	default:
 	    		return "Non-living Entity";
 	    }
+    }
+
+	public static String getWarnMessage(WarningCause cause, String offender,
+            Location loc, boolean blocked, String material)
+    {
+		switch(cause)
+		{
+			case LAVA:
+				return getWarnMessage(WarningCause.BLACKLIST, offender, loc, blocked, "LAVA");
+			case FIRE:
+				return ChatColor.RED + "Player " + offender + (blocked?" was prevented from starting":" has started") + " a fire in world : " + loc.getWorld().getName();
+			case TNT:
+				return getWarnMessage(WarningCause.BLACKLIST, offender, loc, blocked, "TNT");
+			case SPAWN_EGG:
+				return ChatColor.RED + "Player " + offender + (blocked?"tried to spawn":"spawned") + " a " + material + "in world : " + loc.getWorld().getName();
+			case BLACKLIST:
+				return ChatColor.RED + "Player " + offender + (blocked?" was prevented from placing ":" has placed ") + material + " in world : " + loc.getWorld().getName();
+			default:
+				return null;
+		}
     }
 
 }

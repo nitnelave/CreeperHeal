@@ -24,8 +24,8 @@ public class CreeperConfig
 	private final static String[] world_config_nodes = {"replace.Creepers", "replace.TNT", "replace.Ghast", "replace.Dragons", "replace.Magical", "replace.Fire", "replace.Enderman",
 		"replace.replace-all-TNT-blocks", "replace.replace-above-limit-only", "replace.replace-limit", "replace.use-restrict-list",
 		"replace.restrict-list", "replace.repair-time-of-day", "grief.block.lava", "grief.block.TNT", "grief.block.flint-and-steel", 
-		"grief.block.blacklist", "grief.block.spawn-eggs", "grief.warn.lava", "grief.warn.TNT", "grief.warn.flint-and-steel", "grief.warn.blacklist",
-		"grief.warn.spawn-eggs", "grief.prevent-fire-spread.fire", "grief.prevent-fire-spread.lava", "grief.blacklist"}; //list of properties for the world config
+		"grief.block.blacklist", "grief.block.spawn-eggs", "grief.block.PvP", "grief.warn.lava", "grief.warn.TNT", "grief.warn.flint-and-steel", "grief.warn.blacklist",
+		"grief.warn.spawn-eggs", "grief.warn.PvP", "grief.prevent-fire-spread.fire", "grief.prevent-fire-spread.lava", "grief.blacklist"}; //list of properties for the world config
 	//private final static String[] world_config_nodes4 = {"Creepers", "TNT", "Ghast", "Magical", "Fire", "restrict-blocks", "restrict-list", "replace-all-tnt", "replace-above-limit-only", "replace-limit", "block-enderman-pickup", "dragons", "repair-time"}; //list of properties for the world config
 	protected final Logger log = Logger.getLogger("Minecraft");            //to output messages to the console/log
 	private final static String[] STRING_BOOLEAN_OPTIONS = {"true", "false", "time"};
@@ -36,7 +36,7 @@ public class CreeperConfig
 
 	protected int waitBeforeHeal, logLevel, blockPerBlockInterval, waitBeforeHealBurnt, dropChance, distanceNear;
 	protected boolean dropReplacedBlocks, blockPerBlock, teleportOnSuffocate, dropDestroyedBlocks, crackDestroyedBricks,
-	lockette, replaceAllChests, replaceProtectedChests, overwriteBlocks, preventBlockFall, lightweightMode, opEnforce;
+	lockette, replaceAllChests, replaceProtectedChests, overwriteBlocks, preventBlockFall, lightweightMode, opEnforce, logWarnings;
 
 	protected String chestProtection, alias;		//no, lwc or lockette
 	protected double configVersion;
@@ -99,6 +99,8 @@ public class CreeperConfig
 		lightweightMode = getBoolean("lightweight-mode", false);
 		alias = configFile.getString("command-alias", "ch");
 		configVersion = 5;
+		logWarnings = true;
+		set("advanced.log-warnings", true);
 		set("config-version", 5);
 		try{
 			tmp_str = configFile.getString("chest-protection", "no").trim().toLowerCase();
@@ -169,7 +171,7 @@ public class CreeperConfig
 				restrict_list.add(new BlockId(0));
 			}
 
-			returnValue = new WorldConfig(name, creeper, tnt, ghast, dragons, magical, fire, enderman, replace_tnt, replaceAbove, replaceLimit, restrict_blocks, restrict_list, wRepairTime, false, false, false, false, false, false, false, false, false, false, false, false, new ArrayList<BlockId>());
+			returnValue = new WorldConfig(name, creeper, tnt, ghast, dragons, magical, fire, enderman, replace_tnt, replaceAbove, replaceLimit, restrict_blocks, restrict_list, wRepairTime, false, false, false, false, false, false, false, false, false, false, false, false, false, false, new ArrayList<BlockId>());
 			world_config.put(name, returnValue);
 			return returnValue;
 		}
@@ -217,6 +219,7 @@ public class CreeperConfig
 			distanceNear = getInt("advanced.distance-near", 20);
 			lightweightMode = getBoolean("advanced.lightweight-mode", false);
 			alias = configFile.getString("advanced.command-alias", "ch");
+			logWarnings =  getBoolean("advanced.log-warnings", true);
 
 			String tmp_str;
 			try{
@@ -316,6 +319,7 @@ public class CreeperConfig
 		set("advanced.lightweight-mode", lightweightMode);
 		set("advanced.command-alias", alias);
 		set("config-version", configVersion);
+		set("advanced.log-warnings", logWarnings);
 
 
 
@@ -405,6 +409,8 @@ public class CreeperConfig
 			boolean warnBlackList = getBoolean(name + ".grief.warn.blacklist", false);
 			boolean blockSpawnEggs = getBoolean(name + ".grief.block.spawn-eggs", false);
 			boolean warnSpawnEggs = getBoolean(name + ".grief.warn.spawn-eggs", false);
+			boolean blockPvP = getBoolean(name + "grief.block.PvP", false);
+			boolean warnPvP = getBoolean(name + "grief.warn.PvP", false);
 
 			ArrayList<BlockId> placeList  = new ArrayList<BlockId>();
 			try{
@@ -423,8 +429,8 @@ public class CreeperConfig
 			}
 			
 			returnValue = new WorldConfig(name, creeper, tnt, ghast, dragons, magical, fire, enderman, replaceTNT, replaceAbove, replaceLimit, 
-					restrictBlocks, restrictList, repairTime, blockLava, blockTNT, blockIgnite, blockBlackList, blockSpawnEggs, 
-					warnLava, warnTNT, warnIgnite, warnBlackList, warnSpawnEggs, preventFireSpread, preventFireLava, placeList);
+					restrictBlocks, restrictList, repairTime, blockLava, blockTNT, blockIgnite, blockBlackList, blockSpawnEggs, blockPvP, 
+					warnLava, warnTNT, warnIgnite, warnBlackList, warnSpawnEggs, warnPvP, preventFireSpread, preventFireLava, placeList);
 
 			world_config.put(name, returnValue);
 			return returnValue;

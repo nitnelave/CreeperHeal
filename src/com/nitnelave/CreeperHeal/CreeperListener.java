@@ -10,7 +10,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -21,6 +23,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.painting.PaintingBreakByEntityEvent;
 import org.bukkit.event.painting.PaintingBreakEvent;
@@ -65,7 +68,7 @@ public class CreeperListener implements Listener{
 	}
 
 
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityDamage(EntityDamageEvent event)
 	{
 		if(event.isCancelled())
@@ -88,6 +91,58 @@ public class CreeperListener implements Listener{
 			else
 			{
 				plugin.log_info("Painting destroyed by block?", 1);
+			}
+		}
+		else 
+		{
+			if(en instanceof Player)
+
+			{
+				Player offender = null;
+				String message = "";
+				WorldConfig world = getWorld(event.getEntity().getWorld());
+				DamageCause cause = event.getCause();
+				if(cause == DamageCause.ENTITY_ATTACK)
+				{
+					Entity attacker = ((EntityDamageByEntityEvent)event).getDamager();
+					if(attacker instanceof Player)
+					{
+						offender = (Player) attacker;
+						message = offender.getItemInHand().getType().toString();
+						
+					}
+				}
+				else if(cause == DamageCause.PROJECTILE)
+				{
+					Projectile projectile = (Projectile) ((EntityDamageByEntityEvent) event).getDamager();
+					Entity attacker = projectile.getShooter();
+					if(attacker instanceof Player)
+					{
+						offender = (Player) attacker;
+						message = projectile.getType().toString();
+					}
+				}
+				else if(cause == DamageCause.MAGIC)
+				{
+					Projectile projectile = (Projectile) ((EntityDamageByEntityEvent) event).getDamager();
+					if(projectile instanceof ThrownPotion)
+					{
+						Entity attacker = projectile.getShooter();
+						if(attacker instanceof Player)
+						{
+							offender = (Player) attacker;
+							message = "magic potion";
+						}
+					}
+				}
+				if(offender != null && !plugin.getPermissionManager().checkPermissions(offender, true, "pvp"))
+				{						
+					boolean blocked = world.blockPvP;
+					if(blocked)
+						event.setCancelled(true);
+					if(world.warnPvP)
+						plugin.warn(CreeperPlayer.WarningCause.PVP, offender.getName(), offender.getLocation(), blocked, message);
+				}
 			}
 		}
 	}
@@ -207,7 +262,7 @@ public class CreeperListener implements Listener{
 
 		Player player = event.getPlayer();
 		WorldConfig world = getWorld(player.getWorld());
-		
+
 		ItemStack item = event.getItem();
 		if(item == null)
 			return;
@@ -215,7 +270,7 @@ public class CreeperListener implements Listener{
 		if(item.getType() == Material.MONSTER_EGG && !plugin.getPermissionManager().checkPermissions(player, true, "spawnEgg"))
 		{
 			String entityType = CreeperUtils.getEntityNameFromId(event.getItem().getData().getData());
-			
+
 			boolean blocked = world.blockSpawnEggs;
 			if(blocked)
 				event.setCancelled(true);
@@ -324,6 +379,5 @@ public class CreeperListener implements Listener{
 			}
 		}
 	}
-
 
 }
