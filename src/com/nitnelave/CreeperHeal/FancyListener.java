@@ -38,9 +38,9 @@ public class FancyListener implements Listener
 		{
 			Location vineLoc = b.getLocation();
 			World w = vineLoc.getWorld();
-			synchronized(plugin.explosion_list)
+			synchronized(plugin.explosionList)
 			{
-				for(CreeperExplosion cEx : plugin.explosion_list)
+				for(CreeperExplosion cEx : plugin.explosionList)
 				{
 					Location loc = cEx.getLocation();
 					if(loc.getWorld() == w)
@@ -75,9 +75,9 @@ public class FancyListener implements Listener
 			Set<Location> set = plugin.preventBlockFall.keySet();
 			if(plugin.config.preventBlockFall)
 			{
-				synchronized(plugin.explosion_list)
+				synchronized(plugin.explosionList)
 				{
-					for(CreeperExplosion cEx : plugin.explosion_list)
+					for(CreeperExplosion cEx : plugin.explosionList)
 					{
 						try{
 							set.add(cEx.getLocation());}
@@ -111,7 +111,7 @@ public class FancyListener implements Listener
 		
 		Location leafLoc = e.getBlock().getLocation();
 		World w = leafLoc.getWorld();
-		for(CreeperExplosion cEx : plugin.explosion_list)
+		for(CreeperExplosion cEx : plugin.explosionList)
 		{
 			Location loc = cEx.getLocation();
 			if(loc.getWorld() == w)

@@ -85,7 +85,7 @@ public class CreeperListener implements Listener{
 				{
 					WorldConfig world = getWorld(entity.getWorld());
 					if(CreeperUtils.shouldReplace(entity, world))         //if it's a creeper, and creeper explosions are recorded
-						plugin.checkForPaintings((Painting)en, world.isRepairTimed());
+						plugin.checkForPaintings((Painting)en, world.isRepairTimed(), false);
 				}
 			}
 			else
@@ -135,13 +135,13 @@ public class CreeperListener implements Listener{
 						}
 					}
 				}
-				if(offender != null && !plugin.getPermissionManager().checkPermissions(offender, true, "pvp"))
+				if(offender != null && !plugin.getPermissionManager().checkPermissions(offender, true, "bypass.pvp"))
 				{						
 					boolean blocked = world.blockPvP;
 					if(blocked)
 						event.setCancelled(true);
 					if(world.warnPvP)
-						plugin.warn(CreeperPlayer.WarningCause.PVP, offender.getName(), offender.getLocation(), blocked, message);
+						plugin.warn(CreeperPlayer.WarningCause.PVP, offender, blocked, message);
 				}
 			}
 		}
@@ -164,14 +164,14 @@ public class CreeperListener implements Listener{
 			{
 				WorldConfig world = getWorld(remover.getWorld());
 				if(CreeperUtils.shouldReplace(remover, world))         //if it's a creeper, and creeper explosions are recorded
-					plugin.checkForPaintings(event.getPainting(), world.isRepairTimed());
+					plugin.checkForPaintings(event.getPainting(), world.isRepairTimed(), false);
 			}
 		}
 		else if(e.getCause() == RemoveCause.FIRE)
 		{
 			WorldConfig world = getWorld(e.getPainting().getWorld());
 			if(world.fire)
-				plugin.checkForPaintings(e.getPainting(), world.isRepairTimed());
+				plugin.checkForPaintings(e.getPainting(), world.isRepairTimed(), true);
 		}
 		else if(e.getCause() == RemoveCause.PHYSICS || e.getCause() == RemoveCause.WATER)
 		{
@@ -179,9 +179,9 @@ public class CreeperListener implements Listener{
 			{
 				Location paintLoc = e.getPainting().getLocation();
 				World w = paintLoc.getWorld();
-				synchronized(plugin.explosion_list)
+				synchronized(plugin.explosionList)
 				{
-					for(CreeperExplosion cEx : plugin.explosion_list)
+					for(CreeperExplosion cEx : plugin.explosionList)
 					{
 						Location loc = cEx.getLocation();
 						if(loc.getWorld() == w)
@@ -200,7 +200,7 @@ public class CreeperListener implements Listener{
 								else
 									should = world.creepers;
 								if(should)
-									plugin.checkForPaintings(e.getPainting(), world.isRepairTimed());
+									plugin.checkForPaintings(e.getPainting(), world.isRepairTimed(), false);
 								return;
 							}
 						}
@@ -217,7 +217,7 @@ public class CreeperListener implements Listener{
 								WorldConfig world = getWorld(w);
 
 								if(world.fire)
-									plugin.checkForPaintings(e.getPainting(), world.isRepairTimed());
+									plugin.checkForPaintings(e.getPainting(), world.isRepairTimed(), true);
 								return;
 							}
 						}
@@ -267,7 +267,7 @@ public class CreeperListener implements Listener{
 		if(item == null)
 			return;
 
-		if(item.getType() == Material.MONSTER_EGG && !plugin.getPermissionManager().checkPermissions(player, true, "spawnEgg"))
+		if(item.getType() == Material.MONSTER_EGG && !plugin.getPermissionManager().checkPermissions(player, true, "bypass.spawnEgg"))
 		{
 			String entityType = CreeperUtils.getEntityNameFromId(event.getItem().getData().getData());
 
@@ -275,7 +275,15 @@ public class CreeperListener implements Listener{
 			if(blocked)
 				event.setCancelled(true);
 			if(world.warnSpawnEggs)
-				plugin.warn(CreeperPlayer.WarningCause.SPAWN_EGG, player.getName(), player.getLocation(), blocked, entityType);
+				plugin.warn(CreeperPlayer.WarningCause.SPAWN_EGG, player, blocked, entityType);
+		}
+		if(item.getType() == Material.FLINT_AND_STEEL && !plugin.getPermissionManager().checkPermissions(player, true, "bypass.ignite"))
+		{
+			boolean blocked = world.blockIgnite;
+			if(blocked)
+				event.setCancelled(true);
+			if(world.warnIgnite)
+				plugin.warn(CreeperPlayer.WarningCause.FIRE, player, blocked, null);
 		}
 	}
 
@@ -289,7 +297,7 @@ public class CreeperListener implements Listener{
 
 		WorldConfig world = getWorld(event.getBlock().getWorld());
 
-		Player player = event.getPlayer();
+		/*Player player = event.getPlayer();
 		if(player != null)
 		{
 			if(!plugin.getPermissionManager().checkPermissions(player, true, "ignite"))
@@ -298,10 +306,11 @@ public class CreeperListener implements Listener{
 				if(blocked)
 					event.setCancelled(true);
 				if(world.warnIgnite)
-					plugin.warn(CreeperPlayer.WarningCause.FIRE, player.getName(), player.getLocation(), blocked, null);
+					plugin.warn(CreeperPlayer.WarningCause.FIRE, player, blocked, null);
 			}
 		}
-		else if(event.getCause() == IgniteCause.SPREAD && world.preventFireSpread)
+		else */
+		if(event.getCause() == IgniteCause.SPREAD && world.preventFireSpread)
 			event.setCancelled(true);
 		else if(event.getCause() == IgniteCause.LAVA && world.preventFireLava)
 			event.setCancelled(true);
@@ -316,13 +325,13 @@ public class CreeperListener implements Listener{
 		WorldConfig world = getWorld(event.getPlayer().getWorld());
 
 		Player player = event.getPlayer();
-		if(event.getBucket() == Material.LAVA_BUCKET && !plugin.getPermissionManager().checkPermissions(player, true, "place-lava"))
+		if(event.getBucket() == Material.LAVA_BUCKET && !plugin.getPermissionManager().checkPermissions(player, true, "bypass.place-lava"))
 		{
 			boolean blocked = world.blockLava;
 			if(blocked)
 				event.setCancelled(true);
 			if(world.warnLava)
-				plugin.warn(CreeperPlayer.WarningCause.LAVA, player.getName(), player.getLocation(), blocked, null);
+				plugin.warn(CreeperPlayer.WarningCause.LAVA, player, blocked, null);
 		}
 	}
 
@@ -335,23 +344,23 @@ public class CreeperListener implements Listener{
 
 		Player player = event.getPlayer();
 		WorldConfig world = getWorld(player.getWorld());
-		if(event.getBlockPlaced().getType() == Material.TNT && !plugin.getPermissionManager().checkPermissions(player, true, "place-tnt"))
+		if(event.getBlockPlaced().getType() == Material.TNT && !plugin.getPermissionManager().checkPermissions(player, true, "bypass.place-tnt"))
 		{
 			boolean blocked = world.blockTNT;
 			if(blocked)
 				event.setCancelled(true);
 			if(world.warnTNT)
-				plugin.warn(CreeperPlayer.WarningCause.TNT, player.getName(), player.getLocation(), blocked, null);
+				plugin.warn(CreeperPlayer.WarningCause.TNT, player, blocked, null);
 		}
 		else if(world.blockBlackList)
 		{
-			if(world.placeList.contains(new BlockId(event.getBlock().getTypeId(), event.getBlock().getData())))
+			if(world.placeList.contains(new BlockId(event.getBlock().getTypeId(), event.getBlock().getData())) && !plugin.getPermissionManager().checkPermissions(player, true, "bypass.place-blacklist"))
 			{
 				boolean blocked = world.blockBlackList;
 				if(blocked)
 					event.setCancelled(true);
 				if(world.warnBlackList)
-					plugin.warn(CreeperPlayer.WarningCause.BLACKLIST, player.getName(), player.getLocation(), blocked, event.getBlockPlaced().getType().toString());
+					plugin.warn(CreeperPlayer.WarningCause.BLACKLIST, player, blocked, event.getBlockPlaced().getType().toString());
 			}
 		}
 

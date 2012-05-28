@@ -32,7 +32,7 @@ public class CreeperEconomy
         return (vaultEco != null);
     }
 
-	public void finePlayer(Player p, float cost) throws VaultNotDetectedException, TransactionFailedException
+	public void finePlayer(Player p, double cost) throws VaultNotDetectedException, TransactionFailedException
     {
 		if(cost == 0) return;
 		if(vaultEco == null)
@@ -41,13 +41,13 @@ public class CreeperEconomy
 		{
 			EconomyResponse r = vaultEco.withdrawPlayer(p.getName(), cost);
 			if(r.transactionSuccess())
-				p.sendMessage("You have bought a trap for " + cost);
+				p.sendMessage(plugin.messenger.processMessage("transaction-success", p.getWorld().getName(), p.getName(), null, null, null, Double.toString(cost)));
 			else
 				throw new TransactionFailedException();
 		}
     }
 
-	public boolean playerHasEnough(Player p, float cost) throws VaultNotDetectedException
+	public boolean playerHasEnough(Player p, double cost) throws VaultNotDetectedException
     {
 		if(cost == 0) return true;
 		if(vaultEco == null)
@@ -55,6 +55,21 @@ public class CreeperEconomy
 		else
 			return vaultEco.has(p.getName(), cost);
     }
+	
+	public void refundPlayer(Player p, double amount) throws VaultNotDetectedException, TransactionFailedException
+	{
+		if(amount == 0) return;
+		if(vaultEco == null)
+			throw new VaultNotDetectedException();
+		else
+		{
+			EconomyResponse r = vaultEco.depositPlayer(p.getName(), amount);
+			if(r.transactionSuccess())
+				p.sendMessage(plugin.messenger.processMessage("refunded", p.getWorld().getName(), p.getName(), null, null, null, Double.toString(amount)));
+			else
+				throw new TransactionFailedException();
+		}
+	}
 	
 
 }

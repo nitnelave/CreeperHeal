@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
 public class CreeperHandler
@@ -30,6 +31,11 @@ public class CreeperHandler
 	public void recordBlocks(EntityExplodeEvent event) 
 	{
 		plugin.recordBlocks(event, plugin.loadWorld(event.getLocation().getWorld()));
+	}
+	
+	public boolean shouldRemoveLWCProtection(Entity entity)
+	{
+		return !CreeperUtils.shouldReplace(entity, plugin.loadWorld(entity.getWorld()));
 	}
 
 }

@@ -2,6 +2,7 @@ package com.nitnelave.CreeperHeal;
 
 
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,7 +18,7 @@ public class CreeperCommandManager implements CommandExecutor
 		plugin = instance;
 	}
 
-	
+
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
@@ -25,6 +26,7 @@ public class CreeperCommandManager implements CommandExecutor
 		if(args.length != 0) 
 		{        //if it's just /ch, display help
 
+			boolean allWorlds = false;
 			WorldConfig current_world = getConfig().world_config.get(args[args.length - 1]);   //the last argument can be a world
 
 			if(current_world == null) 
@@ -36,6 +38,7 @@ public class CreeperCommandManager implements CommandExecutor
 				{										//or get the first (normal) world
 					current_world = plugin.loadWorld(plugin.getServer().getWorlds().get(0));
 					sender.sendMessage("No world specified, defaulting to " + current_world.getName());
+					allWorlds = true;
 				}
 			}
 
@@ -64,10 +67,10 @@ public class CreeperCommandManager implements CommandExecutor
 				getConfig().waitBeforeHealBurnt = integerCmd(getConfig().waitBeforeHealBurnt, args, "burnt block", sender);
 
 			else if(cmd.equalsIgnoreCase("forceHeal") || cmd.equalsIgnoreCase("heal"))
-				forceCmd(args, "explosions", sender, current_world);
+				forceCmd(args, "explosions", sender, current_world, allWorlds);
 
 			else if(cmd.equalsIgnoreCase("healBurnt"))
-				forceCmd(args, "burnt blocks", sender, current_world);
+				forceCmd(args, "burnt blocks", sender, current_world, allWorlds);
 
 			else if(cmd.equalsIgnoreCase("healNear"))
 				healNear(sender, args);
@@ -78,21 +81,21 @@ public class CreeperCommandManager implements CommandExecutor
 				else if(args.length == 2 && sender instanceof Player) 
 				{
 					if(args[1].equalsIgnoreCase("create") || args[1].equalsIgnoreCase("make"))
-	                    try
-                        {
-	                        plugin.createTrap((Player)sender);
-                        }
-                        catch (VaultNotDetectedException e)
-                        {
-                        	sender.sendMessage(ChatColor.RED + "[CreeperTrap] Vault is required for all economy transactions");
-	                        e.printStackTrace();
-                        }
-                        catch (TransactionFailedException e)
-                        {
-                        	sender.sendMessage(ChatColor.RED + "[CreeperTrap] Critical error in the transaction");
-	                        e.printStackTrace();
-                        }
-                    else if(args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("delete"))
+						try
+					{
+							plugin.createTrap((Player)sender);
+					}
+					catch (VaultNotDetectedException e)
+					{
+						sender.sendMessage(ChatColor.RED + "[CreeperTrap] Vault is required for all economy transactions");
+						e.printStackTrace();
+					}
+					catch (TransactionFailedException e)
+					{
+						sender.sendMessage(ChatColor.RED + "[CreeperTrap] Critical error in the transaction");
+						e.printStackTrace();
+					}
+					else if(args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("delete"))
 						plugin.deleteTrap((Player)sender);
 					else if(args[1].equalsIgnoreCase("removeall") || args[1].equalsIgnoreCase("deleteall"))
 						plugin.deleteAllTraps(sender, ((Player)sender).getName());
@@ -144,13 +147,13 @@ public class CreeperCommandManager implements CommandExecutor
 			admin = checkPermissions(player, "admin");
 			heal = admin || checkPermissions(player, "heal");
 			trap = checkPermissions(player, "trap.create", "trap.*");
-			healNear = heal || checkPermissions(player, "healNear.other");
-			healNearSelf = checkPermissions(player, "healNear.self");
+			healNear = heal || checkPermissions(player, "heal.near.all");
+			healNearSelf = checkPermissions(player, "heal.near.self");
 
 		}
 
 		if(!(admin || heal || trap))
-			sender.sendMessage(purple + "You do not have access to any of the CreeperHeal commands");
+			sender.sendMessage(getMessage("plugin-help-no-commands", null, sender.getName(), null, null, null, null));
 
 		if(admin){
 			sender.sendMessage(green + "/ch reload :" + purple + " reloads the config from the file.");
@@ -164,8 +167,8 @@ public class CreeperCommandManager implements CommandExecutor
 		}
 
 		if(heal){
-			sender.sendMessage(green + "/ch heal (seconds) (world) :" + purple + " Heals all explosions in the last x seconds, or all if x is not specified.");
-			sender.sendMessage(green + "/ch healBurnt (seconds) (world) :" + purple + " Heal all burnt blocks since x seconds, or all if x is not specified.");
+			sender.sendMessage(green + "/ch heal (world) :" + purple + " Heals all explosions in the world, or in every world.");
+			sender.sendMessage(green + "/ch healBurnt (world) :" + purple + " Heal all burnt blocks in the world, or in every world.");
 		}
 
 		if(healNear || healNearSelf)
@@ -173,7 +176,7 @@ public class CreeperCommandManager implements CommandExecutor
 
 
 		if(trap && plugin.creeperTrap != null)
-			sender.sendMessage(green + "/ch trap (create/delete) :" + purple + " creates/removes a trap from the tnt block in front of you.");
+			sender.sendMessage(getMessage("plugin-help-traps", null, sender.getName(), null, null, null, null));
 
 
 	}
@@ -210,7 +213,7 @@ public class CreeperCommandManager implements CommandExecutor
 	{		//changes a setting with a number
 		if(sender instanceof Player) {
 			if(!checkPermissions((Player) sender, "admin")) {
-				sender.sendMessage(ChatColor.RED + "You don’t have the permission");
+				sender.sendMessage(getMessage("no-permission-command", null, sender.getName(), null, null, null, null));
 				return current;
 			}
 		}
@@ -235,38 +238,55 @@ public class CreeperCommandManager implements CommandExecutor
 		}
 	}
 
-	public void forceCmd(String[] args, String msg, CommandSender sender, WorldConfig current_world) 
+	public void forceCmd(String[] args, String msg, CommandSender sender, WorldConfig current_world, boolean allWorlds) 
 	{
-		String cmd = args[0];
-
-		if(sender instanceof Player) 
+		if(allWorlds)
 		{
-			if(!checkPermissions((Player)sender, "heal", "admin")) 
+			for(World w : plugin.getServer().getWorlds())
 			{
-				sender.sendMessage(ChatColor.RED + "You don’t have the permission");
-				return;
-			}
-		}   
-
-		long since = 0;               
-		if(args.length > 1){
-			try{
-				since = Long.parseLong(args[1]);
-			}
-			catch (Exception e) {
-				sender.sendMessage("/ch " + cmd + " (seconds) (world_name | all)");
-				sender.sendMessage("If a time is specified, heals all " + msg + " since x seconds ago. Otherwise, heals all.");
-				return;
+				WorldConfig wc = plugin.loadWorld(w);
+				forceCmd(args, msg, sender, wc, false);
 			}
 		}
-		boolean burnt = cmd.equalsIgnoreCase("healBurnt");
-		if(args.length >2) {
-			if(args[2].equalsIgnoreCase("all")) {
-				for(WorldConfig w : getConfig().world_config.values()) {
+		else
+		{
+			String cmd = args[0];
+
+			if(sender instanceof Player) 
+			{
+				if(!checkPermissions((Player)sender, "heal", "admin")) 
+				{
+					sender.sendMessage(getMessage("no-permission-command", null, sender.getName(), null, null, null, null));
+					return;
+				}
+			}   
+
+			long since = 0;               
+			if(args.length > 1){
+				try{
+					since = Long.parseLong(args[1]);
+				}
+				catch (Exception e) {
+					sender.sendMessage("/ch " + cmd + " (seconds) (world_name | all)");
+					sender.sendMessage("If a time is specified, heals all " + msg + " since x seconds ago. Otherwise, heals all.");
+					return;
+				}
+			}
+			boolean burnt = cmd.equalsIgnoreCase("healBurnt");
+			if(args.length >2) {
+				if(args[2].equalsIgnoreCase("all")) {
+					for(WorldConfig w : getConfig().world_config.values()) {
+						if(burnt)
+							plugin.force_replace_burnt(since, w);
+						else
+							plugin.force_replace(since, w);
+					}
+				}
+				else {
 					if(burnt)
-						plugin.force_replace_burnt(since, w);
+						plugin.force_replace_burnt(since, current_world);
 					else
-						plugin.force_replace(since, w);
+						plugin.force_replace(since, current_world);
 				}
 			}
 			else {
@@ -275,18 +295,12 @@ public class CreeperCommandManager implements CommandExecutor
 				else
 					plugin.force_replace(since, current_world);
 			}
-		}
-		else {
-			if(burnt)
-				plugin.force_replace_burnt(since, current_world);
-			else
-				plugin.force_replace(since, current_world);
-		}
 
-		sender.sendMessage(ChatColor.GREEN + "Explosions healed");
+			sender.sendMessage(ChatColor.GREEN + "Explosions healed");
+		}
 	}
 
-	
+
 
 
 	private CreeperConfig getConfig()
@@ -304,10 +318,10 @@ public class CreeperCommandManager implements CommandExecutor
 			Player target;
 			if(args.length > 1)
 			{
-				hasPermission = hasPermission || checkPermissions(player, "healNear.other");
+				hasPermission = hasPermission || checkPermissions(player, "heal.near.all");
 				if(!hasPermission)
 				{
-					player.sendMessage(ChatColor.RED + "You do not have permision to use that command");
+					player.sendMessage(getMessage("no-permission-command", player.getWorld().getName(), sender.getName(), null, null, null, null));
 					return;
 				}
 				target = plugin.getServer().getPlayer(args[1]);
@@ -320,10 +334,10 @@ public class CreeperCommandManager implements CommandExecutor
 			}
 			else
 			{
-				hasPermission = hasPermission || checkPermissions(player, "healNear.self");
+				hasPermission = hasPermission || checkPermissions(player, "heal.near.self");
 				if(!hasPermission)
 				{
-					player.sendMessage(ChatColor.RED + "You do not have permision to use that command");
+					sender.sendMessage(getMessage("no-permission-command", null, sender.getName(), null, null, null, null));
 					return;
 				}
 				target = player;
@@ -332,13 +346,17 @@ public class CreeperCommandManager implements CommandExecutor
 
 		}
 	}
-	
+
 	private boolean checkPermissions(Player player, String... nodes)
 	{
 		return plugin.getPermissionManager().checkPermissions(player, true, nodes);
 	}
-	
-	
+
+	private String getMessage(String message, String... values)
+	{
+		return plugin.messenger.processMessage(message, values);
+	}
+
 
 
 }

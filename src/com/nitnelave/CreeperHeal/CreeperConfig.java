@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.World;
@@ -21,11 +22,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class CreeperConfig
 {
 
-	private final static String[] world_config_nodes = {"replace.Creepers", "replace.TNT", "replace.Ghast", "replace.Dragons", "replace.Magical", "replace.Fire", "replace.Enderman",
-		"replace.replace-all-TNT-blocks", "replace.replace-above-limit-only", "replace.replace-limit", "replace.use-restrict-list",
-		"replace.restrict-list", "replace.repair-time-of-day", "grief.block.lava", "grief.block.TNT", "grief.block.flint-and-steel", 
-		"grief.block.blacklist", "grief.block.spawn-eggs", "grief.block.PvP", "grief.warn.lava", "grief.warn.TNT", "grief.warn.flint-and-steel", "grief.warn.blacklist",
-		"grief.warn.spawn-eggs", "grief.warn.PvP", "grief.prevent-fire-spread.fire", "grief.prevent-fire-spread.lava", "grief.blacklist"}; //list of properties for the world config
 	//private final static String[] world_config_nodes4 = {"Creepers", "TNT", "Ghast", "Magical", "Fire", "restrict-blocks", "restrict-list", "replace-all-tnt", "replace-above-limit-only", "replace-limit", "block-enderman-pickup", "dragons", "repair-time"}; //list of properties for the world config
 	protected final Logger log = Logger.getLogger("Minecraft");            //to output messages to the console/log
 	private final static String[] STRING_BOOLEAN_OPTIONS = {"true", "false", "time"};
@@ -38,7 +34,7 @@ public class CreeperConfig
 	protected boolean dropReplacedBlocks, blockPerBlock, teleportOnSuffocate, dropDestroyedBlocks, crackDestroyedBricks,
 	lockette, replaceAllChests, replaceProtectedChests, overwriteBlocks, preventBlockFall, lightweightMode, opEnforce, logWarnings;
 
-	protected String chestProtection, alias;		//no, lwc or lockette
+	protected String /*chestProtection,*/ alias;		//no, lwc or lockette
 	protected double configVersion;
 
 	private CreeperHeal plugin;
@@ -121,7 +117,6 @@ public class CreeperConfig
 			else if(tmp_str.equals("lwc") || tmp_str.equals("lockette"))
 				replaceProtectedChests = true;
 		}
-		chestProtection = tmp_str;
 		boolean timeRepairs = false;
 		world_config.clear();
 		for(World w : plugin.getServer().getWorlds()) {
@@ -149,14 +144,14 @@ public class CreeperConfig
 			boolean enderman = getBoolean(name + ".block-enderman-pickup", false);
 			boolean dragons = !getStringBoolean(name + ".dragons", "false").equalsIgnoreCase("false");
 			int wRepairTime = getInt(name + ".repair-time", -1);
-			
+
 			String restrict_blocks;
 			restrict_blocks = configFile.getString(name + ".restrict-blocks", "false");
 			if(!restrict_blocks.equalsIgnoreCase("false") && !restrict_blocks.equalsIgnoreCase("whitelist") && !restrict_blocks.equalsIgnoreCase("blacklist")) {
 				log.warning("[CreeperHeal] Wrong value for " + name + ".restrict-blocks field. Defaulting to false.");
 				restrict_blocks = "false";
 			}
-			
+
 			ArrayList<BlockId> restrict_list  = new ArrayList<BlockId>();
 			try{
 				String tmp_str1 = configFile.getString(name + ".restrict-list", "").trim();
@@ -171,7 +166,7 @@ public class CreeperConfig
 				restrict_list.add(new BlockId(0));
 			}
 
-			returnValue = new WorldConfig(name, creeper, tnt, ghast, dragons, magical, fire, enderman, replace_tnt, replaceAbove, replaceLimit, restrict_blocks, restrict_list, wRepairTime, false, false, false, false, false, false, false, false, false, false, false, false, false, false, new ArrayList<BlockId>());
+			returnValue = new WorldConfig(name, creeper, tnt, ghast, dragons, magical, fire, enderman, replace_tnt, replaceAbove, replaceLimit, restrict_blocks, restrict_list, wRepairTime);
 			world_config.put(name, returnValue);
 			return returnValue;
 		}
@@ -220,34 +215,25 @@ public class CreeperConfig
 			lightweightMode = getBoolean("advanced.lightweight-mode", false);
 			alias = configFile.getString("advanced.command-alias", "ch");
 			logWarnings =  getBoolean("advanced.log-warnings", true);
+			replaceAllChests = getBoolean("replacement.ignore-chests.all", false);
+			replaceProtectedChests = getBoolean("replacement.ignore-chests.protected", false);
 
-			String tmp_str;
-			try{
-				tmp_str = configFile.getString("replacement.chest-protection", "no").trim().toLowerCase();
-			}
-			catch (Exception e) {
-				log.warning("[CreeperHeal] Wrong value for chest protection field. Defaulting to no.");
-				log_info(e.getLocalizedMessage(), 1);
-				tmp_str = "no";
-			}
-			if(!tmp_str.equalsIgnoreCase("no") && !tmp_str.equalsIgnoreCase("lwc") && !tmp_str.equalsIgnoreCase("all") && !tmp_str.equalsIgnoreCase("lockette"))
-				log.warning("[CreeperHeal] Wrong value for chest protection field. Defaulting to no.");
-			else {
-				replaceAllChests = replaceProtectedChests = false;
-
-				if(tmp_str.equals("all"))
-					replaceAllChests = true;
-				else if(tmp_str.equals("lwc") || tmp_str.equals("lockette"))
-					replaceProtectedChests = true;
-			}
-			chestProtection = tmp_str;
 		}
 
 		boolean timeRepairs = false;
 		world_config.clear();
-		for(World w : plugin.getServer().getWorlds()) {
-			String name = w.getName();
-			timeRepairs = timeRepairs || loadWorld(name).repairTime > -1;
+		try
+		{
+			for(World w : plugin.getServer().getWorlds()) {
+				String name = w.getName();
+				WorldConfig world = new WorldConfig(name, getDataFolder());
+				world_config.put(name, world);
+				timeRepairs = timeRepairs || world.repairTime > -1;
+			}
+		}catch(Exception e)
+		{
+			log.log(Level.SEVERE, "[CreeperHeal] Could not load world configurations");
+			log.log(Level.SEVERE, e.getMessage());
 		}
 
 		if(timeRepairs)
@@ -305,7 +291,8 @@ public class CreeperConfig
 		set("replacement.wait-before-heal.fire", waitBeforeHealBurnt);
 		set("replacement.block-per-block.enabled", blockPerBlock);
 		set("replacement.block-per-block.interval", blockPerBlockInterval);
-		set("replacement.chest-protection", chestProtection );
+		set("replacement.ignore-chests.all", replaceAllChests);
+		set("replacement.ignore-chests.protected", replaceProtectedChests);
 		set("replacement.crack-destroyed-bricks", crackDestroyedBricks);
 		set("advanced.replacement-conflict.overwrite", overwriteBlocks);
 		set("advanced.replacement-conflict.drop-overwritten-blocks", dropReplacedBlocks);
@@ -323,20 +310,11 @@ public class CreeperConfig
 
 
 
-
-		for(WorldConfig w : world_config.values()) {
-			String name = w.getName();
-
-			int k = 0;
-
-			ArrayList<Object> node_list = w.getConfig();
-
-			for(String property : world_config_nodes)
-				set( name + "." + property, node_list.get(k++));
-		}
-
 		try
 		{
+			for(WorldConfig w : world_config.values()) {
+				w.save();
+			}
 			configFile.save(yml);
 		}
 		catch (IOException e)
@@ -353,11 +331,25 @@ public class CreeperConfig
 
 	public WorldConfig loadWorld(World world) {
 
-		return loadWorld(world.getName());
+		String name = world.getName();
+		WorldConfig returnValue = world_config.get(name);
+		if(returnValue == null)
+		{
+			try
+			{
+				returnValue = new WorldConfig(name, getDataFolder());
+			}
+			catch (Exception e)
+			{
+				log.log(Level.SEVERE, "[CreeperHeal] Could not load configuration for world : " + name);
+				log.log(Level.SEVERE, e.getMessage());
+			}
+		}
+		return returnValue;
 	}
 
 
-	public WorldConfig loadWorld(String name) {      //loads the world (for example, the first we need it)
+	/*public WorldConfig loadWorld(String name) {      //loads the world (for example, the first we need it)
 
 		WorldConfig returnValue = world_config.get(name);   
 
@@ -376,7 +368,7 @@ public class CreeperConfig
 				log.warning("[CreeperHeal] Wrong value for use-restrict-list field for world " + name + ". Defaulting to false.");
 				restrictBlocks = "false";
 			}
-			
+
 			ArrayList<BlockId> restrictList  = new ArrayList<BlockId>();
 			try{
 				String tmp_str1 = configFile.getString(name + ".replace.restrict-list", "0");
@@ -427,7 +419,7 @@ public class CreeperConfig
 				placeList.clear();
 				placeList.add(new BlockId(0));
 			}
-			
+
 			returnValue = new WorldConfig(name, creeper, tnt, ghast, dragons, magical, fire, enderman, replaceTNT, replaceAbove, replaceLimit, 
 					restrictBlocks, restrictList, repairTime, blockLava, blockTNT, blockIgnite, blockBlackList, blockSpawnEggs, blockPvP, 
 					warnLava, warnTNT, warnIgnite, warnBlackList, warnSpawnEggs, warnPvP, preventFireSpread, preventFireLava, placeList);
@@ -437,7 +429,7 @@ public class CreeperConfig
 		}
 
 		return returnValue;
-	}
+	}*/
 
 	private String getStringBoolean(String path, String defaultValue)
 	{
@@ -478,27 +470,28 @@ public class CreeperConfig
 	{
 		try {
 			file.createNewFile();
-            boolean success = false;
-            InputStream templateIn = plugin.getResource("config.yml");
-            OutputStream outStream = new FileOutputStream(file);
-           
-            int read = 0;
-            byte[] bytes = new byte[1024];
-       
-            while ((read = templateIn.read(bytes)) != -1) {
-                outStream.write(bytes, 0, read);
-            }
-       
-            templateIn.close();
-            outStream.flush();
-            outStream.close();
-            if (success) {
-                log.info("[CreeperHeal] Default config created");
-            }
-        } catch (Exception e) {
-        	log.warning("[CreeperHeal] Failed to create file: config.yml");
-        	log.warning(e.getMessage());
-        }
+			boolean success = false;
+			InputStream templateIn = plugin.getResource("config.yml");
+			OutputStream outStream = new FileOutputStream(file);
+
+			int read = 0;
+			byte[] bytes = new byte[1024];
+
+			while ((read = templateIn.read(bytes)) != -1) {
+				outStream.write(bytes, 0, read);
+			}
+
+			templateIn.close();
+			outStream.flush();
+			outStream.close();
+			if (success) 
+				log.info("[CreeperHeal] Default config created");
+			log.warning("[CreeperHeal] Failed to create file: config.yml");
+
+		} catch (Exception e) {
+			log.warning("[CreeperHeal] Failed to create file: config.yml");
+			log.warning(e.getMessage());
+		}
 	}
 
 
