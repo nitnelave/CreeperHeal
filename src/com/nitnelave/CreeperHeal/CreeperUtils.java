@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.Map;
 
 import org.bukkit.Art;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -19,8 +18,6 @@ import org.bukkit.entity.Fireball;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.material.Rails;
-
-import com.nitnelave.CreeperHeal.CreeperPlayer.WarningCause;
 
 public class CreeperUtils
 {
@@ -338,25 +335,44 @@ public class CreeperUtils
 	    		return "Non-living Entity";
 	    }
     }
-
+/*
 	public static String getWarnMessage(WarningCause cause, String offender,
-            Location loc, boolean blocked, String material)
+            String world, boolean blocked, String material)
     {
 		switch(cause)
 		{
 			case LAVA:
-				return getWarnMessage(WarningCause.BLACKLIST, offender, loc, blocked, "LAVA");
+				return getWarnMessage(WarningCause.BLACKLIST, offender, world, blocked, "LAVA");
 			case FIRE:
-				return ChatColor.RED + "Player " + offender + (blocked?" was prevented from starting":" has started") + " a fire in world : " + loc.getWorld().getName();
+				return offender + (blocked?" was prevented from starting":" has started") + " a fire in world : " + world;
 			case TNT:
-				return getWarnMessage(WarningCause.BLACKLIST, offender, loc, blocked, "TNT");
+				return getWarnMessage(WarningCause.BLACKLIST, offender, world, blocked, "TNT");
 			case SPAWN_EGG:
-				return ChatColor.RED + "Player " + offender + (blocked?"tried to spawn":"spawned") + " a " + material + "in world : " + loc.getWorld().getName();
+				return offender + (blocked?" tried to spawn":" spawned") + " a " + material + " in world : " + world;
 			case BLACKLIST:
-				return ChatColor.RED + "Player " + offender + (blocked?" was prevented from placing ":" has placed ") + material + " in world : " + loc.getWorld().getName();
+				return offender + (blocked?" was prevented from placing a ":" has placed a ") + material + " in world : " + world;
 			default:
 				return null;
 		}
     }
-
+	
+	public static String getPlayerWarnMessage(WarningCause cause, String world, boolean blocked, String material)
+	{
+		switch(cause)
+		{
+			case LAVA:
+				return getPlayerWarnMessage(WarningCause.BLACKLIST,  world, blocked, "LAVA");
+			case FIRE:
+				return (blocked?" was prevented from starting":" has started") + " a fire in world : " + world;
+			case TNT:
+				return getPlayerWarnMessage(WarningCause.BLACKLIST,  world, blocked, "TNT");
+			case SPAWN_EGG:
+				return (blocked?" tried to spawn":" spawned") + " a " + material + " in world : " + world;
+			case BLACKLIST:
+				return (blocked?" was prevented from placing a ":" has placed a ") + material + " in world : " + world;
+			default:
+				return null;
+		}
+	}
+*/
 }

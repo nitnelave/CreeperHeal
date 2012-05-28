@@ -81,7 +81,7 @@ public class CreeperDrop
 		if(type_drop != 0){
 			int number_drops = 1;
 			Random generator = new Random();
-			if(type_id == 21)
+			if(type_drop == 351 && data == 4)
 				number_drops = generator.nextInt(5) + 4;
 			else if(type_drop == 331)
 				number_drops = generator.nextInt(2) + 4;

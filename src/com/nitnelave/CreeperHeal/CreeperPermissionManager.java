@@ -1,7 +1,6 @@
 package com.nitnelave.CreeperHeal;
 
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -94,7 +93,7 @@ public class CreeperPermissionManager
 
 
 
-	public int getMaxTraps(Player player)
+	/*public int getMaxTraps(Player player)
 	{
 		int max = 0;
 		if(bPerms)
@@ -123,9 +122,9 @@ public class CreeperPermissionManager
 
 		}
 		return max;
-	}
+	}*/
 
-
+/*
 	public float getTrapFee(Player player)
 	{
 		float fee = 0;
@@ -159,7 +158,7 @@ public class CreeperPermissionManager
 
 		}
 		return fee;
-	}
+	}*/
 
 
 }
