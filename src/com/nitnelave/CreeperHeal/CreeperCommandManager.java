@@ -77,8 +77,11 @@ public class CreeperCommandManager implements CommandExecutor
 
 			else if(cmd.equalsIgnoreCase("trap")) {
 				if(plugin.creeperTrap == null)
+				{
 					sender.sendMessage("You have to install the CreeperTrap plugin to use traps");
-				else if(args.length == 2 && sender instanceof Player) 
+					return true;
+				}
+				if(args.length == 2 && sender instanceof Player) 
 				{
 					if(args[1].equalsIgnoreCase("create") || args[1].equalsIgnoreCase("make"))
 						try
@@ -102,15 +105,21 @@ public class CreeperCommandManager implements CommandExecutor
 					else
 						sender.sendMessage("/ch trap (create|remove)");
 				}
-				else if(args.length != 2)
+				else
 				{
-					if(args.length == 3 && args[1].equalsIgnoreCase("removeall") || args[1].equalsIgnoreCase("deleteall"))
-						plugin.deleteAllTraps(sender, args[2]);
+					if(args.length > 1 && (args[1].equalsIgnoreCase("removeall") || args[1].equalsIgnoreCase("deleteall")))
+					{
+						if(args.length == 3)
+							plugin.deleteAllTraps(sender, args[2]);
+						else
+							sender.sendMessage("/ch trap removeAll (player)");
+					}
+					else if(!(sender instanceof Player))
+						sender.sendMessage("Player only command");
 					else
 						sender.sendMessage("/ch trap (create|remove|removeall)");		//misused the command, display the help
 				}
-				else if(!(sender instanceof Player))
-					sender.sendMessage("Player only command");
+
 			}
 
 			else if(cmd.equalsIgnoreCase("reload"))
