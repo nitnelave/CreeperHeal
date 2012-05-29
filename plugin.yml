@@ -28,6 +28,8 @@ permissions:
         children:
             CreeperHeal.trap.create: true
             CreeperHeal.trap.remove.all: true
+            CreeperHeal.trap.bypass.fee: true
+            CreeperHeal.trap.bypass.maxTraps: true
     CreeperHeal.trap.create:
         description: Allows to create a trap
         default: true
@@ -37,6 +39,12 @@ permissions:
     CreeperHeal.trap.remove.own:
         description: Allows to remove traps owned by you
         default: true
+    CreeperHeal.trap.bypass.fee:
+        description: Allows you to buy a trap without paying the fee set in the config.
+        default: op
+    CreeperHeal.trap.bypass.maxTraps:
+        description: Allows you to have more than the maximum number of traps set in the config.
+        default: op
     CreeperHeal.healNear.self:
         description: Heal explosions nearby (/ch healNear)
         default: op

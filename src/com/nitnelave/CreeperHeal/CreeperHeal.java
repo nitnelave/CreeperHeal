@@ -1216,9 +1216,12 @@ public class CreeperHeal extends JavaPlugin {
 				String owner = creeperTrap.getTrapOwner(block);
 				if(owner == null) {
 					double cost = creeperTrap.getTrapFee(p);
+					if(checkPermissions(p, true, "trap.bypass.fee"))
+						cost = 0;
 					if(playerHasEnough(p, cost))
 					{
-						if(creeperTrap.createTrap(block.getLocation(), p.getName()))
+						boolean bypassMaxTraps = checkPermissions(p, true, "trap.bypass.maxTraps");
+						if(creeperTrap.createTrap(block.getLocation(), p.getName(), bypassMaxTraps))
 						{
 							finePlayer(p, cost);
 							if(cost == 0)
