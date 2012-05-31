@@ -22,7 +22,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class CreeperConfig
 {
 
-	//private final static String[] world_config_nodes4 = {"Creepers", "TNT", "Ghast", "Magical", "Fire", "restrict-blocks", "restrict-list", "replace-all-tnt", "replace-above-limit-only", "replace-limit", "block-enderman-pickup", "dragons", "repair-time"}; //list of properties for the world config
 	protected final Logger log = Logger.getLogger("Minecraft");            //to output messages to the console/log
 	private final static String[] STRING_BOOLEAN_OPTIONS = {"true", "false", "time"};
 
@@ -34,7 +33,7 @@ public class CreeperConfig
 	protected boolean dropReplacedBlocks, blockPerBlock, teleportOnSuffocate, dropDestroyedBlocks, crackDestroyedBricks,
 	lockette, replaceAllChests, replaceProtectedChests, overwriteBlocks, preventBlockFall, lightweightMode, opEnforce, logWarnings;
 
-	protected String /*chestProtection,*/ alias;		//no, lwc or lockette
+	protected String alias;		//no, lwc or lockette
 	protected double configVersion;
 
 	private CreeperHeal plugin;
@@ -52,8 +51,6 @@ public class CreeperConfig
 		if (!new File(getDataFolder().toString()).exists() ) {		//create the /CreeperHeal folder
 			new File(getDataFolder().toString()).mkdir();
 		}
-
-		//File yml = new File(getDataFolder()+"/config.yml");
 
 		if (!yml.exists()) {
 			log.warning("[CreeperHeal] Config file not found, creating default.");
@@ -138,19 +135,11 @@ public class CreeperConfig
 			boolean fire = !getStringBoolean(name + ".Fire", "true").equalsIgnoreCase("false");
 			boolean ghast = !getStringBoolean(name + ".Ghast", "true").equalsIgnoreCase("false");
 			boolean magical = !getStringBoolean(name + ".Magical", "false" ).equalsIgnoreCase("false");
-			boolean replace_tnt = getBoolean(name + ".replace-all-tnt", false);
 			boolean replaceAbove = getBoolean(name + ".replace-above-limit-only", false);
 			int replaceLimit = getInt(name + ".replace-limit", 64);
 			boolean enderman = getBoolean(name + ".block-enderman-pickup", false);
 			boolean dragons = !getStringBoolean(name + ".dragons", "false").equalsIgnoreCase("false");
 			int wRepairTime = getInt(name + ".repair-time", -1);
-
-			String restrict_blocks;
-			restrict_blocks = configFile.getString(name + ".restrict-blocks", "false");
-			if(!restrict_blocks.equalsIgnoreCase("false") && !restrict_blocks.equalsIgnoreCase("whitelist") && !restrict_blocks.equalsIgnoreCase("blacklist")) {
-				log.warning("[CreeperHeal] Wrong value for " + name + ".restrict-blocks field. Defaulting to false.");
-				restrict_blocks = "false";
-			}
 
 			ArrayList<BlockId> restrict_list  = new ArrayList<BlockId>();
 			try{
@@ -166,7 +155,7 @@ public class CreeperConfig
 				restrict_list.add(new BlockId(0));
 			}
 
-			returnValue = new WorldConfig(name, creeper, tnt, ghast, dragons, magical, fire, enderman, replace_tnt, replaceAbove, replaceLimit, restrict_blocks, restrict_list, wRepairTime);
+			returnValue = new WorldConfig(name, creeper, tnt, ghast, dragons, magical, fire, enderman, replaceAbove, replaceLimit, restrict_list, wRepairTime);
 			world_config.put(name, returnValue);
 			return returnValue;
 		}
@@ -175,7 +164,7 @@ public class CreeperConfig
 	}
 
 	public void load(){            //reads the config
-		log_info("Loading config",1);
+		log_info("Loading config",2);
 		try
 		{
 			configFile.load(new File(getDataFolder()+"/config.yml"));
@@ -349,87 +338,6 @@ public class CreeperConfig
 	}
 
 
-	/*public WorldConfig loadWorld(String name) {      //loads the world (for example, the first we need it)
-
-		WorldConfig returnValue = world_config.get(name);   
-
-		if(returnValue == null){
-			log_info("Loading world: "+name, 2);
-			boolean creeper = getBoolean(name + ".replace.Creepers", true);
-			boolean tnt = getBoolean(name + ".replace.TNT", true);
-			boolean ghast = getBoolean(name + ".replace.Ghast", true);
-			boolean dragons = getBoolean(name + ".replace.Dragons", false);
-			boolean magical = getBoolean(name + ".replace.Magical", false);
-			boolean fire = getBoolean(name + ".replace.Fire", true);
-			boolean enderman = getBoolean(name + ".replace.Enderman", false);
-
-			String restrictBlocks = configFile.getString(name + ".replace.use-restrict-list", "false");
-			if(!restrictBlocks.equalsIgnoreCase("false") && !restrictBlocks.equalsIgnoreCase("whitelist") && !restrictBlocks.equalsIgnoreCase("blacklist")) {
-				log.warning("[CreeperHeal] Wrong value for use-restrict-list field for world " + name + ". Defaulting to false.");
-				restrictBlocks = "false";
-			}
-
-			ArrayList<BlockId> restrictList  = new ArrayList<BlockId>();
-			try{
-				String tmp_str1 = configFile.getString(name + ".replace.restrict-list", "0");
-				String[] split = tmp_str1.split(",");
-				if(split!=null){        //split the list into single strings of integer
-					for(String elem : split) {
-						restrictList.add(new BlockId(elem));
-					}
-				}
-			}
-			catch (NumberFormatException e) {
-				log.warning("[CreeperHeal] Wrong values for restrict-list field for world " + name);
-				restrictList.clear();
-				restrictList.add(new BlockId(0));
-			}
-
-			boolean replaceTNT = getBoolean(name + ".replace.replace-all-TNT-blocks", false);
-			boolean replaceAbove = getBoolean(name + ".replace.replace-above-limit-only", false);
-			int replaceLimit = getInt(name + ".replace.replace-limit", 64);
-			int repairTime = getInt(name + ".replace.repair-time-of-day", -1);
-			boolean preventFireSpread = getBoolean(name + ".grief.prevent-fire-spread.fire", false);
-			boolean preventFireLava = getBoolean(name + ".grief.prevent-fire-spread.lava", false);
-			boolean blockLava = getBoolean(name + ".grief.block.lava", false);
-			boolean warnLava = getBoolean(name + ".grief.warn.lava", false);
-			boolean blockTNT = getBoolean(name + ".grief.block.TNT", false);
-			boolean warnTNT = getBoolean(name + ".grief.warn.TNT", false);
-			boolean blockIgnite = getBoolean(name + ".grief.block.flint-and-steel", false);
-			boolean warnIgnite = getBoolean(name + ".grief.warn.flint-and-steel", false);
-			boolean blockBlackList = getBoolean(name + ".grief.block.blacklist", false);
-			boolean warnBlackList = getBoolean(name + ".grief.warn.blacklist", false);
-			boolean blockSpawnEggs = getBoolean(name + ".grief.block.spawn-eggs", false);
-			boolean warnSpawnEggs = getBoolean(name + ".grief.warn.spawn-eggs", false);
-			boolean blockPvP = getBoolean(name + "grief.block.PvP", false);
-			boolean warnPvP = getBoolean(name + "grief.warn.PvP", false);
-
-			ArrayList<BlockId> placeList  = new ArrayList<BlockId>();
-			try{
-				String tmp_str1 = configFile.getString(name + ".grief.blacklist", "");
-				String[] split = tmp_str1.split(",");
-				if(split!=null){        //split the list into single strings of integer
-					for(String elem : split) {
-						placeList.add(new BlockId(elem));
-					}
-				}
-			}
-			catch (NumberFormatException e) {
-				log.warning("[CreeperHeal] Wrong values for restrict-list field for world " + name);
-				placeList.clear();
-				placeList.add(new BlockId(0));
-			}
-
-			returnValue = new WorldConfig(name, creeper, tnt, ghast, dragons, magical, fire, enderman, replaceTNT, replaceAbove, replaceLimit, 
-					restrictBlocks, restrictList, repairTime, blockLava, blockTNT, blockIgnite, blockBlackList, blockSpawnEggs, blockPvP, 
-					warnLava, warnTNT, warnIgnite, warnBlackList, warnSpawnEggs, warnPvP, preventFireSpread, preventFireLava, placeList);
-
-			world_config.put(name, returnValue);
-			return returnValue;
-		}
-
-		return returnValue;
-	}*/
 
 	private String getStringBoolean(String path, String defaultValue)
 	{
@@ -470,7 +378,6 @@ public class CreeperConfig
 	{
 		try {
 			file.createNewFile();
-			boolean success = false;
 			InputStream templateIn = plugin.getResource("config.yml");
 			OutputStream outStream = new FileOutputStream(file);
 
@@ -484,9 +391,7 @@ public class CreeperConfig
 			templateIn.close();
 			outStream.flush();
 			outStream.close();
-			if (success) 
-				log.info("[CreeperHeal] Default config created");
-			log.warning("[CreeperHeal] Failed to create file: config.yml");
+			log.info("[CreeperHeal] Default config created");
 
 		} catch (Exception e) {
 			log.warning("[CreeperHeal] Failed to create file: config.yml");

@@ -66,26 +66,6 @@ public class WorldConfig {
 		placeList = new ArrayList<BlockId>();
 	}
 
-	/*
-	@SuppressWarnings("unchecked")
-	public ArrayList<Object> getConfig() {
-		String blocklist = "";
-		for(BlockId block : blockList)
-			blocklist += block.toString() + ", ";
-
-		blocklist = blocklist.substring(0, blocklist.length() - 2);
-
-		String placelist = "";
-		for(BlockId block : placeList)
-			placelist += block.toString() + ", ";
-
-		placelist = placelist.substring(0, placelist.length() - 2);
-
-		return new ArrayList<Object>(Arrays.asList(creepers, tnt, ghast, dragons, magical, fire, enderman, replaceTNT, replaceAbove,
-				replaceLimit, restrictBlocks, blocklist, repairTime, blockLava, blockTNT, blockIgnite, blockBlackList, blockSpawnEggs, blockPvP,
-				warnLava, warnTNT, warnIgnite, warnBlackList, warnSpawnEggs, warnPvP, preventFireSpread, preventFireLava, placelist));
-	}
-*/
 
 
 	public String getName() {
@@ -109,7 +89,6 @@ public class WorldConfig {
 
 	public void load() throws FileNotFoundException, IOException, InvalidConfigurationException
 	{
-		log.info("Loaded World " + name);
 		File configFile = new File(pluginFolder.getPath() + "/" + name + ".yml");
 		if(!configFile.exists())
 			configFile.createNewFile();
@@ -124,14 +103,8 @@ public class WorldConfig {
 		magical = getBoolean("replace.Magical", false);
 		fire = getBoolean("replace.Fire", true);
 		enderman = getBoolean("replace.Enderman", true);
-		//replaceTNT = getBoolean("replace.replace-all-TNT-blocks", false);
 		replaceAbove = getBoolean("replace.replace-above-limit-only", false);
 		replaceLimit = getInt("replace.replace-limit", 64);
-		/*restrictBlocks = config.getString("replace.use-restrict-list", "false");
-		if(!restrictBlocks.equalsIgnoreCase("false") && !restrictBlocks.equalsIgnoreCase("whitelist") && !restrictBlocks.equalsIgnoreCase("blacklist")) {
-			log.warning("[CreeperHeal] Wrong value for use-restrict-list field for world " + name + ". Defaulting to false.");
-			restrictBlocks = "false";
-		}*/
 		blockList = loadList("replace.restrict-list");
 		repairTime = getInt("replace.repair-time-of-day", -1);
 		blockLava = getBoolean("grief.block.lava", false);
@@ -162,10 +135,8 @@ public class WorldConfig {
 		set("replace.Magical", magical);
 		set("replace.Fire", fire);
 		set("replace.Enderman", enderman);
-		//set("replace.replace-all-TNT-blocks", replaceTNT);
 		set("replace.replace-above-limit-only", replaceAbove);
 		set("replace.replace-limit", replaceLimit);
-		//set("replace.use-restrict-list", restrictBlocks);
 		set("replace.restrict-list", formatList(blockList));
 		set("replace.repair-time-of-day", repairTime);
 		set("grief.block.lava", blockLava);
