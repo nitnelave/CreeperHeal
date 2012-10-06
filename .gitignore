@@ -1,12 +1,21 @@
 *.class
 
+
 # Package Files #
+
 *.war
+
 *.ear
+
 
 .settings/*
 
+
 .classpath
+
 .project
+
 *.jardesc
+
 bin/*
+lib/*

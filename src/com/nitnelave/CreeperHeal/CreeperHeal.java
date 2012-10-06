@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -102,8 +103,8 @@ public class CreeperHeal extends JavaPlugin {
 	protected Map<BlockState, Date> preventUpdate = Collections.synchronizedMap(new HashMap<BlockState, Date>());
 	protected Map<Location, Date> fireList = Collections.synchronizedMap(new HashMap<Location, Date>());
 	protected Map<Location, Date> preventBlockFall = Collections.synchronizedMap(new HashMap<Location, Date>());
-	protected List<CreeperBurntBlock> burntList = Collections.synchronizedList(new ArrayList<CreeperBurntBlock>());
-	protected List<CreeperExplosion> explosionList = Collections.synchronizedList(new ArrayList<CreeperExplosion>());
+	protected LinkedList<CreeperBurntBlock> burntList = new LinkedList<CreeperBurntBlock>();
+	protected LinkedList<CreeperExplosion> explosionList = new LinkedList<CreeperExplosion>();
 	protected List<CreeperPlayer> warnList = new ArrayList<CreeperPlayer>(); 
 
 	/**
