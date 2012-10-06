@@ -115,6 +115,8 @@ public class CreeperUtils
 					break;
 				case SOUTH:
 					break;
+				default:
+					break;
 			}
 			loc.add(i, 1-art.getBlockHeight(), j);
 		}
@@ -134,6 +136,8 @@ public class CreeperUtils
 						loc.add(0, 0, -1);
 						break;
 					case SOUTH:
+						break;
+					default:
 						break;
 				}
 			}
