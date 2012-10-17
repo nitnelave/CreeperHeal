@@ -6,10 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -141,7 +141,7 @@ public class CreeperConfig
 			boolean dragons = !getStringBoolean(name + ".dragons", "false").equalsIgnoreCase("false");
 			int wRepairTime = getInt(name + ".repair-time", -1);
 
-			ArrayList<BlockId> restrict_list  = new ArrayList<BlockId>();
+			TreeSet<BlockId> restrict_list  = new TreeSet<BlockId>(new BlockIdComparator());
 			try{
 				String tmp_str1 = configFile.getString(name + ".restrict-list", "").trim();
 				String[] split = tmp_str1.split(",");

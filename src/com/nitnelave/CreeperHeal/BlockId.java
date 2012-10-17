@@ -73,12 +73,12 @@ public class BlockId {
 			return block.data == data;
 		}
 		else {
-			return true;
+			return !hasData;
 		}
 	}
 	
 	@Override
 	public int hashCode(){
-		return 37*id;
+		return id*32 + data + (hasData?16:0);
 	}
 }
