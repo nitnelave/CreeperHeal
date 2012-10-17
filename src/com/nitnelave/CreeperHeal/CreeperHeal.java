@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -15,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -67,12 +67,12 @@ public class CreeperHeal extends JavaPlugin {
 	 */
 
 
-	protected final static ArrayList<Integer> blocks_physics = new ArrayList<Integer>(Arrays.asList(12,13,88));                        //sand gravel, soulsand fall
-	protected final static ArrayList<Integer> blocks_dependent_down = new ArrayList<Integer>(Arrays.asList(6,26,27,28,31,32,37,38,39,40,55,59,63,64,66,70,71,72,78,93,94,104,105,115));
-	protected final static ArrayList<Integer> blocks_dependent = new ArrayList<Integer>(Arrays.asList(6,26,27,28,31,32,37,38,39,40,50,55,59,63,64,65,66,68,69,70,71,72,75,76,77,78,93,94,96,104,105,106,115));
-	protected final static ArrayList<Integer> blocks_non_solid = new ArrayList<Integer>(Arrays.asList(0,6,8,9,26,27,28,30,31,37,38,39,40, 50,55,59,63,64,65,66,68,69,70,71,72,75,76,77,78,83,90,93,94,96));   //the player can breathe
-	private final static ArrayList<Integer> empty_blocks = new ArrayList<Integer>(Arrays.asList(0,8,9,10,11, 51, 78));
-	public static HashSet<Byte> transparent_blocks = null;			//blocks that you can aim through while creating a trap.
+	protected final static Set<Integer> blocks_physics = CreeperUtils.createFinalHashSet(12,13,88);                        //sand gravel, soulsand fall
+	protected final static Set<Integer> blocks_dependent_down = CreeperUtils.createFinalHashSet(6,26,27,28,31,32,37,38,39,40,55,59,63,64,66,70,71,72,78,93,94,104,105,115);
+	protected final static Set<Integer> blocks_dependent = CreeperUtils.createFinalHashSet(6,26,27,28,31,32,37,38,39,40,50,55,59,63,64,65,66,68,69,70,71,72,75,76,77,78,93,94,96,104,105,106,115);
+	protected final static Set<Integer> blocks_non_solid = CreeperUtils.createFinalHashSet(0,6,8,9,26,27,28,30,31,37,38,39,40, 50,55,59,63,64,65,66,68,69,70,71,72,75,76,77,78,83,90,93,94,96);   //the player can breathe
+	private final static Set<Integer> empty_blocks = CreeperUtils.createFinalHashSet(0,8,9,10,11, 51, 78);
+	public static HashSet<Byte> transparent_blocks;			//blocks that you can aim through while creating a trap.
 
 	/**
 	 * Static constructor.
@@ -98,14 +98,14 @@ public class CreeperHeal extends JavaPlugin {
 	private Map<Location, String[]> signText = Collections.synchronizedMap(new HashMap<Location, String[]>());                    //stores the signs text
 	private Map<Location, Byte> noteBlock = Collections.synchronizedMap(new HashMap<Location, Byte>());								//stores the note blocks' notes
 	private Map<Location, String> mobSpawner = Collections.synchronizedMap(new HashMap<Location, String>());						//stores the mob spawners' type
-	private List<CreeperPainting> paintings = Collections.synchronizedList(new ArrayList<CreeperPainting>());					//paintings to be replaced
+	private List<CreeperPainting> paintings = Collections.synchronizedList(new LinkedList<CreeperPainting>());					//paintings to be replaced
 	private Map<Location, BlockState> toReplace = Collections.synchronizedMap(new HashMap<Location,BlockState>());		//blocks to be replaced immediately after an explosion
 	protected Map<BlockState, Date> preventUpdate = Collections.synchronizedMap(new HashMap<BlockState, Date>());
 	protected Map<Location, Date> fireList = Collections.synchronizedMap(new HashMap<Location, Date>());
 	protected Map<Location, Date> preventBlockFall = Collections.synchronizedMap(new HashMap<Location, Date>());
-	protected LinkedList<CreeperBurntBlock> burntList = new LinkedList<CreeperBurntBlock>();
-	protected LinkedList<CreeperExplosion> explosionList = new LinkedList<CreeperExplosion>();
-	protected List<CreeperPlayer> warnList = new ArrayList<CreeperPlayer>(); 
+	protected List<CreeperBurntBlock> burntList = Collections.synchronizedList(new LinkedList<CreeperBurntBlock>());
+	protected List<CreeperExplosion> explosionList = Collections.synchronizedList(new LinkedList<CreeperExplosion>());
+	protected List<CreeperPlayer> warnList = Collections.synchronizedList(new LinkedList<CreeperPlayer>()); 
 
 	/**
 	 * Handlers for misc. plugins
@@ -354,9 +354,9 @@ public class CreeperHeal extends JavaPlugin {
 		//record the list of blocks of an explosion, from bottom to top
 		Date now = new Date();
 
-		List<BlockState> listState = new ArrayList<BlockState>();        //the list of blockstate we'll be keeping afterward
+		List<BlockState> listState = new LinkedList<BlockState>();        //the list of blockstate we'll be keeping afterward
 		WorldConfig world = loadWorld(location.getWorld());
-		List<Block> to_add = new ArrayList<Block>();
+		List<Block> to_add = new LinkedList<Block>();
 
 
 		for(Block block : list)     //cycle through the blocks declared destroyed
