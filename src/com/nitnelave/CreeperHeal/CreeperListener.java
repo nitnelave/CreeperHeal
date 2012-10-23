@@ -35,6 +35,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
 
+
 public class CreeperListener implements Listener{
 
 	private static CreeperHeal plugin;
@@ -51,6 +52,10 @@ public class CreeperListener implements Listener{
 			return;
 
 		WorldConfig world = getWorld(event.getLocation().getWorld());
+		
+		if (plugin.getFactionHandler().shouldIgnore(event.blockList(), world)) {
+			return;
+		}
 
 		Entity entity = event.getEntity();
 		if(CreeperUtils.shouldReplace(entity, world))

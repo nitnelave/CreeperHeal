@@ -14,13 +14,14 @@ public class WorldConfig {
 
 	public boolean enderman, replaceAbove, blockLava, blockTNT, blockIgnite, blockBlackList, 
 	blockSpawnEggs, blockPvP, warnLava, warnTNT, warnIgnite, warnBlackList, warnSpawnEggs, warnPvP, preventFireSpread, preventFireLava,
-	creepers, tnt, fire, ghast, magical, dragons;
+	creepers, tnt, fire, ghast, magical, dragons, ignoreFactionsWilderness;
 	public String name;
 	public int repairTime, replaceLimit;
 	public ArrayList<BlockId> blockList = new ArrayList<BlockId>(), placeList = new ArrayList<BlockId>();
 	private File pluginFolder;
 	private YamlConfiguration config;
 	protected final Logger log = Logger.getLogger("Minecraft");            //to output messages to the console/log
+
 
 
 
@@ -35,8 +36,9 @@ public class WorldConfig {
 		else
 		{
 			creepers = tnt = ghast = fire = true;
-			magical = dragons = replaceAbove = enderman = blockLava = blockTNT = blockIgnite = blockBlackList = blockSpawnEggs = blockPvP= 
-					warnLava = warnTNT = warnIgnite = warnBlackList = warnSpawnEggs = warnPvP = preventFireSpread = preventFireLava = false;
+			magical = dragons = replaceAbove = enderman = blockLava = blockTNT = blockIgnite = blockBlackList = blockSpawnEggs = blockPvP = 
+					warnLava = warnTNT = warnIgnite = warnBlackList = warnSpawnEggs = warnPvP = preventFireSpread = preventFireLava =
+					ignoreFactionsWilderness = false;
 			replaceLimit = 60;
 			repairTime = -1;
 			blockList = new ArrayList<BlockId>();        //sample whitelist
@@ -62,7 +64,8 @@ public class WorldConfig {
 		blockList = (ArrayList<BlockId>) l[9];
 		repairTime = (Integer) l[10];
 		blockLava = blockTNT = blockIgnite = blockBlackList = blockSpawnEggs = blockPvP = warnLava = 
-		warnTNT = warnIgnite = warnBlackList = warnSpawnEggs = warnPvP = preventFireSpread = preventFireLava = false;
+		warnTNT = warnIgnite = warnBlackList = warnSpawnEggs = warnPvP = preventFireSpread = preventFireLava =
+		ignoreFactionsWilderness = false;
 		placeList = new ArrayList<BlockId>();
 	}
 
@@ -122,7 +125,7 @@ public class WorldConfig {
 		preventFireSpread = getBoolean("grief.prevent-fire-spread.fire", false);
 		preventFireLava = getBoolean("grief.prevent-fire-spread.lava", false);
 		placeList = loadList("grief.blacklist"); 
-
+		ignoreFactionsWilderness = getBoolean("replace.ignore-factions-wilderness", false);
 		
 	}
 	
@@ -154,7 +157,7 @@ public class WorldConfig {
 		set("grief.prevent-fire-spread.fire", preventFireSpread);
 		set("grief.prevent-fire-spread.lava", preventFireLava);
 		set("grief.blacklist", formatList(placeList)); 
-		
+		set("replace.ignore-factions-wilderness", ignoreFactionsWilderness);
 		config.save(pluginFolder.getPath() + "/" + name + ".yml");
 	}
 
