@@ -127,6 +127,7 @@ public class CreeperHeal extends JavaPlugin {
 	private CreeperEconomy cEconomy;
 	private CreeperLog warningLog;
 	protected CreeperMessenger messenger;
+	private FactionHandler factionHandler;
 
 
 
@@ -236,6 +237,10 @@ public class CreeperHeal extends JavaPlugin {
 			 log_info("Successfully hooked in CreeperTrap", 0);
 		 }
 
+		 factionHandler = new FactionHandler(pm);
+		 if (factionHandler.isFactionsEnabled()) {
+			 log_info("Successfully hooked in Factions",0);
+		 }
 
 		 pm.registerEvents(listener, this);
 
@@ -1389,6 +1394,10 @@ public class CreeperHeal extends JavaPlugin {
 	public void refund(Player p, double amount) throws VaultNotDetectedException, TransactionFailedException
 	{
 		cEconomy.refundPlayer(p, amount); 
+	}
+
+	public FactionHandler getFactionHandler() {
+		return factionHandler;
 	}
 
 

@@ -58,6 +58,8 @@ world:
 #Minecraft time of the day at which everything should be healed (-1 to deactivate)
 #Sunrise is around 23000, noon 6000, sunset 13000, and midnight 18000. Day (zombies burning) starts at 0.
     repair-time-of-day: -1
+#Do not regenerate if Factions plugin enabled and explosion completely happens in Wilderness
+    ignore-factions-wilderness: false
 #
 #Grief prevention part
 #
