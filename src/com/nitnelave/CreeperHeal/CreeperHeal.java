@@ -372,7 +372,7 @@ public class CreeperHeal extends JavaPlugin {
 			byte data = block.getData();
 			if(/*(world.restrictBlocks.equalsIgnoreCase("whitelist") && world.blockList.contains(new BlockId(type_id, data))
 					|| (world.restrictBlocks.equalsIgnoreCase("blacklist") && !world.blockList.contains(new BlockId(type_id, data))
-							|| world.restrictBlocks.equalsIgnoreCase("false")))*/!world.blockList.contains(new BlockId(type_id, data)))       
+							|| world.restrictBlocks.equalsIgnoreCase("false")))*/!world.blockList.contains(type_id))       
 				//if the block is to be replaced
 			{
 
