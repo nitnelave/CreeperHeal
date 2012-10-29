@@ -17,7 +17,8 @@ public class WorldConfig {
 	creepers, tnt, fire, ghast, magical, dragons, ignoreFactionsWilderness;
 	public String name;
 	public int repairTime, replaceLimit;
-	public ArrayList<BlockId> blockList = new ArrayList<BlockId>(), placeList = new ArrayList<BlockId>();
+	public ArrayList<Integer> blockList = new ArrayList<Integer>();
+	public ArrayList<BlockId>placeList = new ArrayList<BlockId>();
 	private File pluginFolder;
 	private YamlConfiguration config;
 	protected final Logger log = Logger.getLogger("Minecraft");            //to output messages to the console/log
@@ -41,10 +42,10 @@ public class WorldConfig {
 					ignoreFactionsWilderness = false;
 			replaceLimit = 60;
 			repairTime = -1;
-			blockList = new ArrayList<BlockId>();        //sample whitelist
+			blockList = new ArrayList<Integer>();        //sample whitelist
 			int[] tmp_list = { 1,2,3,9,11,12,13,14,15,16,17,18,21,24,31,32,37,38,39,40,48,49,56,73,79,81,82,86,87,88,89 };
 			for(int k : tmp_list)
-				blockList.add(new BlockId(k));
+				blockList.add(k);
 		}
 	}
 
@@ -61,7 +62,7 @@ public class WorldConfig {
 		enderman = (Boolean) l[6];
 		replaceAbove = (Boolean) l[7];
 		replaceLimit = (Integer) l[8]; 
-		blockList = (ArrayList<BlockId>) l[9];
+		blockList = (ArrayList<Integer>) l[9];
 		repairTime = (Integer) l[10];
 		blockLava = blockTNT = blockIgnite = blockBlackList = blockSpawnEggs = blockPvP = warnLava = 
 		warnTNT = warnIgnite = warnBlackList = warnSpawnEggs = warnPvP = preventFireSpread = preventFireLava =
@@ -82,6 +83,16 @@ public class WorldConfig {
 			blocklist += block.toString() + ", ";
 
 		return blocklist.substring(0, blocklist.length() - 2);
+
+	}
+	
+	public String formatNumberList(ArrayList<Integer> list)
+	{
+		String blocklist = "";
+		for(int block : list)
+			blocklist += block + ",";
+
+		return blocklist;
 
 	}
 
@@ -108,7 +119,7 @@ public class WorldConfig {
 		enderman = getBoolean("replace.Enderman", true);
 		replaceAbove = getBoolean("replace.replace-above-limit-only", false);
 		replaceLimit = getInt("replace.replace-limit", 64);
-		blockList = loadList("replace.restrict-list");
+		blockList = loadNumberList("replace.restrict-list");
 		repairTime = getInt("replace.repair-time-of-day", -1);
 		blockLava = getBoolean("grief.block.lava", false);
 		blockTNT = getBoolean("grief.block.TNT", false);
@@ -140,7 +151,7 @@ public class WorldConfig {
 		set("replace.Enderman", enderman);
 		set("replace.replace-above-limit-only", replaceAbove);
 		set("replace.replace-limit", replaceLimit);
-		set("replace.restrict-list", formatList(blockList));
+		set("replace.restrict-list", formatNumberList(blockList));
 		set("replace.repair-time-of-day", repairTime);
 		set("grief.block.lava", blockLava);
 		set("grief.block.TNT", blockTNT);
@@ -166,6 +177,22 @@ public class WorldConfig {
 		config.set(path, value);
     }
 
+	private ArrayList<Integer> loadNumberList(String path) {
+		ArrayList<Integer> returnList  = new ArrayList<Integer>();
+		try{
+			String tmp_str1 = config.getString(path, "").trim();
+			String[] split = tmp_str1.split(",");
+			for(String elem : split) {
+				returnList.add(Integer.parseInt(elem));
+			}
+		}
+		catch (NumberFormatException e) {
+			log.warning("[CreeperHeal] Wrong values for " + path + " field for world " + name);
+			returnList.clear();
+		}
+		return returnList;
+	}
+	
 	private ArrayList<BlockId> loadList(String path)
     {
 		ArrayList<BlockId> returnList  = new ArrayList<BlockId>();
