@@ -7,6 +7,9 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
+import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
+import com.nitnelave.CreeperHeal.utils.CreeperUtils;
+
 public class CreeperHandler
 {
 
@@ -25,12 +28,12 @@ public class CreeperHandler
 	
 	public void recordBlocks(List<Block> list, Location location)
 	{
-		plugin.recordBlocks(list, location);
+		ExplodedBlockManager.recordBlocks(list, location);
 	}
 
 	public void recordBlocks(EntityExplodeEvent event) 
 	{
-		plugin.recordBlocks(event, plugin.loadWorld(event.getLocation().getWorld()));
+		ExplodedBlockManager.recordBlocks(event, plugin.loadWorld(event.getLocation().getWorld()));
 	}
 	
 	public boolean shouldRemoveLWCProtection(Entity entity)
