@@ -108,7 +108,7 @@ public class ExplodedBlockManager {
 
 	public static void recordBlocks(List<Block> list, Location location)
 	{
-		recordBlocks(list, location, null, plugin.loadWorld(location.getWorld()).isRepairTimed());
+		recordBlocks(list, location, null, CreeperConfig.loadWorld(location.getWorld()).isRepairTimed());
 	}
 
 	protected static void recordBlocks(List<Block> list, Location location, Entity entity, boolean timed)
@@ -118,7 +118,7 @@ public class ExplodedBlockManager {
 		//record the list of blocks of an explosion, from bottom to top
 		Date now = new Date();
 		List<BlockState> listState = new LinkedList<BlockState>();        //the list of blockstate we'll be keeping afterward
-		WorldConfig world = plugin.loadWorld(location.getWorld());
+		WorldConfig world = CreeperConfig.loadWorld(location.getWorld());
 		List<Block> to_add = new LinkedList<Block>();
 
 		for(Block block : list)     //cycle through the blocks declared destroyed

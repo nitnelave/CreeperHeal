@@ -4,17 +4,17 @@ import java.util.Date;
 
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Painting;
+import org.bukkit.entity.Hanging;
 
 public class CreeperPainting
 {
-	private Painting painting;
+	private Hanging hanging;
 	private Date date;
 	private boolean fire;
 	
-	public CreeperPainting(Painting p, Date d, boolean f)
+	public CreeperPainting(Hanging p, Date d, boolean f)
 	{
-		painting = p;
+		hanging = p;
 		date = d;
 		fire = f;
 	}
@@ -34,19 +34,19 @@ public class CreeperPainting
 		return fire;
 	}
 	
-	public Painting getPainting()
+	public Hanging getHanging()
 	{
-		return painting;
+		return hanging;
 	}
 	
 	public World getWorld()
 	{
-		return painting.getWorld();
+		return hanging.getWorld();
 	}
 	
 	public Location getLocation()
 	{
-		return painting.getLocation();
+		return hanging.getLocation();
 	}
 	
 	public void postPone(int delay)
