@@ -112,10 +112,10 @@ public class BurntBlockManager {
 			{
 				World w = block.getWorld();
 				Location blockLoc = block.getLocation();
-				synchronized(plugin.getFireList())
+				synchronized(CreeperHeal.getFireList())
 				{
 					boolean far = true;
-					for(Location loc : plugin.getFireList().keySet())
+					for(Location loc : CreeperHeal.getFireList().keySet())
 					{
 						if(loc.getWorld() == w)
 						{
@@ -127,7 +127,7 @@ public class BurntBlockManager {
 						}
 					}
 					if(far)
-						plugin.getFireList().put(block.getLocation(), now);
+						CreeperHeal.getFireList().put(block.getLocation(), now);
 				}
 				block.setTypeIdAndData(0, (byte)0, false);
 			}

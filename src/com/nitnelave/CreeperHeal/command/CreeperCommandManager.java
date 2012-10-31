@@ -44,10 +44,10 @@ public class CreeperCommandManager implements CommandExecutor
 			{		//if the last argument was not a world
 
 				if(sender instanceof Player)
-					current_world = plugin.loadWorld( ((Player)sender).getWorld());		//get the player's world
+					current_world = CreeperConfig.loadWorld( ((Player)sender).getWorld());		//get the player's world
 				else
 				{										//or get the first (normal) world
-					current_world = plugin.loadWorld(plugin.getServer().getWorlds().get(0));
+					current_world = CreeperConfig.loadWorld(plugin.getServer().getWorlds().get(0));
 					sender.sendMessage("No world specified, defaulting to " + current_world.getName());
 					allWorlds = true;
 				}
@@ -264,7 +264,7 @@ public class CreeperCommandManager implements CommandExecutor
 		{
 			for(World w : plugin.getServer().getWorlds())
 			{
-				WorldConfig wc = plugin.loadWorld(w);
+				WorldConfig wc = CreeperConfig.loadWorld(w);
 				forceCmd(args, msg, sender, wc, false);
 			}
 		}

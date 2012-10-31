@@ -8,37 +8,30 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
+import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperUtils;
 
 public class CreeperHandler
-{
-
-	private CreeperHeal plugin;
+{	
 	
-	
-	public CreeperHandler(CreeperHeal instance)
-    {
-	   plugin = instance;
-    }
-	
-	public void recordBlocks(List<Block> list)
+	public static void recordBlocks(List<Block> list)
 	{
 		recordBlocks(list, list.get(0).getLocation());
 	}
 	
-	public void recordBlocks(List<Block> list, Location location)
+	public static void recordBlocks(List<Block> list, Location location)
 	{
 		ExplodedBlockManager.recordBlocks(list, location);
 	}
 
-	public void recordBlocks(EntityExplodeEvent event) 
+	public static void recordBlocks(EntityExplodeEvent event) 
 	{
-		ExplodedBlockManager.recordBlocks(event, plugin.loadWorld(event.getLocation().getWorld()));
+		ExplodedBlockManager.recordBlocks(event, CreeperConfig.loadWorld(event.getLocation().getWorld()));
 	}
 	
-	public boolean shouldRemoveLWCProtection(Entity entity)
+	public static boolean shouldRemoveLWCProtection(Entity entity)
 	{
-		return !CreeperUtils.shouldReplace(entity, plugin.loadWorld(entity.getWorld()));
+		return !CreeperUtils.shouldReplace(entity, CreeperConfig.loadWorld(entity.getWorld()));
 	}
 
 }

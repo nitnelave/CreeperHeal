@@ -18,8 +18,11 @@ import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Fireball;
+import org.bukkit.entity.Hanging;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Painting;
 import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.Wither;
 import org.bukkit.material.Rails;
 
 import com.nitnelave.CreeperHeal.block.BlockManager;
@@ -105,12 +108,16 @@ public class CreeperUtils
 
 	}
 
-	public static Location getAttachingBlock(Location loc, Art art, BlockFace face)
+	public static Location getAttachingBlock(Location loc, Hanging hanging, BlockFace face)
 	{
-		if(art.getBlockHeight() + art.getBlockWidth() < 5)
+		if(hanging instanceof Painting)
 		{
-			int i = 0, j = 0, k = art.getBlockWidth() - 1;
-			switch(face){
+			Art art = ((Painting) hanging).getArt();
+
+			if(art.getBlockHeight() + art.getBlockWidth() < 5)
+			{
+				int i = 0, j = 0, k = art.getBlockWidth() - 1;
+				switch(face){
 				case EAST:
 					break;
 				case WEST:
@@ -123,16 +130,16 @@ public class CreeperUtils
 					break;
 				default:
 					break;
+				}
+				loc.add(i, 1-art.getBlockHeight(), j);
 			}
-			loc.add(i, 1-art.getBlockHeight(), j);
-		}
-		else 
-		{ 
-			if(art.getBlockHeight() == 4)
-				loc.add(0, -1, 0);
-			if(art.getBlockWidth() == 4)
-			{
-				switch(face){
+			else 
+			{ 
+				if(art.getBlockHeight() == 4)
+					loc.add(0, -1, 0);
+				if(art.getBlockWidth() == 4)
+				{
+					switch(face){
 					case EAST:
 						break;
 					case WEST:
@@ -145,7 +152,28 @@ public class CreeperUtils
 						break;
 					default:
 						break;
+					}
 				}
+			}
+		}
+		else
+		{
+			switch(face) {
+			case EAST:
+				loc.add(1, 0, 0);
+				break;
+			case NORTH:
+				loc.add(0, 0, -1);
+				break;
+			case SOUTH:
+				loc.add(0, 0, 1);
+				break;
+			case WEST:
+				loc.add(-1, 0, 0);
+				break;
+			default:
+				break;
+
 			}
 		}
 
@@ -174,7 +202,7 @@ public class CreeperUtils
 		System.arraycopy(second, 0, result, first.length, second.length);
 		return result;
 	}
-	
+
 	public static boolean shouldReplace(Entity entity, WorldConfig world)
 	{
 
@@ -191,6 +219,7 @@ public class CreeperUtils
 				return world.creepers;
 			}
 			else if(entity instanceof TNTPrimed)                 //tnt -- it checks if it's a trap.
+			{
 				if(world.replaceAbove){
 					if(isAbove(entity, world.replaceLimit))
 						return world.tnt;
@@ -198,8 +227,9 @@ public class CreeperUtils
 				}
 				else
 					return world.tnt;
-
+			}
 			else if(entity instanceof Fireball)         //fireballs (shot by ghasts)
+			{
 				if(world.replaceAbove){
 					if(isAbove(entity, world.replaceLimit))
 						return world.ghast;
@@ -207,22 +237,19 @@ public class CreeperUtils
 				}
 				else
 					return world.ghast;
-
+			}
 			else if(entity instanceof EnderDragon)
-
 				return world.dragons;
-
-			else if(!(entity instanceof Creeper) && !(entity instanceof TNTPrimed) && !(entity instanceof Fireball) && !(entity instanceof EnderDragon))        //none of it, another custom entity
-
+			else if(entity instanceof Wither)
+				return world.wither;
+			else        //none of it, another custom entity
 				return world.magical;
 
 		}
 		else
 			return world.magical;
-
-		return false;
 	}
-	
+
 	public static BlockFace rotateCClockWise(BlockFace face)
 	{
 		if(face == BlockFace.EAST)
@@ -236,7 +263,7 @@ public class CreeperUtils
 		else
 			return face;
 	}
-	
+
 
 	public static BlockFace getAttachingFace(BlockState block_up)
 	{
@@ -244,119 +271,125 @@ public class CreeperUtils
 			return BlockFace.DOWN;
 		else
 			switch(block_up.getTypeId()){
-				case 50:
-				case 75:
-				case 76:
-					switch(block_up.getRawData()){
-						case 1: return BlockFace.EAST;
-						case 2: return BlockFace.WEST;
-						case 3: return BlockFace.SOUTH;
-						case 4: return BlockFace.NORTH;
-						default: return BlockFace.UP;
-					}
-				case 65:
-				case 68:
-					switch(block_up.getRawData()){
-						case 5: return BlockFace.EAST;
-						case 4: return BlockFace.WEST;
-						case 3: return BlockFace.SOUTH;
-						case 2: return BlockFace.NORTH;
-						default: return BlockFace.UP;
-					}
-				case 69:
-				case 77:
-					switch(block_up.getRawData()> 8?block_up.getRawData() - 8:block_up.getRawData()){
-						case 1: return BlockFace.EAST;
-						case 2: return BlockFace.WEST;
-						case 3: return BlockFace.SOUTH;
-						case 4: return BlockFace.NORTH;
-						default: return BlockFace.UP;
-					}
-				case 96:
-					switch(block_up.getRawData()> 4?block_up.getRawData() - 4:block_up.getRawData()){
-						case 4: return BlockFace.EAST;
-						case 3: return BlockFace.WEST;
-						case 2: return BlockFace.SOUTH;
-						case 1: return BlockFace.NORTH;
-						default: return BlockFace.UP;
-					}
-				default:
+			case 50:
+			case 75:
+			case 76:
+				switch(block_up.getRawData()){
+				case 1: return BlockFace.EAST;
+				case 2: return BlockFace.WEST;
+				case 3: return BlockFace.SOUTH;
+				case 4: return BlockFace.NORTH;
+				default: return BlockFace.UP;
+				}
+			case 65:
+			case 68:
+				switch(block_up.getRawData()){
+				case 5: return BlockFace.EAST;
+				case 4: return BlockFace.WEST;
+				case 3: return BlockFace.SOUTH;
+				case 2: return BlockFace.NORTH;
+				default: return BlockFace.UP;
+				}
+			case 69:
+			case 77:
+				switch(block_up.getRawData()> 8?block_up.getRawData() - 8:block_up.getRawData()){
+				case 1: return BlockFace.EAST;
+				case 2: return BlockFace.WEST;
+				case 3: return BlockFace.SOUTH;
+				case 4: return BlockFace.NORTH;
+				default: return BlockFace.UP;
+				}
+			case 96:
+				switch(block_up.getRawData()> 4?block_up.getRawData() - 4:block_up.getRawData()){
+				case 4: return BlockFace.EAST;
+				case 3: return BlockFace.WEST;
+				case 2: return BlockFace.SOUTH;
+				case 1: return BlockFace.NORTH;
+				default: return BlockFace.UP;
+				}
+			default:
 
-					return BlockFace.SELF;
+				return BlockFace.SELF;
 			}
 	}
 
 
 	public static String getEntityNameFromId(byte data)
-    {
-	    switch (data)
-	    {
-	    	case 50:
-	    		return "Creeper";
-	    	case 51:
-	    		return "Skeleton";
-	    	case 52:
-	    		return "Spider";
-	    	case 53:
-	    		return "Giant";
-	    	case 54:
-	    		return "Zombie";
-	    	case 55:
-	    		return "Slime";
-	    	case 56:
-	    		return "Ghast";
-	    	case 57:
-	    		return "Zombie Pigman";
-	    	case 58:
-	    		return "Enderman";
-	    	case 59:
-	    		return "Cave Spider";
-	    	case 60:
-	    		return "Silverfish";
-	    	case 61:
-	    		return "Blaze";
-	    	case 62:
-	    		return "Magma Cube";
-	    	case 63:
-	    		return "EnderDragon";
-	    	case 90:
-	    		return "Pig";
-	    	case 91:
-	    		return "Sheep";
-	    	case 92:
-	    		return "Cow";
-	    	case 93:
-	    		return "Chicken";
-	    	case 94:
-	    		return "Squid";
-	    	case 95:
-	    		return "Wolf";
-	    	case 96:
-	    		return "Mooshroom";
-	    	case 97:
-	    		return "Snow Golem";
-	    	case 98:
-	    		return "Ocelot";
-	    	case 99:
-	    		return "Iron Golem";
-	    	case 120:
-	    		return "Villager";
-	    	default:
-	    		return "Non-living Entity";
-	    }
-    }
-	
+	{
+		switch (data)
+		{
+		case 50:
+			return "Creeper";
+		case 51:
+			return "Skeleton";
+		case 52:
+			return "Spider";
+		case 53:
+			return "Giant";
+		case 54:
+			return "Zombie";
+		case 55:
+			return "Slime";
+		case 56:
+			return "Ghast";
+		case 57:
+			return "Zombie Pigman";
+		case 58:
+			return "Enderman";
+		case 59:
+			return "Cave Spider";
+		case 60:
+			return "Silverfish";
+		case 61:
+			return "Blaze";
+		case 62:
+			return "Magma Cube";
+		case 63:
+			return "EnderDragon";
+		case 64:
+			return "Wither";
+		case 65:
+			return "Bat";
+		case 66:
+			return "Witch";
+		case 90:
+			return "Pig";
+		case 91:
+			return "Sheep";
+		case 92:
+			return "Cow";
+		case 93:
+			return "Chicken";
+		case 94:
+			return "Squid";
+		case 95:
+			return "Wolf";
+		case 96:
+			return "Mooshroom";
+		case 97:
+			return "Snow Golem";
+		case 98:
+			return "Ocelot";
+		case 99:
+			return "Iron Golem";
+		case 120:
+			return "Villager";
+		default:
+			return "Non-living Entity";
+		}
+	}
+
 	@SafeVarargs
 	public static <T> Set<T> createFinalHashSet(T... elements) {
 		Set<T> set = new HashSet<T>(elements.length);
-		
+
 		for(T element : elements)
 			set.add(element);
-		
+
 		return Collections.unmodifiableSet(set);
 	}
-	
-/*
+
+	/*
 	public static String getWarnMessage(WarningCause cause, String offender,
             String world, boolean blocked, String material)
     {
@@ -376,7 +409,7 @@ public class CreeperUtils
 				return null;
 		}
     }
-	
+
 	public static String getPlayerWarnMessage(WarningCause cause, String world, boolean blocked, String material)
 	{
 		switch(cause)
@@ -395,5 +428,5 @@ public class CreeperUtils
 				return null;
 		}
 	}
-*/
+	 */
 }

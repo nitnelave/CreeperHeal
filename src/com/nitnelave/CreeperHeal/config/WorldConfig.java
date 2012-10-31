@@ -16,7 +16,7 @@ public class WorldConfig {
 
 	public boolean enderman, replaceAbove, blockLava, blockTNT, blockIgnite, blockBlackList, 
 	blockSpawnEggs, blockPvP, warnLava, warnTNT, warnIgnite, warnBlackList, warnSpawnEggs, warnPvP, preventFireSpread, preventFireLava,
-	creepers, tnt, fire, ghast, magical, dragons, ignoreFactionsWilderness, whiteBlockList, whitePlaceList;
+	creepers, tnt, fire, ghast, magical, dragons, wither, spawnWither, ignoreFactionsWilderness, whiteBlockList, whitePlaceList;
 	public String name;
 	public int repairTime, replaceLimit;
 	public HashSet<BlockId> blockList = new HashSet<BlockId>(), placeList = new HashSet<BlockId>();
@@ -37,7 +37,7 @@ public class WorldConfig {
 		}
 		else
 		{
-			creepers = tnt = ghast = fire = true;
+			creepers = tnt = ghast = fire = wither = spawnWither = true;
 			magical = dragons = replaceAbove = enderman = blockLava = blockTNT = blockIgnite = blockBlackList = blockSpawnEggs = blockPvP = 
 					warnLava = warnTNT = warnIgnite = warnBlackList = warnSpawnEggs = warnPvP = preventFireSpread = preventFireLava =
 					ignoreFactionsWilderness = whiteBlockList = whitePlaceList = false;
@@ -68,6 +68,7 @@ public class WorldConfig {
 		blockLava = blockTNT = blockIgnite = blockBlackList = blockSpawnEggs = blockPvP = warnLava = 
 				warnTNT = warnIgnite = warnBlackList = warnSpawnEggs = warnPvP = preventFireSpread = preventFireLava =
 				ignoreFactionsWilderness = whiteBlockList = whitePlaceList = false;
+		wither = spawnWither = true;
 		placeList = new HashSet<BlockId>();
 	}
 
@@ -130,6 +131,8 @@ public class WorldConfig {
 		ignoreFactionsWilderness = getBoolean("replace.ignore-factions-wilderness", false);
 		whiteBlockList = getBoolean("replace.white-restric-list", false);
 		whitePlaceList = getBoolean("grief.white-list", false);
+		wither = getBoolean("replace.Wither", true);
+		spawnWither = getBoolean("grief.allow-spawn-wither", true);
 		
 	}
 	
@@ -148,6 +151,7 @@ public class WorldConfig {
 		set("replace.white-block-list", whiteBlockList);
 		set("replace.repair-time-of-day", repairTime);
 		set("replace.ignore-factions-wilderness", ignoreFactionsWilderness);
+		set("replace.Wither", wither);
 		set("grief.block.lava", blockLava);
 		set("grief.block.TNT", blockTNT);
 		set("grief.block.flint-and-steel", blockIgnite);
@@ -164,6 +168,7 @@ public class WorldConfig {
 		set("grief.prevent-fire-spread.lava", preventFireLava);
 		set("grief.blacklist", formatList(placeList)); 
 		set("grief.white-list", whitePlaceList);
+		set("grief.allow-spawn-wither", spawnWither);
 		config.save(pluginFolder.getPath() + "/" + name + ".yml");
 	}
 

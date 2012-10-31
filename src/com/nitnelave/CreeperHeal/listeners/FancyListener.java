@@ -57,9 +57,9 @@ public class FancyListener implements Listener
 					}
 				}
 			}
-			synchronized(plugin.getFireList())
+			synchronized(CreeperHeal.getFireList())
 			{
-				for(Location loc : plugin.getFireList().keySet())
+				for(Location loc : CreeperHeal.getFireList().keySet())
 				{
 					if(loc.getWorld() == w)
 					{
@@ -135,7 +135,7 @@ public class FancyListener implements Listener
 				}
 			}
 		}
-		for(Location loc : plugin.getFireList().keySet())
+		for(Location loc : CreeperHeal.getFireList().keySet())
 		{
 			if(loc.getWorld() == w)
 			{

@@ -66,7 +66,7 @@ public class BlockManager {
 	public BlockManager(CreeperHeal plugin) {
 		BlockManager.plugin = plugin;
 		new CreeperDrop(plugin);
-		new PaintingsManager(plugin);
+		new PaintingsManager();
 		new ChestManager(toReplace);
 		new BurntBlockManager(plugin);
 		new ExplodedBlockManager(toReplace, plugin);

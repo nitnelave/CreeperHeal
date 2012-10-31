@@ -16,7 +16,6 @@ import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandMap;
@@ -38,6 +37,7 @@ import com.nitnelave.CreeperHeal.command.CreeperCommandManager;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.economy.CreeperEconomy;
+import com.nitnelave.CreeperHeal.listeners.CreeperBlockListener;
 import com.nitnelave.CreeperHeal.listeners.CreeperListener;
 import com.nitnelave.CreeperHeal.listeners.FancyListener;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
@@ -59,10 +59,11 @@ public class CreeperHeal extends JavaPlugin {
 
 	protected CreeperListener listener = new CreeperListener(this);                        //listener for explosions
 	private FancyListener fancyListener = new FancyListener(this);
+	private CreeperBlockListener blockListener = new CreeperBlockListener();
 
 	
 	private Map<BlockState, Date> preventUpdate = Collections.synchronizedMap(new HashMap<BlockState, Date>());
-	private Map<Location, Date> fireList = Collections.synchronizedMap(new HashMap<Location, Date>());
+	private static Map<Location, Date> fireList = Collections.synchronizedMap(new HashMap<Location, Date>());
 	private Map<Location, Date> preventBlockFall = Collections.synchronizedMap(new HashMap<Location, Date>());
 	private static List<CreeperPlayer> warnList = Collections.synchronizedList(new LinkedList<CreeperPlayer>()); 
 
@@ -83,7 +84,7 @@ public class CreeperHeal extends JavaPlugin {
 	private CreeperPermissionManager perms;
 	private static CreeperLog warningLog;
 	protected CreeperMessenger messenger;
-	private FactionHandler factionHandler;
+	private static FactionHandler factionHandler;
 	private BlockManager blockManager;
 
 
@@ -117,7 +118,7 @@ public class CreeperHeal extends JavaPlugin {
 		commandMap.register("_", com);
 
 
-		handler = new CreeperHandler(this);
+		handler = new CreeperHandler();
 
 		new CreeperEconomy(this);
 
@@ -203,6 +204,7 @@ public class CreeperHeal extends JavaPlugin {
 		}
 
 		pm.registerEvents(listener, this);
+		pm.registerEvents(blockListener, this);
 
 		if(!(CreeperConfig.lightweightMode))
 			pm.registerEvents(fancyListener, this);
@@ -318,16 +320,7 @@ public class CreeperHeal extends JavaPlugin {
 	}
 
 
-	public WorldConfig loadWorld(World w)
-	{
-		return CreeperConfig.loadWorld(w);
-	}
-
-
-
-
-
-
+	@Deprecated //Use static acces instead
 	public CreeperHandler getHandler()
 	{
 		return handler;
@@ -355,7 +348,7 @@ public class CreeperHeal extends JavaPlugin {
 
 	}
 
-	public FactionHandler getFactionHandler() {
+	public static FactionHandler getFactionHandler() {
 		return factionHandler;
 	}
 
@@ -376,7 +369,7 @@ public class CreeperHeal extends JavaPlugin {
 		return preventUpdate;
 	}
 
-	public Map<Location, Date> getFireList() {
+	public static Map<Location, Date> getFireList() {
 		return fireList;
 	}
 
