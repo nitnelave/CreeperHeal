@@ -25,10 +25,9 @@ public class ChestManager {
 	private static Map<Location, ItemStack[]> chestContents = Collections.synchronizedMap(new HashMap<Location, ItemStack[]>());         //stores the chests contents
 	private static Map<Location, BlockState> toReplace;
 	
-	public ChestManager(Map<Location, BlockState> toReplace) {
+	public static void setToReplaceMap(Map<Location, BlockState> toReplace) {
 		ChestManager.toReplace = toReplace;
 	}
-	
 
 	protected static void storeChest(Block block, List<BlockState> listState) {
 		Inventory inv = ((InventoryHolder) block.getState()).getInventory();

@@ -78,12 +78,10 @@ public class CreeperHeal extends JavaPlugin {
 
 
 	public final static Logger log = Logger.getLogger("Minecraft");            //to output messages to the console/log
-	protected CreeperConfig config;
 	protected CreeperCommandManager commandExecutor;
 	private CreeperHandler handler;
 	private CreeperPermissionManager perms;
 	private static CreeperLog warningLog;
-	protected CreeperMessenger messenger;
 	private static FactionHandler factionHandler;
 	private BlockManager blockManager;
 
@@ -92,11 +90,11 @@ public class CreeperHeal extends JavaPlugin {
 
 	public void onEnable() {
 
-		config = new CreeperConfig(this);
+		new CreeperConfig(this);
 		
 		blockManager = new BlockManager(this);
 
-		messenger = new CreeperMessenger(getDataFolder(), this);
+		new CreeperMessenger(getDataFolder(), this);
 
 		commandExecutor = new CreeperCommandManager(this);
 		perms = new CreeperPermissionManager(this);
@@ -115,7 +113,8 @@ public class CreeperHeal extends JavaPlugin {
 		String[] aliases = {"CreeperHeal",CreeperConfig.alias};
 		CreeperCommand com = new CreeperCommand(aliases, "", "", commandExecutor);
 
-		commandMap.register("_", com);
+		if(commandMap != null)
+			commandMap.register("_", com);
 
 
 		handler = new CreeperHandler();

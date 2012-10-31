@@ -38,7 +38,9 @@ public class CreeperMessenger
 			if(!messageFile.exists())
 				createNewFile(messageFile);
 
-			prop.load(new FileInputStream(messageFile));
+			FileInputStream input = new FileInputStream(messageFile);
+			prop.load(input);
+			input.close();
 		}
 		catch (FileNotFoundException e)
 		{

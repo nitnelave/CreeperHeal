@@ -80,10 +80,14 @@ public class WorldConfig {
 
 	public String formatList(HashSet<BlockId> list)
 	{
-		String blocklist = "";
+		StringBuilder b = new StringBuilder();
 		for(BlockId block : list)
-			blocklist += block.toString() + ", ";
+		{
+			b.append(block.toString());
+			b.append(", ");
+		}
 
+		String blocklist = b.toString();
 		return blocklist.substring(0, blocklist.length() - 2);
 
 	}
