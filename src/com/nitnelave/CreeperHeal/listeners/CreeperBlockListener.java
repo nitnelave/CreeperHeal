@@ -46,12 +46,12 @@ public class CreeperBlockListener implements Listener{
 	public void onHangingBreak(HangingBreakEvent e)
 	{
 		CreeperHeal.log.info("Hanging removed because of" + e.getCause());
-		if(e.isCancelled() || !(e.getEntity() instanceof Hanging))
+		if(e.isCancelled())
 			return;
 		
 
 		Hanging h = (Hanging) e.getEntity();
-		if(e.getCause() == RemoveCause.ENTITY)
+		if(e instanceof HangingBreakByEntityEvent)
 		{
 			HangingBreakByEntityEvent event = (HangingBreakByEntityEvent)e;
 			Entity remover = event.getRemover();
@@ -124,7 +124,7 @@ public class CreeperBlockListener implements Listener{
 			}
 		}
 	}
-
+ 
 
 
 

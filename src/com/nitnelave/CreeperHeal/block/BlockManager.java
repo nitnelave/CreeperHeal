@@ -64,14 +64,20 @@ public class BlockManager {
 	private static CreeperHeal plugin;
 
 	public BlockManager(CreeperHeal plugin) {
-		BlockManager.plugin = plugin;
+		setBlockManagerPlugin(plugin);
 		new CreeperDrop(plugin);
 		new PaintingsManager();
-		new ChestManager(toReplace);
-		new BurntBlockManager(plugin);
+		ChestManager.setToReplaceMap(toReplace);
+		BurntBlockManager.setBurntBlockManagerPlugin(plugin);
 		new ExplodedBlockManager(toReplace, plugin);
 	}
 	
+
+
+	private void setBlockManagerPlugin(CreeperHeal plugin) {
+		BlockManager.plugin = plugin;
+	}
+
 
 
 	protected static void dropBlock(BlockState blockState)
@@ -143,7 +149,7 @@ public class BlockManager {
 		else if(CreeperConfig.overwriteBlocks && !empty_blocks.contains(block_id) && CreeperConfig.dropDestroyedBlocks)
 			dropBlock(block.getState());
 
-		if(blocks_dependent.contains(blockState) && blockState.getBlock().getRelative(CreeperUtils.getAttachingFace(blockState).getOppositeFace()).getType() == Material.AIR)
+		if(blocks_dependent.contains(blockState.getTypeId()) && blockState.getBlock().getRelative(CreeperUtils.getAttachingFace(blockState).getOppositeFace()).getType() == Material.AIR)
 			delay_replacement(blockState);
 		else
 		{

@@ -347,7 +347,7 @@ public class CreeperConfig
 
 	private static String getStringBoolean(String path, String defaultValue)
 	{
-		String result = new String();
+		String result = "";
 		try{
 			result = configFile.getString(path, defaultValue).trim().toLowerCase();
 		}
@@ -382,10 +382,11 @@ public class CreeperConfig
 
 	private static void copyJarConfig(File file)
 	{
+		OutputStream outStream = null;
 		try {
 			file.createNewFile();
 			InputStream templateIn = plugin.getResource("config.yml");
-			OutputStream outStream = new FileOutputStream(file);
+			outStream = new FileOutputStream(file);
 
 			int read = 0;
 			byte[] bytes = new byte[1024];
@@ -402,6 +403,15 @@ public class CreeperConfig
 		} catch (Exception e) {
 			log.warning("[CreeperHeal] Failed to create file: config.yml");
 			log.warning(e.getMessage());
+			if(outStream != null)
+			{
+				try {
+					outStream.flush();
+					outStream.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
 		}
 	}
 

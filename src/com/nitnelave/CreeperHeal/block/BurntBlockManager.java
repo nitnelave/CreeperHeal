@@ -24,10 +24,9 @@ public class BurntBlockManager {
 	private static CreeperHeal plugin;
 	private static List<CreeperBurntBlock> burntList = Collections.synchronizedList(new LinkedList<CreeperBurntBlock>());
 
-	public BurntBlockManager(CreeperHeal plugin) {
+	public static void setBurntBlockManagerPlugin(CreeperHeal plugin) {
 		BurntBlockManager.plugin = plugin;
 	}
-
 
 
 	public static void forceReplaceBurnt(long since, WorldConfig world_config) {     //replace all of the burnt blocks since "since"
