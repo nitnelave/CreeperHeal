@@ -177,10 +177,9 @@ public class ExplodedBlockManager {
 			return;
 		}
 
-		if(world.whiteBlockList ^ !world.blockList.contains(new BlockId(type_id, data)))
+		if(world.whiteBlockList ^ !isBlocklisted(world, type_id, data))
 			//if the block is to be replaced
 		{
-
 			if(CreeperConfig.replaceProtectedChests && CreeperHeal.isProtected(block))
 				toReplace.put(block.getLocation(), block.getState());    //replace immediately
 
@@ -295,6 +294,27 @@ public class ExplodedBlockManager {
 
 	public static List<CreeperExplosion> getExplosionList() {
 		return explosionList;
+	}
+
+
+	/**
+	 * Check if a block with given type and data is blocklisted, ignoring
+	 * data if the blocklist entry lacks a data value
+	 */
+	private static boolean isBlocklisted(WorldConfig world, int type_id,
+			byte data) {
+		for(BlockId entry: world.blockList) {
+			if (entry.id == type_id) {
+				if (entry.hasData) {
+					if (entry.data == data) {
+						return true;
+					}
+				} else {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 

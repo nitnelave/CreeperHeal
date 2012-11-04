@@ -45,10 +45,10 @@ public class CreeperBlockListener implements Listener{
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onHangingBreak(HangingBreakEvent e)
 	{
-		CreeperHeal.log.info("Hanging removed because of" + e.getCause());
 		if(e.isCancelled())
 			return;
 		
+		CreeperHeal.log.info("Hanging removed because of" + e.getCause());
 
 		Hanging h = (Hanging) e.getEntity();
 		if(e instanceof HangingBreakByEntityEvent)
@@ -224,7 +224,7 @@ public class CreeperBlockListener implements Listener{
 		
 		WorldConfig world = CreeperConfig.loadWorld(event.getLocation().getWorld());
 		
-		if (CreeperHeal.getFactionHandler().shouldIgnore(event.getLocation(), world)) {
+		if (CreeperHeal.getFactionHandler().shouldIgnore(event.blockList(), world)) {
 			return;
 		}
 
