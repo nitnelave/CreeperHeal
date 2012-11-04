@@ -1,6 +1,8 @@
 package com.nitnelave.CreeperHeal.utils;
 
-import org.bukkit.Location;
+import java.util.List;
+
+import org.bukkit.block.Block;
 import org.bukkit.plugin.PluginManager;
 
 import com.massivecraft.factions.Board;
@@ -17,12 +19,17 @@ public class FactionHandler {
 		isFactionsEnabled = factions != null;
 	}
 	
-	public boolean shouldIgnore(Location location, WorldConfig world) {
+	public boolean shouldIgnore(List<Block> list, WorldConfig world) {
 		if (!isFactionsEnabled || !world.ignoreFactionsWilderness) {
 			return false;
 		}
 		
-		return Board.getFactionAt(new FLocation(location)).isNone();	//don't replace if in Wilderness
+		for(Block block: list) {
+			if (!Board.getFactionAt(new FLocation(block.getLocation())).isNone()) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public boolean isFactionsEnabled() {
