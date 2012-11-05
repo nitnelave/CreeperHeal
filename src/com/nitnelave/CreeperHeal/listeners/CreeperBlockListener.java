@@ -45,7 +45,7 @@ public class CreeperBlockListener implements Listener{
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onHangingBreak(HangingBreakEvent e)
 	{
-		CreeperHeal.log.info("Hanging removed because of" + e.getCause());
+		CreeperHeal.log.info("Hanging removed because of " + e.getCause());
 		if(e.isCancelled())
 			return;
 		
@@ -53,7 +53,7 @@ public class CreeperBlockListener implements Listener{
 		Hanging h = (Hanging) e.getEntity();
 		if(e instanceof HangingBreakByEntityEvent)
 		{
-			HangingBreakByEntityEvent event = (HangingBreakByEntityEvent)e;
+			HangingBreakByEntityEvent event = (HangingBreakByEntityEvent) e;
 			Entity remover = event.getRemover();
 			if(remover instanceof Creeper || remover instanceof TNTPrimed || remover instanceof Fireball || remover instanceof EnderDragon)
 			{
@@ -224,7 +224,7 @@ public class CreeperBlockListener implements Listener{
 		
 		WorldConfig world = CreeperConfig.loadWorld(event.getLocation().getWorld());
 		
-		if (CreeperHeal.getFactionHandler().shouldIgnore(event.getLocation(), world)) {
+		if (CreeperHeal.getFactionHandler().shouldIgnore(event.blockList(), world)) {
 			return;
 		}
 

@@ -123,6 +123,11 @@ public class ExplodedBlockManager {
 
 		for(Block block : list)     //cycle through the blocks declared destroyed
 			record(block, listState, world, to_add);
+		
+
+		if(CreeperConfig.explodeObsidian) 
+			checkForObsidian(location, listState);
+		
 
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable(){public void run() {BlockManager.replaceProtected();}});       //immediately replace the blocks marked for immediate replacement
 
@@ -162,6 +167,32 @@ public class ExplodedBlockManager {
 	}
 	
 	
+
+
+	private static void checkForObsidian(Location location, List<BlockState> listState) {
+		int radius = CreeperConfig.obsidianRadius;
+		double chance = ((float)CreeperConfig.obsidianChance) / 100;
+		World w = location.getWorld();
+		
+		Random r = new Random(System.currentTimeMillis());
+		
+		for(int i = location.getBlockX() - radius; i < location.getBlockX() + radius; i++) {
+			for(int j = Math.max(0, location.getBlockY() - radius); j < Math.min(w.getMaxHeight(), location.getBlockY() + radius); j++)
+			{
+				for(int k = location.getBlockZ() - radius; k < location.getBlockZ() + radius; k++) {
+					Location l = new Location(w, i, j, k);
+					if(l.distance(location) > radius)
+						continue;
+					Block b = w.getBlockAt(l);
+					if(b.getType() == Material.OBSIDIAN && r.nextDouble() < chance)
+					{
+						listState.add(b.getState());
+						b.setTypeIdAndData(0, (byte)0, false);
+					}
+				}
+			}
+		}
+	}
 
 
 	private static void record(Block block, List<BlockState> listState, WorldConfig world, List<Block> toAdd) {
