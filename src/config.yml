@@ -61,4 +61,9 @@ advanced:
   lightweight-mode: false
 # Prevents TNT and Creepers from detonating other TNT when set to true
   prevent-chain-reaction: false
+  obsidian:
+    #Explode obsidian blocks within (radius) blocks of an explosion, with a chance of (chance)%
+    explode: false
+    radius: 5
+    chance: 20
 config-version: 5.0

@@ -32,9 +32,9 @@ public class CreeperConfig
 	 * Config settings
 	 */
 
-	public static int waitBeforeHeal, logLevel, blockPerBlockInterval, waitBeforeHealBurnt, dropChance, distanceNear;
+	public static int waitBeforeHeal, logLevel, blockPerBlockInterval, waitBeforeHealBurnt, dropChance, distanceNear, obsidianChance, obsidianRadius;
 	public static boolean dropReplacedBlocks, blockPerBlock, teleportOnSuffocate, dropDestroyedBlocks, crackDestroyedBricks,
-		lockette, replaceAllChests, replaceProtectedChests, overwriteBlocks, preventBlockFall, lightweightMode, opEnforce, logWarnings, preventChainReaction;
+		lockette, replaceAllChests, replaceProtectedChests, overwriteBlocks, preventBlockFall, lightweightMode, opEnforce, logWarnings, preventChainReaction, explodeObsidian;
 
 	public static String alias;		//no, lwc or lockette
 	public static double configVersion;
@@ -97,6 +97,9 @@ public class CreeperConfig
 		configVersion = 5;
 		logWarnings = true;
 		preventChainReaction = false;
+		obsidianChance = 20;
+		obsidianRadius = 5;
+		explodeObsidian = false;
 		set("advanced.log-warnings", true);
 		set("config-version", 5);
 		try{
@@ -211,6 +214,9 @@ public class CreeperConfig
 			replaceAllChests = getBoolean("replacement.ignore-chests.all", false);
 			replaceProtectedChests = getBoolean("replacement.ignore-chests.public", false);
 			preventChainReaction = getBoolean("advanced.prevent-chain-reaction", false);
+			explodeObsidian = getBoolean("advanced.obsidian.explode", false);
+			obsidianRadius = getInt("advanced.obsidian.radius", 5);
+			obsidianChance = getInt("advanced.obsidian.chance", 20);
 
 		}
 
@@ -302,6 +308,9 @@ public class CreeperConfig
 		set("advanced.prevent-chain-reaction", preventChainReaction);
 		set("advanced.log-warnings", logWarnings);
 		set("config-version", configVersion);
+		set("advanced.obsidian.explode", explodeObsidian);
+		set("advanced.obsidian.radius", obsidianRadius);
+		set("advanced.obsidian.chance", obsidianChance);
 
 
 

@@ -196,7 +196,7 @@ public class CreeperTrapHandler {
 	}
 
 
-	public void refund(Player p, double amount) throws VaultNotDetectedException, TransactionFailedException
+	public static void refund(Player p, double amount) throws VaultNotDetectedException, TransactionFailedException
 	{
 		CreeperEconomy.refundPlayer(p, amount); 
 	}
