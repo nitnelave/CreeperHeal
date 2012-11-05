@@ -20,12 +20,16 @@ public class FactionHandler {
 	}
 	
 	public boolean shouldIgnore(List<Block> list, WorldConfig world) {
-		if (!isFactionsEnabled || !world.ignoreFactionsWilderness) {
+		if (!isFactionsEnabled)
 			return false;
-		}
+		
+		if(world.ignoreFactionsWilderness == world.ignoreFactionsTerritory)
+			return !(world.ignoreFactionsWilderness);
+		
+		boolean wild = world.ignoreFactionsWilderness;
 		
 		for(Block block : list) {
-			if(Board.getFactionAt(new FLocation(block.getLocation())).isNone())
+			if(wild == Board.getFactionAt(new FLocation(block.getLocation())).isNone())
 				return false;
 		}
 		return true;
