@@ -425,38 +425,7 @@ public class CreeperConfig
 	}
 	
 	private static void removeOldWorldConfig() {
-		set("world.replace.Creepers", null);
-		set("world.replace.TNT", null);
-		set("world.replace.Ghast", null);
-		set("world.replace.Dragons", null);
-		set("world.replace.Magical", null);
-		set("world.replace.Fire", null);
-		set("world.replace.Enderman", null);
-		set("world.replace.replace-above-limit-only", null);
-		set("world.replace.replace-limit", null);
-		set("world.replace.restrict-list", null);
-		set("world.replace.white-block-list", null);
-		set("world.replace.repair-time-of-day", null);
-		set("world.replace.factions.ignore-wilderness", null);
-		set("world.replace.factions.ignore-territory", null);
-		set("world.replace.Wither", null);
-		set("world.grief.block.lava", null);
-		set("world.grief.block.TNT", null);
-		set("world.grief.block.flint-and-steel", null);
-		set("world.grief.block.blacklist", null);
-		set("world.grief.block.spawn-eggs", null);
-		set("world.grief.block.PvP", null);
-		set("world.grief.warn.lava", null);
-		set("world.grief.warn.TNT", null);
-		set("world.grief.warn.flint-and-steel", null);
-		set("world.grief.warn.blacklist", null);
-		set("world.grief.warn.spawn-eggs", null);
-		set("world.grief.warn.PvP", null);
-		set("world.grief.prevent-fire-spread.fire", null);
-		set("world.grief.prevent-fire-spread.lava", null);
-		set("world.grief.blacklist", null); 
-		set("world.grief.white-list", null);
-		set("world.grief.allow-spawn-wither", null);
+		set("world", null);
 	}
 
 
