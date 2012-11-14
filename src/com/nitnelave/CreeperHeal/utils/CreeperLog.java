@@ -8,8 +8,8 @@ import java.util.logging.Logger;
 
 public class CreeperLog
 {
-	private File file;
-	protected final Logger log = Logger.getLogger("Minecraft");            //to output messages to the console/log
+	private static File file;
+	protected final static Logger log = Logger.getLogger("Minecraft");            //to output messages to the console/log
 
 	
 	public CreeperLog(File f)
@@ -17,7 +17,7 @@ public class CreeperLog
 		file = f;
 	}
 
-	public void record(String s)
+	public static void record(String s)
 	{
 		try{
 			// Create file 

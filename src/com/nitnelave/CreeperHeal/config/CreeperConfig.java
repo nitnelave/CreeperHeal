@@ -19,6 +19,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.block.BlockId;
+import com.nitnelave.CreeperHeal.utils.CreeperLog;
 
 
 
@@ -386,7 +387,10 @@ public class CreeperConfig
 	public static void log_info(String msg, int level)
 	{
 		if(level<=logLevel)
+		{
 			log.info("[CreeperHeal] "+msg);
+			CreeperLog.record(msg);
+		}
 	}
 
 	private static void copyJarConfig(File file)

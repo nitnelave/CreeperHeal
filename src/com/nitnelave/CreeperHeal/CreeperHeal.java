@@ -81,7 +81,6 @@ public class CreeperHeal extends JavaPlugin {
 	protected CreeperCommandManager commandExecutor;
 	private CreeperHandler handler;
 	private CreeperPermissionManager perms;
-	private static CreeperLog warningLog;
 	private static FactionHandler factionHandler;
 	private BlockManager blockManager;
 
@@ -136,7 +135,7 @@ public class CreeperHeal extends JavaPlugin {
 			log.log(Level.WARNING, e.getMessage());
 		}
 
-		warningLog = new CreeperLog(warningLogFile);
+		new CreeperLog(warningLogFile);
 
 
 
@@ -356,7 +355,7 @@ public class CreeperHeal extends JavaPlugin {
 		String message = CreeperMessenger.getMessage(cause, offender.getName(), offender.getWorld().getName(), blocked, material, false);
 		SimpleDateFormat f = new SimpleDateFormat("HH:mm:ss");
 		if(CreeperConfig.logWarnings)
-			warningLog.record("[" + f.format(new Date()) + "] " + ChatColor.stripColor(message));
+			CreeperLog.record("[" + f.format(new Date()) + "] " + ChatColor.stripColor(message));
 		message = ChatColor.RED + message;
 		offender.sendMessage(CreeperMessenger.getMessage(cause, offender.getName(), offender.getWorld().getName(), blocked, material, true));
 		for(CreeperPlayer cp : getWarnList())
