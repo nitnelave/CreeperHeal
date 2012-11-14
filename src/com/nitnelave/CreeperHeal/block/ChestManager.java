@@ -91,12 +91,12 @@ public class ChestManager {
 		if(block.getState() instanceof Chest)
 		{
 			CreeperChest d = scanForNeighborChest(block.getState());
-
+			Chest chest = (Chest) block.getState();
 			if(d != null)
 			{
-				Inventory i = ((InventoryHolder) block.getState()).getInventory();
+				Inventory i = chest.getInventory();
 				ItemStack[] both;
-				ItemStack[] otherInv = getOtherChestInventory(block.getState(), d.right);
+				ItemStack[] otherInv = getOtherChestInventory(chest, d.right);
 				if(otherInv == null)
 				{
 					CreeperHeal.log.warning("empty inventory");
@@ -110,19 +110,14 @@ public class ChestManager {
 						both = CreeperUtils.concat(newInv, otherInv);
 					i.setContents(both);
 				}
-				chestContents.remove(block.getLocation());
 			}
 			else
-			{
-				((InventoryHolder) block.getState()).getInventory().setContents( chestContents.get(block.getLocation()));
-				chestContents.remove(block.getLocation());
-			}
+				((InventoryHolder) block.getState()).getInventory().setContents(chestContents.get(block.getLocation()));
 		}
 		else
-		{
-			((InventoryHolder) block.getState()).getInventory().setContents( chestContents.get(new Location(block.getWorld(), block.getX(), block.getY(), block.getZ())));
-			chestContents.remove(block.getLocation());
-		}		
+			((InventoryHolder) block.getState()).getInventory().setContents(chestContents.get(new Location(block.getWorld(), block.getX(), block.getY(), block.getZ())));
+		chestContents.remove(block.getLocation());
+
 	}
 
 

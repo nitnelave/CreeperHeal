@@ -45,7 +45,7 @@ public class CreeperBlockListener implements Listener{
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onHangingBreak(HangingBreakEvent e)
 	{
-		CreeperHeal.log.info("Hanging removed because of " + e.getCause());
+		CreeperHeal.log_info("Hanging removed because of " + e.getCause(), 2);
 		if(e.isCancelled())
 			return;
 		
@@ -53,6 +53,7 @@ public class CreeperBlockListener implements Listener{
 		Hanging h = (Hanging) e.getEntity();
 		if(e instanceof HangingBreakByEntityEvent)
 		{
+			CreeperHeal.log_info("HanginBreakByEntityEvent", 2);
 			HangingBreakByEntityEvent event = (HangingBreakByEntityEvent) e;
 			Entity remover = event.getRemover();
 			if(remover instanceof Creeper || remover instanceof TNTPrimed || remover instanceof Fireball || remover instanceof EnderDragon)
@@ -72,6 +73,7 @@ public class CreeperBlockListener implements Listener{
 		}*/
 		else if(e.getCause() == RemoveCause.PHYSICS /*|| e.getCause() == RemoveCause.WATER*/)
 		{
+			CreeperHeal.log_info("Hanging removed because of physics", 2);
 			if(!CreeperConfig.lightweightMode)
 			{
 				Location paintLoc = h.getLocation();
@@ -123,6 +125,8 @@ public class CreeperBlockListener implements Listener{
 				}
 			}
 		}
+		else
+			CreeperHeal.log_info("Hanging removed for another reason", 2);
 	}
  
 
@@ -130,6 +134,7 @@ public class CreeperBlockListener implements Listener{
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockBurn(BlockBurnEvent event) {
+		CreeperHeal.log_info("BlockBurntEvent", 3);
 		if(event.isCancelled())
 			return;
 
@@ -219,15 +224,17 @@ public class CreeperBlockListener implements Listener{
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEntityExplode(EntityExplodeEvent event) {//explosion
+		CreeperHeal.log_info("EntityExplodeEvent", 3);
 		if(event.isCancelled())
 			return;
-		
+		CreeperHeal.log_info("explosion not cancelled", 3);
 		WorldConfig world = CreeperConfig.loadWorld(event.getLocation().getWorld());
 		
 		if (CreeperHeal.getFactionHandler().shouldIgnore(event.blockList(), world)) {
 			return;
 		}
 
+		CreeperHeal.log_info("faction handler says ok", 3);
 		Entity entity = event.getEntity();
 		if(CreeperUtils.shouldReplace(entity, world))
 			ExplodedBlockManager.recordBlocks(event, world);

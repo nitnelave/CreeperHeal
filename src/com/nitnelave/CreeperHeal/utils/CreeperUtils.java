@@ -379,7 +379,7 @@ public class CreeperUtils
 		}
 	}
 
-	@SafeVarargs
+	@SuppressWarnings("unchecked")
 	public static <T> Set<T> createFinalHashSet(T... elements) {
 		Set<T> set = new HashSet<T>(elements.length);
 
