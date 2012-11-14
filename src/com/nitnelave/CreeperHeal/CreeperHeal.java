@@ -90,12 +90,15 @@ public class CreeperHeal extends JavaPlugin {
 
 	public void onEnable() {
 
+		log_info("loading config...", 3);
 		new CreeperConfig(this);
+		log_info("config loaded", 3);
 		
 		blockManager = new BlockManager(this);
 
 		new CreeperMessenger(getDataFolder(), this);
 
+		log_info("registering command...", 3);
 		commandExecutor = new CreeperCommandManager(this);
 		perms = new CreeperPermissionManager(this);
 		CommandMap commandMap = null;
@@ -116,6 +119,7 @@ public class CreeperHeal extends JavaPlugin {
 		if(commandMap != null)
 			commandMap.register("_", com);
 
+		log_info("command registered", 3);
 
 		handler = new CreeperHandler();
 
@@ -139,6 +143,8 @@ public class CreeperHeal extends JavaPlugin {
 		/*
 		 * Recurrent tasks
 		 */
+		
+		log_info("starting tasks", 3);
 
 		int tmp_period = 20;        //register the task to go every "period" second if all at once
 		if(CreeperConfig.blockPerBlock)                    //or every "block_interval" ticks if block_per_block
@@ -161,9 +167,13 @@ public class CreeperHeal extends JavaPlugin {
 			}}, 200, 200) == -1)
 			log.warning("[CreeperHeal] Impossible to schedule the map-cleaning task. Map cleaning will not work");
 
+		log_info("tasks started", 3);
+		
 		/*
 		 * Connection with the other plugins
 		 */
+		
+		log_info("connectiong with other plugins", 3);
 
 		PluginManager pm = getServer().getPluginManager(); 
 
@@ -172,43 +182,51 @@ public class CreeperHeal extends JavaPlugin {
 		Plugin lwcPlugin = pm.getPlugin("LWC");
 		if(lwcPlugin != null) {
 			lwc = ((LWCPlugin) lwcPlugin).getLWC();
-			log_info("Successfully hooked in LWC",0);
+			log_info("Successfully hooked in LWC", 1);
 		}
 
 		Plugin lockettePlugin = pm.getPlugin("Lockette");
 		if(lockettePlugin!=null){
 			CreeperConfig.lockette  = true;
-			log_info("Successfully detected Lockette",0);
+			log_info("Successfully detected Lockette", 1);
 		}
 
 
 		Plugin mobArena = pm.getPlugin("MobArena");
 		if(mobArena != null) {
 			maHandler = new MobArenaHandler();
-			log_info("Successfully hooked in MobArena",0);
+			log_info("Successfully hooked in MobArena", 1);
 		}
 
 		Plugin cTrap = pm.getPlugin("CreeperTrap");
 		if(cTrap != null)
 		{
 			new CreeperTrapHandler(this, (CreeperTrap) cTrap);
-			log_info("Successfully hooked in CreeperTrap", 0);
+			log_info("Successfully hooked in CreeperTrap", 1);
 		}
 		else
 			new CreeperTrapHandler(this);
 
 		factionHandler = new FactionHandler(pm);
 		if (factionHandler.isFactionsEnabled()) {
-			log_info("Successfully hooked in Factions",0);
+			log_info("Successfully hooked in Factions", 1);
 		}
+		
+		log_info("conected", 3);
+		
+		log_info("loading listeners", 3);
 
 		pm.registerEvents(listener, this);
 		pm.registerEvents(blockListener, this);
 
 		if(!(CreeperConfig.lightweightMode))
 			pm.registerEvents(fancyListener, this);
+		
+		log_info("listeners loaded", 3);
 
 		populateWarnList();
+		
+		log_info("warning list populated", 3);
 
 	}
 
@@ -239,6 +257,7 @@ public class CreeperHeal extends JavaPlugin {
 
 	protected void cleanMaps()
 	{
+		log_info("maps cleaned", 3);
 		Date now = new Date();
 		Date delay = new Date(now.getTime() - 7500*CreeperConfig.waitBeforeHeal);
 		Iterator<Date> iter;

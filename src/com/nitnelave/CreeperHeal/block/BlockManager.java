@@ -51,7 +51,7 @@ public class BlockManager {
 		Byte[] elements = {0, 6, 8, 9, 10, 11, 18, 20, 26, 27, 28, 30, 31, 32, 37, 38, 39, 40, 44, 50, 51, 55, 59, 63, 65, 66, 68, 69, 70, 72, 75, 76, 77, 78, 83, 93, 94, 96, 101, 102, 104, 105, 106, 111, 115, 117};
 		transparent_blocks = new HashSet<Byte>(Arrays.asList(elements));
 	}
-	
+
 	/**
 	 * HashMaps
 	 */
@@ -71,7 +71,7 @@ public class BlockManager {
 		BurntBlockManager.setBurntBlockManagerPlugin(plugin);
 		new ExplodedBlockManager(toReplace, plugin);
 	}
-	
+
 
 
 	private void setBlockManagerPlugin(CreeperHeal plugin) {
@@ -113,8 +113,8 @@ public class BlockManager {
 		else if(blockState instanceof CreatureSpawner) 
 			mobSpawner.remove(loc);
 	}
-	
-	
+
+
 
 
 	protected static void replaceProtected() {         //replace the blocks that should be immediately replaced after an explosion
@@ -183,7 +183,7 @@ public class BlockManager {
 				/*Block tmp_block = block.getRelative(BlockFace.DOWN);
 				if(empty_blocks.contains(tmp_block.getTypeId()))
 				{
-					
+
 					BlockState tmpState = tmp_block.getState();
 					tmp_block.setTypeId(4, false);
 					blockState.update(true);
@@ -205,27 +205,31 @@ public class BlockManager {
 		else if(blockState instanceof Sign)                     //if it's a sign... no I'll let you guess
 			restoreSign(block);
 		else if(blockState instanceof NoteBlock) {
-			((NoteBlock)block.getState()).setRawNote( noteBlock.get(block.getLocation()));
+			if(block.getState() instanceof NoteBlock)
+				((NoteBlock)block.getState()).setRawNote(noteBlock.get(block.getLocation()));
 			noteBlock.remove(block.getLocation());
 		}
 		else if(blockState instanceof CreatureSpawner) {
-			((CreatureSpawner)block.getState()).setCreatureTypeByName( mobSpawner.get(block.getLocation()));
+			if(block.getState() instanceof CreatureSpawner)
+				((CreatureSpawner)block.getState()).setCreatureTypeByName(mobSpawner.get(block.getLocation()));
 			mobSpawner.remove(block.getLocation());
 		}
 
 	}
-	
+
 
 	private static void restoreSign(Block block) {
-		Sign state = (Sign) block.getState();
-		int k = 0;
+		if(block.getState() instanceof Sign)
+		{
+			Sign state = (Sign) block.getState();
+			int k = 0;
 
-		for(String line : signText.get(block.getLocation())) {
-			state.setLine(k++, line);
+			for(String line : signText.get(block.getLocation())) {
+				state.setLine(k++, line);
+			}
+			state.update(true);
 		}
-		state.update(true);
 		signText.remove(new Location(block.getWorld(), block.getX(), block.getY(), block.getZ()));
-		
 	}
 
 
@@ -250,7 +254,7 @@ public class BlockManager {
 
 
 	}
-	
+
 
 
 	protected static void check_player_one_block(Location loc) {      //get the living entities around to save thoses who are suffocating
