@@ -30,6 +30,7 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.utils.AddTrapRunnable;
 import com.nitnelave.CreeperHeal.utils.CreeperComparator;
+import com.nitnelave.CreeperHeal.utils.CreeperLog;
 
 public class ExplodedBlockManager {
 
@@ -113,7 +114,7 @@ public class ExplodedBlockManager {
 
 	protected static void recordBlocks(List<Block> list, Location location, Entity entity, boolean timed)
 	{
-		CreeperHeal.log_info("Explosion getting recorded...", 3);
+		CreeperLog.logInfo("Explosion getting recorded...", 3);
 		if(plugin.isInArena(location)) 
 			return;
 		//record the list of blocks of an explosion, from bottom to top
@@ -125,10 +126,10 @@ public class ExplodedBlockManager {
 		for(Block block : list)     //cycle through the blocks declared destroyed
 			record(block, listState, world, to_add);
 		
-		CreeperHeal.log_info("Blocks recorded. Number of blocks : " + listState.size(), 3);
+		CreeperLog.logInfo("Blocks recorded. Number of blocks : " + listState.size(), 3);
 		if(CreeperConfig.explodeObsidian) 
 			checkForObsidian(location, listState);
-		CreeperHeal.log_info("Obsidian checked. Number of blocks : " + listState.size(), 3);
+		CreeperLog.logInfo("Obsidian checked. Number of blocks : " + listState.size(), 3);
 
 
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable(){public void run() {BlockManager.replaceProtected();}});       //immediately replace the blocks marked for immediate replacement
@@ -149,7 +150,7 @@ public class ExplodedBlockManager {
 		for(BlockState block : tmp_array) 
 			listState.add(block);
 
-		CreeperHeal.log_info("List sorted. Number of blocks : " + listState.size(), 3);
+		CreeperLog.logInfo("List sorted. Number of blocks : " + listState.size(), 3);
 		CreeperExplosion cEx;
 		if(timed)
 			now = new Date(now.getTime() + 1200000);
@@ -157,7 +158,7 @@ public class ExplodedBlockManager {
 		cEx = new CreeperExplosion(now, listState, location);        //store in the global hashmap, with the time it happened as a key
 
 		explosionList.add(cEx);
-		CreeperHeal.log_info("Added explosion to the list", 3);
+		CreeperLog.logInfo("Added explosion to the list", 3);
 
 		if(entity instanceof TNTPrimed) 
 		{            //to replace the tnt that just exploded

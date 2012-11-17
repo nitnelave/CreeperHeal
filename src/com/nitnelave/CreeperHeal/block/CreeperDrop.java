@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
+import com.nitnelave.CreeperHeal.utils.CreeperLog;
 
 public class CreeperDrop
 {
@@ -35,16 +36,16 @@ public class CreeperDrop
 				createNewFile(file);
 			}
 			catch (IOException ex) {
-				CreeperHeal.log.warning("[CreeperHeal] Cannot create file "+file.getPath());
+				CreeperLog.warning("[CreeperHeal] Cannot create file "+file.getPath());
 			}
 		}
 		catch (IOException e)
 		{
-			CreeperHeal.log.warning("[CreeperHeal] Cannot load file "+file.getPath());
+			CreeperLog.warning("[CreeperHeal] Cannot load file "+file.getPath());
 		}
 		catch (InvalidConfigurationException e)
 		{
-			CreeperHeal.log.warning("[CreeperHeal] Invalid configuration file "+file.getPath());
+			CreeperLog.warning("[CreeperHeal] Invalid configuration file "+file.getPath());
 		}
 
 

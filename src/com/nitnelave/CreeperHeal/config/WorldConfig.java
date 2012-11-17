@@ -4,12 +4,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.logging.Logger;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.nitnelave.CreeperHeal.block.BlockId;
+import com.nitnelave.CreeperHeal.utils.CreeperLog;
 
 
 public class WorldConfig {
@@ -22,7 +22,6 @@ public class WorldConfig {
 	public HashSet<BlockId> blockList = new HashSet<BlockId>(), placeList = new HashSet<BlockId>();
 	private File pluginFolder;
 	private YamlConfiguration config;
-	protected final Logger log = Logger.getLogger("Minecraft");            //to output messages to the console/log
 
 
 
@@ -194,7 +193,7 @@ public class WorldConfig {
 			}
 		}
 		catch (NumberFormatException e) {
-			log.warning("[CreeperHeal] Wrong values for " + path + " field for world " + name);
+			CreeperLog.warning("[CreeperHeal] Wrong values for " + path + " field for world " + name);
 			returnList.clear();
 			returnList.add(new BlockId(0));
 		}
@@ -208,7 +207,7 @@ public class WorldConfig {
 			tmp = config.getInt(path, def);
 		}
 		catch(Exception e) {
-			log.warning("[CreeperHeal] Wrong value for " + path + " field in world " + name + ". Defaulting to " + Integer.toString(def));
+			CreeperLog.warning("[CreeperHeal] Wrong value for " + path + " field in world " + name + ". Defaulting to " + Integer.toString(def));
 			tmp = def;
 		}
 		return tmp;
@@ -221,7 +220,7 @@ public class WorldConfig {
 			tmp = config.getBoolean(path, def);
 		}
 		catch(Exception e) {
-			log.warning("[CreeperHeal] Wrong value for " + path + " field in world " + name + ". Defaulting to " + Boolean.toString(def));
+			CreeperLog.warning("[CreeperHeal] Wrong value for " + path + " field in world " + name + ". Defaulting to " + Boolean.toString(def));
 			tmp = def;
 		}
 		return tmp;
