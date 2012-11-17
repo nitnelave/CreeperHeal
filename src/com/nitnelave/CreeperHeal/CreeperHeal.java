@@ -163,7 +163,7 @@ public class CreeperHeal extends JavaPlugin {
 		if( getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
 			public void run() {
 				cleanMaps();
-			}}, 200, 200) == -1)
+			}}, 200, 2000) == -1)
 			log.warning("[CreeperHeal] Impossible to schedule the map-cleaning task. Map cleaning will not work");
 
 		log_info("tasks started", 3);
