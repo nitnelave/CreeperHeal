@@ -24,9 +24,9 @@ public class FactionHandler {
 			return false;
 		
 		if(world.ignoreFactionsWilderness == world.ignoreFactionsTerritory)
-			return !(world.ignoreFactionsWilderness);
+			return world.ignoreFactionsWilderness;
 		
-		boolean wild = world.ignoreFactionsWilderness;
+		boolean wild = world.ignoreFactionsTerritory;
 		
 		for(Block block : list) {
 			if(wild == Board.getFactionAt(new FLocation(block.getLocation())).isNone())
