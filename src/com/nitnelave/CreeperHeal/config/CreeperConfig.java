@@ -10,8 +10,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -26,7 +24,6 @@ import com.nitnelave.CreeperHeal.utils.CreeperLog;
 public class CreeperConfig
 {
 
-	public final static Logger log = Logger.getLogger("Minecraft");            //to output messages to the console/log
 	private final static String[] STRING_BOOLEAN_OPTIONS = {"true", "false", "time"};
 
 	/**
@@ -57,7 +54,7 @@ public class CreeperConfig
 		}
 
 		if (!yml.exists()) {
-			log.warning("[CreeperHeal] Config file not found, creating default.");
+			CreeperLog.warning("[CreeperHeal] Config file not found, creating default.");
 			copyJarConfig(yml);        //write the config with the default values.
 		}
 
@@ -68,7 +65,7 @@ public class CreeperConfig
 
 	private static void importFrom4()
 	{
-		log_info("Importing config from version 4",1);
+		CreeperLog.logInfo("Importing config from version 4",1);
 		waitBeforeHeal = getInt("wait-before-heal-explosions", 60);        //tries to read the value directly from the config
 		logLevel = getInt("verbose-level", 1);
 		dropReplacedBlocks = getBoolean("drop-overwritten-blocks", true);
@@ -77,12 +74,12 @@ public class CreeperConfig
 			tmp_str = configFile.getString("replacement-method", "block-per-block").trim();
 		}
 		catch (Exception e) {
-			log.warning("[CreeperHeal] Wrong value for replacement method field. Defaulting to block-per-block.");
-			log_info(e.getLocalizedMessage(), 1);
+			CreeperLog.warning("[CreeperHeal] Wrong value for replacement method field. Defaulting to block-per-block.");
+			CreeperLog.logInfo(e.getLocalizedMessage(), 1);
 			tmp_str = "block-per-block";
 		}
 		if(!tmp_str.equalsIgnoreCase("all-at-once") && !tmp_str.equalsIgnoreCase("block-per-block"))
-			log.warning("[CreeperHeal] Wrong value for replacement method field. Defaulting to block-per-block.");
+			CreeperLog.warning("[CreeperHeal] Wrong value for replacement method field. Defaulting to block-per-block.");
 		blockPerBlock = (tmp_str.equalsIgnoreCase("all-at-once"))?false:true;
 		teleportOnSuffocate = getBoolean("teleport-when-buried", true);
 		waitBeforeHealBurnt = getInt("wait-before-heal-fire", 45);
@@ -107,13 +104,13 @@ public class CreeperConfig
 			tmp_str = configFile.getString("chest-protection", "no").trim().toLowerCase();
 		}
 		catch (Exception e) {
-			log.warning("[CreeperHeal] Wrong value for chest protection field. Defaulting to no.");
-			log_info(e.getLocalizedMessage(), 1);
+			CreeperLog.warning("[CreeperHeal] Wrong value for chest protection field. Defaulting to no.");
+			CreeperLog.logInfo(e.getLocalizedMessage(), 1);
 			tmp_str = "no";
 		}
 
 		if(!tmp_str.equalsIgnoreCase("no") && !tmp_str.equalsIgnoreCase("lwc") && !tmp_str.equalsIgnoreCase("all") && !tmp_str.equalsIgnoreCase("lockette"))
-			log.warning("[CreeperHeal] Wrong value for chest protection field. Defaulting to no.");
+			CreeperLog.warning("[CreeperHeal] Wrong value for chest protection field. Defaulting to no.");
 		else {
 			replaceAllChests = replaceProtectedChests = false;
 
@@ -137,7 +134,7 @@ public class CreeperConfig
 		WorldConfig returnValue = world_config.get(name);   
 
 		if(returnValue == null){
-			log_info("Importing settings for world: "+name, 1);
+			CreeperLog.logInfo("Importing settings for world: "+name, 1);
 			boolean creeper = !getStringBoolean(name + ".Creepers", "true").equalsIgnoreCase("false");
 			boolean tnt = !getStringBoolean(name + ".TNT", "true").equalsIgnoreCase("false");
 			boolean fire = !getStringBoolean(name + ".Fire", "true").equalsIgnoreCase("false");
@@ -158,7 +155,7 @@ public class CreeperConfig
 				}
 			}
 			catch (NumberFormatException e) {
-				log.warning("[CreeperHeal] Wrong values for restrict-list field for world " + name);
+				CreeperLog.warning("[CreeperHeal] Wrong values for restrict-list field for world " + name);
 				restrict_list.clear();
 				restrict_list.add(new BlockId(0));
 			}
@@ -172,7 +169,7 @@ public class CreeperConfig
 	}
 
 	public static void load(){            //reads the config
-		log_info("Loading config",2);
+		CreeperLog.logInfo("Loading config",2);
 		try
 		{
 			configFile.load(new File(getDataFolder()+"/config.yml"));
@@ -233,8 +230,8 @@ public class CreeperConfig
 			}
 		}catch(Exception e)
 		{
-			log.log(Level.SEVERE, "[CreeperHeal] Could not load world configurations");
-			log.log(Level.SEVERE, e.getMessage());
+			CreeperLog.severe("[CreeperHeal] Could not load world configurations");
+			CreeperLog.severe(e.getMessage());
 		}
 
 		if(timeRepairs)
@@ -249,7 +246,7 @@ public class CreeperConfig
 			tmp = configFile.getBoolean(path, def);
 		}
 		catch(Exception e) {
-			log.warning("[CreeperHeal] Wrong value for " + path + " field. Defaulting to " + Boolean.toString(def));
+			CreeperLog.warning("[CreeperHeal] Wrong value for " + path + " field. Defaulting to " + Boolean.toString(def));
 			tmp = def;
 		}
 		return tmp;
@@ -261,7 +258,7 @@ public class CreeperConfig
 			tmp = configFile.getInt(path, def);
 		}
 		catch(Exception e) {
-			log.warning("[CreeperHeal] Wrong value for " + path + " field. Defaulting to " + Integer.toString(def));
+			CreeperLog.warning("[CreeperHeal] Wrong value for " + path + " field. Defaulting to " + Integer.toString(def));
 			tmp = def;
 		}
 		return tmp;
@@ -283,7 +280,7 @@ public class CreeperConfig
 				yml.createNewFile();
 			}
 			catch (IOException ex) {
-				log.warning("[CreeperHeal] Cannot create file "+yml.getPath());
+				CreeperLog.warning("[CreeperHeal] Cannot create file "+yml.getPath());
 			}
 		}
 
@@ -346,8 +343,8 @@ public class CreeperConfig
 			}
 			catch (Exception e)
 			{
-				log.log(Level.SEVERE, "[CreeperHeal] Could not load configuration for world : " + name);
-				log.log(Level.SEVERE, e.getMessage());
+				CreeperLog.severe("[CreeperHeal] Could not load configuration for world : " + name);
+				CreeperLog.severe(e.getMessage());
 			}
 		}
 		return returnValue;
@@ -362,8 +359,8 @@ public class CreeperConfig
 			result = configFile.getString(path, defaultValue).trim().toLowerCase();
 		}
 		catch (Exception e) {
-			log.warning("[CreeperHeal] Wrong value for "+path+" field. Defaulting to "+defaultValue+".");
-			log_info(e.getLocalizedMessage(), 1);
+			CreeperLog.warning("[CreeperHeal] Wrong value for "+path+" field. Defaulting to "+defaultValue+".");
+			CreeperLog.logInfo(e.getLocalizedMessage(), 1);
 			result = defaultValue;
 		}
 
@@ -373,7 +370,7 @@ public class CreeperConfig
 
 		if(!correct)
 		{
-			log.warning("[CreeperHeal] Wrong value for "+path+" field. Defaulting to "+defaultValue+".");
+			CreeperLog.warning("[CreeperHeal] Wrong value for "+path+" field. Defaulting to "+defaultValue+".");
 			return defaultValue;
 		}
 		return result;
@@ -384,14 +381,6 @@ public class CreeperConfig
 		return plugin.getDataFolder();
 	}
 
-	public static void log_info(String msg, int level)
-	{
-		if(level<=logLevel)
-		{
-			log.info("[CreeperHeal] "+msg);
-			CreeperLog.record(msg);
-		}
-	}
 
 	private static void copyJarConfig(File file)
 	{
@@ -411,11 +400,11 @@ public class CreeperConfig
 			templateIn.close();
 			outStream.flush();
 			outStream.close();
-			log.info("[CreeperHeal] Default config created");
+			CreeperLog.logInfo("[CreeperHeal] Default config created", 1);
 
 		} catch (Exception e) {
-			log.warning("[CreeperHeal] Failed to create file: config.yml");
-			log.warning(e.getMessage());
+			CreeperLog.warning("[CreeperHeal] Failed to create file: config.yml");
+			CreeperLog.warning(e.getMessage());
 			if(outStream != null)
 			{
 				try {

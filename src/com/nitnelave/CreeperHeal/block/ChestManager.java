@@ -19,6 +19,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
+import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.CreeperUtils;
 
 public class ChestManager {
@@ -99,7 +100,7 @@ public class ChestManager {
 				ItemStack[] otherInv = getOtherChestInventory(chest, d.right);
 				if(otherInv == null)
 				{
-					CreeperHeal.log.warning("empty inventory");
+					CreeperLog.warning("empty inventory");
 				}
 				else
 				{
@@ -181,7 +182,7 @@ public class ChestManager {
 		BlockState chest = state.getBlock().getRelative(i, 0, j).getState();
 		if(chest instanceof Chest)
 			return (state.getRawData() == 2 || state.getRawData() == 5?right:!right)?((DoubleChestInventory) ((Chest) chest).getInventory()).getRightSide().getContents():((DoubleChestInventory) ((InventoryHolder) chest).getInventory()).getLeftSide().getContents();
-			CreeperHeal.log.warning("[CreeperHeal] Debug : chest inventory error? " + state.getRawData() + " ; " + (state.getX() + i) + " ; " + (state.getZ() + j) + "; orientation : " + state.getRawData() + "right : " + right);
+			CreeperLog.warning("[CreeperHeal] Debug : chest inventory error? " + state.getRawData() + " ; " + (state.getX() + i) + " ; " + (state.getZ() + j) + "; orientation : " + state.getRawData() + "right : " + right);
 			return null;
 	}
 

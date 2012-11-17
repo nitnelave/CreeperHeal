@@ -389,44 +389,4 @@ public class CreeperUtils
 		return Collections.unmodifiableSet(set);
 	}
 
-	/*
-	public static String getWarnMessage(WarningCause cause, String offender,
-            String world, boolean blocked, String material)
-    {
-		switch(cause)
-		{
-			case LAVA:
-				return getWarnMessage(WarningCause.BLACKLIST, offender, world, blocked, "LAVA");
-			case FIRE:
-				return offender + (blocked?" was prevented from starting":" has started") + " a fire in world : " + world;
-			case TNT:
-				return getWarnMessage(WarningCause.BLACKLIST, offender, world, blocked, "TNT");
-			case SPAWN_EGG:
-				return offender + (blocked?" tried to spawn":" spawned") + " a " + material + " in world : " + world;
-			case BLACKLIST:
-				return offender + (blocked?" was prevented from placing a ":" has placed a ") + material + " in world : " + world;
-			default:
-				return null;
-		}
-    }
-
-	public static String getPlayerWarnMessage(WarningCause cause, String world, boolean blocked, String material)
-	{
-		switch(cause)
-		{
-			case LAVA:
-				return getPlayerWarnMessage(WarningCause.BLACKLIST,  world, blocked, "LAVA");
-			case FIRE:
-				return (blocked?" was prevented from starting":" has started") + " a fire in world : " + world;
-			case TNT:
-				return getPlayerWarnMessage(WarningCause.BLACKLIST,  world, blocked, "TNT");
-			case SPAWN_EGG:
-				return (blocked?" tried to spawn":" spawned") + " a " + material + " in world : " + world;
-			case BLACKLIST:
-				return (blocked?" was prevented from placing a ":" has placed a ") + material + " in world : " + world;
-			default:
-				return null;
-		}
-	}
-	 */
 }

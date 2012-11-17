@@ -44,13 +44,13 @@ public class CreeperMessenger
 		}
 		catch (FileNotFoundException e)
 		{
-			CreeperHeal.log.warning("[CreeperHeal] Failed to read file: messages.properties");
-			CreeperHeal.log.warning(e.getMessage());
+			CreeperLog.warning("[CreeperHeal] Failed to read file: messages.properties");
+			CreeperLog.warning(e.getMessage());
 		}
 		catch (IOException e)
 		{
-			CreeperHeal.log.warning("[CreeperHeal] Failed to read file: messages.properties");
-			CreeperHeal.log.warning(e.getMessage());
+			CreeperLog.warning("[CreeperHeal] Failed to read file: messages.properties");
+			CreeperLog.warning(e.getMessage());
 		}
 	}
 
@@ -75,13 +75,13 @@ public class CreeperMessenger
 			outStream.flush();
 			outStream.close();
 			if (success) 
-				CreeperHeal.log.info("[CreeperHeal] Default config created");
+				CreeperLog.logInfo("[CreeperHeal] Default config created", 1);
 			else
-				CreeperHeal.log.warning("[CreeperHeal] Failed to create file: messages.properties");
+				CreeperLog.warning("[CreeperHeal] Failed to create file: messages.properties");
 
 		} catch (Exception e) {
-			CreeperHeal.log.warning("[CreeperHeal] Failed to create file: messages.properties");
-			CreeperHeal.log.warning(e.getMessage());
+			CreeperLog.warning("[CreeperHeal] Failed to create file: messages.properties");
+			CreeperLog.warning(e.getMessage());
 		}	    
 	}
 
@@ -107,7 +107,7 @@ public class CreeperMessenger
 				message = message.replaceAll("\\{" + variables[i] + "\\}", values[i]);
 		}
 		} catch(NullPointerException e) {
-			CreeperHeal.log.warning("[CreeperHeal] Wrong variable used in message " + m);
+			CreeperLog.warning("[CreeperHeal] Wrong variable used in message " + m);
 		}
 		return message;
 	}

@@ -27,14 +27,14 @@ public class CreeperPermissionManager
 		Plugin vaultPlugin = pm.getPlugin("Vault");
 		if(vaultPlugin != null) {
 			if(load_Vault())
-				CreeperHeal.log_info("Successfully hooked in Vault",0);
+				CreeperLog.logInfo("Successfully hooked in Vault",0);
 			else
-				CreeperHeal.log.warning("[CreeperHeal] There was an error while hooking in Vault");
+				CreeperLog.warning("[CreeperHeal] There was an error while hooking in Vault");
 		}
 		Plugin bPermissions = pm.getPlugin("bPermissions");
 		if(bPermissions != null) {
 			bPerms = true;
-			CreeperHeal.log_info("Successfully hooked in bPermissions",0);
+			CreeperLog.logInfo("Successfully hooked in bPermissions",0);
 		}
 	}
 

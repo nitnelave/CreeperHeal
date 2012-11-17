@@ -31,6 +31,7 @@ import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.block.PaintingsManager;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
+import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.CreeperPermissionManager;
 import com.nitnelave.CreeperHeal.utils.CreeperPlayer;
 import com.nitnelave.CreeperHeal.utils.CreeperUtils;
@@ -76,7 +77,7 @@ public class CreeperListener implements Listener{
 			}
 			else
 			{
-				CreeperHeal.log_info("Painting destroyed by block?", 1);
+				CreeperLog.logInfo("Painting destroyed by block?", 1);
 			}
 		}
 		else 
