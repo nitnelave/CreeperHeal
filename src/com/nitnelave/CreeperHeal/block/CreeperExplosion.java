@@ -11,12 +11,14 @@ public class CreeperExplosion
 	private Date time;
 	private List<BlockState> blockList;
 	private Location loc;
+	private double radius;
 	
 	public CreeperExplosion(Date time, List<BlockState> blockList, Location loc)
 	{
 		this.setTime(time);
 		this.setBlockList(blockList);
 		this.setLocation(loc);
+		computeRadius();
 	}
 
 	public List<BlockState> getBlockList()
@@ -48,5 +50,18 @@ public class CreeperExplosion
     {
 	    this.loc = loc;
     }
+
+	public double getRadius() {
+		return radius;
+	}
+
+	public void computeRadius() {
+		double r = 0;
+		for(BlockState bs : blockList) {
+			Location bl = bs.getLocation();
+			r = Math.max(r, loc.distance(bl));
+		}
+		radius = r;
+	}
 
 }

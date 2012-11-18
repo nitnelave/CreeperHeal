@@ -31,12 +31,19 @@ import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.utils.AddTrapRunnable;
 import com.nitnelave.CreeperHeal.utils.CreeperComparator;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
+import com.nitnelave.CreeperHeal.utils.NeighborExplosion;
 
 public class ExplodedBlockManager {
 
 	private static Map<Location, BlockState> toReplace;
 	private static List<CreeperExplosion> explosionList = Collections.synchronizedList(new LinkedList<CreeperExplosion>());
 	private static CreeperHeal plugin;
+	private static NeighborExplosion explosionIndex;
+	
+	static {
+		if(!CreeperConfig.lightweightMode)
+			explosionIndex = new NeighborExplosion();
+	}
 
 
 	public ExplodedBlockManager(Map<Location, BlockState> toReplace, CreeperHeal plugin) {
@@ -158,6 +165,11 @@ public class ExplodedBlockManager {
 		cEx = new CreeperExplosion(now, listState, location);        //store in the global hashmap, with the time it happened as a key
 
 		explosionList.add(cEx);
+		if(!CreeperConfig.lightweightMode)
+		{
+			Location l = cEx.getLocation();
+			explosionIndex.addElement(cEx, l.getX(), l.getZ());
+		}
 		CreeperLog.logInfo("Added explosion to the list", 3);
 
 		if(entity instanceof TNTPrimed) 
@@ -332,6 +344,12 @@ public class ExplodedBlockManager {
 	public static List<CreeperExplosion> getExplosionList() {
 		return explosionList;
 	}
+
+
+	public static boolean isNextToExplosion(Location location) {
+		return explosionIndex.hasNeighbor(location);
+	}
+
 
 
 }

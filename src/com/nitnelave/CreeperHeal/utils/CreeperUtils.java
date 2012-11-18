@@ -176,7 +176,7 @@ public class CreeperUtils
 
 			}
 		}
-
+		CreeperLog.logInfo("painting attached to : x=" + loc.getBlockX() + ", y=" + loc.getBlockY() + ", z=" + loc.getBlockZ(), 2);
 		return loc;
 	}
 

@@ -12,6 +12,7 @@ import org.bukkit.material.Rails;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.block.BlockManager;
+import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.block.CreeperExplosion;
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
@@ -40,36 +41,15 @@ public class FancyListener implements Listener
 		}
 		else if(b.getType() == Material.VINE)
 		{
-			Location vineLoc = b.getLocation();
-			World w = vineLoc.getWorld();
-			synchronized(ExplodedBlockManager.getExplosionList())
+			if(ExplodedBlockManager.isNextToExplosion(b.getLocation()))
 			{
-				for(CreeperExplosion cEx : ExplodedBlockManager.getExplosionList())
-				{
-					Location loc = cEx.getLocation();
-					if(loc.getWorld() == w)
-					{
-						if(loc.distance(vineLoc) < 20)
-						{
-							event.setCancelled(true);
-							return;
-						}
-					}
-				}
+				event.setCancelled(true);
+				return;
 			}
-			synchronized(CreeperHeal.getFireList())
+			if(BurntBlockManager.isNextToFire(b.getLocation()))
 			{
-				for(Location loc : CreeperHeal.getFireList().keySet())
-				{
-					if(loc.getWorld() == w)
-					{
-						if(loc.distance(vineLoc) < 10)
-						{
-							event.setCancelled(true);
-							return;
-						}
-					}
-				}
+				event.setCancelled(true);
+				return;
 			}
 		}
 		else if(CreeperConfig.preventBlockFall && BlockManager.blocks_physics.contains(b.getTypeId()))
@@ -116,35 +96,21 @@ public class FancyListener implements Listener
 	}
 
 	@EventHandler
-	synchronized public void onLeavesDecay(LeavesDecayEvent e)
+	synchronized public void onLeavesDecay(LeavesDecayEvent event)
 	{
-		if(e.isCancelled())
+		if(event.isCancelled())
 			return;
 
-		Location leafLoc = e.getBlock().getLocation();
-		World w = leafLoc.getWorld();
-		for(CreeperExplosion cEx : ExplodedBlockManager.getExplosionList())
+		Block b = event.getBlock();
+		if(ExplodedBlockManager.isNextToExplosion(b.getLocation()))
 		{
-			Location loc = cEx.getLocation();
-			if(loc.getWorld() == w)
-			{
-				if(loc.distance(leafLoc) < 20)
-				{
-					e.setCancelled(true);
-					return;
-				}
-			}
+			event.setCancelled(true);
+			return;
 		}
-		for(Location loc : CreeperHeal.getFireList().keySet())
+		if(BurntBlockManager.isNextToFire(b.getLocation()))
 		{
-			if(loc.getWorld() == w)
-			{
-				if(loc.distance(leafLoc) < 5)
-				{
-					e.setCancelled(true);
-					return;
-				}
-			}
+			event.setCancelled(true);
+			return;
 		}
 	}
 

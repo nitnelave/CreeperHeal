@@ -19,7 +19,6 @@ import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Painting;
 import org.bukkit.inventory.ItemStack;
 
-import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperUtils;
 
@@ -37,17 +36,20 @@ public class PaintingsManager {
 			CreeperPainting cp = iter.next();
 			if(cp.isBurnt())
 			{
-				if(cp.getDate().getTime() - time.getTime() < 0 || CreeperHeal.getFireList().size() == 0)
+				if(cp.getDate().getTime() - time.getTime() < 0)
 				{
 					if(!replacePainting(cp.getHanging()))
 					{
-						if(CreeperHeal.getFireList().size() > 0)
+						if(cp.isPostPoned() || (!CreeperConfig.lightweightMode && BurntBlockManager.isIndexEmpty()))
 						{
 							cp.getWorld().dropItemNaturally(cp.getLocation(), new ItemStack(321, 1));
 							iter.remove();
 						}
 						else
+						{
 							cp.postPone(CreeperConfig.waitBeforeHealBurnt);
+							cp.setPostPoned(true);
+						}
 
 					}
 					else 
@@ -56,8 +58,7 @@ public class PaintingsManager {
 			}
 			else
 			{
-				if(Math.abs(cp.getDate().getTime() - time.getTime()) < 500 || ExplodedBlockManager.getExplosionList().size() == 0);
-
+				if(Math.abs(cp.getDate().getTime() - time.getTime()) < 500 || ExplodedBlockManager.getExplosionList().isEmpty())
 				{
 					if(!replacePainting(cp.getHanging()))
 						cp.getWorld().dropItemNaturally(cp.getLocation(), new ItemStack(321, 1));

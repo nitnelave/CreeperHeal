@@ -61,7 +61,6 @@ public class CreeperHeal extends JavaPlugin {
 
 	
 	private Map<BlockState, Date> preventUpdate = Collections.synchronizedMap(new HashMap<BlockState, Date>());
-	private static Map<Location, Date> fireList = Collections.synchronizedMap(new HashMap<Location, Date>());
 	private Map<Location, Date> preventBlockFall = Collections.synchronizedMap(new HashMap<Location, Date>());
 	private static List<CreeperPlayer> warnList = Collections.synchronizedList(new LinkedList<CreeperPlayer>()); 
 
@@ -276,22 +275,8 @@ public class CreeperHeal extends JavaPlugin {
 		}
 		if(!(CreeperConfig.lightweightMode))
 		{
-			synchronized (getFireList())
-			{
-				iter = getFireList().values().iterator();
-				delay = new Date(now.getTime() - 1000 * CreeperConfig.waitBeforeHealBurnt);
-				while(iter.hasNext())
-				{
-
-					Date date = iter.next();
-					if(date.before(delay))
-						iter.remove();
-					else
-						break;
-
-				}
-
-			}
+			BurntBlockManager.cleanIndex();
+			
 		}
 	}
 
@@ -374,10 +359,6 @@ public class CreeperHeal extends JavaPlugin {
 
 	public Map<BlockState, Date> getPreventUpdate() {
 		return preventUpdate;
-	}
-
-	public static Map<Location, Date> getFireList() {
-		return fireList;
 	}
 
 	public static List<CreeperPlayer> getWarnList() {

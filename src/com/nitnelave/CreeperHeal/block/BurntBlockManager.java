@@ -18,11 +18,18 @@ import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperUtils;
+import com.nitnelave.CreeperHeal.utils.NeighborFire;
 
 public class BurntBlockManager {
 
 	private static CreeperHeal plugin;
 	private static List<CreeperBurntBlock> burntList = Collections.synchronizedList(new LinkedList<CreeperBurntBlock>());
+	private static NeighborFire fireIndex;
+	
+	static {
+		if(!CreeperConfig.lightweightMode)
+			fireIndex = new NeighborFire();
+	}
 
 	public static void setBurntBlockManagerPlugin(CreeperHeal plugin) {
 		BurntBlockManager.plugin = plugin;
@@ -106,28 +113,13 @@ public class BurntBlockManager {
 	public static void recordBurn(Block block) {            //record a burnt block
 		if(block.getType() != Material.TNT) {        //unless it's TNT triggered by fire
 			Date now = new Date();
-			burntList.add(new CreeperBurntBlock(now, block.getState()));
+			CreeperBurntBlock cBB = new CreeperBurntBlock(now, block.getState());
+			burntList.add(cBB);
 			if(!(CreeperConfig.lightweightMode))
 			{
-				World w = block.getWorld();
-				Location blockLoc = block.getLocation();
-				synchronized(CreeperHeal.getFireList())
-				{
-					boolean far = true;
-					for(Location loc : CreeperHeal.getFireList().keySet())
-					{
-						if(loc.getWorld() == w)
-						{
-							if(loc.distance(blockLoc) < 5)
-							{
-								far = false;
-								break;
-							}
-						}
-					}
-					if(far)
-						CreeperHeal.getFireList().put(block.getLocation(), now);
-				}
+				Location l = cBB.getLocation();
+				fireIndex.addElement(cBB, l.getX(), l.getY());
+				
 				block.setTypeIdAndData(0, (byte)0, false);
 			}
 			BlockFace[] faces = {BlockFace.UP, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH};
@@ -137,6 +129,23 @@ public class BurntBlockManager {
 			}
 
 		}
+	}
+
+
+
+	public static void cleanIndex() {
+			fireIndex.clean();
+	}
+
+
+	public static boolean isNextToFire(Location location) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	public static boolean isIndexEmpty() {
+		return fireIndex.isEmpty();
 	}
 
 
