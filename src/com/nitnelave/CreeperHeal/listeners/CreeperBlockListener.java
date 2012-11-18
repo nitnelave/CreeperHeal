@@ -1,8 +1,5 @@
 package com.nitnelave.CreeperHeal.listeners;
 
-import java.util.Date;
-import java.util.Map;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -18,9 +15,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
-import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
@@ -40,7 +37,7 @@ import com.nitnelave.CreeperHeal.utils.CreeperPlayer;
 import com.nitnelave.CreeperHeal.utils.CreeperUtils;
 
 public class CreeperBlockListener implements Listener{
-	
+
 
 
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -49,7 +46,7 @@ public class CreeperBlockListener implements Listener{
 		CreeperLog.logInfo("Hanging removed because of " + e.getCause(), 2);
 		if(e.isCancelled())
 			return;
-		
+
 
 		Hanging h = (Hanging) e.getEntity();
 		if(e instanceof HangingBreakByEntityEvent)
@@ -106,30 +103,20 @@ public class CreeperBlockListener implements Listener{
 						}
 					}
 				}
-				Map<Location, Date> map = CreeperHeal.getFireList();
-				synchronized(map)
+				if(BurntBlockManager.isNextToFire(paintLoc))
 				{
-					for(Location loc : map.keySet())
-					{
-						if(loc.getWorld() == w)
-						{
-							if(loc.distance(paintLoc) < 10)
-							{
-								WorldConfig world = CreeperConfig.loadWorld(w);
+					WorldConfig world = CreeperConfig.loadWorld(w);
 
-								if(world.fire) 
-									PaintingsManager.checkForPaintings(h, world.isRepairTimed(), true);
-								return;
-							}
-						}
-					}
+					if(world.fire) 
+						PaintingsManager.checkForPaintings(h, world.isRepairTimed(), true);
+					return;
 				}
 			}
 		}
 		else
 			CreeperLog.logInfo("Hanging removed for another reason", 2);
 	}
- 
+
 
 
 
@@ -143,11 +130,11 @@ public class CreeperBlockListener implements Listener{
 
 		if(world.fire)
 			BurntBlockManager.recordBurn(event.getBlock());
-		
+
 		if(world.preventFireSpread)
 			event.getBlock().setTypeIdAndData(0, (byte) 0, false);
 	}
-	
+
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockPlace(BlockPlaceEvent event)
@@ -208,13 +195,13 @@ public class CreeperBlockListener implements Listener{
 		else if(event.getCause() == IgniteCause.LAVA && world.preventFireLava)
 			event.setCancelled(true);
 	}
-	
+
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockSpread(BlockSpreadEvent event) {
 		if(event.isCancelled() || !event.getBlock().getType().equals(Material.FIRE))
 			return;
 		WorldConfig world = CreeperConfig.loadWorld(event.getBlock().getWorld());
-		
+
 		CreeperLog.logInfo("Fire Spread!", 2);
 		event.getBlock().setTypeId(0);
 		event.getSource().setTypeId(0);
@@ -230,7 +217,7 @@ public class CreeperBlockListener implements Listener{
 			return;
 		CreeperLog.logInfo("explosion not cancelled", 3);
 		WorldConfig world = CreeperConfig.loadWorld(event.getLocation().getWorld());
-		
+
 		if (CreeperHeal.getFactionHandler().shouldIgnore(event.blockList(), world)) {
 			return;
 		}

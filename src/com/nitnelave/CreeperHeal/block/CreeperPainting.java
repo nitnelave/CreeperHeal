@@ -10,7 +10,7 @@ public class CreeperPainting
 {
 	private Hanging hanging;
 	private Date date;
-	private boolean fire;
+	private boolean fire, postPoned = false;
 	
 	public CreeperPainting(Hanging p, Date d, boolean f)
 	{
@@ -52,5 +52,13 @@ public class CreeperPainting
 	public void postPone(int delay)
 	{
 		date = new Date(date.getTime() + 1000 * delay);
+	}
+
+	public void setPostPoned(boolean b) {
+		postPoned = b;
+	}
+	
+	public boolean isPostPoned() {
+		return postPoned;
 	}
 }
