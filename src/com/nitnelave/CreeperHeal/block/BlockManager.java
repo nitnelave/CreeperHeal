@@ -147,9 +147,12 @@ public class BlockManager {
 			return;
 		}
 		else if(CreeperConfig.overwriteBlocks && !empty_blocks.contains(block_id) && CreeperConfig.dropDestroyedBlocks)
+		{
 			dropBlock(block.getState());
+			block.setTypeIdAndData(0, (byte)0, false);
+		}
 
-		if(blocks_dependent.contains(blockState.getTypeId()) && blockState.getBlock().getRelative(CreeperUtils.getAttachingFace(blockState).getOppositeFace()).getType() == Material.AIR)
+		if(blocks_dependent.contains(blockState.getTypeId()) && empty_blocks.contains(blockState.getBlock().getRelative(CreeperUtils.getAttachingFace(blockState).getOppositeFace()).getTypeId()))
 			delay_replacement(blockState);
 		else
 		{
@@ -180,17 +183,6 @@ public class BlockManager {
 			{
 				if(CreeperConfig.preventBlockFall)
 					plugin.getPreventBlockFall().put(blockState.getBlock().getLocation(), new Date());
-				/*Block tmp_block = block.getRelative(BlockFace.DOWN);
-				if(empty_blocks.contains(tmp_block.getTypeId()))
-				{
-
-					BlockState tmpState = tmp_block.getState();
-					tmp_block.setTypeId(4, false);
-					blockState.update(true);
-					getServer().getScheduler().scheduleSyncDelayedTask(this, new ReplaceBlockRunnable(tmpState), 2);
-				}
-				else
-					blockState.update(true);*/
 				blockState.getBlock().setTypeIdAndData(blockState.getTypeId(), blockState.getRawData(), false);
 
 			}
@@ -246,13 +238,8 @@ public class BlockManager {
 
 	protected static void replace_one_block(List<BlockState> list) {        //replace one block (block per block)
 		replace_blocks(list.get(0));        //blocks are sorted, so get the first
-		if(!list.isEmpty())
-		{
-			check_player_one_block(list.get(0).getBlock().getLocation());
-			list.remove(0);
-		}
-
-
+		check_player_one_block(list.get(0).getBlock().getLocation());
+		list.remove(0);
 	}
 
 
