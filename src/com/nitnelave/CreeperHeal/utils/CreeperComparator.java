@@ -2,23 +2,21 @@ package com.nitnelave.CreeperHeal.utils;
 
 import java.util.*;
 
-import org.bukkit.block.BlockState;
+import com.nitnelave.CreeperHeal.block.CreeperBlock;
 
-import com.nitnelave.CreeperHeal.block.BlockManager;
-
-public class CreeperComparator implements Comparator<BlockState>{		//used to sort blocks from bottom to top
+public class CreeperComparator implements Comparator<CreeperBlock>{		//used to sort blocks from bottom to top
 	
-	public int compare(BlockState b1, BlockState b2) {
+	public int compare(CreeperBlock b1, CreeperBlock b2) {
 		
-		boolean c1 = BlockManager.blocks_dependent.contains(b1.getTypeId());
-		boolean c2 = BlockManager.blocks_dependent.contains(b2.getTypeId());
+		boolean c1 = CreeperBlock.blocks_dependent.contains(b1.getTypeId());
+		boolean c2 = CreeperBlock.blocks_dependent.contains(b2.getTypeId());
 		if(c1 && !c2)
 			return 1;
 		else if(c2 && !c1)
 			return -1;
 		
-		int pos1 = b1.getY();		//altitude of block one
-		int pos2 = b2.getY();		//altitude of block two
+		int pos1 = b1.getLocation().getBlockY();		//altitude of block one
+		int pos2 = b2.getLocation().getBlockY();		//altitude of block two
 		
 		if(pos1 > pos2)
 			return 1;

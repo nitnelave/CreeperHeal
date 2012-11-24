@@ -2,19 +2,18 @@ package com.nitnelave.CreeperHeal.utils;
 
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 import org.bukkit.material.Attachable;
 
-import com.nitnelave.CreeperHeal.block.BlockManager;
+import com.nitnelave.CreeperHeal.block.CreeperBlock;
 
 public class DelayReplacement implements Runnable
 {
 	private int counter;
-	private BlockState blockState;
+	private CreeperBlock blockState;
 
-	public DelayReplacement(BlockState blockState, int i)
+	public DelayReplacement(CreeperBlock creeperBlock, int i)
 	{
-		this.blockState = blockState;
+		this.blockState = creeperBlock;
 		this.counter = ++i;
 	}
 
@@ -24,14 +23,14 @@ public class DelayReplacement implements Runnable
 		if(counter < 50)
 		{
 			if(blockState instanceof Attachable && blockState.getBlock().getRelative(((Attachable) blockState).getAttachedFace()).getType() == Material.AIR)
-				BlockManager.delay_replacement(blockState, counter);
+				blockState.delay_replacement(counter);
 			else if(blockState.getBlock().getRelative(BlockFace.DOWN).getType() == Material.AIR)
-				BlockManager.delay_replacement(blockState, counter);
+				blockState.delay_replacement(counter);
 			else
-				BlockManager.block_state_replace(blockState);
+				blockState.replace();
 		}
 		else
-			BlockManager.block_state_replace(blockState);
+			blockState.replace();
 
 	}
 

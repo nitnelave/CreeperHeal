@@ -12,7 +12,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
@@ -48,9 +47,8 @@ public class BurntBlockManager {
 			while (iter.hasNext()) {
 				CreeperBurntBlock cBlock = iter.next();
 				Date time = cBlock.getTime();
-				BlockState block = cBlock.getBlockState();
-				if(block.getWorld() == world && (new Date(time.getTime() + since * 1000).after(now) || force)) {        //if enough time went by
-					BlockManager.replace_blocks(block);        //replace the non-dependent block
+				if(cBlock.getWorld() == world && (new Date(time.getTime() + since * 1000).after(now) || force)) {        //if enough time went by
+					BlockManager.replace_blocks(cBlock);        //replace the non-dependent block
 					iter.remove();
 				}
 			}
@@ -67,27 +65,27 @@ public class BurntBlockManager {
 			while (iter.hasNext()) {
 				CreeperBurntBlock cBlock = iter.next();
 				Date time = cBlock.getTime();
-				BlockState block = cBlock.getBlockState();
+				Block block = cBlock.getBlock();
 				if((new Date(time.getTime() + CreeperConfig.waitBeforeHealBurnt * 1000).before(now))) {        //if enough time went by
-					if(BlockManager.blocks_dependent.contains(block.getTypeId()))
+					if(CreeperBlock.blocks_dependent.contains(block.getTypeId()))
 					{
-						Block support = block.getBlock().getRelative(CreeperUtils.getAttachingFace(block).getOppositeFace());
+						Block support = block.getRelative(CreeperUtils.getAttachingFace(cBlock.getState()).getOppositeFace());
 						if(support.getTypeId() == 0 || support.getTypeId() == 51)
 							cBlock.addTime(CreeperConfig.waitBeforeHealBurnt * 1000);
 						else
 						{
-							BlockManager.replace_blocks(block);
+							BlockManager.replace_blocks(cBlock);
 							iter.remove();
 						}
 
 					}
 					else
 					{
-						BlockManager.replace_blocks(block);
+						BlockManager.replace_blocks(cBlock);
 						iter.remove();
 					}
 				}
-				else if(!BlockManager.blocks_dependent.contains(block.getTypeId()))
+				else if(!CreeperBlock.blocks_dependent.contains(block.getTypeId()))
 					break;
 			}
 		}
@@ -96,13 +94,10 @@ public class BurntBlockManager {
 
 	private static void recordAttachedBurntBlocks(Block block, Date now, BlockFace face){
 		BlockState block_up = block.getRelative(face).getState();
-		if(BlockManager.blocks_dependent.contains(block_up.getTypeId())) {        //the block above is a dependent block, store it, but one interval after
+		if(CreeperBlock.blocks_dependent.contains(block_up.getTypeId())) {        //the block above is a dependent block, store it, but one interval after
 			if(CreeperUtils.getAttachingFace(block_up) == CreeperUtils.rotateCClockWise(face))
 			{
 				burntList.add(new CreeperBurntBlock(new Date(now.getTime() + 100), block_up));
-				if(block_up instanceof Sign) {                //as a side note, chests don't burn, but signs are dependent
-					BlockManager.putSignText(new Location(block_up.getWorld(), block_up.getX(), block_up.getY(), block_up.getZ()), ((Sign)block_up).getLines());
-				}
 				block_up.getBlock().setTypeIdAndData(0, (byte)0, false);
 
 			}

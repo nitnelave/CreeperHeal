@@ -4,16 +4,15 @@ import java.util.Date;
 import java.util.List;
 
 import org.bukkit.Location;
-import org.bukkit.block.BlockState;
 
 public class CreeperExplosion
 {
 	private Date time;
-	private List<BlockState> blockList;
+	private List<CreeperBlock> blockList;
 	private Location loc;
 	private double radius;
 	
-	public CreeperExplosion(Date time, List<BlockState> blockList, Location loc)
+	public CreeperExplosion(Date time, List<CreeperBlock> blockList, Location loc)
 	{
 		this.setTime(time);
 		this.setBlockList(blockList);
@@ -21,12 +20,12 @@ public class CreeperExplosion
 		computeRadius();
 	}
 
-	public List<BlockState> getBlockList()
+	public List<CreeperBlock> getBlockList()
     {
 	    return blockList;
     }
 
-	public void setBlockList(List<BlockState> blockList)
+	public void setBlockList(List<CreeperBlock> blockList)
     {
 	    this.blockList = blockList;
     }
@@ -57,7 +56,7 @@ public class CreeperExplosion
 
 	public void computeRadius() {
 		double r = 0;
-		for(BlockState bs : blockList) {
+		for(CreeperBlock bs : blockList) {
 			Location bl = bs.getLocation();
 			r = Math.max(r, loc.distance(bl));
 		}

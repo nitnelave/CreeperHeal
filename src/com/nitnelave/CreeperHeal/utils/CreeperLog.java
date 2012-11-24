@@ -46,6 +46,7 @@ public class CreeperLog
 
 	public static void logInfo(String msg, int level)
 	{
+		logLevel = CreeperConfig.logLevel;
 		if(level<=logLevel)
 		{
 			log.info("[CreeperHeal] "+msg);

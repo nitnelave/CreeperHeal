@@ -5,15 +5,14 @@ import java.util.List;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 
 public class ReorientRails implements Runnable
 {
-	private BlockState blockState;
+	private CreeperBlock blockState;
 
-	public ReorientRails(BlockState blockState)
+	public ReorientRails(CreeperBlock creeperBlock)
 	{
-		this.blockState = blockState;
+		this.blockState = creeperBlock;
 	}
 
 	@Override

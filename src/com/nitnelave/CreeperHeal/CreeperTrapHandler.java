@@ -5,7 +5,7 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.nitnelave.CreeperHeal.block.BlockManager;
+import com.nitnelave.CreeperHeal.block.CreeperBlock;
 import com.nitnelave.CreeperHeal.economy.CreeperEconomy;
 import com.nitnelave.CreeperHeal.economy.TransactionFailedException;
 import com.nitnelave.CreeperHeal.economy.VaultNotDetectedException;
@@ -42,7 +42,7 @@ public class CreeperTrapHandler {
 			delete_own = checkPermissions(p, true, "trap.remove.own");
 		if(delete_own) {
 
-			Block block = p.getTargetBlock(BlockManager.transparent_blocks, 10);
+			Block block = p.getTargetBlock(CreeperBlock.transparent_blocks, 10);
 
 			if(block.getType() == Material.TNT) {
 
@@ -143,7 +143,7 @@ public class CreeperTrapHandler {
 	public static void createTrap(Player p) throws VaultNotDetectedException, TransactionFailedException
 	{
 		if(checkPermissions(p, true,"trap.create", "trap.*")) {
-			Block block = p.getTargetBlock(BlockManager.transparent_blocks, 10);
+			Block block = p.getTargetBlock(CreeperBlock.transparent_blocks, 10);
 			if(block.getType() == Material.TNT) {
 				String owner = creeperTrap.getTrapOwner(block);
 				if(owner == null) {

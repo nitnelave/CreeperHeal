@@ -1,23 +1,18 @@
 package com.nitnelave.CreeperHeal.block;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Random;
 
-import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
-
-import com.nitnelave.CreeperHeal.CreeperHeal;
-import com.nitnelave.CreeperHeal.utils.CreeperLog;
 
 public class CreeperDrop
 {
 
-	private static YamlConfiguration fileconf;
+	private static Random random = new Random(System.currentTimeMillis());
+
+	/*private static YamlConfiguration fileconf;
 
 
 	public CreeperDrop(CreeperHeal instance){
@@ -25,7 +20,7 @@ public class CreeperDrop
 		fileconf = new YamlConfiguration();
 
 
-		
+
 		try
 		{
 			fileconf.load(file);
@@ -70,11 +65,12 @@ public class CreeperDrop
 			fileconf.set(Material.getMaterial(ids[i]).name(), Material.getMaterial(drops[i]).name());
 		}
 		fileconf.save(file);
-	}
+	}*/
 
 
 
-	public static ItemStack getDrop(BlockState blockState) {         //drops the resource associated with the given blockState exploded
+	/*public static ItemStack getDrop(BlockState blockState) {         //drops the resource associated with the given blockState exploded
+
 		int type_id = blockState.getTypeId();
 		byte data = blockState.getRawData();
 		int type_drop = getDropId(type_id);
@@ -99,13 +95,63 @@ public class CreeperDrop
 
 
 	}
-	
+
 	private static int getDropId(int id)
 	{
 		String value = (String) fileconf.get(Material.getMaterial(id).name());
 		if(value != null)
 			return Material.getMaterial(value).getId();
 		else return 0;
+	}*/
+
+	public static ItemStack getDrop(BlockState block) {
+		return getDrop(block.getTypeId(), block.getRawData());
 	}
 
+	public static ItemStack getDrop(Block block) throws RuntimeException {
+		return getDrop(block.getTypeId(), block.getData());
+
+	}
+	
+	public static ItemStack getDrop(int blockTypeId, byte data) {
+		if (blockTypeId < 1 || blockTypeId > 255) return null;
+		try {
+			net.minecraft.server.Block b = net.minecraft.server.Block.byId[blockTypeId];
+
+			int typeId = b.getDropType(blockTypeId, random, 0);
+			if (typeId < 1) return null;
+
+			int dropCount = b.getDropCount(0, random);
+			if (dropCount < 1) return null;
+
+			Method m = getMethod(b.getClass(), "getDropData", new Class[] {int.class});
+			m.setAccessible(true);
+			byte dropData = ((Integer)m.invoke(b, data)).byteValue();
+
+			return new ItemStack(typeId, dropCount, dropData);
+		} catch (Exception e) {
+			throw new RuntimeException("A severe error occured while retreiving the data dropped.", e);
+		}
+	}
+
+	/**
+	 * Equivalent to java.lang.Class.getDeclaredMethod, except also searches through the <i>clazz</i>'s superclasses.
+	 *
+	 * @param clazz The class to get the method from.
+	 * @param methodName the name of the method
+	 * @param parameters the parameter array
+	 * @return the Method object for the method of this class matching the specified name and parameters
+	 * @throws NoSuchMethodException if a matching method is not found
+	 * @throws NullPointerException if methodName is null
+	 */
+	private static Method getMethod(Class<?> clazz, String methodName, Class<?>[] parameters) throws NoSuchMethodException, NullPointerException {
+		if (methodName == null) throw new NullPointerException();
+		if (clazz == null) throw new NoSuchMethodException();
+		try {
+			return clazz.getDeclaredMethod(methodName, parameters);
+		} catch (Exception e) {
+			return getMethod(clazz.getSuperclass(), methodName, parameters);
+		}
+
+	}
 }

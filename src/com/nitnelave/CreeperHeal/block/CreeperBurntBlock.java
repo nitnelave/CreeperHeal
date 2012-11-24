@@ -2,17 +2,15 @@ package com.nitnelave.CreeperHeal.block;
 
 import java.util.Date;
 
-import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 
-public class CreeperBurntBlock
+public class CreeperBurntBlock extends CreeperBlock
 {
-	private BlockState blockState;
 	private Date time;
 
 	public CreeperBurntBlock(Date now, BlockState state)
     {
-		setBlockState(state);
+		super(state);
 		setTime(now);
     }
 	
@@ -31,20 +29,4 @@ public class CreeperBurntBlock
 	    this.time = time;
     }
 
-	public BlockState getBlockState()
-    {
-	    return blockState;
-    }
-
-	public void setBlockState(BlockState blockState)
-    {
-	    this.blockState = blockState;
-    }
-
-	public Location getLocation() {
-		return blockState.getLocation();
-	}
-
-	
-	
 }
