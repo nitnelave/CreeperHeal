@@ -11,11 +11,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandMap;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -29,6 +29,7 @@ import com.griefcraft.lwc.LWC;
 import com.griefcraft.lwc.LWCPlugin;
 import com.nitnelave.CreeperHeal.block.BlockManager;
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
+import com.nitnelave.CreeperHeal.block.CreeperBlock;
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
 import com.nitnelave.CreeperHeal.command.CreeperCommand;
 import com.nitnelave.CreeperHeal.command.CreeperCommandManager;
@@ -56,19 +57,19 @@ public class CreeperHeal extends JavaPlugin {
 	 */
 
 	protected CreeperListener listener = new CreeperListener(this);                        //listener for explosions
-	private FancyListener fancyListener = new FancyListener(this);
+	private FancyListener fancyListener = new FancyListener();
 	private CreeperBlockListener blockListener = new CreeperBlockListener();
 
 	
-	private Map<BlockState, Date> preventUpdate = Collections.synchronizedMap(new HashMap<BlockState, Date>());
-	private Map<Location, Date> preventBlockFall = Collections.synchronizedMap(new HashMap<Location, Date>());
+	private static Map<CreeperBlock, Date> preventUpdate = Collections.synchronizedMap(new HashMap<CreeperBlock, Date>());
+	private static Map<Location, Date> preventBlockFall = Collections.synchronizedMap(new HashMap<Location, Date>());
 	private static List<CreeperPlayer> warnList = Collections.synchronizedList(new LinkedList<CreeperPlayer>()); 
 
 	/**
 	 * Handlers for misc. plugins
 	 */
 
-	private MobArenaHandler maHandler = null;		//handler to detect mob arenas
+	private static MobArenaHandler maHandler = null;		//handler to detect mob arenas
 	private static LWC lwc = null;			//handler for LWC protection
 
 
@@ -78,6 +79,7 @@ public class CreeperHeal extends JavaPlugin {
 	private CreeperHandler handler;
 	private CreeperPermissionManager perms;
 	private static FactionHandler factionHandler;
+	private static CreeperHeal instance;
 	private BlockManager blockManager;
 
 
@@ -85,9 +87,16 @@ public class CreeperHeal extends JavaPlugin {
 
 	public void onEnable() {
 
-		logInfo("Loading config", 3);
+		instance = this;
 
 		new CreeperConfig(this);
+		Logger.getLogger("Minecraft").info("test");
+		
+		File file = new File(getDataFolder() + "/drops.yml");		//get the trap file
+		file.delete();
+
+
+		logInfo("Loaded config", 3);
 		
 		blockManager = new BlockManager(this);
 
@@ -344,7 +353,7 @@ public class CreeperHeal extends JavaPlugin {
 		return factionHandler;
 	}
 
-	public boolean isInArena(Location location) {
+	public static boolean isInArena(Location location) {
 		if(maHandler != null)
 		{
 			if (maHandler.inRegion(location)) 
@@ -353,16 +362,20 @@ public class CreeperHeal extends JavaPlugin {
 		return false;
 	}
 
-	public Map<Location, Date> getPreventBlockFall() {
+	public static Map<Location, Date> getPreventBlockFall() {
 		return preventBlockFall;
 	}
 
-	public Map<BlockState, Date> getPreventUpdate() {
+	public static Map<CreeperBlock, Date> getPreventUpdate() {
 		return preventUpdate;
 	}
 
 	public static List<CreeperPlayer> getWarnList() {
 		return warnList;
+	}
+
+	public static CreeperHeal getInstance() {
+		return instance;
 	}
 
 }

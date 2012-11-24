@@ -23,14 +23,15 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.entity.Wither;
+import org.bukkit.material.Attachable;
 import org.bukkit.material.Rails;
 
-import com.nitnelave.CreeperHeal.block.BlockManager;
+import com.nitnelave.CreeperHeal.block.CreeperBlock;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 
 public class CreeperUtils
 {
-	public static void checkForAscendingRails(BlockState blockState, Map<BlockState, Date> preventUpdate)
+	public static void checkForAscendingRails(CreeperBlock blockState, Map<CreeperBlock, Date> preventUpdate)
 	{
 		BlockFace[] cardinals = {BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP};
 		Block block = blockState.getBlock();
@@ -52,7 +53,7 @@ public class CreeperUtils
 					else if(data == 5)
 						facing = BlockFace.SOUTH;
 					if(tmp_block.getRelative(facing).getType() == Material.AIR)
-						preventUpdate.put(tmp_block.getState(), new Date());
+						preventUpdate.put(CreeperBlock.newBlock(tmp_block.getState()), new Date());
 				}
 			}
 		}
@@ -68,7 +69,7 @@ public class CreeperUtils
 
 	public static boolean check_free(World w, int x, int y, int z, LivingEntity en) {
 		Block block = w.getBlockAt(x, y, z);
-		if(BlockManager.blocks_non_solid.contains(block.getTypeId()) && BlockManager.blocks_non_solid.contains(block.getRelative(0, 1, 0).getTypeId()) && !BlockManager.blocks_non_solid.contains(block.getRelative(0, -1, 0).getTypeId())) {
+		if(CreeperBlock.blocks_non_solid.contains(block.getTypeId()) && CreeperBlock.blocks_non_solid.contains(block.getRelative(0, 1, 0).getTypeId()) && !CreeperBlock.blocks_non_solid.contains(block.getRelative(0, -1, 0).getTypeId())) {
 			Location loc = new Location(w, x, y+0.5, z+0.5);
 			loc.setYaw(en.getLocation().getYaw());
 			loc.setPitch(en.getLocation().getPitch());
@@ -84,7 +85,7 @@ public class CreeperUtils
 		int y =loc.getBlockY();
 		int z =loc.getBlockZ();
 		World w = en.getWorld();
-		if(!BlockManager.blocks_non_solid.contains(loc.getBlock().getTypeId()) || !BlockManager.blocks_non_solid.contains(loc.getBlock().getRelative(0, 1, 0).getTypeId())) {
+		if(!CreeperBlock.blocks_non_solid.contains(loc.getBlock().getTypeId()) || !CreeperBlock.blocks_non_solid.contains(loc.getBlock().getRelative(0, 1, 0).getTypeId())) {
 			for(int k =1; k + y < 127; k++) {        //all the way to the sky, checks if there's some room up or around
 
 				if(check_free(w, x, y+k, z, en))
@@ -265,52 +266,83 @@ public class CreeperUtils
 	}
 
 
-	public static BlockFace getAttachingFace(BlockState block_up)
+	public static BlockFace getAttachingFace(BlockState block)
 	{
-		if(BlockManager.blocks_dependent_down.contains(block_up.getTypeId()))
+		if(block.getData() instanceof Attachable)
+			return ((Attachable)block.getData()).getAttachedFace();
+		switch(block.getType()) {
+		case WOODEN_DOOR:
+		case IRON_DOOR:
+			return BlockFace.DOWN;
+		case RAILS:
+		case DETECTOR_RAIL:
+		case POWERED_RAIL:
+			switch(block.getRawData()){
+			case 5: return BlockFace.WEST;
+			case 4: return BlockFace.EAST;
+			case 3: return BlockFace.NORTH;
+			case 2: return BlockFace.SOUTH;
+			default: return BlockFace.DOWN;
+			}
+		default:
+			return BlockFace.DOWN;
+
+		}
+
+		/*if(BlockManager.blocks_dependent_down.contains(block.getTypeId()))
 			return BlockFace.DOWN;
 		else
-			switch(block_up.getTypeId()){
-			case 50:
-			case 75:
-			case 76:
-				switch(block_up.getRawData()){
-				case 1: return BlockFace.EAST;
-				case 2: return BlockFace.WEST;
-				case 3: return BlockFace.SOUTH;
-				case 4: return BlockFace.NORTH;
-				default: return BlockFace.UP;
+			switch(block.getType()){
+			case TORCH:
+			case REDSTONE_TORCH_ON:
+			case REDSTONE_TORCH_OFF:
+				switch(block.getRawData()){
+				case 1: return BlockFace.NORTH;
+				case 2: return BlockFace.SOUTH;
+				case 3: return BlockFace.EAST;
+				case 4: return BlockFace.WEST;
+				default: return BlockFace.DOWN;
 				}
-			case 65:
-			case 68:
-				switch(block_up.getRawData()){
+			case LADDER:
+				switch(block.getRawData()) {
+				case 2: return BlockFace.WEST;
+				case 3: return BlockFace.EAST;
+				case 4: return BlockFace.SOUTH;
+				case 5: return BlockFace.NORTH;
+				default: return null;
+				}
+			case WALL_SIGN:
+				return ((Sign)(block.getData())).getAttachedFace();
+			case RAILS:
+			case DETECTOR_RAIL:
+			case POWERED_RAIL:
+				switch(block.getRawData()){
 				case 5: return BlockFace.EAST;
 				case 4: return BlockFace.WEST;
 				case 3: return BlockFace.SOUTH;
 				case 2: return BlockFace.NORTH;
-				default: return BlockFace.UP;
+				default: return BlockFace.DOWN;
 				}
-			case 69:
-			case 77:
-				switch(block_up.getRawData()> 8?block_up.getRawData() - 8:block_up.getRawData()){
+			case LEVER:
+			case STONE_BUTTON:
+				switch(block.getRawData()> 8?block.getRawData() - 8:block.getRawData()){
 				case 1: return BlockFace.EAST;
 				case 2: return BlockFace.WEST;
 				case 3: return BlockFace.SOUTH;
 				case 4: return BlockFace.NORTH;
-				default: return BlockFace.UP;
+				default: return BlockFace.DOWN;
 				}
-			case 96:
-				switch(block_up.getRawData()> 4?block_up.getRawData() - 4:block_up.getRawData()){
+			case TRAP_DOOR:
+				switch(block.getRawData()> 4?block.getRawData() - 4:block.getRawData()){
 				case 4: return BlockFace.EAST;
 				case 3: return BlockFace.WEST;
 				case 2: return BlockFace.SOUTH;
 				case 1: return BlockFace.NORTH;
-				default: return BlockFace.UP;
+				default: return BlockFace.DOWN;
 				}
 			default:
-
-				return BlockFace.SELF;
-			}
+				return null;
+			}*/
 	}
 
 

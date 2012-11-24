@@ -9,15 +9,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
-import org.bukkit.block.CreatureSpawner;
-import org.bukkit.block.NoteBlock;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
@@ -35,21 +33,16 @@ import com.nitnelave.CreeperHeal.utils.NeighborExplosion;
 
 public class ExplodedBlockManager {
 
-	private static Map<Location, BlockState> toReplace;
 	private static List<CreeperExplosion> explosionList = Collections.synchronizedList(new LinkedList<CreeperExplosion>());
-	private static CreeperHeal plugin;
 	private static NeighborExplosion explosionIndex;
+	private static Map<Location, CreeperBlock> toReplace = BlockManager.getToReplace();		//blocks to be replaced immediately after an explosion
+
 	
 	static {
 		if(!CreeperConfig.lightweightMode)
 			explosionIndex = new NeighborExplosion();
 	}
 
-
-	public ExplodedBlockManager(Map<Location, BlockState> toReplace, CreeperHeal plugin) {
-		ExplodedBlockManager.plugin = plugin;
-		ExplodedBlockManager.toReplace = toReplace;
-	}
 
 
 	public static void replaceNear(Player target)
@@ -87,7 +80,7 @@ public class ExplodedBlockManager {
 			Date time = cEx.getTime();
 			if(new Date(time.getTime() + since).after(now) || since == 0)         //if the explosion happened since x seconds
 			{
-				List<BlockState> list = cEx.getBlockList();
+				List<CreeperBlock> list = cEx.getBlockList();
 				if(!list.isEmpty() && list.get(0).getWorld().getName().equals( world.getName())) 
 				{
 					BlockManager.replace_blocks(cEx.getBlockList());
@@ -122,39 +115,37 @@ public class ExplodedBlockManager {
 	protected static void recordBlocks(List<Block> list, Location location, Entity entity, boolean timed)
 	{
 		CreeperLog.logInfo("Explosion getting recorded...", 3);
-		if(plugin.isInArena(location)) 
+		if(CreeperHeal.isInArena(location)) 
 			return;
 		//record the list of blocks of an explosion, from bottom to top
 		Date now = new Date();
-		List<BlockState> listState = new LinkedList<BlockState>();        //the list of blockstate we'll be keeping afterward
+		List<CreeperBlock> listState = new LinkedList<CreeperBlock>();        //the list of blockstate we'll be keeping afterward
 		WorldConfig world = CreeperConfig.loadWorld(location.getWorld());
 		List<Block> to_add = new LinkedList<Block>();
 
 		for(Block block : list)     //cycle through the blocks declared destroyed
 			record(block, listState, world, to_add);
 		
-		CreeperLog.logInfo("Blocks recorded. Number of blocks : " + listState.size(), 3);
 		if(CreeperConfig.explodeObsidian) 
 			checkForObsidian(location, listState);
-		CreeperLog.logInfo("Obsidian checked. Number of blocks : " + listState.size(), 3);
 
 
-		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable(){public void run() {BlockManager.replaceProtected();}});       //immediately replace the blocks marked for immediate replacement
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(CreeperHeal.getInstance(), new Runnable(){public void run() {BlockManager.replaceProtected();}});       //immediately replace the blocks marked for immediate replacement
 
 
-		Iterator<BlockState> iter = listState.iterator();
+		Iterator<CreeperBlock> iter = listState.iterator();
 		while(iter.hasNext())
 		{
-			BlockState state = iter.next();
+			CreeperBlock state = iter.next();
 			if(toReplaceContains(state.getBlock().getLocation()))       //remove the dupes already stored in the immediate
 				iter.remove();
 		}
 
-		BlockState[] tmp_array = listState.toArray(new BlockState[listState.size()]);        //sort through an array (bottom to top, dependent blocks in last), then store back in the list
+		CreeperBlock[] tmp_array = listState.toArray(new CreeperBlock[listState.size()]);        //sort through an array (bottom to top, dependent blocks in last), then store back in the list
 		Arrays.sort(tmp_array, new CreeperComparator());
 		listState.clear();
 
-		for(BlockState block : tmp_array) 
+		for(CreeperBlock block : tmp_array) 
 			listState.add(block);
 
 		CreeperLog.logInfo("List sorted. Number of blocks : " + listState.size(), 3);
@@ -176,17 +167,17 @@ public class ExplodedBlockManager {
 		{            //to replace the tnt that just exploded
 			Block block = location.getBlock();
 			if(/*world.replaceTNT || */CreeperTrapHandler.isTrap(block)) 
-				plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new AddTrapRunnable(cEx, block,Material.TNT));
+				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(CreeperHeal.getInstance(), new AddTrapRunnable(cEx, block,Material.TNT));
 		}
 		for(Block block : to_add)
-			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new AddTrapRunnable(cEx, block,Material.TNT));
+			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(CreeperHeal.getInstance(), new AddTrapRunnable(cEx, block,Material.TNT));
 
 	}
 	
 	
 
 
-	private static void checkForObsidian(Location location, List<BlockState> listState) {
+	private static void checkForObsidian(Location location, List<CreeperBlock> listState) {
 		int radius = CreeperConfig.obsidianRadius;
 		double chance = ((float)CreeperConfig.obsidianChance) / 100;
 		World w = location.getWorld();
@@ -203,7 +194,7 @@ public class ExplodedBlockManager {
 					Block b = w.getBlockAt(l);
 					if(b.getType() == Material.OBSIDIAN && r.nextDouble() < chance)
 					{
-						listState.add(b.getState());
+						listState.add(CreeperBlock.newBlock(b.getState()));
 						b.setTypeIdAndData(0, (byte)0, false);
 					}
 				}
@@ -212,7 +203,7 @@ public class ExplodedBlockManager {
 	}
 
 
-	private static void record(Block block, List<BlockState> listState, WorldConfig world, List<Block> toAdd) {
+	private static void record(Block block, List<CreeperBlock> listState, WorldConfig world, List<Block> toAdd) {
 		int type_id = block.getTypeId();
 		if (type_id == 0)
 			return;
@@ -220,7 +211,7 @@ public class ExplodedBlockManager {
 
 		if(CreeperConfig.preventChainReaction && block.getType().equals(Material.TNT))
 		{
-			toReplace.put(block.getLocation(), block.getState());
+			toReplace.put(block.getLocation(), CreeperBlock.newBlock(block.getState()));
 			block.setTypeIdAndData(0, (byte)0, false);
 			return;
 		}
@@ -230,16 +221,13 @@ public class ExplodedBlockManager {
 		{
 
 			if(CreeperConfig.replaceProtectedChests && CreeperHeal.isProtected(block))
-				toReplace.put(block.getLocation(), block.getState());    //replace immediately
+				toReplace.put(block.getLocation(), CreeperBlock.newBlock(block.getState()));    //replace immediately
 
 			if(block.getState() instanceof InventoryHolder)         //save the inventory
-				ChestManager.storeChest(block, listState);
-			else if(block.getState() instanceof Sign)                //save the text
-				BlockManager.putSignText(block.getLocation(), ((Sign)block.getState()).getLines());
-			else if(block.getState() instanceof NoteBlock) 
-				BlockManager.putNoteBlock(block.getLocation(), ((NoteBlock)(block.getState())).getRawNote());
-			else if(block.getState() instanceof CreatureSpawner) 
-				BlockManager.putMobSpawner(block.getLocation(), ((CreatureSpawner)(block.getState())).getCreatureTypeName());
+			{
+				storeChest(block, listState);
+				return;
+			}
 
 			switch (block.getType()) 
 			{       
@@ -247,7 +235,7 @@ public class ExplodedBlockManager {
 			case WOODEN_DOOR :
 				if(block.getData() < 8) 
 				{
-					listState.add(block.getState());
+					listState.add(CreeperBlock.newBlock(new Door(block)));
 					block.setTypeIdAndData(0, (byte)0, false);
 					block.getRelative(BlockFace.UP).setTypeIdAndData(0, (byte)0, false);
 				}
@@ -255,7 +243,7 @@ public class ExplodedBlockManager {
 			case BED_BLOCK :
 				if(data < 8) 
 				{
-					listState.add(block.getState());
+					listState.add(CreeperBlock.newBlock(block.getState()));
 					BlockFace face;
 					if(data == 0)            //facing the right way
 						face = BlockFace.WEST;
@@ -283,7 +271,7 @@ public class ExplodedBlockManager {
 			case WOOD_PLATE :
 				BlockState state = block.getState();
 				state.setRawData((byte) 0);
-				listState.add(state);
+				listState.add(CreeperBlock.newBlock(state));
 				block.setTypeIdAndData(0, (byte) 0, false);
 				break;
 			case SMOOTH_BRICK :
@@ -291,7 +279,7 @@ public class ExplodedBlockManager {
 				if(CreeperConfig.crackDestroyedBricks  && block.getData() == (byte)0)
 					block.setData((byte) 2);        //crack the bricks if the setting is right
 			default :                        //store the rest
-				listState.add(block.getState());
+				listState.add(CreeperBlock.newBlock(block.getState()));
 				block.setTypeIdAndData(0, (byte)0, false);
 				break;
 			}
@@ -301,13 +289,22 @@ public class ExplodedBlockManager {
 		{
 			Random generator = new Random();
 			if(generator.nextInt(100) < CreeperConfig.dropChance)        //percentage
-				BlockManager.dropBlock(block.getState());
+				CreeperBlock.newBlock(block.getState()).dropBlock();
 			block.setTypeIdAndData(0, (byte)0, false);
 
 		}
 		
 	}
 	
+	protected static void storeChest(Block block, List<CreeperBlock> listState) {
+		
+		CreeperChest chest = new CreeperChest(block.getState());
+		if(CreeperConfig.replaceProtectedChests && CreeperHeal.isProtected(block) || CreeperConfig.replaceAllChests)
+			toReplace.put(chest.getLocation(), chest);
+		else
+			listState.add(chest);
+			
+	}
 
 	public static void checkReplace(boolean blockPerBlock) {        //check to see if any block has to be replaced
 		Date now = new Date();
@@ -317,7 +314,7 @@ public class ExplodedBlockManager {
 		while(iter.hasNext()) {
 			CreeperExplosion cEx = iter.next();
 			Date time = cEx.getTime();
-			List<BlockState> blockList = cEx.getBlockList();
+			List<CreeperBlock> blockList = cEx.getBlockList();
 			Date after = new Date(time.getTime() + CreeperConfig.waitBeforeHeal * 1000);
 			if(after.before(now)) {        //if enough time went by
 				if(!blockPerBlock){        //all blocks at once

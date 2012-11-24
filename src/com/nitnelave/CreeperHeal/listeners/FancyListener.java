@@ -11,21 +11,15 @@ import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.material.Rails;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
-import com.nitnelave.CreeperHeal.block.BlockManager;
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
+import com.nitnelave.CreeperHeal.block.CreeperBlock;
 import com.nitnelave.CreeperHeal.block.CreeperExplosion;
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 public class FancyListener implements Listener
 {
-	private CreeperHeal plugin;
 
-
-	public FancyListener(CreeperHeal instance)
-	{
-		plugin = instance;
-	}
 
 	@EventHandler
 	public void onBlockPhysics(BlockPhysicsEvent event)
@@ -36,7 +30,7 @@ public class FancyListener implements Listener
 		Block b = event.getBlock();
 		if(b.getState() instanceof Rails)
 		{
-			if(plugin.getPreventUpdate().containsKey(b.getState()))
+			if(CreeperHeal.getPreventUpdate().containsKey(CreeperBlock.newBlock(b.getState())))
 				event.setCancelled(true);
 		}
 		else if(b.getType() == Material.VINE)
@@ -52,11 +46,11 @@ public class FancyListener implements Listener
 				return;
 			}
 		}
-		else if(CreeperConfig.preventBlockFall && BlockManager.blocks_physics.contains(b.getTypeId()))
+		else if(CreeperConfig.preventBlockFall && CreeperBlock.blocks_physics.contains(b.getTypeId()))
 		{
 			Location bLoc = b.getLocation();
 			World w = bLoc.getWorld();
-			if(plugin.getPreventBlockFall().containsKey(bLoc))
+			if(CreeperHeal.getPreventBlockFall().containsKey(bLoc))
 			{
 				event.setCancelled(true);
 				return;
@@ -78,9 +72,9 @@ public class FancyListener implements Listener
 				}
 			}
 			
-			synchronized(plugin.getPreventBlockFall())
+			synchronized(CreeperHeal.getPreventBlockFall())
 			{
-				for(Location loc : plugin.getPreventBlockFall().keySet())
+				for(Location loc : CreeperHeal.getPreventBlockFall().keySet())
 				{
 					if(loc.getWorld() == w)
 					{

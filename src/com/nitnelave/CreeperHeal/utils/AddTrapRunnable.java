@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 
+import com.nitnelave.CreeperHeal.block.CreeperBlock;
 import com.nitnelave.CreeperHeal.block.CreeperExplosion;
 
 public class AddTrapRunnable implements Runnable{
@@ -27,8 +28,8 @@ public class AddTrapRunnable implements Runnable{
 
 		block.setType(type);                            //set the block to tnt
 
-		List<BlockState> list = cEx.getBlockList();
-		list.add(block.getState());                //record it
+		List<CreeperBlock> list = cEx.getBlockList();
+		list.add(CreeperBlock.newBlock(block.getState()));                //record it
 
 		tmp_state.update(true);        //set it back to what it was
 		
