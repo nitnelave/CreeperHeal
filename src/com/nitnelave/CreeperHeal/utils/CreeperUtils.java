@@ -411,7 +411,6 @@ public class CreeperUtils
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public static <T> Set<T> createFinalHashSet(T... elements) {
 		Set<T> set = new HashSet<T>(elements.length);
 

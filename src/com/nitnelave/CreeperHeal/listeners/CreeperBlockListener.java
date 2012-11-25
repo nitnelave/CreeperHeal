@@ -210,7 +210,7 @@ public class CreeperBlockListener implements Listener{
 			event.setCancelled(true);
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onEntityExplode(EntityExplodeEvent event) {//explosion
 		CreeperLog.logInfo("EntityExplodeEvent", 3);
 		if(event.isCancelled())
