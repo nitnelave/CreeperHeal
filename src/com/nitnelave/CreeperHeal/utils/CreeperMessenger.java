@@ -60,7 +60,6 @@ public class CreeperMessenger
 	{
 		try {
 			file.createNewFile();
-			boolean success = false;
 			InputStream templateIn = plugin.getResource("messages.properties");
 			OutputStream outStream = new FileOutputStream(file);
 
@@ -74,10 +73,7 @@ public class CreeperMessenger
 			templateIn.close();
 			outStream.flush();
 			outStream.close();
-			if (success) 
-				CreeperLog.logInfo("[CreeperHeal] Default config created", 1);
-			else
-				CreeperLog.warning("[CreeperHeal] Failed to create file: messages.properties");
+			CreeperLog.logInfo("[CreeperHeal] Default config created", 1);
 
 		} catch (Exception e) {
 			CreeperLog.warning("[CreeperHeal] Failed to create file: messages.properties");
@@ -101,11 +97,11 @@ public class CreeperMessenger
 		String message = prop.getProperty(m);
 		message = colorToChat(message);
 		try{
-		for(int i = 0; i < variables.length; i++)
-		{
-			if(values[i] != null)
-				message = message.replaceAll("\\{" + variables[i] + "\\}", values[i]);
-		}
+			for(int i = 0; i < variables.length; i++)
+			{
+				if(values[i] != null)
+					message = message.replaceAll("\\{" + variables[i] + "\\}", values[i]);
+			}
 		} catch(NullPointerException e) {
 			CreeperLog.warning("[CreeperHeal] Wrong variable used in message " + m);
 		}
@@ -113,24 +109,24 @@ public class CreeperMessenger
 	}
 
 	public static String getMessage(WarningCause cause, String offender, String world,
-            boolean blocked, String data, boolean player)
-    {
+			boolean blocked, String data, boolean player)
+	{
 		switch(cause)
 		{
-			case LAVA:
-				return processMessage((blocked?"block":"warn") + "-lava" + (blocked?(player?"-player":"-admin"):""), world, offender, null, null, null, null);
-			case FIRE:
-				return processMessage((blocked?"block":"warn") + "-flint-and-steel" + (blocked?(player?"-player":"-admin"):""), world, offender, null, null, null, null);
-			case TNT:
-				return processMessage((blocked?"block":"warn") + "-TNT" + (blocked?(player?"-player":"-admin"):""), world, offender, null, null, null, null);
-			case BLACKLIST:
-				return processMessage((blocked?"block":"warn") + "-place-blacklist" + (blocked?(player?"-player":"-admin"):""), world, offender, null, null, data, null);
-			case SPAWN_EGG:
-				return processMessage((blocked?"block":"warn") + "-spawn-eggs" + (blocked?(player?"-player":"-admin"):""), world, offender, null, data, null, null);
-			case PVP:
-				return processMessage((blocked?"block":"warn") + "-pvp" + (blocked?(player?"-player":"-admin"):""), world, offender, data, null, null, null);
+		case LAVA:
+			return processMessage((blocked?"block":"warn") + "-lava" + (blocked?(player?"-player":"-admin"):""), world, offender, null, null, null, null);
+		case FIRE:
+			return processMessage((blocked?"block":"warn") + "-flint-and-steel" + (blocked?(player?"-player":"-admin"):""), world, offender, null, null, null, null);
+		case TNT:
+			return processMessage((blocked?"block":"warn") + "-TNT" + (blocked?(player?"-player":"-admin"):""), world, offender, null, null, null, null);
+		case BLACKLIST:
+			return processMessage((blocked?"block":"warn") + "-place-blacklist" + (blocked?(player?"-player":"-admin"):""), world, offender, null, null, data, null);
+		case SPAWN_EGG:
+			return processMessage((blocked?"block":"warn") + "-spawn-eggs" + (blocked?(player?"-player":"-admin"):""), world, offender, null, data, null, null);
+		case PVP:
+			return processMessage((blocked?"block":"warn") + "-pvp" + (blocked?(player?"-player":"-admin"):""), world, offender, data, null, null, null);
 		}
-	    return null;
-    }
+		return null;
+	}
 
 }

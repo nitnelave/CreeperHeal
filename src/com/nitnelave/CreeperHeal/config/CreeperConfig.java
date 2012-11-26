@@ -30,7 +30,7 @@ public class CreeperConfig
 	 * Config settings
 	 */
 
-	public static int waitBeforeHeal, logLevel, blockPerBlockInterval, waitBeforeHealBurnt, dropChance, distanceNear, obsidianChance, obsidianRadius;
+	public static int waitBeforeHeal, logLevel = -42, blockPerBlockInterval, waitBeforeHealBurnt, dropChance, distanceNear, obsidianChance, obsidianRadius;
 	public static boolean dropReplacedBlocks, blockPerBlock, teleportOnSuffocate, dropDestroyedBlocks, crackDestroyedBricks,
 		lockette, replaceAllChests, replaceProtectedChests, overwriteBlocks, preventBlockFall, lightweightMode, opEnforce, logWarnings, preventChainReaction, explodeObsidian;
 
@@ -55,7 +55,7 @@ public class CreeperConfig
 
 		if (!yml.exists()) {
 			CreeperLog.warning("[CreeperHeal] Config file not found, creating default.");
-			copyJarConfig(yml);        //write the config with the default values.
+			copyJarConfig(yml, "config.yml");        //write the config with the default values.
 		}
 
 		load();
@@ -382,12 +382,12 @@ public class CreeperConfig
 	}
 
 
-	private static void copyJarConfig(File file)
+	public static void copyJarConfig(File file, String resource)
 	{
 		OutputStream outStream = null;
 		try {
 			file.createNewFile();
-			InputStream templateIn = plugin.getResource("config.yml");
+			InputStream templateIn = plugin.getResource(resource);
 			outStream = new FileOutputStream(file);
 
 			int read = 0;
@@ -403,7 +403,7 @@ public class CreeperConfig
 			CreeperLog.logInfo("[CreeperHeal] Default config created", 1);
 
 		} catch (Exception e) {
-			CreeperLog.warning("[CreeperHeal] Failed to create file: config.yml");
+			CreeperLog.warning("[CreeperHeal] Failed to create file: " + file.getName());
 			CreeperLog.warning(e.getMessage());
 			if(outStream != null)
 			{
