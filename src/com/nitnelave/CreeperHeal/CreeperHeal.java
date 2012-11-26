@@ -89,8 +89,21 @@ public class CreeperHeal extends JavaPlugin {
 
 		instance = this;
 
+		File warningLogFile = new File(getDataFolder()+"/log.txt");
+		if(!warningLogFile.exists())
+			try
+		{
+				warningLogFile.createNewFile();
+		}
+		catch (IOException e)
+		{
+			Logger.getLogger("Minecraft").warning(e.getMessage());
+		}
+
+		new CreeperLog(warningLogFile);
+
+
 		new CreeperConfig(this);
-		Logger.getLogger("Minecraft").info("test");
 		
 		File file = new File(getDataFolder() + "/drops.yml");		//get the trap file
 		file.delete();
@@ -129,20 +142,7 @@ public class CreeperHeal extends JavaPlugin {
 
 		new CreeperEconomy(this);
 
-		File warningLogFile = new File(getDataFolder()+"/log.txt");
-		if(!warningLogFile.exists())
-			try
-		{
-				warningLogFile.createNewFile();
-		}
-		catch (IOException e)
-		{
-			CreeperLog.warning(e.getMessage());
-		}
-
-		new CreeperLog(warningLogFile);
-
-
+		
 
 		/*
 		 * Recurrent tasks

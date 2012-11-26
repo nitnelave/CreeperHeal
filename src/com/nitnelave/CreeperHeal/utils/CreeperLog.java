@@ -15,9 +15,9 @@ public class CreeperLog
 {
 	private static File file;
 	private final static Logger log = Logger.getLogger("Minecraft");            //to output messages to the console/log
-	private static int logLevel = CreeperConfig.logLevel;
+	private static int logLevel = -42;
 
-	
+
 	public CreeperLog(File f)
 	{
 		file = f;
@@ -46,7 +46,9 @@ public class CreeperLog
 
 	public static void logInfo(String msg, int level)
 	{
-		logLevel = CreeperConfig.logLevel;
+		if(logLevel == -42) 
+			if(CreeperConfig.logLevel != -42)
+				logLevel = CreeperConfig.logLevel;
 		if(level<=logLevel)
 		{
 			log.info("[CreeperHeal] "+msg);
@@ -58,7 +60,7 @@ public class CreeperLog
 		log.log(Level.SEVERE, "[CreeperHeal] " + s);
 		record("[SEVERE]" + s);
 	}
-	
+
 	private static String getDate() {
 		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss ");
 		return dateFormat.format(new Date());

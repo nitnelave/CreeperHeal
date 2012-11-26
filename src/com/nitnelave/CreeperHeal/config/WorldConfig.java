@@ -100,7 +100,7 @@ public class WorldConfig {
 	{
 		File configFile = new File(pluginFolder.getPath() + "/" + name + ".yml");
 		if(!configFile.exists())
-			configFile.createNewFile();
+			CreeperConfig.copyJarConfig(configFile, "world.yml");
 		config = new YamlConfiguration();
 		config.load(configFile);
 		
