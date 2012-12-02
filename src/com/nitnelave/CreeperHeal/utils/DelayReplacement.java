@@ -20,17 +20,17 @@ public class DelayReplacement implements Runnable
 	@Override
 	public void run()
 	{
-		if(counter < 50)
+		if(counter < 150)
 		{
 			if(blockState instanceof Attachable && blockState.getBlock().getRelative(((Attachable) blockState).getAttachedFace()).getType() == Material.AIR)
 				blockState.delay_replacement(counter);
 			else if(blockState.getBlock().getRelative(BlockFace.DOWN).getType() == Material.AIR)
 				blockState.delay_replacement(counter);
 			else
-				blockState.replace();
+				blockState.replace(true);
 		}
 		else
-			blockState.replace();
+			blockState.replace(true);
 
 	}
 

@@ -69,7 +69,7 @@ public class CreeperUtils
 
 	public static boolean check_free(World w, int x, int y, int z, LivingEntity en) {
 		Block block = w.getBlockAt(x, y, z);
-		if(CreeperBlock.blocks_non_solid.contains(block.getTypeId()) && CreeperBlock.blocks_non_solid.contains(block.getRelative(0, 1, 0).getTypeId()) && !CreeperBlock.blocks_non_solid.contains(block.getRelative(0, -1, 0).getTypeId())) {
+		if(!CreeperBlock.isSolid(block.getTypeId()) && !CreeperBlock.isSolid(block.getRelative(0, 1, 0).getTypeId()) && CreeperBlock.isSolid(block.getRelative(0, -1, 0).getTypeId())) {
 			Location loc = new Location(w, x, y+0.5, z+0.5);
 			loc.setYaw(en.getLocation().getYaw());
 			loc.setPitch(en.getLocation().getPitch());
@@ -85,7 +85,7 @@ public class CreeperUtils
 		int y =loc.getBlockY();
 		int z =loc.getBlockZ();
 		World w = en.getWorld();
-		if(!CreeperBlock.blocks_non_solid.contains(loc.getBlock().getTypeId()) || !CreeperBlock.blocks_non_solid.contains(loc.getBlock().getRelative(0, 1, 0).getTypeId())) {
+		if(CreeperBlock.isSolid(loc.getBlock().getTypeId()) || CreeperBlock.isSolid(loc.getBlock().getRelative(0, 1, 0).getTypeId())) {
 			for(int k =1; k + y < 127; k++) {        //all the way to the sky, checks if there's some room up or around
 
 				if(check_free(w, x, y+k, z, en))

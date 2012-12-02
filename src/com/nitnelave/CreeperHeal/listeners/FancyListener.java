@@ -26,7 +26,7 @@ public class FancyListener implements Listener
 	{
 		if(event.isCancelled())
 			return;
-
+		
 		Block b = event.getBlock();
 		if(b.getState() instanceof Rails)
 		{
@@ -46,7 +46,7 @@ public class FancyListener implements Listener
 				return;
 			}
 		}
-		else if(CreeperConfig.preventBlockFall && CreeperBlock.blocks_physics.contains(b.getTypeId()))
+		else if(CreeperConfig.preventBlockFall && CreeperBlock.hasPhysics(b.getTypeId()))
 		{
 			Location bLoc = b.getLocation();
 			World w = bLoc.getWorld();

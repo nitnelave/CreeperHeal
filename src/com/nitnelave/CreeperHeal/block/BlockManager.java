@@ -46,7 +46,7 @@ public class BlockManager {
 	protected static void replaceProtected() {         //replace the blocks that should be immediately replaced after an explosion
 		Iterator<CreeperBlock> iter = toReplace.values().iterator();
 		while(iter.hasNext())
-			iter.next().replace();
+			iter.next().replace(false);
 
 
 		toReplace.clear();
@@ -57,7 +57,7 @@ public class BlockManager {
 
 
 	protected static void replace_blocks(CreeperBlock block) {        //if there's just one block, no need to go over all this
-		block.replace();
+		block.replace(false);
 	}
 
 
@@ -94,16 +94,16 @@ public class BlockManager {
 			Iterator<CreeperBlock> iter = list.iterator();
 			while (iter.hasNext()){
 				CreeperBlock block = iter.next();
-				if(!CreeperBlock.blocks_physics.contains(block.getTypeId())){
-					block.replace();
+				if(!CreeperBlock.hasPhysics(block.getTypeId())){
+					block.replace(false);
 					iter.remove();
 				}
 			}
 			iter = list.iterator();
 			while (iter.hasNext()){        //then all physics
 				CreeperBlock block = iter.next();
-				if(CreeperBlock.blocks_physics.contains(block.getTypeId())){
-					block.replace();
+				if(CreeperBlock.hasPhysics(block.getTypeId())){
+					block.replace(false);
 					iter.remove();
 				}
 			}

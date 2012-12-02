@@ -8,8 +8,8 @@ public class CreeperComparator implements Comparator<CreeperBlock>{		//used to s
 	
 	public int compare(CreeperBlock b1, CreeperBlock b2) {
 		
-		boolean c1 = CreeperBlock.blocks_dependent.contains(b1.getTypeId());
-		boolean c2 = CreeperBlock.blocks_dependent.contains(b2.getTypeId());
+		boolean c1 = CreeperBlock.isDependent(b1.getTypeId());
+		boolean c2 = CreeperBlock.isDependent(b2.getTypeId());
 		if(c1 && !c2)
 			return 1;
 		else if(c2 && !c1)
