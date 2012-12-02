@@ -39,11 +39,10 @@ import com.nitnelave.CreeperHeal.utils.CreeperUtils;
 public class CreeperBlockListener implements Listener{
 
 
-
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onHangingBreak(HangingBreakEvent e)
 	{
-		CreeperLog.logInfo("Hanging removed because of " + e.getCause(), 2);
+		CreeperLog.debug("Hanging removed because of " + e.getCause());
 		if(e.isCancelled())
 			return;
 
@@ -51,7 +50,7 @@ public class CreeperBlockListener implements Listener{
 		Hanging h = (Hanging) e.getEntity();
 		if(e instanceof HangingBreakByEntityEvent)
 		{
-			CreeperLog.logInfo("HanginBreakByEntityEvent", 2);
+			CreeperLog.debug("HanginBreakByEntityEvent");
 			HangingBreakByEntityEvent event = (HangingBreakByEntityEvent) e;
 			Entity remover = event.getRemover();
 			if(remover instanceof Creeper || remover instanceof TNTPrimed || remover instanceof Fireball || remover instanceof EnderDragon)
@@ -71,7 +70,7 @@ public class CreeperBlockListener implements Listener{
 		}*/
 		else if(e.getCause() == RemoveCause.PHYSICS /*|| e.getCause() == RemoveCause.WATER*/)
 		{
-			CreeperLog.logInfo("Hanging removed because of physics", 2);
+			CreeperLog.debug("Hanging removed because of physics");
 			if(!CreeperConfig.lightweightMode)
 			{
 				Location paintLoc = h.getLocation();
@@ -227,6 +226,5 @@ public class CreeperBlockListener implements Listener{
 		if(CreeperUtils.shouldReplace(entity, world))
 			ExplodedBlockManager.recordBlocks(event, world);
 	}
-
 
 }

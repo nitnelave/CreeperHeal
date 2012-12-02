@@ -99,11 +99,12 @@ public class CreeperHeal extends JavaPlugin {
 		{
 			Logger.getLogger("Minecraft").warning(e.getMessage());
 		}
+		
+		new CreeperConfig(this);
 
 		new CreeperLog(warningLogFile);
 
 
-		new CreeperConfig(this);
 		
 		File file = new File(getDataFolder() + "/drops.yml");		//get the trap file
 		file.delete();

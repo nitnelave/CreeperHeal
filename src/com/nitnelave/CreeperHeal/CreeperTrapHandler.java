@@ -42,7 +42,7 @@ public class CreeperTrapHandler {
 			delete_own = checkPermissions(p, true, "trap.remove.own");
 		if(delete_own) {
 
-			Block block = p.getTargetBlock(CreeperBlock.transparent_blocks, 10);
+			Block block = p.getTargetBlock(CreeperBlock.getTransparentBlocks(), 10);
 
 			if(block.getType() == Material.TNT) {
 
@@ -143,7 +143,7 @@ public class CreeperTrapHandler {
 	public static void createTrap(Player p) throws VaultNotDetectedException, TransactionFailedException
 	{
 		if(checkPermissions(p, true,"trap.create", "trap.*")) {
-			Block block = p.getTargetBlock(CreeperBlock.transparent_blocks, 10);
+			Block block = p.getTargetBlock(CreeperBlock.getTransparentBlocks(), 10);
 			if(block.getType() == Material.TNT) {
 				String owner = creeperTrap.getTrapOwner(block);
 				if(owner == null) {

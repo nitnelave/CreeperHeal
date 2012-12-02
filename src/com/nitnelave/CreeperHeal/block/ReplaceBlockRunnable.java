@@ -1,12 +1,10 @@
 package com.nitnelave.CreeperHeal.block;
 
-import org.bukkit.block.BlockState;
-
 public class ReplaceBlockRunnable implements Runnable
 {
-	BlockState block;
+	CreeperBlock block;
 	
-	public ReplaceBlockRunnable(BlockState b)
+	public ReplaceBlockRunnable(CreeperBlock b)
 	{
 		block = b;
 	}

@@ -67,7 +67,7 @@ public class BurntBlockManager {
 				Date time = cBlock.getTime();
 				Block block = cBlock.getBlock();
 				if((new Date(time.getTime() + CreeperConfig.waitBeforeHealBurnt * 1000).before(now))) {        //if enough time went by
-					if(CreeperBlock.blocks_dependent.contains(block.getTypeId()))
+					if(CreeperBlock.isDependent(block.getTypeId()))
 					{
 						Block support = block.getRelative(CreeperUtils.getAttachingFace(cBlock.getState()).getOppositeFace());
 						if(support.getTypeId() == 0 || support.getTypeId() == 51)
@@ -85,7 +85,7 @@ public class BurntBlockManager {
 						iter.remove();
 					}
 				}
-				else if(!CreeperBlock.blocks_dependent.contains(block.getTypeId()))
+				else if(!CreeperBlock.isDependent(block.getTypeId()))
 					break;
 			}
 		}
@@ -94,7 +94,7 @@ public class BurntBlockManager {
 
 	private static void recordAttachedBurntBlocks(Block block, Date now, BlockFace face){
 		BlockState block_up = block.getRelative(face).getState();
-		if(CreeperBlock.blocks_dependent.contains(block_up.getTypeId())) {        //the block above is a dependent block, store it, but one interval after
+		if(CreeperBlock.isDependent(block_up.getTypeId())) {        //the block above is a dependent block, store it, but one interval after
 			if(CreeperUtils.getAttachingFace(block_up) == CreeperUtils.rotateCClockWise(face))
 			{
 				burntList.add(new CreeperBurntBlock(new Date(now.getTime() + 100), block_up));

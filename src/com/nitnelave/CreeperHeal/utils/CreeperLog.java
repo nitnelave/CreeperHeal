@@ -16,11 +16,13 @@ public class CreeperLog
 	private static File file;
 	private final static Logger log = Logger.getLogger("Minecraft");            //to output messages to the console/log
 	private static int logLevel = -42;
+	private static boolean debug = false;
 
 
 	public CreeperLog(File f)
 	{
 		file = f;
+		debug = CreeperConfig.debug;
 	}
 
 	public static void record(String s)
@@ -64,6 +66,11 @@ public class CreeperLog
 	private static String getDate() {
 		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss ");
 		return dateFormat.format(new Date());
+	}
+
+	public static void debug(String string) {
+		if(debug)
+			log.info("[DEBUG] " + string);
 	}
 
 }

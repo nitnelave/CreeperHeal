@@ -122,6 +122,10 @@ public class ExplodedBlockManager {
 		List<CreeperBlock> listState = new LinkedList<CreeperBlock>();        //the list of blockstate we'll be keeping afterward
 		WorldConfig world = CreeperConfig.loadWorld(location.getWorld());
 		List<Block> to_add = new LinkedList<Block>();
+		
+		double radius = computeRadius(list, location);
+
+		checkForRestone(location, list, listState, radius, world);
 
 		for(Block block : list)     //cycle through the blocks declared destroyed
 			record(block, listState, world, to_add);
@@ -147,13 +151,16 @@ public class ExplodedBlockManager {
 
 		for(CreeperBlock block : tmp_array) 
 			listState.add(block);
+		
+		
 
 		CreeperLog.logInfo("List sorted. Number of blocks : " + listState.size(), 3);
 		CreeperExplosion cEx;
 		if(timed)
 			now = new Date(now.getTime() + 1200000);
-
-		cEx = new CreeperExplosion(now, listState, location);        //store in the global hashmap, with the time it happened as a key
+		
+		
+		cEx = new CreeperExplosion(now, listState, location, radius);        //store in the global hashmap, with the time it happened as a key
 
 		explosionList.add(cEx);
 		if(!CreeperConfig.lightweightMode)
@@ -174,6 +181,28 @@ public class ExplodedBlockManager {
 
 	}
 	
+	private static void checkForRestone(Location location, List<Block> list,
+			List<CreeperBlock> listState, double radius, WorldConfig world) {
+		for(Block b : list)
+		{
+			if(CreeperBlock.isRedstone(b.getTypeId()) && b.getLocation().distance(location) < radius)
+			{
+				record(b, listState, world, list);
+				listState.add(CreeperBlock.newBlock(b.getState()));
+				b.setType(Material.AIR);
+			}
+		}		
+	}
+
+
+	public static double computeRadius(List<Block> list, Location loc) {
+		double r = 0;
+		for(Block b : list) {
+			Location bl = b.getLocation();
+			r = Math.max(r, loc.distance(bl));
+		}
+		return r;
+	}
 	
 
 
