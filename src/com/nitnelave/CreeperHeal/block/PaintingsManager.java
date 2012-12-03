@@ -1,26 +1,19 @@
 package com.nitnelave.CreeperHeal.block;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.minecraft.server.EntityItemFrame;
-import net.minecraft.server.EntityPainting;
-import net.minecraft.server.EnumArt;
 import net.minecraft.server.WorldServer;
 
 import org.bukkit.Location;
-import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Hanging;
-import org.bukkit.entity.ItemFrame;
-import org.bukkit.entity.Painting;
-import org.bukkit.inventory.ItemStack;
 
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
-import com.nitnelave.CreeperHeal.utils.CreeperUtils;
 
 public class PaintingsManager {
 
@@ -38,11 +31,11 @@ public class PaintingsManager {
 			{
 				if(cp.getDate().getTime() - time.getTime() < 0)
 				{
-					if(!replacePainting(cp.getHanging()))
+					if(!cp.replace())
 					{
 						if(cp.isPostPoned() || (!CreeperConfig.lightweightMode && BurntBlockManager.isIndexEmpty()))
 						{
-							cp.getWorld().dropItemNaturally(cp.getLocation(), new ItemStack(321, 1));
+							cp.drop();
 							iter.remove();
 						}
 						else
@@ -60,8 +53,8 @@ public class PaintingsManager {
 			{
 				if(Math.abs(cp.getDate().getTime() - time.getTime()) < 500 || ExplodedBlockManager.getExplosionList().isEmpty())
 				{
-					if(!replacePainting(cp.getHanging()))
-						cp.getWorld().dropItemNaturally(cp.getLocation(), new ItemStack(321, 1));
+					if(!cp.replace())
+						cp.drop();
 					iter.remove();
 				}
 			}
@@ -69,63 +62,8 @@ public class PaintingsManager {
 	}
 
 
-	private static boolean replacePainting(Hanging hanging) {
-		BlockFace face = hanging.getAttachedFace().getOppositeFace();
-		Location loc = hanging.getLocation().getBlock().getRelative(face.getOppositeFace()).getLocation();
-		CraftWorld w = (CraftWorld) loc.getWorld();
 
-		loc = CreeperUtils.getAttachingBlock(loc, hanging, face);
-
-		int dir;
-		switch(face) {
-		case EAST:
-		default:
-			dir = 0;
-			break;
-		case NORTH:
-			dir = 1;
-			break;
-		case WEST:
-			dir = 2;
-			break;
-		case SOUTH:
-			dir = 3;;
-			break;
-		}
-
-		if(hanging instanceof Painting)
-		{
-			Painting p = (Painting) hanging;
-			EntityPainting paint = new EntityPainting(w.getHandle(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), dir);
-			EnumArt[] array = EnumArt.values();
-			paint.art = array[p.getArt().getId()];
-			paint.setDirection(paint.direction);
-			if (!paint.survives()) {
-				paint = null;
-				return false;
-			}
-			w.getHandle().addEntity(paint);
-		}
-		else if(hanging instanceof ItemFrame)
-		{
-			ItemFrame f = (ItemFrame) hanging;
-			EntityItemFrame frame = new EntityItemFrame(w.getHandle(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), dir);
-			net.minecraft.server.ItemStack stack = new net.minecraft.server.ItemStack(f.getItem().getTypeId(), 1, 0);
-			frame.a(stack);
-			//set item rotation, direction
-			if(!frame.survives()) {
-				frame = null;
-				return false;
-			}
-			w.getHandle().addEntity(frame);
-		}
-		return true;
-
-	}
-
-
-
-	public static void checkForPaintings(Hanging h, boolean postpone, boolean burnt)
+	public static void checkPainting(Hanging h, boolean postpone, boolean burnt)
 	{
 		Date time = new Date();
 		if(postpone)
@@ -134,9 +72,21 @@ public class PaintingsManager {
 		if(burnt)
 			paintings.add(new CreeperPainting(h, new Date(time.getTime() + 1000 * CreeperConfig.waitBeforeHealBurnt + 10000), true));
 		else
-			paintings.add(new CreeperPainting(h, time, false));
+			paintings.add(new CreeperPainting(h, new Date(time.getTime() + 1000 * CreeperConfig.waitBeforeHeal + 150000 * CreeperConfig.blockPerBlockInterval), false));
 		WorldServer w = ((CraftWorld)h.getWorld()).getHandle();
 		w.getEntity(h.getEntityId()).dead = true;
+	}
+	
+	
+	public static void checkForPaintings(Location loc, double radius, boolean postpone, boolean fire) {
+		Collection<Hanging> hangings = loc.getWorld().getEntitiesByClass(Hanging.class);
+		Iterator<Hanging> iter = hangings.iterator();
+		while(iter.hasNext()) {
+			Hanging h = iter.next();
+			if(h.getLocation().distance(loc) < radius) {
+				checkPainting(h, postpone, fire);
+			}
+		}
 	}
 
 
@@ -144,8 +94,8 @@ public class PaintingsManager {
 	{
 		for(CreeperPainting p : paintings)
 		{
-			if(!replacePainting(p.getHanging()))
-				p.getWorld().dropItemNaturally(p.getLocation(), new ItemStack(321, 1));
+			if(!p.replace())
+				p.drop();
 		}
 		paintings.clear();
 

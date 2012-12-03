@@ -124,6 +124,7 @@ public class ExplodedBlockManager {
 		List<Block> to_add = new LinkedList<Block>();
 		
 		double radius = computeRadius(list, location);
+		//PaintingsManager.checkForPaintings(location, radius, world.isRepairTimed(), false);
 
 		checkForRestone(location, list, listState, radius, world);
 

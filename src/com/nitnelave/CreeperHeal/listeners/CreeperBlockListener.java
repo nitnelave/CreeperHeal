@@ -8,6 +8,7 @@ import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Hanging;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
@@ -34,7 +35,6 @@ import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.CreeperPermissionManager;
 import com.nitnelave.CreeperHeal.utils.CreeperPlayer;
-import com.nitnelave.CreeperHeal.utils.CreeperUtils;
 
 public class CreeperBlockListener implements Listener{
 
@@ -42,22 +42,22 @@ public class CreeperBlockListener implements Listener{
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onHangingBreak(HangingBreakEvent e)
 	{
-		CreeperLog.debug("Hanging removed because of " + e.getCause());
 		if(e.isCancelled())
 			return;
 
+		if(e.getEntity() instanceof ItemFrame)
+			CreeperLog.debug("Item Frame detected!!");
 
 		Hanging h = (Hanging) e.getEntity();
 		if(e instanceof HangingBreakByEntityEvent)
 		{
-			CreeperLog.debug("HanginBreakByEntityEvent");
 			HangingBreakByEntityEvent event = (HangingBreakByEntityEvent) e;
 			Entity remover = event.getRemover();
 			if(remover instanceof Creeper || remover instanceof TNTPrimed || remover instanceof Fireball || remover instanceof EnderDragon)
 			{
 				WorldConfig world = CreeperConfig.loadWorld(remover.getWorld());
-				if(CreeperUtils.shouldReplace(remover, world)) {
-					PaintingsManager.checkForPaintings(h, world.isRepairTimed(), false);
+				if(world.shouldReplace(remover)) {
+					PaintingsManager.checkPainting(h, world.isRepairTimed(), false);
 				}
 			}
 		}
@@ -70,7 +70,6 @@ public class CreeperBlockListener implements Listener{
 		}*/
 		else if(e.getCause() == RemoveCause.PHYSICS /*|| e.getCause() == RemoveCause.WATER*/)
 		{
-			CreeperLog.debug("Hanging removed because of physics");
 			if(!CreeperConfig.lightweightMode)
 			{
 				Location paintLoc = h.getLocation();
@@ -96,7 +95,7 @@ public class CreeperBlockListener implements Listener{
 								else
 									should = world.creepers;
 								if(should) 
-									PaintingsManager.checkForPaintings(h, world.isRepairTimed(), false);
+									PaintingsManager.checkPainting(h, world.isRepairTimed(), false);
 								return;
 							}
 						}
@@ -107,7 +106,7 @@ public class CreeperBlockListener implements Listener{
 					WorldConfig world = CreeperConfig.loadWorld(w);
 
 					if(world.fire) 
-						PaintingsManager.checkForPaintings(h, world.isRepairTimed(), true);
+						PaintingsManager.checkPainting(h, world.isRepairTimed(), true);
 					return;
 				}
 			}
@@ -223,7 +222,7 @@ public class CreeperBlockListener implements Listener{
 
 		CreeperLog.logInfo("faction handler says ok", 3);
 		Entity entity = event.getEntity();
-		if(CreeperUtils.shouldReplace(entity, world))
+		if(world.shouldReplace(entity))
 			ExplodedBlockManager.recordBlocks(event, world);
 	}
 

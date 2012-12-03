@@ -71,8 +71,8 @@ public class CreeperListener implements Listener{
 				if(entity instanceof Creeper || entity instanceof TNTPrimed || entity instanceof Fireball || entity instanceof EnderDragon)
 				{
 					WorldConfig world = getWorld(entity.getWorld());
-					if(CreeperUtils.shouldReplace(entity, world)) 
-						PaintingsManager.checkForPaintings((Painting)en, world.isRepairTimed(), false);
+					if(world.shouldReplace(entity)) 
+						PaintingsManager.checkPainting((Painting)en, world.isRepairTimed(), false);
 				}
 			}
 			else
