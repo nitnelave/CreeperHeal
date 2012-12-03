@@ -61,6 +61,8 @@ public class CreeperBlock {
 			return new CreeperNoteBlock((NoteBlock) blockState);
 		if(blockState instanceof CreatureSpawner)
 			return new CreeperMonsterSpawner((CreatureSpawner) blockState);
+		if((CreeperConfig.playerHeads) && (blockState.getType() == Material.SKULL))
+			return new CreeperSkullBlock(blockState);
 		
 		return new CreeperBlock(blockState);
 	}
