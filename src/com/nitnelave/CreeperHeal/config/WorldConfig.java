@@ -7,6 +7,12 @@ import java.util.HashSet;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.EnderDragon;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Fireball;
+import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.Wither;
 
 import com.nitnelave.CreeperHeal.block.BlockId;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
@@ -133,7 +139,7 @@ public class WorldConfig {
 		placeList = loadList("grief.blacklist"); 
 		ignoreFactionsWilderness = getBoolean("replace.factions.ignore-wilderness", false);
 		ignoreFactionsTerritory = getBoolean("replace.factions.ignore-territory", false);
-		whiteBlockList = getBoolean("replace.white-restric-list", false);
+		whiteBlockList = getBoolean("replace.white-restrict-list", false);
 		whitePlaceList = getBoolean("grief.white-list", false);
 		wither = getBoolean("replace.Wither", true);
 		spawnWither = getBoolean("grief.allow-spawn-wither", true);
@@ -225,5 +231,59 @@ public class WorldConfig {
 		}
 		return tmp;
     }
+	
+	
 
+	public boolean shouldReplace(Entity entity)
+	{
+
+		if(entity != null) {
+
+			if( entity instanceof Creeper)         //if it's a creeper, and creeper explosions are recorded
+			{
+				if(replaceAbove)
+				{
+					if(isAbove(entity))
+						return creepers;
+					return false;
+				}
+				return creepers;
+			}
+			else if(entity instanceof TNTPrimed)                 //tnt -- it checks if it's a trap.
+			{
+				if(replaceAbove){
+					if(isAbove(entity))
+						return tnt;
+					return false;
+				}
+				else
+					return tnt;
+			}
+			else if(entity instanceof Fireball)         //fireballs (shot by ghasts)
+			{
+				if(replaceAbove){
+					if(isAbove(entity))
+						return ghast;
+					return false;
+				}
+				else
+					return ghast;
+			}
+			else if(entity instanceof EnderDragon)
+				return dragons;
+			else if(entity instanceof Wither)
+				return wither;
+			else        //none of it, another custom entity
+				return magical;
+
+		}
+		else
+			return magical;
+	}
+
+
+
+	public boolean isAbove(Entity entity) {       //the entity that exploded was above the limit
+		return entity.getLocation().getBlockY()>= replaceLimit;
+	}
 }

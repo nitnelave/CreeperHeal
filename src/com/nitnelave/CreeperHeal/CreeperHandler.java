@@ -9,7 +9,6 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
-import com.nitnelave.CreeperHeal.utils.CreeperUtils;
 
 public class CreeperHandler
 {	
@@ -31,7 +30,7 @@ public class CreeperHandler
 	
 	public static boolean shouldRemoveLWCProtection(Entity entity)
 	{
-		return !CreeperUtils.shouldReplace(entity, CreeperConfig.loadWorld(entity.getWorld()));
+		return !CreeperConfig.loadWorld(entity.getWorld()).shouldReplace(entity);
 	}
 
 }

@@ -3,6 +3,7 @@ package com.nitnelave.CreeperHeal.block;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -17,6 +18,8 @@ import org.bukkit.block.NoteBlock;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Attachable;
+import org.bukkit.material.Rails;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
@@ -130,7 +133,7 @@ public class CreeperBlock {
 		}
 
 
-		if(!shouldDrop && isDependent(getTypeId()) && isEmpty(getBlock().getRelative(CreeperUtils.getAttachingFace(blockState)).getTypeId()))
+		if(!shouldDrop && isDependent(getTypeId()) && isEmpty(getBlock().getRelative(getAttachingFace()).getTypeId()))
 		{
 			delay_replacement();
 			return;
@@ -194,7 +197,7 @@ public class CreeperBlock {
 				update(true);
 		}
 
-		CreeperUtils.checkForAscendingRails(this, CreeperHeal.getPreventUpdate());
+		checkForAscendingRails(CreeperHeal.getPreventUpdate());
 
 	}
 	
@@ -237,6 +240,61 @@ public class CreeperBlock {
 		return REDSTONE_BLOCKS.contains(typeId);
 	}
 
+	public void checkForAscendingRails(Map<CreeperBlock, Date> preventUpdate)
+	{
+		BlockFace[] cardinals = {BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP};
+		Block block = blockState.getBlock();
+		for(BlockFace face : cardinals)
+		{
+			Block tmp_block = block.getRelative(face);
+			if(tmp_block.getState() instanceof Rails)
+			{
+				byte data = tmp_block.getData();
+				if(data>1 && data < 6)
+				{
+					BlockFace facing = null;
+					if(data == 2)
+						facing = BlockFace.EAST;
+					else if(data == 3)
+						facing = BlockFace.WEST;
+					else if(data == 4)
+						facing = BlockFace.NORTH;
+					else if(data == 5)
+						facing = BlockFace.SOUTH;
+					if(tmp_block.getRelative(facing).getType() == Material.AIR)
+						preventUpdate.put(CreeperBlock.newBlock(tmp_block.getState()), new Date());
+				}
+			}
+		}
+	}
+	
+	public BlockFace getAttachingFace() {
+		return getAttachingFace(blockState);
+	}
+	
+	public static BlockFace getAttachingFace(BlockState block)
+	{
+		if(block.getData() instanceof Attachable)
+			return ((Attachable)block.getData()).getAttachedFace();
+		switch(block.getType()) {
+		case WOODEN_DOOR:
+		case IRON_DOOR:
+			return BlockFace.DOWN;
+		case RAILS:
+		case DETECTOR_RAIL:
+		case POWERED_RAIL:
+			switch(block.getRawData()){
+			case 5: return BlockFace.WEST;
+			case 4: return BlockFace.EAST;
+			case 3: return BlockFace.NORTH;
+			case 2: return BlockFace.SOUTH;
+			default: return BlockFace.DOWN;
+			}
+		default:
+			return BlockFace.DOWN;
+
+		}
+	}
 
 
 
