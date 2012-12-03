@@ -215,6 +215,12 @@ public class CreeperHeal extends JavaPlugin {
 		if (factionHandler.isFactionsEnabled()) {
 			logInfo("Successfully hooked in Factions", 1);
 		}
+
+		Plugin playerHeadsPlugin = pm.getPlugin("PlayerHeads");
+		if(playerHeadsPlugin!=null){
+			CreeperConfig.playerHeads  = true;
+			logInfo("Successfully detected PlayerHeads", 1);
+		}
 				
 		logInfo("Loading listeners", 3);
 
