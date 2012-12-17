@@ -15,18 +15,12 @@ import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.command.CommandMap;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.yi.acru.bukkit.Lockette.Lockette;
 
-import com.garbagemule.MobArena.MobArenaHandler;
-import com.griefcraft.lwc.LWC;
-import com.griefcraft.lwc.LWCPlugin;
 import com.nitnelave.CreeperHeal.block.BlockManager;
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.block.CreeperBlock;
@@ -44,8 +38,6 @@ import com.nitnelave.CreeperHeal.utils.CreeperMessenger;
 import com.nitnelave.CreeperHeal.utils.CreeperPermissionManager;
 import com.nitnelave.CreeperHeal.utils.CreeperPlayer;
 import com.nitnelave.CreeperHeal.utils.CreeperPlayer.WarningCause;
-import com.nitnelave.CreeperHeal.utils.FactionHandler;
-import com.nitnelave.CreeperTrap.CreeperTrap;
 
 
 
@@ -69,16 +61,11 @@ public class CreeperHeal extends JavaPlugin {
 	 * Handlers for misc. plugins
 	 */
 
-	private static MobArenaHandler maHandler = null;		//handler to detect mob arenas
-	private static LWC lwc = null;			//handler for LWC protection
-
-
 
 
 	protected CreeperCommandManager commandExecutor;
 	private CreeperHandler handler;
 	private CreeperPermissionManager perms;
-	private static FactionHandler factionHandler;
 	private static CreeperHeal instance;
 	private BlockManager blockManager;
 
@@ -172,50 +159,10 @@ public class CreeperHeal extends JavaPlugin {
 			}}, 200, 2000) == -1)
 			CreeperLog.warning("[CreeperHeal] Impossible to schedule the map-cleaning task. Map cleaning will not work");
 
-		
-		/*
-		 * Connection with the other plugins
-		 */
-		
-		logInfo("Connection with other plugins", 3);
-
 		PluginManager pm = getServer().getPluginManager(); 
 
-
-
-		Plugin lwcPlugin = pm.getPlugin("LWC");
-		if(lwcPlugin != null) {
-			lwc = ((LWCPlugin) lwcPlugin).getLWC();
-			logInfo("Successfully hooked in LWC", 1);
-		}
-
-		Plugin lockettePlugin = pm.getPlugin("Lockette");
-		if(lockettePlugin!=null){
-			CreeperConfig.lockette  = true;
-			logInfo("Successfully detected Lockette", 1);
-		}
-
-
-		Plugin mobArena = pm.getPlugin("MobArena");
-		if(mobArena != null) {
-			maHandler = new MobArenaHandler();
-			logInfo("Successfully hooked in MobArena", 1);
-		}
-
-		Plugin cTrap = pm.getPlugin("CreeperTrap");
-		if(cTrap != null)
-		{
-			new CreeperTrapHandler(this, (CreeperTrap) cTrap);
-			logInfo("Successfully hooked in CreeperTrap", 1);
-		}
-		else
-			new CreeperTrapHandler(this);
-
-		factionHandler = new FactionHandler(pm);
-		if (factionHandler.isFactionsEnabled()) {
-			logInfo("Successfully hooked in Factions", 1);
-		}
-				
+		PluginHandler.init();
+		
 		logInfo("Loading listeners", 3);
 
 		pm.registerEvents(listener, this);
@@ -308,20 +255,6 @@ public class CreeperHeal extends JavaPlugin {
 
 
 
-	public static boolean isProtected(Block block){       //is the block protected?
-		if(lwc!=null){                      //lwc gets the priority. BECAUSE!
-			boolean protect = (lwc.findProtection(block)!=null);
-			if(protect)
-				logInfo("protected block : " + block.getType(), 1);
-			return protect;
-		}
-		else if(CreeperConfig.lockette){                  //and then lockette
-			return Lockette.isProtected(block);
-		}
-		else return false;
-	}
-
-
 	@Deprecated //Use static acces instead
 	public CreeperHandler getHandler()
 	{
@@ -348,19 +281,6 @@ public class CreeperHeal extends JavaPlugin {
 			cp.warnPlayer(cp.getPlayer(), cause, message);	
 		}
 
-	}
-
-	public static FactionHandler getFactionHandler() {
-		return factionHandler;
-	}
-
-	public static boolean isInArena(Location location) {
-		if(maHandler != null)
-		{
-			if (maHandler.inRegion(location)) 
-				return true;		//Explosion inside a mob arena
-		}
-		return false;
 	}
 
 	public static Map<Location, Date> getPreventBlockFall() {

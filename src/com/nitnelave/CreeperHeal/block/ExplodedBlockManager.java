@@ -24,6 +24,7 @@ import org.bukkit.inventory.InventoryHolder;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.CreeperTrapHandler;
+import com.nitnelave.CreeperHeal.PluginHandler;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.utils.AddTrapRunnable;
@@ -115,7 +116,7 @@ public class ExplodedBlockManager {
 	protected static void recordBlocks(List<Block> list, Location location, Entity entity, boolean timed)
 	{
 		CreeperLog.logInfo("Explosion getting recorded...", 3);
-		if(CreeperHeal.isInArena(location)) 
+		if(PluginHandler.isInArena(location)) 
 			return;
 		//record the list of blocks of an explosion, from bottom to top
 		Date now = new Date();
@@ -126,7 +127,7 @@ public class ExplodedBlockManager {
 		double radius = computeRadius(list, location);
 		//PaintingsManager.checkForPaintings(location, radius, world.isRepairTimed(), false);
 
-		checkForRestone(location, list, listState, radius, world);
+		checkForRestone(location, list, listState, world);
 
 		for(Block block : list)     //cycle through the blocks declared destroyed
 			record(block, listState, world, to_add);
@@ -183,13 +184,15 @@ public class ExplodedBlockManager {
 	}
 	
 	private static void checkForRestone(Location location, List<Block> list,
-			List<CreeperBlock> listState, double radius, WorldConfig world) {
-		for(Block b : list)
+			List<CreeperBlock> listState, WorldConfig world) {
+		Iterator<Block> iter = list.iterator();
+		while(iter.hasNext())
 		{
-			if(CreeperBlock.isRedstone(b.getTypeId()) && b.getLocation().distance(location) < radius)
+			Block b = iter.next();
+			if(CreeperBlock.isDependent(b.getTypeId()))
 			{
 				record(b, listState, world, list);
-				listState.add(CreeperBlock.newBlock(b.getState()));
+				b.setType(Material.AIR);
 				b.setType(Material.AIR);
 			}
 		}		
@@ -225,7 +228,7 @@ public class ExplodedBlockManager {
 					if(b.getType() == Material.OBSIDIAN && r.nextDouble() < chance)
 					{
 						listState.add(CreeperBlock.newBlock(b.getState()));
-						b.setTypeIdAndData(0, (byte)0, false);
+						b.setType(Material.AIR);
 					}
 				}
 			}
@@ -242,7 +245,7 @@ public class ExplodedBlockManager {
 		if(CreeperConfig.preventChainReaction && block.getType().equals(Material.TNT))
 		{
 			toReplace.put(block.getLocation(), CreeperBlock.newBlock(block.getState()));
-			block.setTypeIdAndData(0, (byte)0, false);
+			block.setType(Material.AIR);
 			return;
 		}
 
@@ -250,7 +253,7 @@ public class ExplodedBlockManager {
 			//if the block is to be replaced
 		{
 
-			if(CreeperConfig.replaceProtectedChests && CreeperHeal.isProtected(block))
+			if(CreeperConfig.replaceProtectedChests && PluginHandler.isProtected(block))
 				toReplace.put(block.getLocation(), CreeperBlock.newBlock(block.getState()));    //replace immediately
 
 			if(block.getState() instanceof InventoryHolder)         //save the inventory
@@ -258,7 +261,11 @@ public class ExplodedBlockManager {
 				storeChest(block, listState);
 				return;
 			}
+			
+			if(!CreeperBlock.isDependent(block.getTypeId()) && CreeperBlock.isDependentDown(block.getRelative(BlockFace.UP).getTypeId()))
+				record(block.getRelative(BlockFace.UP), listState, world, toAdd);
 
+			BlockFace face;
 			switch (block.getType()) 
 			{       
 			case IRON_DOOR_BLOCK :                //in case of a door or bed, only store one block to avoid dupes
@@ -266,32 +273,80 @@ public class ExplodedBlockManager {
 				if(block.getData() < 8) 
 				{
 					listState.add(CreeperBlock.newBlock(new Door(block)));
-					block.setTypeIdAndData(0, (byte)0, false);
-					block.getRelative(BlockFace.UP).setTypeIdAndData(0, (byte)0, false);
+					block.setType(Material.AIR);
+					block.getRelative(BlockFace.UP).setType(Material.AIR);
 				}
 				break;
 			case BED_BLOCK :
+				byte faceData = (byte) (data & 3);
+				if(faceData == 0)            //facing the right way
+					face = BlockFace.NORTH;
+				else if(faceData == 1)
+					face = BlockFace.EAST;
+				else if(faceData == 2)
+					face = BlockFace.SOUTH;
+				else
+					face = BlockFace.WEST;
 				if(data < 8) 
-				{
-					listState.add(CreeperBlock.newBlock(block.getState()));
-					BlockFace face;
-					if(data == 0)            //facing the right way
-						face = BlockFace.WEST;
-					else if(data == 1)
-						face = BlockFace.NORTH;
-					else if(data == 2)
-						face = BlockFace.EAST;
-					else
-						face = BlockFace.SOUTH;
-					block.setTypeIdAndData(0, (byte)0, false);
-					block.getRelative(face).setTypeIdAndData(0, (byte)0, false);
-				}
+					block = block.getRelative(face.getOppositeFace());
+				listState.add(CreeperBlock.newBlock(block.getState()));
+				block.setType(Material.AIR);
+				block.getRelative(face).setType(Material.AIR);
 				break;
 			case AIR :                        //don't store air
-				break;
-			case FIRE :                        //or fire
 			case PISTON_EXTENSION :				//pistons are special, don't store this part
-				block.setTypeIdAndData(0, (byte)0, false);
+				switch (data & 7)
+				{
+				case 0:
+					face = BlockFace.UP;
+					break;
+				case 1:
+					face = BlockFace.DOWN;
+					break;
+				case 2:
+					face = BlockFace.SOUTH;
+					break;
+				case 3:
+					face = BlockFace.NORTH;
+					break;
+				case 4:
+					face = BlockFace.EAST;
+					break;
+				default:
+					face = BlockFace.WEST;
+				}
+				listState.add(CreeperBlock.newBlock(block.getRelative(face).getState()));
+				block.getRelative(face).setType(Material.AIR);
+				block.setType(Material.AIR);
+				break;
+			case PISTON_BASE:
+			case PISTON_STICKY_BASE:
+				switch (data & 7) 
+				{
+				case 0:
+					face = BlockFace.DOWN;
+					break;
+				case 1:
+					face = BlockFace.UP;
+					break;
+				case 2:
+					face = BlockFace.NORTH;
+					break;
+				case 3:
+					face = BlockFace.SOUTH;
+					break;
+				case 4:
+					face = BlockFace.WEST;
+					break;
+				default:
+					face = BlockFace.EAST;
+				}
+				listState.add(CreeperBlock.newBlock(block.getState()));
+				block.setType(Material.AIR);
+				if (data > 7)
+					block.getRelative(face).setType(Material.AIR);
+			case FIRE :                        //or fire
+				block.setType(Material.AIR);
 				break;
 			case TNT :      //add the traps triggered to the list of blocks to be replaced
 				if(CreeperTrapHandler.isTrap(block)/* || loadWorld(block.getWorld()).replaceTNT*/)
@@ -310,7 +365,7 @@ public class ExplodedBlockManager {
 					block.setData((byte) 2);        //crack the bricks if the setting is right
 			default :                        //store the rest
 				listState.add(CreeperBlock.newBlock(block.getState()));
-				block.setTypeIdAndData(0, (byte)0, false);
+				block.setType(Material.AIR);
 				break;
 			}
 
@@ -320,7 +375,7 @@ public class ExplodedBlockManager {
 			Random generator = new Random();
 			if(generator.nextInt(100) < CreeperConfig.dropChance)        //percentage
 				CreeperBlock.newBlock(block.getState()).dropBlock();
-			block.setTypeIdAndData(0, (byte)0, false);
+			block.setType(Material.AIR);
 
 		}
 		
@@ -329,7 +384,7 @@ public class ExplodedBlockManager {
 	protected static void storeChest(Block block, List<CreeperBlock> listState) {
 		
 		CreeperChest chest = new CreeperChest(block.getState());
-		if(CreeperConfig.replaceProtectedChests && CreeperHeal.isProtected(block) || CreeperConfig.replaceAllChests)
+		if(CreeperConfig.replaceProtectedChests && PluginHandler.isProtected(block) || CreeperConfig.replaceAllChests)
 			toReplace.put(chest.getLocation(), chest);
 		else
 			listState.add(chest);

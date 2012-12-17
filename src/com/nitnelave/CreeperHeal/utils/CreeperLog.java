@@ -9,6 +9,9 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 public class CreeperLog
@@ -71,6 +74,11 @@ public class CreeperLog
 	public static void debug(String string) {
 		if(debug)
 			log.info("[DEBUG] " + string);
+	}
+
+	public static void displayBlockLocation(Block block) {
+		Location loc = block.getLocation();
+		debug(block.getType() + " at " + loc.getBlockX() + "; " + loc.getBlockY() + "; " + loc.getBlockZ());
 	}
 
 }

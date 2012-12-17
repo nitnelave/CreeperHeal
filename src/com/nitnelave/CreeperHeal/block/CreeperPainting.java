@@ -92,7 +92,7 @@ public class CreeperPainting
 					j = -k;
 					break;
 				case NORTH:
-					j = -k;
+					i = -k;
 					break;
 				default:
 					break;

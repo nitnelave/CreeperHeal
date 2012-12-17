@@ -97,26 +97,33 @@ public class CreeperListener implements Listener{
 			}
 			else if(cause == DamageCause.PROJECTILE)
 			{
-				Projectile projectile = (Projectile) ((EntityDamageByEntityEvent) event).getDamager();
-				Entity attacker = projectile.getShooter();
-				if(attacker instanceof Player)
+				if (((EntityDamageByEntityEvent) event).getDamager() instanceof Projectile)
 				{
-					offender = (Player) attacker;
-					message = projectile.getType().toString();
-				}
-			}
-			else if(cause == DamageCause.MAGIC)
-			{
-				Projectile projectile = (Projectile) ((EntityDamageByEntityEvent) event).getDamager();
-				if(projectile instanceof ThrownPotion)
-				{
+					Projectile projectile = (Projectile) ((EntityDamageByEntityEvent) event).getDamager();
 					Entity attacker = projectile.getShooter();
 					if(attacker instanceof Player)
 					{
 						offender = (Player) attacker;
-						message = "magic potion";
+						message = projectile.getType().toString();
 					}
 				}
+			}
+			else if(cause == DamageCause.MAGIC)
+			{
+				if (((EntityDamageByEntityEvent) event).getDamager() instanceof Projectile)
+				{
+					Projectile projectile = (Projectile) ((EntityDamageByEntityEvent) event).getDamager();
+					if(projectile instanceof ThrownPotion)
+					{
+						Entity attacker = projectile.getShooter();
+						if(attacker instanceof Player)
+						{
+							offender = (Player) attacker;
+							message = "magic potion";
+						}
+					}
+				}
+
 			}
 			if(offender != null && !CreeperPermissionManager.checkPermissions(offender, true, "bypass.pvp"))
 			{						

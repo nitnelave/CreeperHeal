@@ -158,7 +158,7 @@ public class WorldConfig {
 		set("replace.replace-above-limit-only", replaceAbove);
 		set("replace.replace-limit", replaceLimit);
 		set("replace.restrict-list", formatList(blockList));
-		set("replace.white-block-list", whiteBlockList);
+		set("replace.white-restrict-list", whiteBlockList);
 		set("replace.repair-time-of-day", repairTime);
 		set("replace.factions.ignore-wilderness", ignoreFactionsWilderness);
 		set("replace.factions.ignore-territory", ignoreFactionsTerritory);
