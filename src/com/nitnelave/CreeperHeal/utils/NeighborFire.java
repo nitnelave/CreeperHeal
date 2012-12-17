@@ -15,6 +15,8 @@ public class NeighborFire extends NeighborFinder<CreeperBurntBlock>{
 	@Override
 	protected boolean hasNeighbor(Location loc, LinkedList<CreeperBurntBlock> list) {
 		World w = loc.getWorld();
+		if(list == null)
+			return false;
 		for(CreeperBurntBlock cB : list) {
 			if(loc.getWorld() == w && loc.distance(cB.getLocation()) < 10)
 				return true;

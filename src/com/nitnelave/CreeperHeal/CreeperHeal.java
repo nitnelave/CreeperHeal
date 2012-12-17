@@ -230,6 +230,7 @@ public class CreeperHeal extends JavaPlugin {
 					break;
 			}
 		}
+		BurntBlockManager.cleanUp();
 		if(!(CreeperConfig.lightweightMode))
 		{
 			BurntBlockManager.cleanIndex();

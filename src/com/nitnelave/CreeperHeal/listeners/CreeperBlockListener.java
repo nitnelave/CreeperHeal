@@ -128,10 +128,18 @@ public class CreeperBlockListener implements Listener{
 		WorldConfig world = CreeperConfig.loadWorld(event.getBlock().getLocation().getWorld());
 
 		if(world.fire)
+		{
+			if(!CreeperConfig.lightweightMode)
+			{
+				if(BurntBlockManager.wasRecentlyBurnt(event.getBlock().getLocation()))
+				{
+					event.setCancelled(true);
+					return;
+				}
+			}
 			BurntBlockManager.recordBurn(event.getBlock());
+		}
 
-		if(world.preventFireSpread)
-			event.getBlock().setTypeIdAndData(0, (byte) 0, false);
 	}
 
 

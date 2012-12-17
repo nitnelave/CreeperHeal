@@ -30,7 +30,7 @@ public class CreeperConfig
 	 * Config settings
 	 */
 
-	public static int waitBeforeHeal, logLevel = -42, blockPerBlockInterval, waitBeforeHealBurnt, dropChance, distanceNear, obsidianChance, obsidianRadius;
+	public static int waitBeforeHeal, logLevel = -42, blockPerBlockInterval, waitBeforeHealBurnt, dropChance, distanceNear, obsidianChance, obsidianRadius, waitBeforeBurnAgain;
 	public static boolean dropReplacedBlocks, blockPerBlock, teleportOnSuffocate, dropDestroyedBlocks, crackDestroyedBricks,
 	lockette, replaceAllChests, replaceProtectedChests, overwriteBlocks, preventBlockFall, lightweightMode, opEnforce, logWarnings, preventChainReaction, explodeObsidian, debug;
 
@@ -101,6 +101,7 @@ public class CreeperConfig
 		obsidianChance = 20;
 		obsidianRadius = 5;
 		explodeObsidian = false;
+		waitBeforeBurnAgain = 240;
 		set(advancedFile, "log-warnings", true);
 		set(configFile, "config-version", 5);
 		try{
@@ -220,6 +221,7 @@ public class CreeperConfig
 				obsidianRadius = getInt(configFile, "advanced.obsidian.radius", 5);
 				obsidianChance = getInt(configFile, "advanced.obsidian.chance", 20);
 				debug = getBoolean(configFile, "advanced.debug-messages", false);
+				waitBeforeBurnAgain = 240;
 				configVersion = 6;
 				set(configFile, "config-version", 6);
 				set(configFile, "replacement", null);
@@ -271,7 +273,7 @@ public class CreeperConfig
 				obsidianRadius = getInt(advancedFile, "obsidian.radius", 5);
 				obsidianChance = getInt(advancedFile, "obsidian.chance", 20);
 				debug = getBoolean(advancedFile, "debug-messages", false);
-				
+				waitBeforeBurnAgain = getInt(advancedFile, "wait-before-burn-again", 240);
 				
 			}
 
@@ -377,6 +379,7 @@ public class CreeperConfig
 		set(advancedFile, "obsidian.radius", obsidianRadius);
 		set(advancedFile, "obsidian.chance", obsidianChance);
 		set(advancedFile, "debug-messages", debug);
+		set(advancedFile, "wait-before-burn-again", waitBeforeBurnAgain);
 		removeOldWorldConfig();
 
 

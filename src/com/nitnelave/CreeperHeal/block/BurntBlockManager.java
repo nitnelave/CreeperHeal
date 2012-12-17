@@ -2,9 +2,11 @@ package com.nitnelave.CreeperHeal.block;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -23,11 +25,15 @@ public class BurntBlockManager {
 
 	private static CreeperHeal plugin;
 	private static List<CreeperBurntBlock> burntList = Collections.synchronizedList(new LinkedList<CreeperBurntBlock>());
+	private static Map<Location, Date> recentlyBurnt;
 	private static NeighborFire fireIndex;
 	
 	static {
 		if(!CreeperConfig.lightweightMode)
+		{
 			fireIndex = new NeighborFire();
+			recentlyBurnt = Collections.synchronizedMap(new HashMap<Location, Date>());
+		}
 	}
 
 	public static void setBurntBlockManagerPlugin(CreeperHeal plugin) {
@@ -49,6 +55,8 @@ public class BurntBlockManager {
 				Date time = cBlock.getTime();
 				if(cBlock.getWorld() == world && (new Date(time.getTime() + since * 1000).after(now) || force)) {        //if enough time went by
 					BlockManager.replace_blocks(cBlock);        //replace the non-dependent block
+					if(!CreeperConfig.lightweightMode)
+						recentlyBurnt.put(cBlock.getLocation(), new Date(System.currentTimeMillis() + 1000 * CreeperConfig.waitBeforeBurnAgain));
 					iter.remove();
 				}
 			}
@@ -70,18 +78,21 @@ public class BurntBlockManager {
 					if(CreeperBlock.isDependent(block.getTypeId()))
 					{
 						Block support = block.getRelative(cBlock.getAttachingFace().getOppositeFace());
-						if(support.getTypeId() == 0 || support.getTypeId() == 51)
+						if(!CreeperBlock.isSolid(support.getTypeId()))
 							cBlock.addTime(CreeperConfig.waitBeforeHealBurnt * 1000);
 						else
 						{
 							BlockManager.replace_blocks(cBlock);
+							if(!CreeperConfig.lightweightMode)
+								recentlyBurnt.put(cBlock.getLocation(), new Date(System.currentTimeMillis() + 1000 * CreeperConfig.waitBeforeBurnAgain));
 							iter.remove();
 						}
-
 					}
 					else
 					{
 						BlockManager.replace_blocks(cBlock);
+						if(!CreeperConfig.lightweightMode)
+							recentlyBurnt.put(cBlock.getLocation(), new Date(System.currentTimeMillis() + 1000 * CreeperConfig.waitBeforeBurnAgain));
 						iter.remove();
 					}
 				}
@@ -97,7 +108,10 @@ public class BurntBlockManager {
 		if(CreeperBlock.isDependent(block_up.getTypeId())) {        //the block above is a dependent block, store it, but one interval after
 			if(CreeperBlock.getAttachingFace(block_up) == CreeperUtils.rotateCClockWise(face))
 			{
-				burntList.add(new CreeperBurntBlock(new Date(now.getTime() + 100), block_up));
+				CreeperBurntBlock cBB = new CreeperBurntBlock(new Date(now.getTime() + 100), block_up);
+				burntList.add(cBB);
+				if(!CreeperConfig.lightweightMode)
+					fireIndex.addElement(cBB, cBB.getLocation().getX(), cBB.getLocation().getZ());
 				block_up.getBlock().setTypeIdAndData(0, (byte)0, false);
 
 			}
@@ -134,8 +148,7 @@ public class BurntBlockManager {
 
 
 	public static boolean isNextToFire(Location location) {
-		// TODO Auto-generated method stub
-		return false;
+		return fireIndex.hasNeighbor(location);
 	}
 
 
@@ -143,6 +156,27 @@ public class BurntBlockManager {
 		return fireIndex.isEmpty();
 	}
 
+	public static boolean wasRecentlyBurnt(Location loc) {
+		Date d = recentlyBurnt.get(loc);
+		if(d == null)
+			return false;
+		return d.after(new Date());
+	}
 
+
+	public static void cleanUp() {
+		fireIndex.clean();
+		synchronized(recentlyBurnt) {
+			Iterator<Location> iter = recentlyBurnt.keySet().iterator();
+			Date now = new Date();
+			while(iter.hasNext())
+			{
+				Location l = iter.next();
+				Date d = recentlyBurnt.get(l);
+				if(d.before(now))
+					iter.remove();
+			}
+		}
+	}
 
 }
