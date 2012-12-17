@@ -1,0 +1,33 @@
+#
+#
+#
+#Don't mess with this part unless you really need it!
+#
+#
+#if the /ch command conflicts with another one, change it here
+command-alias: ch
+#if true, the block destroyed in the explosion will replace the new one
+replacement-conflict:
+  overwrite: true
+  drop-overwritten-blocks: true
+#if you chose not to replace every block, those not replaced will drop according to the percent chance
+drop-destroyed-blocks:
+  enabled: true
+  chance: 100
+#When an entity suffocates because it got caught in an explosion getting replaced, teleport it to the surface
+teleport-when-buried: true
+verbose-level: 1
+op-have-all-permissions: true
+#Improve the replacement of areas with sand or gravel by not letting them fall
+prevent-block-fall: true
+#range of the replace-near command
+distance-near: 20
+#skips some tests... but degrades the quality of leaves and vines replacement
+lightweight-mode: false
+# Prevents TNT and Creepers from detonating other TNT when set to true
+prevent-chain-reaction: false
+obsidian:
+  #Explode obsidian blocks within (radius) blocks of an explosion, with a chance of (chance)%
+  explode: false
+  radius: 5
+  chance: 20

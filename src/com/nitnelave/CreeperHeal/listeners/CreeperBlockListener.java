@@ -25,6 +25,7 @@ import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingBreakEvent.RemoveCause;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
+import com.nitnelave.CreeperHeal.PluginHandler;
 import com.nitnelave.CreeperHeal.block.BlockId;
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.block.CreeperExplosion;
@@ -216,7 +217,7 @@ public class CreeperBlockListener implements Listener{
 		CreeperLog.logInfo("explosion not cancelled", 3);
 		WorldConfig world = CreeperConfig.loadWorld(event.getLocation().getWorld());
 
-		if (CreeperHeal.getFactionHandler().shouldIgnore(event.blockList(), world)) {
+		if (PluginHandler.getFactionHandler().shouldIgnore(event.blockList(), world)) {
 			return;
 		}
 

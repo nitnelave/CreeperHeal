@@ -22,18 +22,19 @@ import org.bukkit.material.Attachable;
 import org.bukkit.material.Rails;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
+import com.nitnelave.CreeperHeal.PluginHandler;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperUtils;
 import com.nitnelave.CreeperHeal.utils.DelayReplacement;
 
 public class CreeperBlock {
-	
+
 	private final static Set<Integer> PHYSICS_BLOCKS = CreeperUtils.createFinalHashSet(12,13,88, 145);                        //sand gravel, soulsand fall
 	private final static Set<Integer> DEPENDENT_DOWN_BLOCKS = CreeperUtils.createFinalHashSet(6,26,27,28,31,32,37,38,39,40,55,59,63,64,66,70,71,72,78,93,94,104,105,115, 117, 140, 141, 142);
 	private final static Set<Integer> DEPENDENT_BLOCKS = CreeperUtils.createFinalHashSet(6,26,27,28,31,32,37,38,39,40,50,55,59,63,64,65,66,68,69,70,71,72,75,76,77,78,93,94,96,104,105,106,115, 117, 127, 131, 140, 141, 142, 143);
 	private final static Set<Integer> NOT_SOLID_BLOCKS = CreeperUtils.createFinalHashSet(0,6,8,9,26,27,28,30,31,37,38,39,40, 50,55,59,63,64,65,66,68,69,70,71,72,75,76,77,78,83,90,93,94,96);   //the player can breathe
 	private final static Set<Integer> EMPTY_BLOCKS = CreeperUtils.createFinalHashSet(0,8,9,10,11, 51, 78);
-	private final static Set<Integer> REDSTONE_BLOCKS = CreeperUtils.createFinalHashSet(55, 93, 94, 131);
+	private final static Set<Integer> REDSTONE_BLOCKS = CreeperUtils.createFinalHashSet(29, 33, 34, 55, 93, 94, 131);
 	private static HashSet<Byte> TRANSPARENT_BLOCKS;			//blocks that you can aim through while creating a trap.
 
 	/**
@@ -48,10 +49,10 @@ public class CreeperBlock {
 	 * HashMaps
 	 */
 
-	
-	
-	private BlockState blockState;
-	
+
+
+	protected BlockState blockState;
+
 	public static CreeperBlock newBlock(BlockState blockState) {
 		if(blockState instanceof InventoryHolder)
 			return new CreeperChest(blockState);
@@ -61,14 +62,22 @@ public class CreeperBlock {
 			return new CreeperNoteBlock((NoteBlock) blockState);
 		if(blockState instanceof CreatureSpawner)
 			return new CreeperMonsterSpawner((CreatureSpawner) blockState);
-		
+		Material type = blockState.getType();
+		if((PluginHandler.isPlayerHeadsActivated()) && type == Material.SKULL)
+			return new CreeperSkull(blockState);
+		if(type == Material.PISTON_BASE || type == Material.PISTON_STICKY_BASE)
+			return new CreeperPiston(blockState);
+		/*
+		if(blockState.getType() == Material.SKULL)
+			return new CreeperHead(blockState);*/
+
 		return new CreeperBlock(blockState);
 	}
-	
+
 	protected CreeperBlock(BlockState blockState) {
 		this.blockState = blockState;
 	}
-	
+
 	public void update(boolean force) {
 		blockState.update(force);
 	}
@@ -80,11 +89,11 @@ public class CreeperBlock {
 	public World getWorld() {
 		return blockState.getWorld();
 	}
-	
+
 	public Block getBlock() {
 		return blockState.getBlock();
 	}
-	
+
 	public BlockState getState() {
 		return blockState;
 	}
@@ -100,7 +109,7 @@ public class CreeperBlock {
 	public byte getRawData() {
 		return blockState.getRawData();
 	}
-	
+
 
 	public void dropBlock()
 	{
@@ -160,18 +169,18 @@ public class CreeperBlock {
 			}
 			else if(type == Material.BED_BLOCK) 
 			{        //put the head, then the feet
-				byte data = getRawData();
+				byte data = (byte) (getRawData() & 3);
 				BlockFace face;
 				if(data == 0)            //facing the right way
-					face = BlockFace.WEST;
-				else if(data == 1)
 					face = BlockFace.NORTH;
-				else if(data == 2)
+				else if(data == 1)
 					face = BlockFace.EAST;
-				else
+				else if(data == 2)
 					face = BlockFace.SOUTH;
+				else
+					face = BlockFace.WEST;
 				update(true);
-				block.getRelative(face).setTypeIdAndData(getTypeId(), (byte)(data + 8), false);    //feet
+				block.getRelative(face).setTypeIdAndData(getTypeId(), data, false);    //feet
 			}
 			else if(type == Material.PISTON_MOVING_PIECE) {}
 			else if(type == Material.RAILS || type == Material.POWERED_RAIL || type == Material.DETECTOR_RAIL)
@@ -189,9 +198,6 @@ public class CreeperBlock {
 				}
 				else
 					update(true);
-					
-				
-
 			}
 			else         //rest of it, just normal
 				update(true);
@@ -200,7 +206,7 @@ public class CreeperBlock {
 		checkForAscendingRails(CreeperHeal.getPreventUpdate());
 
 	}
-	
+
 
 	private boolean isEmpty(int typeId) {
 		return EMPTY_BLOCKS.contains(typeId);
@@ -267,11 +273,11 @@ public class CreeperBlock {
 			}
 		}
 	}
-	
+
 	public BlockFace getAttachingFace() {
 		return getAttachingFace(blockState);
 	}
-	
+
 	public static BlockFace getAttachingFace(BlockState block)
 	{
 		if(block.getData() instanceof Attachable)
