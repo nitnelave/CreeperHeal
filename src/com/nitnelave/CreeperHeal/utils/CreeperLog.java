@@ -76,9 +76,13 @@ public class CreeperLog
 			log.info("[DEBUG] " + string);
 	}
 
-	public static void displayBlockLocation(Block block) {
+	public static void displayBlockLocation(Block block, boolean force) {
 		Location loc = block.getLocation();
-		debug(block.getType() + " at " + loc.getBlockX() + "; " + loc.getBlockY() + "; " + loc.getBlockZ());
+		String s = block.getType() + " at " + loc.getBlockX() + "; " + loc.getBlockY() + "; " + loc.getBlockZ();
+		if(force)
+			warning(s);
+		else
+			debug(s);
 	}
 
 }
