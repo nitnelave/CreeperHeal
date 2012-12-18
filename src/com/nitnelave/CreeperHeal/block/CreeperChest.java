@@ -11,6 +11,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
+import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.CreeperUtils;
 
 public class CreeperChest extends CreeperBlock {
@@ -108,22 +109,30 @@ public class CreeperChest extends CreeperBlock {
 
 	public void restore() {
 		super.update(true);
-		if(hasNeighbor())
-		{
-			neighbor.update(true);
-			Inventory i = ((InventoryHolder)chest.getState()).getInventory();
-			ItemStack[] both;
-			ItemStack[] otherInv = neighborInventory;
-			ItemStack[] newInv = storedInventory;
-			if(neighbor.isRight())
-				both = CreeperUtils.concat(otherInv , newInv);
-			else
-				both = CreeperUtils.concat(newInv, otherInv);
-			i.setContents(both);
+		try {
+			if(hasNeighbor())
+			{
+				neighbor.update(true);
+				Inventory i = ((InventoryHolder)chest.getState()).getInventory();
+				ItemStack[] both;
+				ItemStack[] otherInv = neighborInventory;
+				ItemStack[] newInv = storedInventory;
+				if(neighbor.isRight())
+					both = CreeperUtils.concat(otherInv , newInv);
+				else
+					both = CreeperUtils.concat(newInv, otherInv);
+				i.setContents(both);
 
+			}
+			else
+				((InventoryHolder) chest.getState()).getInventory().setContents(storedInventory);
 		}
-		else
-			((InventoryHolder) chest.getState()).getInventory().setContents(storedInventory);
+		catch(java.lang.ClassCastException e) {
+			CreeperLog.warning("ClassCastException when replacing a chest : ");
+			CreeperLog.warning(chest.getClass().getCanonicalName());
+			CreeperLog.displayBlockLocation(chest, true);
+			e.printStackTrace();
+		}
 
 
 	}
