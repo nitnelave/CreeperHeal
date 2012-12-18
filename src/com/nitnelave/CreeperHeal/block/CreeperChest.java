@@ -128,6 +128,7 @@ public class CreeperChest extends CreeperBlock {
 				((InventoryHolder) chest.getState()).getInventory().setContents(storedInventory);
 		}
 		catch(java.lang.ClassCastException e) {
+			CreeperLog.warning("Error detected, please report the whole message");
 			CreeperLog.warning("ClassCastException when replacing a chest : ");
 			CreeperLog.warning(chest.getClass().getCanonicalName());
 			CreeperLog.displayBlockLocation(chest, true);
