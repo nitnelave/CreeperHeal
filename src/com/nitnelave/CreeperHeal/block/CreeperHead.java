@@ -1,6 +1,5 @@
 package com.nitnelave.CreeperHeal.block;
 
-import net.minecraft.server.TileEntitySkull;
 
 import org.bukkit.Location;
 import org.bukkit.World;

@@ -2,15 +2,15 @@ package com.nitnelave.CreeperHeal.block;
 
 import java.util.Date;
 
-import net.minecraft.server.EntityItemFrame;
-import net.minecraft.server.EntityPainting;
-import net.minecraft.server.EnumArt;
+import net.minecraft.server.v1_4_5.EntityItemFrame;
+import net.minecraft.server.v1_4_5.EntityPainting;
+import net.minecraft.server.v1_4_5.EnumArt;
 
 import org.bukkit.Art;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.craftbukkit.v1_4_5.CraftWorld;
 import org.bukkit.entity.Hanging;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Painting;
@@ -184,7 +184,7 @@ public class CreeperPainting
 			CreeperLog.debug("item frame");
 			ItemFrame f = (ItemFrame) hanging;
 			EntityItemFrame frame = new EntityItemFrame(w.getHandle(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), dir);
-			net.minecraft.server.ItemStack stack = new net.minecraft.server.ItemStack(f.getItem().getTypeId(), 1, 0);
+			net.minecraft.server.v1_4_5.ItemStack stack = new net.minecraft.server.v1_4_5.ItemStack(f.getItem().getTypeId(), 1, 0);
 			frame.a(stack);
 			//set item rotation, direction
 			if(!frame.survives()) {

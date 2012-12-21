@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandMap;
@@ -153,11 +154,16 @@ public class CreeperHeal extends JavaPlugin {
 			}}, 200, 20) == -1)
 			CreeperLog.warning("[CreeperHeal] Impossible to schedule the replace-burnt task. Burnt blocks replacement will not work");
 
+		Bukkit.getScheduler().runTaskTimerAsynchronously(getInstance(), new Runnable() {
+			public void run() {
+				cleanMaps();
+			}}, 200, 20000);
+		/*
 		if( getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
 			public void run() {
 				cleanMaps();
 			}}, 200, 2000) == -1)
-			CreeperLog.warning("[CreeperHeal] Impossible to schedule the map-cleaning task. Map cleaning will not work");
+			CreeperLog.warning("[CreeperHeal] Impossible to schedule the map-cleaning task. Map cleaning will not work");*/
 
 		PluginManager pm = getServer().getPluginManager(); 
 
@@ -190,10 +196,14 @@ public class CreeperHeal extends JavaPlugin {
 
 	public void scheduleTimeRepairs()
 	{
-		if(getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
+		Bukkit.getScheduler().runTaskTimerAsynchronously(getInstance(), new Runnable() {
 			public void run() {
 				blockManager.checkReplaceTime();
-			}}, 200, 1200) == -1)
+			}}, 200, 1200);
+		/*if(getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
+			public void run() {
+				blockManager.checkReplaceTime();
+			}}, 200, 1200) == -1)*/
 
 			CreeperLog.warning("[CreeperHeal] Impossible to schedule the time-repair task. Time repairs will not work");
 

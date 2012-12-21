@@ -2,7 +2,7 @@ package com.nitnelave.CreeperHeal.block;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.block.CraftBlockState;
+import org.bukkit.craftbukkit.v1_4_5.block.CraftBlockState;
 
 public class Door extends CraftBlockState{
 	private boolean hingeRight;

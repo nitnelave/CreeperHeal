@@ -116,7 +116,7 @@ public class CreeperDrop
 	public static ItemStack getDrop(int blockTypeId, byte data) {
 		if (blockTypeId < 1 || blockTypeId > 255) return null;
 		try {
-			net.minecraft.server.Block b = net.minecraft.server.Block.byId[blockTypeId];
+			net.minecraft.server.v1_4_5.Block b = net.minecraft.server.v1_4_5.Block.byId[blockTypeId];
 
 			int typeId = b.getDropType(blockTypeId, random, 0);
 			if (typeId < 1) return null;
