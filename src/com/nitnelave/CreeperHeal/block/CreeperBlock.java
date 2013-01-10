@@ -16,6 +16,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.block.NoteBlock;
 import org.bukkit.block.Sign;
+import org.bukkit.block.Skull;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Attachable;
@@ -65,6 +66,8 @@ public class CreeperBlock {
 		Material type = blockState.getType();
 		if((PluginHandler.isPlayerHeadsActivated()) && type == Material.SKULL)
 			return new CreeperSkull(blockState);
+		if(blockState instanceof Skull)
+			return new CreeperHead(blockState);
 		if(type == Material.PISTON_BASE || type == Material.PISTON_STICKY_BASE)
 			return new CreeperPiston(blockState);
 		/*
