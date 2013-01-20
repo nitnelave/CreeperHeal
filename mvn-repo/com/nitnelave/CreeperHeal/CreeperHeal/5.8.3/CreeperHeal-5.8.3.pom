@@ -70,7 +70,7 @@
 		<dependency>
 			<groupId>com.nitnelave.CreeperTrap</groupId>
 			<artifactId>CreeperTrap</artifactId>
-			<version>1.0</version>
+			<version>2.0</version>
 			<type>jar</type>
 			<scope>system</scope>
 			<systemPath>${project.basedir}/lib/CreeperTrap.jar</systemPath>
