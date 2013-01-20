@@ -36,6 +36,7 @@
 	<properties>
 		<!--maven variable which points to your local repository -->
 		<internal.repo.path>file://C:\Users\nitnelave\minecraft\code\CreeperHeal\CreeperHeal\mvn-repo</internal.repo.path>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<repositories>
 		<repository>
