@@ -17,8 +17,6 @@ import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Painting;
 import org.bukkit.inventory.ItemStack;
 
-import com.nitnelave.CreeperHeal.utils.CreeperLog;
-
 public class CreeperPainting implements Replaceable
 {
 	private Hanging hanging;
@@ -88,16 +86,12 @@ public class CreeperPainting implements Replaceable
 			if(art.getBlockHeight() + art.getBlockWidth() < 5)
 			{
 				int i = 0, j = 0, k = art.getBlockWidth() - 1;
-				CreeperLog.debug("facing : " + face.toString());
 				switch(face){
 				case EAST:
-					CreeperLog.debug("dans ta face");
 					j = -k;
-					i = -2;
 					break;
 				case NORTH:
 					i = -k;
-					break;
 				default:
 					break;
 				}
@@ -112,37 +106,11 @@ public class CreeperPainting implements Replaceable
 				case EAST:
 					loc.add(0, 0, -1);
 					break;
-				case SOUTH:
-					loc.add(0, 0, 0);
-					break;
-				case WEST:
-					loc.add(0, 0, 0);
-					break;
 				case NORTH:
 					loc.add(-1, 0, 0);
 				default:
 					break;
 				}
-
-			}
-		}
-		else
-		{
-			switch(face) {
-			case EAST:
-				loc.add(-1, 0, 0);
-				break;
-			case NORTH:
-				loc.add(0, 0, -1);
-				break;
-			case SOUTH:
-				loc.add(0, 0, 1);
-				break;
-			case WEST:
-				loc.add(1, 0, 0);
-				break;
-			default:
-				break;
 
 			}
 		}
@@ -186,7 +154,6 @@ public class CreeperPainting implements Replaceable
 		}
 		else if(hanging instanceof ItemFrame)
 		{
-			CreeperLog.debug("item frame");
 			ItemFrame f = (ItemFrame) hanging;
 			EntityItemFrame frame = new EntityItemFrame(w.getHandle(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), dir);
 			net.minecraft.server.v1_4_R1.ItemStack stack = new net.minecraft.server.v1_4_R1.ItemStack(f.getItem().getTypeId(), 1, 0);
