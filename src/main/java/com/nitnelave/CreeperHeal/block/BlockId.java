@@ -1,5 +1,7 @@
 package com.nitnelave.CreeperHeal.block;
 
+import org.bukkit.block.Block;
+
 public class BlockId {
 	int id;
 	byte data;
@@ -40,6 +42,10 @@ public class BlockId {
 			else
 				throw new NumberFormatException();
 		}
+	}
+
+	public BlockId(Block block) {
+		this (block.getTypeId(), block.getData());		
 	}
 
 	public int getId() {
