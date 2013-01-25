@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashSet;
 
+import org.bukkit.block.Block;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Creeper;
@@ -25,7 +26,7 @@ public class WorldConfig {
 	creepers, tnt, fire, ghast, magical, dragons, wither, spawnWither, ignoreFactionsWilderness, ignoreFactionsTerritory, whiteBlockList, whitePlaceList;
 	public String name;
 	public int repairTime, replaceLimit;
-	public HashSet<BlockId> blockList = new HashSet<BlockId>(), placeList = new HashSet<BlockId>();
+	public HashSet<BlockId> blockList = new HashSet<BlockId>(), placeList = new HashSet<BlockId>(), protectList = new HashSet<BlockId>();
 	private File pluginFolder;
 	private YamlConfiguration config;
 
@@ -75,6 +76,7 @@ public class WorldConfig {
 				ignoreFactionsWilderness = whiteBlockList = whitePlaceList = ignoreFactionsTerritory = false;
 		wither = spawnWither = true;
 		placeList = new HashSet<BlockId>();
+		protectList = new HashSet<BlockId>();
 	}
 
 
@@ -121,6 +123,7 @@ public class WorldConfig {
 		replaceAbove = getBoolean("replace.replace-above-limit-only", false);
 		replaceLimit = getInt("replace.replace-limit", 64);
 		blockList = loadList("replace.restrict-list");
+		protectList = loadList("replace.protect-list");
 		repairTime = getInt("replace.repair-time-of-day", -1);
 		blockLava = getBoolean("grief.block.lava", false);
 		blockTNT = getBoolean("grief.block.TNT", false);
@@ -158,6 +161,7 @@ public class WorldConfig {
 		set("replace.replace-above-limit-only", replaceAbove);
 		set("replace.replace-limit", replaceLimit);
 		set("replace.restrict-list", formatList(blockList));
+		set("replace.protect-list", formatList(protectList));
 		set("replace.white-restrict-list", whiteBlockList);
 		set("replace.repair-time-of-day", repairTime);
 		set("replace.factions.ignore-wilderness", ignoreFactionsWilderness);
@@ -285,5 +289,10 @@ public class WorldConfig {
 
 	public boolean isAbove(Entity entity) {       //the entity that exploded was above the limit
 		return entity.getLocation().getBlockY()>= replaceLimit;
+	}
+
+
+	public boolean isProtected(Block block) {
+		return protectList.contains(new BlockId(block));
 	}
 }

@@ -243,6 +243,7 @@ public class ExplodedBlockManager {
 		if (type_id == 0)
 			return;
 		byte data = block.getData();
+		
 
 		if(CreeperConfig.preventChainReaction && block.getType().equals(Material.TNT))
 		{
@@ -251,12 +252,12 @@ public class ExplodedBlockManager {
 			return;
 		}
 
+		if(CreeperConfig.replaceProtectedChests && PluginHandler.isProtected(block) || world.isProtected(block))
+			toReplace.put(block.getLocation(), CreeperBlock.newBlock(block.getState()));    //replace immediately
+
 		if(world.whiteBlockList ^ !world.blockList.contains(new BlockId(type_id, data)))
 			//if the block is to be replaced
 		{
-
-			if(CreeperConfig.replaceProtectedChests && PluginHandler.isProtected(block))
-				toReplace.put(block.getLocation(), CreeperBlock.newBlock(block.getState()));    //replace immediately
 
 			if(block.getState() instanceof InventoryHolder)         //save the inventory
 			{
@@ -351,7 +352,7 @@ public class ExplodedBlockManager {
 				block.setType(Material.AIR);
 				break;
 			case TNT :      //add the traps triggered to the list of blocks to be replaced
-				if(CreeperTrapHandler.isTrap(block)/* || loadWorld(block.getWorld()).replaceTNT*/)
+				if(CreeperTrapHandler.isTrap(block))
 					toAdd.add(block);
 				break;
 			case STONE_PLATE :
@@ -359,7 +360,15 @@ public class ExplodedBlockManager {
 				BlockState state = block.getState();
 				state.setRawData((byte) 0);
 				listState.add(CreeperBlock.newBlock(state));
-				block.setTypeIdAndData(0, (byte) 0, false);
+				block.setType(Material.AIR);
+				break;
+			case CACTUS:
+			case SUGAR_CANE_BLOCK:
+				Block up = block.getRelative(BlockFace.UP);
+				if (up.getTypeId() == type_id)
+					record (up, listState, world, toAdd);
+				listState.add(CreeperBlock.newBlock(block.getState()));
+				block.setType(Material.AIR);
 				break;
 			case SMOOTH_BRICK :
 			case BRICK_STAIRS :

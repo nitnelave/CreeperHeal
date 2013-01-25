@@ -107,7 +107,6 @@ public class CreeperBlockListener implements Listener{
 			}
 		}
 		else */
-		//CreeperHeal.log.info(event.getCause().name() + " ; " + world.preventFireSpread);
 		if(event.getCause() == IgniteCause.SPREAD && world.preventFireSpread)
 			event.setCancelled(true);
 		else if(event.getCause() == IgniteCause.LAVA && world.preventFireLava)

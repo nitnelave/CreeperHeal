@@ -31,9 +31,9 @@ import com.nitnelave.CreeperHeal.utils.DelayReplacement;
 
 public class CreeperBlock implements Replaceable{
 
-	private final static Set<Integer> PHYSICS_BLOCKS = CreeperUtils.createFinalHashSet(12, 13, 145);                        //sand gravel, soulsand fall
-	private final static Set<Integer> DEPENDENT_DOWN_BLOCKS = CreeperUtils.createFinalHashSet(6,26,27,28,31,32,37,38,39,40,55,59,63,64,66,70,71,72,78,93,94,104,105,115, 117, 140, 141, 142);
-	private final static Set<Integer> DEPENDENT_BLOCKS = CreeperUtils.createFinalHashSet(6,26,27,28,31,32,37,38,39,40,50,55,59,63,64,65,66,68,69,70,71,72,75,76,77,78,93,94,96,104,105,106,115, 117, 127, 131, 140, 141, 142, 143);
+	private final static Set<Integer> PHYSICS_BLOCKS = CreeperUtils.createFinalHashSet(12, 13, 81, 83, 145);                        //sand gravel, soulsand fall
+	private final static Set<Integer> DEPENDENT_DOWN_BLOCKS = CreeperUtils.createFinalHashSet(6,26,27,28,31,32,37,38,39,40,55,59,63,64,66,70,71,72,78,81,83,93,94,104,105,115, 117, 140, 141, 142);
+	private final static Set<Integer> DEPENDENT_BLOCKS = CreeperUtils.createFinalHashSet(6,26,27,28,31,32,37,38,39,40,50,55,59,63,64,65,66,68,69,70,71,72,75,76,77,78,81,83,93,94,96,104,105,106,115, 117, 127, 131, 140, 141, 142, 143);
 	private final static Set<Integer> NOT_SOLID_BLOCKS = CreeperUtils.createFinalHashSet(0,6,8,9,26,27,28,30,31,37,38,39,40, 50,55,59,63,64,65,66,68,69,70,71,72,75,76,77,78,83,90,93,94,96);   //the player can breathe
 	protected final static Set<Integer> EMPTY_BLOCKS = CreeperUtils.createFinalHashSet(0,8,9,10,11, 51, 78);
 	private final static Set<Integer> REDSTONE_BLOCKS = CreeperUtils.createFinalHashSet(29, 33, 34, 55, 93, 94, 131);

@@ -80,10 +80,7 @@ public class PluginHandler {
 
 	public static boolean isProtected(Block block){       //is the block protected?
 		if(lwc!=null){                      //lwc gets the priority. BECAUSE!
-			boolean protect = (lwc.findProtection(block)!=null);
-			if(protect)
-				CreeperLog.logInfo("protected block : " + block.getType(), 1);
-			return protect;
+			return lwc.findProtection(block) != null;
 		}
 		else if(CreeperConfig.lockette){                  //and then lockette
 			return Lockette.isProtected(block);
