@@ -237,7 +237,7 @@ public class CreeperConfig
 
 			blockPerBlockInterval = getInt(configFile, "block-per-block.interval", 20);
 			waitBeforeHeal = getInt(configFile, "wait-before-heal.explosions", 60);        //tries to read the value directly from the config
-			blockPerBlock = getBoolean(configFile, "block-per-block", true);
+			blockPerBlock = getBoolean(configFile, "block-per-block.enabled", true);
 			waitBeforeHealBurnt = getInt(configFile, "wait-before-heal.fire", 45);
 			crackDestroyedBricks = getBoolean(configFile, "crack-destroyed-bricks", false);
 			replaceAllChests = getBoolean(configFile, "ignore-chests.all", false);
