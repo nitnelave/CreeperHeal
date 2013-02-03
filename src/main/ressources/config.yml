@@ -5,15 +5,6 @@
 ######################################
 #Default config
 #
-#Feel free to test the settings for "replacement" and the worlds
-#but I advise against changing the "advanced" section if you don't know exactly what you're doing
-#
-#
-#
-#
-#This first section is about how the blocks are goind to get replaced
-#
-#
 #   How many seconds before the explosion/burnt block starts healing
 wait-before-heal:
   explosions: 60
@@ -30,4 +21,7 @@ ignore-chests:
   all: false
 # Protects only protected chests (by Lockette or LWC) when set to true
   protected: false
-
+#Configuration version. Do not change, or you will have migration problems on update.
+config-version: 7.0
+#If set to true, the grass is replaced by dirt after an explosion
+replace-grass-with-dirt: false

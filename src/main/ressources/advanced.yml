@@ -31,3 +31,9 @@ obsidian:
   explode: false
   radius: 5
   chance: 20
+#When a warning is issued for griefing, write it to the log file.
+log-warnings: true
+#Output debug messages. Not recommended.
+debug-messages: false
+#In seconds, how long a block is immune to fire after having been replaced
+wait-before-burn-again: 240
