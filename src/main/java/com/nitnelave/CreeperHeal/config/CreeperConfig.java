@@ -421,6 +421,7 @@ public class CreeperConfig
 				log.severe(e.getMessage());
 			}
 		}
+		world_config.put(name, returnValue);
 		return returnValue;
 	}
 
