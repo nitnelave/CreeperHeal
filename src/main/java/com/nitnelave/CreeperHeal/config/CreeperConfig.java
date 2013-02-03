@@ -286,7 +286,7 @@ public class CreeperConfig
 				String name = w.getName();
 				WorldConfig world = new WorldConfig(name, getDataFolder());
 				if (configVersion == 6)
-					world.removeWither();
+					world.migrate6to7();
 				world_config.put(name, world);
 				timeRepairs = timeRepairs || world.repairTime > -1;
 			}
