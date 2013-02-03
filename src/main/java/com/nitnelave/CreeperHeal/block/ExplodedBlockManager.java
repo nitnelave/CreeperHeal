@@ -370,6 +370,12 @@ public class ExplodedBlockManager {
 				listState.add(CreeperBlock.newBlock(block.getState()));
 				block.setType(Material.AIR);
 				break;
+			case GRASS :
+				if(world.grassToDirt)
+					block.setType(Material.DIRT);
+				listState.add(CreeperBlock.newBlock(block.getState()));
+				block.setType(Material.AIR);
+				break;
 			case SMOOTH_BRICK :
 			case BRICK_STAIRS :
 				if(CreeperConfig.crackDestroyedBricks  && block.getData() == (byte)0)

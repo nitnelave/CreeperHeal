@@ -21,7 +21,7 @@ import com.nitnelave.CreeperHeal.utils.CreeperLog;
 
 public class WorldConfig {
 
-	public boolean enderman, replaceAbove, blockLava, blockTNT, blockIgnite, blockBlackList, 
+	public boolean enderman, replaceAbove, blockLava, blockTNT, blockIgnite, blockBlackList, grassToDirt,
 	blockSpawnEggs, blockPvP, warnLava, warnTNT, warnIgnite, warnBlackList, warnSpawnEggs, warnPvP, preventFireSpread, preventFireLava,
 	creepers, tnt, fire, ghast, magical, dragons, wither, ignoreFactionsWilderness, ignoreFactionsTerritory, whiteBlockList, whitePlaceList;
 	public String name;
@@ -46,7 +46,7 @@ public class WorldConfig {
 			creepers = tnt = ghast = fire = wither =  true;
 			magical = dragons = replaceAbove = enderman = blockLava = blockTNT = blockIgnite = blockBlackList = blockSpawnEggs = blockPvP = 
 					warnLava = warnTNT = warnIgnite = warnBlackList = warnSpawnEggs = warnPvP = preventFireSpread = preventFireLava =
-					ignoreFactionsWilderness = ignoreFactionsTerritory = whiteBlockList = whitePlaceList = false;
+					ignoreFactionsWilderness = ignoreFactionsTerritory = whiteBlockList = whitePlaceList = grassToDirt = false;
 			replaceLimit = 60;
 			repairTime = -1;
 			blockList = new HashSet<BlockId>();        //sample whitelist
@@ -73,7 +73,7 @@ public class WorldConfig {
 		repairTime = (Integer) l[10];
 		blockLava = blockTNT = blockIgnite = blockBlackList = blockSpawnEggs = blockPvP = warnLava = 
 				warnTNT = warnIgnite = warnBlackList = warnSpawnEggs = warnPvP = preventFireSpread = preventFireLava =
-				ignoreFactionsWilderness = whiteBlockList = whitePlaceList = ignoreFactionsTerritory = false;
+				ignoreFactionsWilderness = whiteBlockList = whitePlaceList = grassToDirt = ignoreFactionsTerritory = false;
 		wither =  true;
 		placeList = new HashSet<BlockId>();
 		protectList = new HashSet<BlockId>();
@@ -125,6 +125,11 @@ public class WorldConfig {
 		blockList = loadList("replace.restrict-list");
 		protectList = loadList("replace.protect-list");
 		repairTime = getInt("replace.repair-time-of-day", -1);
+		wither = getBoolean("replace.Wither", true);
+		ignoreFactionsWilderness = getBoolean("replace.factions.ignore-wilderness", false);
+		ignoreFactionsTerritory = getBoolean("replace.factions.ignore-territory", false);
+		whiteBlockList = getBoolean("replace.white-restrict-list", false);
+		grassToDirt = getBoolean("replace.replace-grass-with-dirt", false);
 		blockLava = getBoolean("grief.block.lava", false);
 		blockTNT = getBoolean("grief.block.TNT", false);
 		blockIgnite = getBoolean("grief.block.flint-and-steel", false);
@@ -140,11 +145,7 @@ public class WorldConfig {
 		preventFireSpread = getBoolean("grief.prevent-fire-spread.fire", false);
 		preventFireLava = getBoolean("grief.prevent-fire-spread.lava", false);
 		placeList = loadList("grief.blacklist"); 
-		ignoreFactionsWilderness = getBoolean("replace.factions.ignore-wilderness", false);
-		ignoreFactionsTerritory = getBoolean("replace.factions.ignore-territory", false);
-		whiteBlockList = getBoolean("replace.white-restrict-list", false);
 		whitePlaceList = getBoolean("grief.white-list", false);
-		wither = getBoolean("replace.Wither", true);
 		
 	}
 	
@@ -166,6 +167,7 @@ public class WorldConfig {
 		set("replace.factions.ignore-wilderness", ignoreFactionsWilderness);
 		set("replace.factions.ignore-territory", ignoreFactionsTerritory);
 		set("replace.Wither", wither);
+		set("replace.replace-grass-with-dirt", grassToDirt);
 		set("grief.block.lava", blockLava);
 		set("grief.block.TNT", blockTNT);
 		set("grief.block.flint-and-steel", blockIgnite);
