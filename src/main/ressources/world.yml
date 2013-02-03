@@ -1,8 +1,8 @@
 #
 #
-#
-#World specific settings
-#
+#############################
+## World specific settings ##
+#############################
 #
 #
 #
@@ -15,16 +15,15 @@ replace:
   Magical: false
   Fire: true
   Enderman: false
-# the TNT reappears after blowing up (a bit experimental, use at you risk)
-  replace-all-TNT-blocks: false
+  Wither: true
 # limits the replacement of blocks to the surface
   replace-above-limit-only: false
   replace-limit: 64
-# false, whitelist or blacklist : restricts the blocks replaced after an explosion
-  use-restrict-list: 'false'
-#(list of block ID separated by commas) blacklist (or whitelist, depending on the setting above)
-#For example, to block dirt, all types of wool, normal logs and birch logs : 3, 35, 17:0, 17:2 (with restrict-blocks set to blacklist)
-  restrict-list: '0'
+  restrict:
+    #(list of block ID separated by commas)
+    #For example, to prevent the replacement of dirt, all types of wool, normal logs and birch logs : 3, 35, 17:0, 17:2
+    blacklist: '0'
+    whitelist: '0'
 #Minecraft time of the day at which everything should be healed (-1 to deactivate)
 #Sunrise is around 23000, noon 6000, sunset 13000, and midnight 18000. Day (zombies burning) starts at 0.
   repair-time-of-day: -1
@@ -33,6 +32,8 @@ replace:
     ignore-wilderness: false
     #Do not regenerate if Factions plugin enabled and explosion completely happens in a Faction
     ignore-territory: false
+  #List of blocks to be protected from explosions
+  protect-list: '0'
 #
 #Grief prevention part
 #
@@ -65,3 +66,5 @@ grief:
 #(list of block ID separated by commas) blacklist
 #For example, to block dirt, all types of wool, normal logs and birch logs : 3, 35, 17:0, 17:2
   blacklist: '0'
+  #if set to true, the blacklist defined above acts as a whitelist instead.
+  white-list: false
