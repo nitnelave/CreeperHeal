@@ -299,5 +299,6 @@ public class WorldConfig {
 
 	public void removeWither() {
 		set("grief.allow-spawn-wither", null);
+		set("replace.replace-all-TNT-blocks", null);
 	}
 }
