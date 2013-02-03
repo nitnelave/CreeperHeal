@@ -428,7 +428,8 @@ public class ExplodedBlockManager {
 						BlockManager.replace_one_block(blockList);        //replace one
 					if(blockList.isEmpty())         //if empty, remove from list
 					{
-						explosionIndex.removeElement(cEx, cEx.getLocation().getX(), cEx.getLocation().getZ());
+						if (!CreeperConfig.lightweightMode)
+							explosionIndex.removeElement(cEx, cEx.getLocation().getX(), cEx.getLocation().getZ());
 						iter.remove();
 					}
 				}
