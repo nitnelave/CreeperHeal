@@ -255,7 +255,8 @@ public class ExplodedBlockManager {
 		if(CreeperConfig.replaceProtectedChests && PluginHandler.isProtected(block) || world.isProtected(block))
 			toReplace.put(block.getLocation(), CreeperBlock.newBlock(block.getState()));    //replace immediately
 
-		if(world.whiteBlockList ^ !world.blockList.contains(new BlockId(type_id, data)))
+		BlockId id = new BlockId(type_id, data);
+		if(world.blockWhiteList.contains(id) || !world.blockBlackList.contains(id))
 			//if the block is to be replaced
 		{
 

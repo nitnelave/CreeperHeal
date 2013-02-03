@@ -70,11 +70,11 @@ public class CreeperBlockListener implements Listener{
 			if(world.warnTNT)
 				CreeperHeal.warn(CreeperPlayer.WarningCause.TNT, player, blocked, null);
 		}
-		else if(world.blockBlackList)
+		else if(world.griefBlockList)
 		{
 			if(world.placeList.contains(new BlockId(event.getBlock().getTypeId(), event.getBlock().getData())) && !CreeperPermissionManager.checkPermissions(player, true, "bypass.place-blacklist"))
 			{
-				boolean blocked = world.blockBlackList;
+				boolean blocked = world.griefBlockList;
 				if(blocked)
 					event.setCancelled(true);
 				if(world.warnBlackList)
