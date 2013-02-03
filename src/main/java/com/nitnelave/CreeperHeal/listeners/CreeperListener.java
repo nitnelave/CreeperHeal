@@ -19,7 +19,6 @@ import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -316,20 +315,12 @@ public class CreeperListener implements Listener{
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onCreatureSpawn(CreatureSpawnEvent event) {
-		if(event.isCancelled())
-			return;
-
-		WorldConfig w = CreeperConfig.loadWorld(event.getLocation().getWorld());
-		if(event.getEntityType() == EntityType.WITHER && !w.spawnWither)
-			event.setCancelled(true);
-
-	}
 
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void onEntityChangeBlock(EntityChangeBlockEvent e)
 	{
+		if (e.getBlock().getType() == Material.MONSTER_EGG || e.getEntityType() == EntityType.SILVERFISH)
+			CreeperLog.debug("entity change block");
 		if (CreeperBlock.hasPhysics(e.getBlock().getTypeId()))
 		{
 			Location l = e.getBlock().getLocation();

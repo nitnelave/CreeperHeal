@@ -193,90 +193,89 @@ public class CreeperConfig
 		configVersion = configFile.getDouble("config-version", 4);
 		if(configVersion == 4)
 			importFrom4();
-		else
+		else if (configVersion == 5)
 		{
-			if (configVersion == 5)
-			{
-				blockPerBlockInterval = getInt(configFile, "replacement.block-per-block.interval", 20);
-				waitBeforeHeal = getInt(configFile, "replacement.wait-before-heal.explosions", 60);        //tries to read the value directly from the config
-				blockPerBlock = getBoolean(configFile, "replacement.block-per-block", true);
-				waitBeforeHealBurnt = getInt(configFile, "replacement.wait-before-heal.fire", 45);
-				crackDestroyedBricks = getBoolean(configFile, "replacement.crack-destroyed-bricks", false);
-				replaceAllChests = getBoolean(configFile, "replacement.ignore-chests.all", false);
-				replaceProtectedChests = getBoolean(configFile, "replacement.ignore-chests.protected", false);
-				logLevel = getInt(configFile, "advanced.verbose-level", 1);
-				dropReplacedBlocks = getBoolean(configFile, "advanced.replacement-conflict.drop-overwritten-blocks", true);
-				teleportOnSuffocate = getBoolean(configFile, "advanced.teleport-when-buried", true);
-				dropDestroyedBlocks = getBoolean(configFile, "advanced.drop-destroyed-blocks.enabled", true);
-				dropChance = getInt(configFile, "advanced.drop-destroyed-blocks.chance", 100);
-				opEnforce = getBoolean(configFile, "advanced.op-have-all-permissions", true);
-				overwriteBlocks = getBoolean(configFile, "advanced.replacement-conflict.overwrite", true);
-				preventBlockFall = getBoolean(configFile, "advanced.prevent-block-fall", true);
-				distanceNear = getInt(configFile, "advanced.distance-near", 20);
-				lightweightMode = getBoolean(configFile, "advanced.lightweight-mode", false);
-				alias = configFile.getString("advanced.command-alias", "ch");
-				logWarnings =  getBoolean(configFile, "advanced.log-warnings", true);
-				preventChainReaction = getBoolean(configFile, "advanced.prevent-chain-reaction", false);
-				explodeObsidian = getBoolean(configFile, "advanced.obsidian.explode", false);
-				obsidianRadius = getInt(configFile, "advanced.obsidian.radius", 5);
-				obsidianChance = getInt(configFile, "advanced.obsidian.chance", 20);
-				debug = getBoolean(configFile, "advanced.debug-messages", false);
-				waitBeforeBurnAgain = 240;
-				configVersion = 6;
-				set(configFile, "config-version", 6);
-				set(configFile, "replacement", null);
-				set(configFile, "advanced", null);
 
-				if (!advanced.exists()) {
-					log.warning("[CreeperHeal] Migrating to config v 6");
-					copyJarConfig(advanced, "advanced.yml");        //write the config with the default values.
-				}
-				write();
+			blockPerBlockInterval = getInt(configFile, "replacement.block-per-block.interval", 20);
+			waitBeforeHeal = getInt(configFile, "replacement.wait-before-heal.explosions", 60);        //tries to read the value directly from the config
+			blockPerBlock = getBoolean(configFile, "replacement.block-per-block", true);
+			waitBeforeHealBurnt = getInt(configFile, "replacement.wait-before-heal.fire", 45);
+			crackDestroyedBricks = getBoolean(configFile, "replacement.crack-destroyed-bricks", false);
+			replaceAllChests = getBoolean(configFile, "replacement.ignore-chests.all", false);
+			replaceProtectedChests = getBoolean(configFile, "replacement.ignore-chests.protected", false);
+			logLevel = getInt(configFile, "advanced.verbose-level", 1);
+			dropReplacedBlocks = getBoolean(configFile, "advanced.replacement-conflict.drop-overwritten-blocks", true);
+			teleportOnSuffocate = getBoolean(configFile, "advanced.teleport-when-buried", true);
+			dropDestroyedBlocks = getBoolean(configFile, "advanced.drop-destroyed-blocks.enabled", true);
+			dropChance = getInt(configFile, "advanced.drop-destroyed-blocks.chance", 100);
+			opEnforce = getBoolean(configFile, "advanced.op-have-all-permissions", true);
+			overwriteBlocks = getBoolean(configFile, "advanced.replacement-conflict.overwrite", true);
+			preventBlockFall = getBoolean(configFile, "advanced.prevent-block-fall", true);
+			distanceNear = getInt(configFile, "advanced.distance-near", 20);
+			lightweightMode = getBoolean(configFile, "advanced.lightweight-mode", false);
+			alias = configFile.getString("advanced.command-alias", "ch");
+			logWarnings =  getBoolean(configFile, "advanced.log-warnings", true);
+			preventChainReaction = getBoolean(configFile, "advanced.prevent-chain-reaction", false);
+			explodeObsidian = getBoolean(configFile, "advanced.obsidian.explode", false);
+			obsidianRadius = getInt(configFile, "advanced.obsidian.radius", 5);
+			obsidianChance = getInt(configFile, "advanced.obsidian.chance", 20);
+			debug = getBoolean(configFile, "advanced.debug-messages", false);
+			waitBeforeBurnAgain = 240;
+			configVersion = 6;
+			set(configFile, "config-version", 6);
+			set(configFile, "replacement", null);
+			set(configFile, "advanced", null);
 
+			if (!advanced.exists()) {
+				log.warning("[CreeperHeal] Migrating to config v 6");
+				copyJarConfig(advanced, "advanced.yml");        //write the config with the default values.
 			}
-			else {
-				
-				blockPerBlockInterval = getInt(configFile, "block-per-block.interval", 20);
-				waitBeforeHeal = getInt(configFile, "wait-before-heal.explosions", 60);        //tries to read the value directly from the config
+			write();
 
-				blockPerBlock = getBoolean(configFile, "block-per-block", true);
-				waitBeforeHealBurnt = getInt(configFile, "wait-before-heal.fire", 45);
-				crackDestroyedBricks = getBoolean(configFile, "crack-destroyed-bricks", false);
-				replaceAllChests = getBoolean(configFile, "ignore-chests.all", false);
-				replaceProtectedChests = getBoolean(configFile, "ignore-chests.protected", false);
+		}
+		else if (configVersion >= 6){
 
-				if (!advanced.exists()) {
-					log.warning("[CreeperHeal] Advanced config file not found, creating default.");
-					copyJarConfig(advanced, "advanced.yml");        //write the config with the default values.
-				}
+			blockPerBlockInterval = getInt(configFile, "block-per-block.interval", 20);
+			waitBeforeHeal = getInt(configFile, "wait-before-heal.explosions", 60);        //tries to read the value directly from the config
+			blockPerBlock = getBoolean(configFile, "block-per-block", true);
+			waitBeforeHealBurnt = getInt(configFile, "wait-before-heal.fire", 45);
+			crackDestroyedBricks = getBoolean(configFile, "crack-destroyed-bricks", false);
+			replaceAllChests = getBoolean(configFile, "ignore-chests.all", false);
+			replaceProtectedChests = getBoolean(configFile, "ignore-chests.protected", false);
 
-				try {
-					advancedFile.load(advanced);
-				} catch (Exception e) {
-					log.severe("Error loading advanced configuration file");
-					e.printStackTrace();
-				}
-				logLevel = getInt(advancedFile, "verbose-level", 1);
-				dropReplacedBlocks = getBoolean(advancedFile, "replacement-conflict.drop-overwritten-blocks", true);
-				teleportOnSuffocate = getBoolean(advancedFile, "teleport-when-buried", true);
-				dropDestroyedBlocks = getBoolean(advancedFile, "drop-destroyed-blocks.enabled", true);
-				dropChance = getInt(advancedFile, "drop-destroyed-blocks.chance", 100);
-				opEnforce = getBoolean(advancedFile, "op-have-all-permissions", true);
-				overwriteBlocks = getBoolean(advancedFile, "replacement-conflict.overwrite", true);
-				preventBlockFall = getBoolean(advancedFile, "prevent-block-fall", true);
-				distanceNear = getInt(advancedFile, "distance-near", 20);
-				lightweightMode = getBoolean(advancedFile, "lightweight-mode", false);
-				alias = advancedFile.getString("command-alias", "ch");
-				logWarnings =  getBoolean(advancedFile, "log-warnings", true);
-				preventChainReaction = getBoolean(advancedFile, "prevent-chain-reaction", false);
-				explodeObsidian = getBoolean(advancedFile, "obsidian.explode", false);
-				obsidianRadius = getInt(advancedFile, "obsidian.radius", 5);
-				obsidianChance = getInt(advancedFile, "obsidian.chance", 20);
-				debug = getBoolean(advancedFile, "debug-messages", false);
-				waitBeforeBurnAgain = getInt(advancedFile, "wait-before-burn-again", 240);
-				
+			if (!advanced.exists()) {
+				log.warning("[CreeperHeal] Advanced config file not found, creating default.");
+				copyJarConfig(advanced, "advanced.yml");        //write the config with the default values.
 			}
 
+			try {
+				advancedFile.load(advanced);
+			} catch (Exception e) {
+				log.severe("Error loading advanced configuration file");
+				e.printStackTrace();
+			}
+			logLevel = getInt(advancedFile, "verbose-level", 1);
+			dropReplacedBlocks = getBoolean(advancedFile, "replacement-conflict.drop-overwritten-blocks", true);
+			teleportOnSuffocate = getBoolean(advancedFile, "teleport-when-buried", true);
+			dropDestroyedBlocks = getBoolean(advancedFile, "drop-destroyed-blocks.enabled", true);
+			dropChance = getInt(advancedFile, "drop-destroyed-blocks.chance", 100);
+			opEnforce = getBoolean(advancedFile, "op-have-all-permissions", true);
+			overwriteBlocks = getBoolean(advancedFile, "replacement-conflict.overwrite", true);
+			preventBlockFall = getBoolean(advancedFile, "prevent-block-fall", true);
+			distanceNear = getInt(advancedFile, "distance-near", 20);
+			lightweightMode = getBoolean(advancedFile, "lightweight-mode", false);
+			alias = advancedFile.getString("command-alias", "ch");
+			logWarnings =  getBoolean(advancedFile, "log-warnings", true);
+			preventChainReaction = getBoolean(advancedFile, "prevent-chain-reaction", false);
+			explodeObsidian = getBoolean(advancedFile, "obsidian.explode", false);
+			obsidianRadius = getInt(advancedFile, "obsidian.radius", 5);
+			obsidianChance = getInt(advancedFile, "obsidian.chance", 20);
+			debug = getBoolean(advancedFile, "debug-messages", false);
+			waitBeforeBurnAgain = getInt(advancedFile, "wait-before-burn-again", 240);
+			set(configFile, "config-version", 7);
+			if (configVersion == 6)
+				log.warning("[CreeperHeal] Migrating to config v 7");
+			write();
 		}
 
 		boolean timeRepairs = false;
@@ -286,6 +285,8 @@ public class CreeperConfig
 			for(World w : plugin.getServer().getWorlds()) {
 				String name = w.getName();
 				WorldConfig world = new WorldConfig(name, getDataFolder());
+				if (configVersion == 6)
+					world.removeWither();
 				world_config.put(name, world);
 				timeRepairs = timeRepairs || world.repairTime > -1;
 			}
@@ -294,6 +295,7 @@ public class CreeperConfig
 			log.severe("[CreeperHeal] Could not load world configurations");
 			log.severe(e.getMessage());
 		}
+		configVersion = 7;
 
 		if(timeRepairs)
 			plugin.scheduleTimeRepairs();
@@ -342,7 +344,7 @@ public class CreeperConfig
 				log.warning("[CreeperHeal] Cannot create file "+yml.getPath());
 			}
 		}
-		
+
 		if(!advanced.exists()){
 			new File(getDataFolder().toString()).mkdir();
 			try {

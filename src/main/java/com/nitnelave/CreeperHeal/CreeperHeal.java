@@ -31,6 +31,7 @@ import com.nitnelave.CreeperHeal.command.CreeperCommandManager;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.economy.CreeperEconomy;
+import com.nitnelave.CreeperHeal.listeners.CreatureSpawnListener;
 import com.nitnelave.CreeperHeal.listeners.CreeperBlockListener;
 import com.nitnelave.CreeperHeal.listeners.CreeperListener;
 import com.nitnelave.CreeperHeal.listeners.FancyListener;
@@ -45,13 +46,7 @@ import com.nitnelave.CreeperHeal.utils.CreeperPlayer.WarningCause;
 public class CreeperHeal extends JavaPlugin {
 	
 
-	/**
-	 * Listeners
-	 */
 
-	protected CreeperListener listener = new CreeperListener(this);                        //listener for explosions
-	private FancyListener fancyListener = new FancyListener();
-	private CreeperBlockListener blockListener = new CreeperBlockListener();
 
 	
 	private static Map<CreeperBlock, Date> preventUpdate = Collections.synchronizedMap(new HashMap<CreeperBlock, Date>());
@@ -165,12 +160,18 @@ public class CreeperHeal extends JavaPlugin {
 		PluginHandler.init();
 		
 		logInfo("Loading listeners", 3);
+		
+		/**
+		 * Listeners
+		 */
 
-		pm.registerEvents(listener, this);
-		pm.registerEvents(blockListener, this);
+		pm.registerEvents(new CreeperListener(this), this);
+		pm.registerEvents(new CreeperBlockListener(), this);
+		if (CreeperConfig.debug)
+			pm.registerEvents(new CreatureSpawnListener(), this);
 
 		if(!(CreeperConfig.lightweightMode))
-			pm.registerEvents(fancyListener, this);
+			pm.registerEvents(new FancyListener(), this);
 		
 		populateWarnList();
 		
@@ -257,7 +258,7 @@ public class CreeperHeal extends JavaPlugin {
 
 
 
-	@Deprecated //Use static acces instead
+	@Deprecated //Use static access instead
 	public CreeperHandler getHandler()
 	{
 		return handler;
