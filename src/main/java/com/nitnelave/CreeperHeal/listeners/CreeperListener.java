@@ -245,15 +245,7 @@ public class CreeperListener implements Listener{
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerQuit(PlayerQuitEvent event)
 	{
-		String name = event.getPlayer().getName();
-		for(CreeperPlayer cp : CreeperHeal.getWarnList())
-		{
-			if(cp.getPlayer().getName().equals(name))
-			{
-				CreeperHeal.getWarnList().remove(cp);
-				return;
-			}
-		}
+		CreeperHeal.getWarnList().remove(new CreeperPlayer(event.getPlayer()));
 	}
 
 
