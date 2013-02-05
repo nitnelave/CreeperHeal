@@ -20,12 +20,9 @@ public class FancyListener implements Listener
 {
 
 
-	@EventHandler
+	@EventHandler (priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onBlockPhysics(BlockPhysicsEvent event)
 	{
-		if(event.isCancelled())
-			return;
-
 		Block b = event.getBlock();
 		if(b.getState() instanceof Rails)
 		{
@@ -79,12 +76,9 @@ public class FancyListener implements Listener
 		}
 	}
 
-	@EventHandler
+	@EventHandler (priority = EventPriority.NORMAL, ignoreCancelled = true)
 	synchronized public void onLeavesDecay(LeavesDecayEvent event)
 	{
-		if(event.isCancelled())
-			return;
-
 		Block b = event.getBlock();
 		if(ExplodedBlockManager.isNextToExplosion(b.getLocation()))
 		{
