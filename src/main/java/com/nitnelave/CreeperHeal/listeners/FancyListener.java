@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
@@ -29,35 +30,20 @@ public class FancyListener implements Listener
 			if(CreeperHeal.getPreventUpdate().containsKey(CreeperBlock.newBlock(b.getState())))
 				event.setCancelled(true);
 		}
-		else if(b.getType() == Material.VINE)
-		{
-			if(ExplodedBlockManager.isNextToExplosion(b.getLocation()))
-			{
+		else if(b.getType() == Material.VINE
+			&& (ExplodedBlockManager.isNextToExplosion(b.getLocation())
+			|| BurntBlockManager.isNextToFire(b.getLocation())))
 				event.setCancelled(true);
-				return;
-			}
-			if(BurntBlockManager.isNextToFire(b.getLocation()))
-			{
-				event.setCancelled(true);
-				return;
-			}
-		}
 		else if(CreeperConfig.preventBlockFall && CreeperBlock.hasPhysics(b.getTypeId()))
 		{
 			Location bLoc = b.getLocation();
 			World w = bLoc.getWorld();
-			if(CreeperHeal.getPreventBlockFall().containsKey(bLoc))
+			if(CreeperHeal.getPreventBlockFall().containsKey(bLoc)
+			|| ExplodedBlockManager.isNextToExplosion(bLoc))
 			{
 				event.setCancelled(true);
 				return;
 			}
-
-			if (ExplodedBlockManager.isNextToExplosion(bLoc))
-			{
-				event.setCancelled(true);
-				return;
-			}
-
 
 			synchronized(CreeperHeal.getPreventBlockFall())
 			{
@@ -80,16 +66,9 @@ public class FancyListener implements Listener
 	synchronized public void onLeavesDecay(LeavesDecayEvent event)
 	{
 		Block b = event.getBlock();
-		if(ExplodedBlockManager.isNextToExplosion(b.getLocation()))
-		{
+		if(ExplodedBlockManager.isNextToExplosion(b.getLocation())
+		|| BurntBlockManager.isNextToFire(b.getLocation()))
 			event.setCancelled(true);
-			return;
-		}
-		if(BurntBlockManager.isNextToFire(b.getLocation()))
-		{
-			event.setCancelled(true);
-			return;
-		}
 	}
 
 }
