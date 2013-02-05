@@ -20,7 +20,6 @@ import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
-import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.CreeperPermissionManager;
 import com.nitnelave.CreeperHeal.utils.CreeperPlayer;
 
@@ -30,12 +29,9 @@ public class CreeperBlockListener implements Listener{
 
 
 
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onBlockBurn(BlockBurnEvent event) {
 		CreeperLog.logInfo("BlockBurntEvent", 3);
-		if(event.isCancelled())
-			return;
-
 		WorldConfig world = CreeperConfig.loadWorld(event.getBlock().getLocation().getWorld());
 
 		if(world.fire)
@@ -54,12 +50,9 @@ public class CreeperBlockListener implements Listener{
 	}
 
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onBlockPlace(BlockPlaceEvent event)
 	{
-		if(event.isCancelled())
-			return;
-
 		Player player = event.getPlayer();
 		WorldConfig world = CreeperConfig.loadWorld(player.getWorld());
 		if(event.getBlockPlaced().getType() == Material.TNT && !CreeperPermissionManager.checkPermissions(player, true, "bypass.place-tnt"))
@@ -86,12 +79,9 @@ public class CreeperBlockListener implements Listener{
 
 
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onBlockIgnite(BlockIgniteEvent event)
 	{
-		if(event.isCancelled())
-			return;
-
 		WorldConfig world = CreeperConfig.loadWorld(event.getBlock().getWorld());
 
 		/*Player player = event.getPlayer();
@@ -113,9 +103,9 @@ public class CreeperBlockListener implements Listener{
 			event.setCancelled(true);
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onBlockSpread(BlockSpreadEvent event) {
-		if(event.isCancelled() || !event.getBlock().getType().equals(Material.FIRE))
+		if(!event.getBlock().getType().equals(Material.FIRE))
 			return;
 		WorldConfig world = CreeperConfig.loadWorld(event.getBlock().getWorld());
 
@@ -127,11 +117,9 @@ public class CreeperBlockListener implements Listener{
 			event.setCancelled(true);
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onEntityExplode(EntityExplodeEvent event) {//explosion
 		CreeperLog.logInfo("EntityExplodeEvent", 3);
-		if(event.isCancelled())
-			return;
 		CreeperLog.logInfo("explosion not cancelled", 3);
 		WorldConfig world = CreeperConfig.loadWorld(event.getLocation().getWorld());
 

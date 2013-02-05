@@ -65,12 +65,9 @@ public class CreeperListener implements Listener{
 
 
 
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onHangingBreak(HangingBreakEvent e)
 	{
-		if(e.isCancelled())
-			return;
-
 		if(e.getEntity() instanceof ItemFrame)
 			CreeperLog.debug("Item Frame detected!! Cause : " + e.getCause());
 
@@ -140,12 +137,9 @@ public class CreeperListener implements Listener{
 			CreeperLog.logInfo("Hanging removed for another reason", 2);
 	}
 	
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onEntityDamage(EntityDamageEvent event)
 	{
-		if(event.isCancelled())
-			return;
-
 		Entity en = event.getEntity();
 		if(en instanceof Painting)
 		{
@@ -225,11 +219,8 @@ public class CreeperListener implements Listener{
 
 
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onEndermanPickup(EntityChangeBlockEvent event) {//enderman pickup
-		if(event.isCancelled())
-			return;
-
 		if (event.getEntity() instanceof Enderman)
 		{
 			WorldConfig world = getWorld(event.getBlock().getWorld());
@@ -238,12 +229,9 @@ public class CreeperListener implements Listener{
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{
-		if(event.isCancelled())
-			return;
-
 		Player player = event.getPlayer();
 		WorldConfig world = getWorld(player.getWorld());
 
@@ -272,12 +260,9 @@ public class CreeperListener implements Listener{
 	}
 
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event)
 	{
-		if(event.isCancelled())
-			return;
-
 		WorldConfig world = getWorld(event.getPlayer().getWorld());
 
 		Player player = event.getPlayer();
@@ -316,7 +301,7 @@ public class CreeperListener implements Listener{
 	}
 
 
-	@EventHandler (priority = EventPriority.NORMAL)
+	@EventHandler (priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onEntityChangeBlock(EntityChangeBlockEvent e)
 	{
 		if (e.getBlock().getType() == Material.MONSTER_EGG || e.getEntityType() == EntityType.SILVERFISH)
