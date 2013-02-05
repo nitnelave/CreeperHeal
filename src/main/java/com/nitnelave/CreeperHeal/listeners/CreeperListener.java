@@ -10,7 +10,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Hanging;
-import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -68,9 +67,6 @@ public class CreeperListener implements Listener{
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onHangingBreak(HangingBreakEvent e)
 	{
-		if(e.getEntity() instanceof ItemFrame)
-			CreeperLog.debug("Item Frame detected!! Cause : " + e.getCause());
-
 		Hanging h = (Hanging) e.getEntity();
 		if(e instanceof HangingBreakByEntityEvent)
 		{
@@ -79,85 +75,63 @@ public class CreeperListener implements Listener{
 			if(remover instanceof Creeper || remover instanceof TNTPrimed || remover instanceof Fireball || remover instanceof EnderDragon)
 			{
 				WorldConfig world = CreeperConfig.loadWorld(remover.getWorld());
-				if(world.shouldReplace(remover)) {
+				if(world.shouldReplace(remover))
 					PaintingsManager.checkPainting(h, world.isRepairTimed(), false);
-				}
 			}
 		}
 		else if(e.getCause() == RemoveCause.EXPLOSION)
 		{
 			WorldConfig world = CreeperConfig.loadWorld(e.getEntity().getWorld());
 			PaintingsManager.checkPainting(h, world.isRepairTimed(), false);
-			
 		}
-		else if(e.getCause() == RemoveCause.PHYSICS)
+		else if(e.getCause() == RemoveCause.PHYSICS && !CreeperConfig.lightweightMode)
 		{
-			if(!CreeperConfig.lightweightMode)
+			Location paintLoc = h.getLocation();
+			World w = paintLoc.getWorld();
+			synchronized(ExplodedBlockManager.getExplosionList())
 			{
-				Location paintLoc = h.getLocation();
-				World w = paintLoc.getWorld();
-				synchronized(ExplodedBlockManager.getExplosionList())
+				for(CreeperExplosion cEx : ExplodedBlockManager.getExplosionList())
 				{
-					for(CreeperExplosion cEx : ExplodedBlockManager.getExplosionList())
+					Location loc = cEx.getLocation();
+					if(loc.getWorld() == w && loc.distance(paintLoc) < 20)
 					{
-						Location loc = cEx.getLocation();
-						if(loc.getWorld() == w)
-						{
-							if(loc.distance(paintLoc) < 20)
-							{
-								boolean should;
-								WorldConfig world = CreeperConfig.loadWorld(w);
-								if(world.replaceAbove)
-								{
-									if(paintLoc.getY() >= world.replaceLimit)
-										should =  world.creepers;
-									else
-										should = false;
-								}
-								else
-									should = world.creepers;
-								if(should) 
-									PaintingsManager.checkPainting(h, world.isRepairTimed(), false);
-								return;
-							}
-						}
+						WorldConfig world = CreeperConfig.loadWorld(w);
+						boolean should = world.creepers;
+						if(world.replaceAbove && paintLoc.getY() < world.replaceLimit)
+							should = false;
+						if(should)
+							PaintingsManager.checkPainting(h, world.isRepairTimed(), false);
+						return;
 					}
-				}
-				if(BurntBlockManager.isNextToFire(paintLoc))
-				{
-					WorldConfig world = CreeperConfig.loadWorld(w);
 
-					if(world.fire) 
-						PaintingsManager.checkPainting(h, world.isRepairTimed(), true);
-					return;
 				}
 			}
+			if(BurntBlockManager.isNextToFire(paintLoc))
+			{
+				WorldConfig world = CreeperConfig.loadWorld(w);
+
+				if(world.fire)
+					PaintingsManager.checkPainting(h, world.isRepairTimed(), true);
+			}
+
 		}
-		else
-			CreeperLog.logInfo("Hanging removed for another reason", 2);
 	}
-	
+
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onEntityDamage(EntityDamageEvent event)
 	{
 		Entity en = event.getEntity();
-		if(en instanceof Painting)
+		if(en instanceof Painting && event instanceof EntityDamageByEntityEvent)
 		{
-			if(event instanceof EntityDamageByEntityEvent)
+			EntityDamageByEntityEvent e = (EntityDamageByEntityEvent)event;
+			Entity entity = e.getDamager();
+			if(entity instanceof Creeper || entity instanceof TNTPrimed || entity instanceof Fireball || entity instanceof EnderDragon)
 			{
-				EntityDamageByEntityEvent e = (EntityDamageByEntityEvent)event;
-				Entity entity = e.getDamager();
-				if(entity instanceof Creeper || entity instanceof TNTPrimed || entity instanceof Fireball || entity instanceof EnderDragon)
-				{
-					WorldConfig world = getWorld(entity.getWorld());
-					if(world.shouldReplace(entity)) 
-						PaintingsManager.checkPainting((Painting)en, world.isRepairTimed(), false);
-				}
+				WorldConfig world = getWorld(entity.getWorld());
+				if(world.shouldReplace(entity))
+					PaintingsManager.checkPainting((Painting)en, world.isRepairTimed(), false);
 			}
-			else
-			{
-				CreeperLog.logInfo("Painting destroyed by block?", 1);
-			}
+
 		}
 		else if(en instanceof Player){
 			Player offender = null;
@@ -171,41 +145,31 @@ public class CreeperListener implements Listener{
 				{
 					offender = (Player) attacker;
 					message = offender.getItemInHand().getType().toString();
-
 				}
 			}
-			else if(cause == DamageCause.PROJECTILE)
+			else if(cause == DamageCause.PROJECTILE && ((EntityDamageByEntityEvent) event).getDamager() instanceof Projectile)
 			{
-				if (((EntityDamageByEntityEvent) event).getDamager() instanceof Projectile)
+				Projectile projectile = (Projectile) ((EntityDamageByEntityEvent) event).getDamager();
+				Entity attacker = projectile.getShooter();
+				if(attacker instanceof Player)
 				{
-					Projectile projectile = (Projectile) ((EntityDamageByEntityEvent) event).getDamager();
-					Entity attacker = projectile.getShooter();
-					if(attacker instanceof Player)
-					{
-						offender = (Player) attacker;
-						message = projectile.getType().toString();
-					}
-				}
-			}
-			else if(cause == DamageCause.MAGIC)
-			{
-				if (((EntityDamageByEntityEvent) event).getDamager() instanceof Projectile)
-				{
-					Projectile projectile = (Projectile) ((EntityDamageByEntityEvent) event).getDamager();
-					if(projectile instanceof ThrownPotion)
-					{
-						Entity attacker = projectile.getShooter();
-						if(attacker instanceof Player)
-						{
-							offender = (Player) attacker;
-							message = "magic potion";
-						}
-					}
+					offender = (Player) attacker;
+					message = projectile.getType().toString();
 				}
 
+			}
+			else if(cause == DamageCause.MAGIC && ((EntityDamageByEntityEvent) event).getDamager() instanceof Projectile)
+			{
+				Projectile projectile = (Projectile) ((EntityDamageByEntityEvent) event).getDamager();
+				Entity attacker = projectile.getShooter();
+				if(projectile instanceof ThrownPotion && attacker instanceof Player)
+				{
+					offender = (Player) attacker;
+					message = "magic potion";
+				}
 			}
 			if(offender != null && !CreeperPermissionManager.checkPermissions(offender, true, "bypass.pvp"))
-			{						
+			{
 				boolean blocked = world.blockPvP;
 				if(blocked)
 					event.setCancelled(true);
@@ -214,9 +178,6 @@ public class CreeperListener implements Listener{
 			}
 		}
 	}
-
-
-
 
 
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -232,30 +193,28 @@ public class CreeperListener implements Listener{
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{
-		Player player = event.getPlayer();
-		WorldConfig world = getWorld(player.getWorld());
-
 		ItemStack item = event.getItem();
 		if(item == null)
 			return;
+
+		Player player = event.getPlayer();
+		WorldConfig world = getWorld(player.getWorld());
 
 		if(item.getType() == Material.MONSTER_EGG && !CreeperPermissionManager.checkPermissions(player, true, "bypass.spawnEgg"))
 		{
 			String entityType = CreeperUtils.getEntityNameFromId(event.getItem().getData().getData());
 
-			boolean blocked = world.blockSpawnEggs;
-			if(blocked)
+			if(world.blockSpawnEggs)
 				event.setCancelled(true);
 			if(world.warnSpawnEggs)
-				CreeperHeal.warn(CreeperPlayer.WarningCause.SPAWN_EGG, player, blocked, entityType);
+				CreeperHeal.warn(CreeperPlayer.WarningCause.SPAWN_EGG, player, world.blockSpawnEggs, entityType);
 		}
-		if(item.getType() == Material.FLINT_AND_STEEL && !CreeperPermissionManager.checkPermissions(player, true, "bypass.ignite"))
+		else if(item.getType() == Material.FLINT_AND_STEEL && !CreeperPermissionManager.checkPermissions(player, true, "bypass.ignite"))
 		{
-			boolean blocked = world.blockIgnite;
-			if(blocked)
+			if(world.blockIgnite)
 				event.setCancelled(true);
 			if(world.warnIgnite)
-				CreeperHeal.warn(CreeperPlayer.WarningCause.FIRE, player, blocked, null);
+				CreeperHeal.warn(CreeperPlayer.WarningCause.FIRE, player, world.blockIgnite, null);
 		}
 	}
 
@@ -268,11 +227,10 @@ public class CreeperListener implements Listener{
 		Player player = event.getPlayer();
 		if(event.getBucket() == Material.LAVA_BUCKET && !CreeperPermissionManager.checkPermissions(player, true, "bypass.place-lava"))
 		{
-			boolean blocked = world.blockLava;
-			if(blocked)
+			if(world.blockLava)
 				event.setCancelled(true);
 			if(world.warnLava)
-				CreeperHeal.warn(CreeperPlayer.WarningCause.LAVA, player, blocked, null);
+				CreeperHeal.warn(CreeperPlayer.WarningCause.LAVA, player, world.blockLava, null);
 		}
 	}
 
@@ -281,9 +239,7 @@ public class CreeperListener implements Listener{
 	public void onPlayerJoin(PlayerJoinEvent event)
 	{
 		if(CreeperPermissionManager.checkPermissions(event.getPlayer(), false, "warn.*", "warn.lava", "warn.fire", "warn.tnt", "warn.blacklist", "warn.spawnEggs"))
-		{
 			CreeperHeal.getWarnList().add(new CreeperPlayer(event.getPlayer(), plugin));
-		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -314,13 +270,10 @@ public class CreeperListener implements Listener{
 			{
 				for(Location loc : CreeperHeal.getPreventBlockFall().keySet())
 				{
-					if(loc.getWorld() == w)
+					if(loc.getWorld() == w && loc.distance(l) < 3)
 					{
-						if(loc.distance(l) < 3)
-						{
-							e.setCancelled(true);
-							return;
-						}
+						e.setCancelled(true);
+						return;
 					}
 				}
 			}

@@ -31,7 +31,6 @@ public class CreeperBlockListener implements Listener{
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onBlockBurn(BlockBurnEvent event) {
-		CreeperLog.logInfo("BlockBurntEvent", 3);
 		WorldConfig world = CreeperConfig.loadWorld(event.getBlock().getLocation().getWorld());
 
 		if(world.fire)
@@ -109,7 +108,6 @@ public class CreeperBlockListener implements Listener{
 			return;
 		WorldConfig world = CreeperConfig.loadWorld(event.getBlock().getWorld());
 
-		CreeperLog.logInfo("Fire Spread!", 2);
 		event.getBlock().setTypeId(0);
 		event.getSource().setTypeId(0);
 
@@ -119,15 +117,12 @@ public class CreeperBlockListener implements Listener{
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onEntityExplode(EntityExplodeEvent event) {//explosion
-		CreeperLog.logInfo("EntityExplodeEvent", 3);
-		CreeperLog.logInfo("explosion not cancelled", 3);
 		WorldConfig world = CreeperConfig.loadWorld(event.getLocation().getWorld());
 
 		if (PluginHandler.getFactionHandler().shouldIgnore(event.blockList(), world)) {
 			return;
 		}
 
-		CreeperLog.logInfo("faction handler says ok", 3);
 		Entity entity = event.getEntity();
 		if(world.shouldReplace(entity))
 			ExplodedBlockManager.recordBlocks(event, world);
