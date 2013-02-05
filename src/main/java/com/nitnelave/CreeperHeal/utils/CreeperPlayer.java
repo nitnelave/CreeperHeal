@@ -21,6 +21,11 @@ public class CreeperPlayer
 		loadPermissions();
 	}
 
+	/* Used to compare CreeperPlayers, to remove from a list. */
+	public CreeperPlayer(Player player) {
+		this.player = player;
+	}
+
 	private void loadPermissions()
 	{
 		lava = CreeperPermissionManager.checkPermissions(player, false, "grief.warn.*", "grief.warn.lava");
@@ -47,5 +52,25 @@ public class CreeperPlayer
 	    		|| cause == WarningCause.LAVA && lava || cause == WarningCause.SPAWN_EGG && spawnEggs || cause == WarningCause.PVP && pvp)
 	    	player.sendMessage(message);
     }
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((player == null) ? 0 : player.hashCode());
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof CreeperPlayer))
+			return false;
+		CreeperPlayer other = (CreeperPlayer) obj;
+		return player.getName().equals(other.player.getName());
+	}
 
 }
