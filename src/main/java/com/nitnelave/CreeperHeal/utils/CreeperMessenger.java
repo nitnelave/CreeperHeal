@@ -85,9 +85,7 @@ public class CreeperMessenger
 	private static String colorToChat(String message)
 	{
 		for(ChatColor c : ChatColor.values())
-		{
 			message = message.replaceAll("\\{" + c.name() + "\\}", c.toString());
-		}
 		return message;
 	}
 
@@ -95,13 +93,15 @@ public class CreeperMessenger
 	public static String processMessage(String m, String... values)
 	{
 		String message = prop.getProperty(m);
-		message = colorToChat(message);
+		try {
+			message = colorToChat(message);
+		}catch (NullPointerException e) {
+			CreeperLog.warning("Missing message property : " + m);
+		}
 		try{
 			for(int i = 0; i < variables.length; i++)
-			{
 				if(values[i] != null)
 					message = message.replaceAll("\\{" + variables[i] + "\\}", values[i]);
-			}
 		} catch(NullPointerException e) {
 			CreeperLog.warning("[CreeperHeal] Wrong variable used in message " + m);
 		}
