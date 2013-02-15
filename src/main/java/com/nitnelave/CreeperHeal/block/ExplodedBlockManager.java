@@ -1,12 +1,10 @@
 package com.nitnelave.CreeperHeal.block;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -15,450 +13,363 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.inventory.InventoryHolder;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
-import com.nitnelave.CreeperHeal.CreeperTrapHandler;
 import com.nitnelave.CreeperHeal.PluginHandler;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
-import com.nitnelave.CreeperHeal.utils.AddTrapRunnable;
 import com.nitnelave.CreeperHeal.utils.CreeperComparator;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.NeighborExplosion;
 
+/**
+ * Manager for the explosions and the resulting blocks to be replaced.
+ * 
+ * @author nitnelave
+ * 
+ */
 public class ExplodedBlockManager {
 
-	private static List<CreeperExplosion> explosionList = Collections.synchronizedList(new LinkedList<CreeperExplosion>());
-	private static NeighborExplosion explosionIndex;
-	private static Map<Location, Replaceable> toReplace = BlockManager.getToReplace();		//blocks to be replaced immediately after an explosion
+    /*
+     * List of explosions, to replace the blocks.
+     */
+    private static List<CreeperExplosion> explosionList = Collections.synchronizedList (new LinkedList<CreeperExplosion> ());
+    /*
+     * Map of the explosions, if the plugin is not in lightweight mode.
+     */
+    private static NeighborExplosion explosionIndex;
 
-	
-	static {
-		if(!CreeperConfig.lightweightMode)
-			explosionIndex = new NeighborExplosion();
-	}
+    private final static BlockFace[] CARDINALS = {BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH, BlockFace.UP, BlockFace.DOWN};
 
-
-
-	public static void replaceNear(Player target)
-	{
-		int k = CreeperConfig.distanceNear;
-		Location playerLoc = target.getLocation();
-
-		World w = playerLoc.getWorld();
-		Iterator<CreeperExplosion> iter = explosionList.iterator();
-		while (iter.hasNext())
-		{
-			CreeperExplosion cEx = iter.next();
-			Location loc = cEx.getLocation();
-			if(loc.getWorld() == w)
-			{
-				if(loc.distance(playerLoc) < k)
-				{
-					BlockManager.replace_blocks(cEx.getBlockList());
-					explosionIndex.removeElement(cEx, cEx.getLocation().getX(), cEx.getLocation().getZ());
-					iter.remove();
-				}
-			}
-		}
-
-	}
+    static
+    {
+        if (!CreeperConfig.lightweightMode)
+        {
+            explosionIndex = new NeighborExplosion ();
+            Bukkit.getScheduler ().runTaskTimerAsynchronously (CreeperHeal.getInstance (), new Runnable () {
+                @Override
+                public void run () {
+                    cleanIndex ();
+                }
+            }, 200, 2400);
+        }
+        /*
+         * Schedule the replacement of the blocks.
+         */
+        if (Bukkit.getServer ().getScheduler ().scheduleSyncRepeatingTask (CreeperHeal.getInstance (), new Runnable () {
+            @Override
+            public void run () {
+                checkReplace (); //check to replace explosions/blocks
+            }
+        }, 200, CreeperConfig.blockPerBlock ? CreeperConfig.blockPerBlockInterval : 100) == -1)
+            CreeperLog.warning ("[CreeperHeal] Impossible to schedule the re-filling task. Auto-refill will not work");
 
 
-	public static void forceReplace(long since, WorldConfig world)         //force replacement of all the explosions since x seconds
-	{
-		Date now = new Date();
+    }
 
-		Iterator<CreeperExplosion> iterator = explosionList.iterator();
-		while(iterator.hasNext()) 
-		{
-			CreeperExplosion cEx = iterator.next();
-			Date time = cEx.getTime();
-			if(new Date(time.getTime() + since).after(now) || since == 0)         //if the explosion happened since x seconds
-			{
-				List<Replaceable> list = cEx.getBlockList();
-				if(!list.isEmpty() && list.get(0).getWorld().getName().equals( world.getName())) 
-				{
-					BlockManager.replace_blocks(cEx.getBlockList());
-					explosionIndex.removeElement(cEx, cEx.getLocation().getX(), cEx.getLocation().getZ());
-					iterator.remove();
-				}
-			}
-		}
-		PaintingsManager.replace_paintings();
-		if(since == 0) 
-			BurntBlockManager.forceReplaceBurnt(0L, world);
-	}
+    /**
+     * Replace all the blocks of the explosions that happened near a player.
+     * Near is defined in the config by the parameter "advanced.distance-near".
+     * 
+     * @param target
+     *            The player around whom the explosions are replaced.
+     */
+    public static void replaceNear (Player target) {
+        int k = CreeperConfig.distanceNear;
+        Location playerLoc = target.getLocation ();
 
+        World w = playerLoc.getWorld ();
+        Iterator<CreeperExplosion> iter = explosionList.iterator ();
+        while (iter.hasNext ())
+        {
+            CreeperExplosion cEx = iter.next ();
+            Location loc = cEx.getLocation ();
+            if (loc.getWorld () == w && loc.distance (playerLoc) < k)
+            {
+                BlockManager.replace_blocks (cEx.getBlockList ());
+                if (!CreeperConfig.lightweightMode)
+                    explosionIndex.removeElement (cEx, cEx.getLocation ().getX (), cEx.getLocation ().getZ ());
+                iter.remove ();
+            }
+        }
 
+    }
 
-	public static void recordBlocks(EntityExplodeEvent event, WorldConfig world) 
-	{
-		event.setYield(0);
-		recordBlocks(event.blockList(), event.getLocation(), event.getEntity(), world.isRepairTimed());
-	}
+    //TODO: date.
+    /**
+     * Force the replacement of all explosions since x seconds in the specified
+     * world. If x == 0, burnt blocks are also replaced.
+     * 
+     * @param x
+     *            The number of seconds.
+     * @param world
+     *            The world in which the explosions happened.
+     */
+    public static void forceReplace (long x, WorldConfig world)
+    {
+        Date now = new Date (new Date ().getTime () - x);
 
-	private static boolean toReplaceContains(Location location) {      //check if a block is already included in the list of blocks to be immediately replaced
-		return toReplace.containsKey(location);
-	}
+        Iterator<CreeperExplosion> iterator = explosionList.iterator ();
+        while (iterator.hasNext ())
+        {
+            CreeperExplosion cEx = iterator.next ();
+            if ((cEx.getTime ().after (now) || x == 0) && cEx.getLocation ().getWorld ().getName ().equals (world.getName ()))
+            {
+                BlockManager.replace_blocks (cEx.getBlockList ());
+                if (!CreeperConfig.lightweightMode)
+                    explosionIndex.removeElement (cEx, cEx.getLocation ().getX (), cEx.getLocation ().getZ ());
+                iterator.remove ();
+            }
+        }
+        HangingsManager.replaceHangings ();
+        if (x == 0)
+            BurntBlockManager.forceReplaceBurnt (0L, world);
+    }
 
+    /**
+     * Record all the blocks destroyed by an explosion.
+     * 
+     * @param event
+     *            The explosion.
+     * @param world
+     *            The config for the explosion's world.
+     */
+    public static void processExplosion (EntityExplodeEvent event, WorldConfig world) {
+        processExplosion (event.blockList (), event.getLocation (), event.getEntity (), world.isRepairTimed ());
+    }
 
+    /**
+     * Record all the blocks in the list, with the location as the source of the
+     * explosion.
+     * 
+     * @param list
+     *            The list of destroyed blocks.
+     * @param location
+     *            The location of the explosion.
+     */
+    public static void processExplosion (List<Block> list, Location location) {
+        processExplosion (list, location, null, CreeperConfig.loadWorld (location.getWorld ()).isRepairTimed ());
+    }
 
-	public static void recordBlocks(List<Block> list, Location location)
-	{
-		recordBlocks(list, location, null, CreeperConfig.loadWorld(location.getWorld()).isRepairTimed());
-	}
+    /*
+     * Record the blocks in the list and remove them from the world so they
+     * don't drop.
+     */
+    //TODO: Ascending rails pop if their support is gone. Maybe related to dependent blocks.
+    //TODO: Cleanup.
+    protected static void processExplosion (List<Block> blocks, Location location, Entity entity, boolean timed) {
+        if (PluginHandler.isInArena (location))
+            return;
 
-	protected static void recordBlocks(List<Block> list, Location location, Entity entity, boolean timed)
-	{
-		CreeperLog.logInfo("Explosion getting recorded...", 3);
-		if(PluginHandler.isInArena(location)) 
-			return;
-		//record the list of blocks of an explosion, from bottom to top
-		Date now = new Date();
-		List<Replaceable> listState = new LinkedList<Replaceable>();        //the list of blockstate we'll be keeping afterward
-		WorldConfig world = CreeperConfig.loadWorld(location.getWorld());
-		List<Block> to_add = new LinkedList<Block>();
-		
-		double radius = computeRadius(list, location);
-		//PaintingsManager.checkForPaintings(location, radius, world.isRepairTimed(), false);
+        Date now = timed ? new Date (new Date ().getTime () + 1200000) : new Date ();
+        List<Replaceable> blockList = new LinkedList<Replaceable> ();
+        WorldConfig world = CreeperConfig.loadWorld (location.getWorld ());
 
-		checkForRestone(location, list, listState, world);
+        recordBlocks (blocks, blockList, world);
 
-		for(Block block : list)     //cycle through the blocks declared destroyed
-			record(block, listState, world, to_add);
-		
-		if(CreeperConfig.explodeObsidian) 
-			checkForObsidian(location, listState);
+        if (CreeperConfig.explodeObsidian)
+            checkForObsidian (location, blockList);
 
+        Collections.sort (blockList, new CreeperComparator ());
 
-		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(CreeperHeal.getInstance(), new Runnable(){public void run() {BlockManager.replaceProtected();}});       //immediately replace the blocks marked for immediate replacement
+        CreeperExplosion cEx = new CreeperExplosion (now, blockList, location);
 
+        explosionList.add (cEx);
+        if (!CreeperConfig.lightweightMode)
+            explosionIndex.addElement (cEx, location.getX (), location.getZ ());
 
-		Iterator<Replaceable> iter = listState.iterator();
-		while(iter.hasNext())
-		{
-			Replaceable state = iter.next();
-			if(toReplaceContains(state.getBlock().getLocation()))       //remove the dupes already stored in the immediate
-				iter.remove();
-		}
+        // CreeperTrap code
+        //        if (entity instanceof TNTPrimed)
+        //        {
+        //            Block block = location.getBlock ();
+        //            if (CreeperTrapHandler.isTrap (block))
+        //                Bukkit.getServer ().getScheduler ().scheduleSyncDelayedTask (CreeperHeal.getInstance (), new AddTrapRunnable (cEx, block, Material.TNT));
+        //        }
 
-		CreeperBlock[] tmp_array = listState.toArray(new CreeperBlock[listState.size()]);        //sort through an array (bottom to top, dependent blocks in last), then store back in the list
-		Arrays.sort(tmp_array, new CreeperComparator());
-		listState.clear();
+        /*
+         * Immediately replace the blocks marked for immediate replacement.
+         */
+        Bukkit.getServer ().getScheduler ().scheduleSyncDelayedTask (CreeperHeal.getInstance (), new Runnable () {
+            @Override
+            public void run () {
+                BlockManager.replaceProtected ();
+            }
+        });
 
-		for(CreeperBlock block : tmp_array) 
-			listState.add(block);
-		
-		
+    }
 
-		CreeperLog.logInfo("List sorted. Number of blocks : " + listState.size(), 3);
-		CreeperExplosion cEx;
-		if(timed)
-			now = new Date(now.getTime() + 1200000);
-		
-		
-		cEx = new CreeperExplosion(now, listState, location, radius);        //store in the global hashmap, with the time it happened as a key
+    /*
+     * Check for dependent blocks and record them first.
+     */
+    private static void recordBlocks (List<Block> blocks, List<Replaceable> blockList, WorldConfig world) {
+        //        Iterator<Block> iter = blocks.iterator ();
+        //        while (iter.hasNext ())
+        //        {
+        //            Block b = iter.next ();
+        //            if (CreeperBlock.isDependent (b.getTypeId ()))
+        //            {
+        //                record (b, blockList, world);
+        //                iter.remove ();
+        //            }
+        //        }
+        for (Block b : blocks)
+            record (b, blockList, world);
 
-		explosionList.add(cEx);
-		if(!CreeperConfig.lightweightMode)
-		{
-			Location l = cEx.getLocation();
-			explosionIndex.addElement(cEx, l.getX(), l.getZ());
-		}
-		CreeperLog.logInfo("Added explosion to the list", 3);
-
-		if(entity instanceof TNTPrimed) 
-		{            //to replace the tnt that just exploded
-			Block block = location.getBlock();
-			if(/*world.replaceTNT || */CreeperTrapHandler.isTrap(block)) 
-				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(CreeperHeal.getInstance(), new AddTrapRunnable(cEx, block,Material.TNT));
-		}
-		for(Block block : to_add)
-			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(CreeperHeal.getInstance(), new AddTrapRunnable(cEx, block,Material.TNT));
-
-	}
-	
-	private static void checkForRestone(Location location, List<Block> list,
-			List<Replaceable> listState, WorldConfig world) {
-		Iterator<Block> iter = list.iterator();
-		while(iter.hasNext())
-		{
-			Block b = iter.next();
-			if(CreeperBlock.isDependent(b.getTypeId()))
-			{
-				record(b, listState, world, list);
-				b.setType(Material.AIR);
-				b.setType(Material.AIR);
-			}
-		}		
-	}
-
-
-	public static double computeRadius(List<Block> list, Location loc) {
-		double r = 0;
-		for(Block b : list) {
-			Location bl = b.getLocation();
-			r = Math.max(r, loc.distance(bl));
-		}
-		return r + 1;
-	}
-	
-
-
-	private static void checkForObsidian(Location location, List<Replaceable> listState) {
-		int radius = CreeperConfig.obsidianRadius;
-		double chance = ((float)CreeperConfig.obsidianChance) / 100;
-		World w = location.getWorld();
-		
-		Random r = new Random(System.currentTimeMillis());
-		
-		for(int i = location.getBlockX() - radius; i < location.getBlockX() + radius; i++) {
-			for(int j = Math.max(0, location.getBlockY() - radius); j < Math.min(w.getMaxHeight(), location.getBlockY() + radius); j++)
-			{
-				for(int k = location.getBlockZ() - radius; k < location.getBlockZ() + radius; k++) {
-					Location l = new Location(w, i, j, k);
-					if(l.distance(location) > radius)
-						continue;
-					Block b = w.getBlockAt(l);
-					if(b.getType() == Material.OBSIDIAN && r.nextDouble() < chance)
-					{
-						listState.add(CreeperBlock.newBlock(b.getState()));
-						b.setType(Material.AIR);
-					}
-				}
-			}
-		}
-	}
+    }
 
 
-	private static void record(Block block, List<Replaceable> listState, WorldConfig world, List<Block> toAdd) {
-		int type_id = block.getTypeId();
-		if (type_id == 0)
-			return;
-		byte data = block.getData();
-		
 
-		if(CreeperConfig.preventChainReaction && block.getType().equals(Material.TNT))
-		{
-			toReplace.put(block.getLocation(), CreeperBlock.newBlock(block.getState()));
-			block.setType(Material.AIR);
-			return;
-		}
+    /*
+     * In case of possible obsidian destruction, check for obsidian around, and
+     * give them a chance to be destroyed.
+     */
+    private static void checkForObsidian (Location location, List<Replaceable> listState) {
+        int radius = CreeperConfig.obsidianRadius;
+        double chance = ((float) CreeperConfig.obsidianChance) / 100;
+        World w = location.getWorld ();
+        WorldConfig wcfg = CreeperConfig.loadWorld (w);
 
-		if(CreeperConfig.replaceProtectedChests && PluginHandler.isProtected(block) || world.isProtected(block))
-			toReplace.put(block.getLocation(), CreeperBlock.newBlock(block.getState()));    //replace immediately
+        Random r = new Random (System.currentTimeMillis ());
 
-		BlockId id = new BlockId(type_id, data);
-		if(world.blockWhiteList.contains(id) || !world.blockBlackList.contains(id))
-			//if the block is to be replaced
-		{
+        for (int i = location.getBlockX () - radius; i < location.getBlockX () + radius; i++)
+            for (int j = Math.max (0, location.getBlockY () - radius); j < Math.min (w.getMaxHeight (), location.getBlockY () + radius); j++)
+                for (int k = location.getBlockZ () - radius; k < location.getBlockZ () + radius; k++)
+                {
+                    Location l = new Location (w, i, j, k);
+                    if (l.distance (location) > radius)
+                        continue;
+                    Block b = w.getBlockAt (l);
+                    if (b.getType () == Material.OBSIDIAN && r.nextDouble () < chance)
+                        record (b, listState, wcfg);
+                }
+    }
 
-			if(block.getState() instanceof InventoryHolder)         //save the inventory
-			{
-				storeChest(block, listState);
-				return;
-			}
-			
-			if(!CreeperBlock.isDependent(block.getTypeId()) && CreeperBlock.isDependentDown(block.getRelative(BlockFace.UP).getTypeId()))
-				record(block.getRelative(BlockFace.UP), listState, world, toAdd);
+    /*
+     * Record one block and remove it. If it is protected, add to the
+     * replace-immediately list. Check for dependent blocks around.
+     */
+    private static void record (Block block, List<Replaceable> listState, WorldConfig world) {
+        if (block.getType () == Material.AIR)
+            return;
 
-			BlockFace face;
-			switch (block.getType()) 
-			{       
-			case IRON_DOOR_BLOCK :                //in case of a door or bed, only store one block to avoid dupes
-			case WOODEN_DOOR :
-				if(block.getData() < 8) 
-				{
-					listState.add(CreeperBlock.newBlock(block.getState()));
-					block.setType(Material.AIR);
-					block.getRelative(BlockFace.UP).setType(Material.AIR);
-				}
-				break;
-			case BED_BLOCK :
-				byte faceData = (byte) (data & 3);
-				if(faceData == 0)            //facing the right way
-					face = BlockFace.NORTH;
-				else if(faceData == 1)
-					face = BlockFace.EAST;
-				else if(faceData == 2)
-					face = BlockFace.SOUTH;
-				else
-					face = BlockFace.WEST;
-				if(data < 8) 
-					block = block.getRelative(face.getOppositeFace());
-				listState.add(CreeperBlock.newBlock(block.getState()));
-				block.setType(Material.AIR);
-				block.getRelative(face).setType(Material.AIR);
-				break;
-			case AIR :                        //don't store air
-			case PISTON_EXTENSION :				//pistons are special, don't store this part
-				switch (data & 7)
-				{
-				case 0:
-					face = BlockFace.UP;
-					break;
-				case 1:
-					face = BlockFace.DOWN;
-					break;
-				case 2:
-					face = BlockFace.SOUTH;
-					break;
-				case 3:
-					face = BlockFace.NORTH;
-					break;
-				case 4:
-					face = BlockFace.EAST;
-					break;
-				default:
-					face = BlockFace.WEST;
-				}
-				listState.add(CreeperBlock.newBlock(block.getRelative(face).getState()));
-				block.getRelative(face).setType(Material.AIR);
-				block.setType(Material.AIR);
-				break;
-			case PISTON_BASE:
-			case PISTON_STICKY_BASE:
-				switch (data & 7) 
-				{
-				case 0:
-					face = BlockFace.DOWN;
-					break;
-				case 1:
-					face = BlockFace.UP;
-					break;
-				case 2:
-					face = BlockFace.NORTH;
-					break;
-				case 3:
-					face = BlockFace.SOUTH;
-					break;
-				case 4:
-					face = BlockFace.WEST;
-					break;
-				default:
-					face = BlockFace.EAST;
-				}
-				listState.add(CreeperBlock.newBlock(block.getState()));
-				block.setType(Material.AIR);
-				if (data > 7)
-					block.getRelative(face).setType(Material.AIR);
-			case FIRE :                        //or fire
-				block.setType(Material.AIR);
-				break;
-			case TNT :      //add the traps triggered to the list of blocks to be replaced
-				if(CreeperTrapHandler.isTrap(block))
-					toAdd.add(block);
-				break;
-			case STONE_PLATE :
-			case WOOD_PLATE :
-				BlockState state = block.getState();
-				state.setRawData((byte) 0);
-				listState.add(CreeperBlock.newBlock(state));
-				block.setType(Material.AIR);
-				break;
-			case CACTUS:
-			case SUGAR_CANE_BLOCK:
-				Block up = block.getRelative(BlockFace.UP);
-				if (up.getTypeId() == type_id)
-					record (up, listState, world, toAdd);
-				listState.add(CreeperBlock.newBlock(block.getState()));
-				block.setType(Material.AIR);
-				break;
-			case GRASS :
-				if(world.grassToDirt)
-					block.setType(Material.DIRT);
-				listState.add(CreeperBlock.newBlock(block.getState()));
-				block.setType(Material.AIR);
-				break;
-			case SMOOTH_BRICK :
-			case BRICK_STAIRS :
-				if(CreeperConfig.crackDestroyedBricks  && block.getData() == (byte)0)
-					block.setData((byte) 2);        //crack the bricks if the setting is right
-			default :                        //store the rest
-				listState.add(CreeperBlock.newBlock(block.getState()));
-				block.setType(Material.AIR);
-				break;
-			}
+        if ((CreeperConfig.preventChainReaction && block.getType ().equals (Material.TNT))
+                || (CreeperConfig.replaceProtectedChests && PluginHandler.isProtected (block) || world.isProtected (block)))
+        {
+            CreeperBlock b = CreeperBlock.newBlock (block.getState ());
+            if (b != null)
+            {
+                BlockManager.addToReplace (b);
+                b.remove ();
+            }
+            return;
+        }
 
-		}
-		else if(CreeperConfig.dropDestroyedBlocks)      //the block should not be replaced, check if it drops
-		{
-			Random generator = new Random();
-			if(generator.nextInt(100) < CreeperConfig.dropChance)        //percentage
-				CreeperBlock.newBlock(block.getState()).dropBlock();
-			block.setType(Material.AIR);
+        BlockId id = new BlockId (block);
+        if (world.blockWhiteList.contains (id) || !world.blockBlackList.contains (id))
+        {
+            // The block should be replaced.
 
-		}
-		
-	}
-	
-	protected static void storeChest(Block block, List<Replaceable> listState) {
-		
-		CreeperChest chest = new CreeperChest(block.getState());
-		if(CreeperConfig.replaceProtectedChests && PluginHandler.isProtected(block) || CreeperConfig.replaceAllChests)
-			toReplace.put(chest.getLocation(), chest);
-		else
-			listState.add(chest);
-			
-	}
-
-	public static void checkReplace(boolean blockPerBlock) {        //check to see if any block has to be replaced
-		Date now = new Date();
+            //TODO: Check for dependent block all around.
+            //            if (CreeperBlock.isDependentDown (block.getRelative (BlockFace.UP).getTypeId ()))
+            //                record (block.getRelative (BlockFace.UP), listState, world);
+            for (BlockFace face : CARDINALS)
+            {
+                Block b = block.getRelative (face);
+                if (CreeperBlock.getAttachingFace (b.getState ()) == face.getOppositeFace ())
+                    record (b, listState, world);
+            }
 
 
-		Iterator<CreeperExplosion> iter = explosionList.iterator();
-		while(iter.hasNext()) {
-			CreeperExplosion cEx = iter.next();
-			Date time = cEx.getTime();
-			List<Replaceable> blockList = cEx.getBlockList();
-			Date after = new Date(time.getTime() + CreeperConfig.waitBeforeHeal * 1000);
-			if(after.before(now)) {        //if enough time went by
-				if(!blockPerBlock){        //all blocks at once
-					BlockManager.replace_blocks(blockList);        //replace the blocks
-					iter.remove();                    //remove the explosion from the record
-				}
-				else {            //block per block
-					if(!blockList.isEmpty())        //still some blocks left to be replaced
-						BlockManager.replace_one_block(blockList);        //replace one
-					if(blockList.isEmpty())         //if empty, remove from list
-					{
-						if (!CreeperConfig.lightweightMode)
-							explosionIndex.removeElement(cEx, cEx.getLocation().getX(), cEx.getLocation().getZ());
-						iter.remove();
-					}
-				}
+            CreeperBlock b = CreeperBlock.newBlock (block.getState ());
+            if (b != null)
+            {
+                listState.add (b);
+                b.remove ();
+            }
+        }
+        else if (CreeperConfig.dropDestroyedBlocks)
+        {
+            // The block should not be replaced, check if it drops
+            Random generator = new Random ();
+            if (generator.nextInt (100) < CreeperConfig.dropChance) //percentage
+                CreeperBlock.newBlock (block.getState ()).drop ();
+            block.setType (Material.AIR);
 
-			}
-			else
-				break;
-		}   
-		PaintingsManager.replacePaintings(now);
+        }
+
+    }
 
 
-	}
+    /**
+     * Check to see if any block has to be replaced in the explosions.
+     */
+    public static void checkReplace () { //check to see if any block has to be replaced
+        Date now = new Date ();
 
+        Iterator<CreeperExplosion> iter = explosionList.iterator ();
+        while (iter.hasNext ())
+        {
+            CreeperExplosion cEx = iter.next ();
+            Date time = cEx.getTime ();
+            List<Replaceable> blockList = cEx.getBlockList ();
+            Date after = new Date (time.getTime () + CreeperConfig.waitBeforeHeal * 1000);
+            if (after.before (now))
+            { //if enough time went by
+                if (!CreeperConfig.blockPerBlock)
+                { //all blocks at once
+                    BlockManager.replace_blocks (blockList); //replace the blocks
+                    iter.remove (); //remove the explosion from the record
+                }
+                else
+                { //block per block
+                    if (!blockList.isEmpty ()) //still some blocks left to be replaced
+                        BlockManager.replace_one_block (blockList); //replace one
+                    if (blockList.isEmpty ()) //if empty, remove from list
+                    {
+                        if (!CreeperConfig.lightweightMode)
+                            explosionIndex.removeElement (cEx, cEx.getLocation ().getX (), cEx.getLocation ().getZ ());
+                        iter.remove ();
+                    }
+                }
 
-	public static List<CreeperExplosion> getExplosionList() {
-		return explosionList;
-	}
+            }
+            else
+                break;
+        }
+        HangingsManager.replaceHangings (now);
 
+    }
 
-	public static boolean isNextToExplosion(Location location) {
-		return explosionIndex.hasNeighbor(location);
-	}
+    /**
+     * Get whether the location is in the radius of an explosion. Do not use
+     * when in light weight mode.
+     * 
+     * @param location
+     *            The location to check.
+     * @return Whether the location is in the radius of an explosion.
+     */
+    public static boolean isNextToExplosion (Location location) {
+        return explosionIndex.hasNeighbor (location);
+    }
 
+    /*
+     * Clean the explosion map from useless exmpty explosions. Do not use when
+     * in light weight mode.
+     */
+    private static void cleanIndex () {
+        explosionIndex.clean ();
+    }
 
-	public static void cleanIndex() {
-		explosionIndex.clean();
-	}
-
-
+    /**
+     * Get whether there are no more explosions to replace.
+     * 
+     * @return Whether there are no more explosions to replace.
+     */
+    public static boolean isExplosionListEmpty () {
+        return explosionList.isEmpty ();
+    }
 
 }

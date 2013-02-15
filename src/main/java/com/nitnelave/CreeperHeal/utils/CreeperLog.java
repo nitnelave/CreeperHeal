@@ -3,6 +3,7 @@ package com.nitnelave.CreeperHeal.utils;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,78 +12,155 @@ import java.util.logging.Logger;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
-public class CreeperLog
-{
-	private static File file;
-	private final static Logger log = Logger.getLogger("Minecraft");            //to output messages to the console/log
-	private static int logLevel = -42;
-	private static boolean debug = false;
+/**
+ * This class is used for all the outputting to the console and to players.
+ * 
+ * @author nitnelave
+ * 
+ */
+public class CreeperLog {
+    /*
+     * Log file, for outputting warnings to a file.
+     */
+    private static File logFile;
+    /*
+     * Logger, for outputting to the console.
+     */
+    private final static Logger log = Logger.getLogger ("Minecraft");
+    /*
+     * The verbosity level. Initialized at -42 as an arbitrary value, to detect
+     * that it hasn't been loaded from the config yet.
+     */
+    private static int logLevel = -42;
+    /*
+     * Whether to output debug messages.
+     */
+    private static boolean debug = false;
 
+    /**
+     * Constructor, to initialize the static log file and debug setting.
+     * 
+     * @param f
+     *            The output log file.
+     */
+    public CreeperLog (JavaPlugin plugin) {
+        File warningLogFile = new File (plugin.getDataFolder () + "/log.txt");
+        if (!warningLogFile.exists ())
+            try
+            {
+                warningLogFile.createNewFile ();
+            } catch (IOException e)
+            {
+                Logger.getLogger ("Minecraft").warning (e.getMessage ());
+            }
+        logFile = warningLogFile;
+        debug = CreeperConfig.debug;
+    }
 
-	public CreeperLog(File f)
-	{
-		file = f;
-		debug = CreeperConfig.debug;
-	}
+    /**
+     * Write a message to the log file, prepended by the date.
+     * 
+     * @param message
+     *            The message to be recorded.
+     */
+    public static void record (String message) {
+        try
+        {
+            FileWriter fstream = new FileWriter (logFile, true);
+            BufferedWriter out = new BufferedWriter (fstream);
+            out.write (getDate () + message);
+            out.newLine ();
+            out.close ();
+        } catch (Exception e)
+        {
+            e.printStackTrace ();
+        }
+    }
 
-	public static void record(String s)
-	{
-		try{
-			// Create file 
-			FileWriter fstream = new FileWriter(file,true);
-			BufferedWriter out = new BufferedWriter(fstream);
-			out.write(getDate() + s);
-			out.newLine();
-			//Close the output stream
-			out.close();
-		}catch (Exception e){//Catch exception if any
-			log.log(Level.SEVERE, "Error: " + e.getMessage());
-		}
-	}
+    /**
+     * Output a warning to the console and to the log file.
+     * 
+     * @param message
+     *            The message to be output.
+     */
+    public static void warning (String message) {
+        log.warning ("[CreeperHeal] " + message);
+        record ("[WARNING] " + message);
+    }
 
-	public static void warning(String s) {
-		log.warning("[CreeperHeal] " + s);
-		record("[WARNING] " + s);
-	}
+    /**
+     * Display an information message to the console, if the verbosity is high
+     * enough, i.e. if level is lower or equals to the log level.
+     * 
+     * @param msg
+     *            The message to be logged.
+     * @param level
+     *            The corresponding verbosity of the message.
+     */
+    public static void logInfo (String msg, int level) {
+        if (logLevel == -42)
+            if (CreeperConfig.logLevel != -42)
+                logLevel = CreeperConfig.logLevel;
+        if (level <= logLevel)
+        {
+            log.info ("[CreeperHeal] " + msg);
+            record ("[INFO] " + msg);
+        }
+    }
 
+    /**
+     * Output a SEVERE message to the console and record it.
+     * 
+     * @param message
+     *            The message to be output.
+     */
+    public static void severe (String message) {
+        log.log (Level.SEVERE, "[CreeperHeal] " + message);
+        record ("[SEVERE]" + message);
+    }
 
-	public static void logInfo(String msg, int level)
-	{
-		if(logLevel == -42) 
-			if(CreeperConfig.logLevel != -42)
-				logLevel = CreeperConfig.logLevel;
-		if(level<=logLevel)
-		{
-			log.info("[CreeperHeal] "+msg);
-			record("[INFO] " + msg);
-		}
-	}
+    /**
+     * Get a simple time formated date.
+     * 
+     * @return a time with the HH:mm:ss format
+     */
+    private static String getDate () {
+        DateFormat dateFormat = new SimpleDateFormat ("HH:mm:ss ");
+        return dateFormat.format (new Date ());
+    }
 
-	public static void severe(String s) {
-		log.log(Level.SEVERE, "[CreeperHeal] " + s);
-		record("[SEVERE]" + s);
-	}
+    /**
+     * Output a debug message, if the debug setting is true.
+     * 
+     * @param message
+     *            The message to output.
+     */
+    public static void debug (String message) {
+        if (debug)
+            log.info ("[DEBUG] " + message);
+    }
 
-	private static String getDate() {
-		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss ");
-		return dateFormat.format(new Date());
-	}
-
-	public static void debug(String string) {
-		if(debug)
-			log.info("[DEBUG] " + string);
-	}
-
-	public static void displayBlockLocation(Block block, boolean force) {
-		Location loc = block.getLocation();
-		String s = block.getType() + " at " + loc.getBlockX() + "; " + loc.getBlockY() + "; " + loc.getBlockZ();
-		if(force)
-			warning(s);
-		else
-			debug(s);
-	}
+    /**
+     * Display the type and the location of a block in a formatted way. If force
+     * is true, then it is a warning (as part of a warning message). Otherwise
+     * it is a debug message.
+     * 
+     * @param block
+     *            The block whose information is displayed.
+     * @param force
+     *            Whether it is a warning or a debug message.
+     */
+    public static void displayBlockLocation (Block block, boolean force) {
+        Location loc = block.getLocation ();
+        String s = block.getType () + " at " + loc.getBlockX () + "; " + loc.getBlockY () + "; " + loc.getBlockZ ();
+        if (force)
+            warning (s);
+        else
+            debug (s);
+    }
 
 }

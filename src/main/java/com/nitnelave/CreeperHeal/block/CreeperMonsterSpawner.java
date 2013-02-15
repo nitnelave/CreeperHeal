@@ -2,15 +2,28 @@ package com.nitnelave.CreeperHeal.block;
 
 import org.bukkit.block.CreatureSpawner;
 
+/**
+ * MonsterSpawner implementation of CreeperBlock, to save the type of monster.
+ * 
+ * @author nitnelave
+ * 
+ */
 public class CreeperMonsterSpawner extends CreeperBlock{
 
-	public CreeperMonsterSpawner(CreatureSpawner blockState) {
-		super(blockState);
-	}
+    /*
+     * Constructor.
+     */
+    protected CreeperMonsterSpawner (CreatureSpawner blockState) {
+        super(blockState);
+    }
 
-	@Override
-	public void update(boolean force) {
-		super.update(force);
-		((CreatureSpawner)getBlock().getState()).setCreatureTypeByName(((CreatureSpawner)getState()).getCreatureTypeName());
-	}
+    /*
+     * (non-Javadoc)
+     * @see com.nitnelave.CreeperHeal.block.CreeperBlock#update(boolean)
+     */
+    @Override
+    public void update () {
+        blockState.update (true);
+        ((CreatureSpawner) getBlock ().getState ()).setCreatureTypeByName (((CreatureSpawner) blockState).getCreatureTypeName ());
+    }
 }

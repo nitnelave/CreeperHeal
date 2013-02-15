@@ -3,25 +3,64 @@ package com.nitnelave.CreeperHeal.block;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 
+/**
+ * Represents the second part of a double chest, the first one being a
+ * CreeperChest.
+ * 
+ * @author nitnelave
+ * 
+ */
 public class NeighborChest {
-	
-	private BlockState chest;
-	private boolean right;
-	
-	public NeighborChest(Block b, boolean right) {
-		this (b.getState(), right);
-	}
 
-	public NeighborChest(BlockState chest, boolean right) {
-		this.chest = chest;
-		this.right = right;
-	}
+    /*
+     * The chest itself.
+     */
+    private final BlockState chest;
+    /*
+     * Whether it is the right part of the double chest or the left one.
+     */
+    private final boolean right;
 
-	public boolean isRight() {
-		return right;
-	}
-	
-	public BlockState getChest() {
-		return chest;
-	}
+    /**
+     * Constructor.
+     * 
+     * @param chest
+     *            The block where the chest is.
+     * @param right
+     *            Whether the block is the right part of the double chest.
+     */
+    public NeighborChest (Block chest, boolean right) {
+        this (chest.getState (), right);
+    }
+
+    /**
+     * Constructor.
+     * 
+     * @param chest
+     *            The blockState representing the chest.
+     * @param right
+     *            Whether the block is the right part of the double chest.
+     */
+    public NeighborChest(BlockState chest, boolean right) {
+        this.chest = chest;
+        this.right = right;
+    }
+
+    /**
+     * Get whether the block is the right part of the double chest.
+     * 
+     * @return Whether the block is the right part of the double chest.
+     */
+    public boolean isRight () {
+        return right;
+    }
+
+    /**
+     * Get the blockState representing the chest.
+     * 
+     * @return The blockState representing the chest.
+     */
+    public BlockState getChest() {
+        return chest;
+    }
 }

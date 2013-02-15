@@ -1,10 +1,6 @@
 package com.nitnelave.CreeperHeal.block;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -17,7 +13,6 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.block.NoteBlock;
 import org.bukkit.block.Sign;
-import org.bukkit.block.Skull;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Attachable;
@@ -29,258 +24,361 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperUtils;
 import com.nitnelave.CreeperHeal.utils.DelayReplacement;
 
-public class CreeperBlock implements Replaceable{
+/**
+ * Represents a block that can be replaced. Every special type of block derives
+ * from this class, and can only be constructed by using the newBlock method.
+ * 
+ * @author nitnelave
+ * 
+ */
+public class CreeperBlock implements Replaceable {
 
-	private final static Set<Integer> PHYSICS_BLOCKS = CreeperUtils.createFinalHashSet(12, 13, 81, 83, 145);                        //sand gravel, soulsand fall
-	private final static Set<Integer> DEPENDENT_DOWN_BLOCKS = CreeperUtils.createFinalHashSet(6,26,27,28,31,32,37,38,39,40,55,59,63,64,66,70,71,72,78,81,83,93,94,104,105,115, 117, 140, 141, 142);
-	private final static Set<Integer> DEPENDENT_BLOCKS = CreeperUtils.createFinalHashSet(6,26,27,28,31,32,37,38,39,40,50,55,59,63,64,65,66,68,69,70,71,72,75,76,77,78,81,83,93,94,96,104,105,106,115, 117, 127, 131, 140, 141, 142, 143);
-	private final static Set<Integer> NOT_SOLID_BLOCKS = CreeperUtils.createFinalHashSet(0,6,8,9,26,27,28,30,31,37,38,39,40, 50,55,59,63,64,65,66,68,69,70,71,72,75,76,77,78,83,90,93,94,96);   //the player can breathe
-	protected final static Set<Integer> EMPTY_BLOCKS = CreeperUtils.createFinalHashSet(0,8,9,10,11, 51, 78);
-	private final static Set<Integer> REDSTONE_BLOCKS = CreeperUtils.createFinalHashSet(29, 33, 34, 55, 93, 94, 131);
-	private static HashSet<Byte> TRANSPARENT_BLOCKS;			//blocks that you can aim through while creating a trap.
+    /*
+     * The blocks that will fall if not supported.
+     */
+    private final static Set<Integer> PHYSICS_BLOCKS = CreeperUtils.createFinalHashSet (12, 13, 81, 83, 145);
+    /*
+     * These blocks (may) need a block under them not to drop.
+     */
+    private final static Set<Integer> DEPENDENT_DOWN_BLOCKS = CreeperUtils.createFinalHashSet (6, 26, 27, 28, 31, 32, 37, 38, 39, 40, 55, 59, 63, 64, 66, 70,
+            71, 72, 78, 81, 83, 93, 94, 104, 105, 115, 117, 140, 141, 142);
+    /*
+     * These blocks are dependent on another block
+     */
+    private final static Set<Integer> DEPENDENT_BLOCKS = CreeperUtils.createFinalHashSet (50, 65, 68, 69, 75, 76, 77, 96, 106, 127, 131, 143);
+    /*
+     * Blocks a player can breathe in and that are replaced by other blocks.
+     */
+    protected final static Set<Integer> EMPTY_BLOCKS = CreeperUtils.createFinalHashSet (0, 8, 9, 10, 11, 51, 78);
 
-	/**
-	 * Static constructor.
-	 */
-	static {
-		Byte[] elements = {0, 6, 8, 9, 10, 11, 18, 20, 26, 27, 28, 30, 31, 32, 37, 38, 39, 40, 44, 50, 51, 55, 59, 63, 65, 66, 68, 69, 70, 72, 75, 76, 77, 78, 83, 93, 94, 96, 101, 102, 104, 105, 106, 111, 115, 117};
-		TRANSPARENT_BLOCKS = new HashSet<Byte>(Arrays.asList(elements));
-	}
+    /*
+     * The block represented.
+     */
+    protected BlockState blockState;
 
-	/**
-	 * HashMaps
-	 */
+    /**
+     * Create a new CreeperBlock of the right class. Factory method that should
+     * be used as a constructor.
+     * 
+     * @param blockState
+     *            The block to be represented.
+     * @return A new CreeperBlock of the right subclass.
+     */
+    public static CreeperBlock newBlock (BlockState blockState) {
+        if (blockState instanceof InventoryHolder)
+            return new CreeperChest (blockState);
+        if (hasPhysics (blockState.getTypeId ()))
+            return new CreeperPhysicsBlock (blockState);
+        switch (blockState.getType ())
+        {
+            case BED_BLOCK:
+                return new CreeperBed (blockState);
+            case RAILS:
+            case POWERED_RAIL:
+            case DETECTOR_RAIL:
+                return new CreeperRail (blockState);
+            case SKULL:
+                if (PluginHandler.isPlayerHeadsActivated ())
+                    return new CreeperSkull (blockState);
+                return new CreeperHead (blockState);
+            case PISTON_BASE:
+            case PISTON_STICKY_BASE:
+            case PISTON_EXTENSION:
+                return new CreeperPiston (blockState);
+            case WOODEN_DOOR:
+            case IRON_DOOR_BLOCK:
+                return new CreeperDoor (blockState);
+            case NOTE_BLOCK:
+                return new CreeperNoteBlock ((NoteBlock) blockState);
+            case SIGN:
+            case SIGN_POST:
+                return new CreeperSign ((Sign) blockState);
+            case MOB_SPAWNER:
+                return new CreeperMonsterSpawner ((CreatureSpawner) blockState);
+            case WOOD_PLATE:
+            case STONE_PLATE:
+                return new CreeperPlate (blockState);
+            case GRASS:
+                return new CreeperGrass (blockState);
+            case TNT:
+            case FIRE:
+            case AIR:
+                return null;
+            default:
+                return new CreeperBlock (blockState);
+        }
+    }
 
+    /*
+     * The constructor.
+     */
+    protected CreeperBlock (BlockState blockState) {
+        this.blockState = blockState;
+    }
 
-
-	protected BlockState blockState;
-
-	public static CreeperBlock newBlock(BlockState blockState) {
-		if(blockState instanceof InventoryHolder)
-			return new CreeperChest(blockState);
-		if(blockState instanceof Sign) 
-			return new CreeperSign((Sign) blockState);
-		if(blockState instanceof NoteBlock)
-			return new CreeperNoteBlock((NoteBlock) blockState);
-		if(blockState instanceof CreatureSpawner)
-			return new CreeperMonsterSpawner((CreatureSpawner) blockState);
-		Material type = blockState.getType();
-		if((PluginHandler.isPlayerHeadsActivated()) && type == Material.SKULL)
-			return new CreeperSkull(blockState);
-		if(blockState instanceof Skull)
-			return new CreeperHead(blockState);
-		if(type == Material.PISTON_BASE || type == Material.PISTON_STICKY_BASE)
-			return new CreeperPiston(blockState);
-		if(type == Material.WOODEN_DOOR || type == Material.IRON_DOOR_BLOCK)
-			return new CreeperDoor(blockState);
-
-		return new CreeperBlock(blockState);
-	}
-
-	protected CreeperBlock(BlockState blockState) {
-		this.blockState = blockState;
-	}
-
-	public void update(boolean force) {
-		blockState.update(force);
-	}
-
-	public Location getLocation() {
-		return blockState.getLocation();
-	}
-
-	public World getWorld() {
-		return blockState.getWorld();
-	}
-
-	public Block getBlock() {
-		return blockState.getBlock();
-	}
-
-	public BlockState getState() {
-		return blockState;
-	}
-
-	public int getTypeId() {
-		return blockState.getTypeId();
-	}
-
-	public Material getType() {
-		return blockState.getType();
-	}
-
-	public byte getRawData() {
-		return blockState.getRawData();
-	}
-
-
-	public void dropBlock()
-	{
-
-		Location loc = blockState.getBlock().getLocation();
-		World w = loc.getWorld();
-
-		Collection<ItemStack> drop = blockState.getBlock().getDrops();
-		for(ItemStack s : drop)
-			w.dropItemNaturally(loc, s);
-
-	}
+    protected CreeperBlock () {
+    }
 
 
-	public boolean replace(boolean shouldDrop)
-	{
-		Block block = getBlock();
-		int blockId = block.getTypeId();
-		//int tmp_id = 0;
+    /**
+     * Replace the block in the world.
+     */
+    public void update () {
+        blockState.update (true);
+    }
 
-		if(!CreeperConfig.overwriteBlocks && !isEmpty(blockId)) {        //drop an item on the spot
-			if(CreeperConfig.dropDestroyedBlocks)
-				dropBlock();
-			return true;
-		}
-		else if(CreeperConfig.overwriteBlocks && !isEmpty(blockId) && CreeperConfig.dropDestroyedBlocks)
-		{
-			CreeperBlock.newBlock(block.getState()).dropBlock();
-			block.setTypeIdAndData(0, (byte)0, false);
-		}
+    /*
+     * (non-Javadoc)
+     * @see com.nitnelave.CreeperHeal.block.Replaceable#getLocation()
+     */
+    @Override
+    public Location getLocation () {
+        return blockState.getLocation ();
+    }
 
+    /*
+     * (non-Javadoc)
+     * @see com.nitnelave.CreeperHeal.block.Replaceable#getWorld()
+     */
+    @Override
+    public World getWorld () {
+        return blockState.getWorld ();
+    }
 
-		if(!shouldDrop && isDependent(getTypeId()) && isEmpty(getBlock().getRelative(getAttachingFace()).getTypeId()))
-		{
-			delay_replacement();
-			return true;
-		}
-		else
-		{
-			Material type = getType();
-			if(type == Material.BED_BLOCK) 
-			{        //put the head, then the feet
-				byte data = (byte) (getRawData() & 3);
-				BlockFace face;
-				if(data == 0)            //facing the right way
-					face = BlockFace.NORTH;
-				else if(data == 1)
-					face = BlockFace.EAST;
-				else if(data == 2)
-					face = BlockFace.SOUTH;
-				else
-					face = BlockFace.WEST;
-				update(true);
-				block.getRelative(face).setTypeIdAndData(getTypeId(), data, false);    //feet
-			}
-			else if(type == Material.PISTON_MOVING_PIECE) {}
-			else if(type == Material.RAILS || type == Material.POWERED_RAIL || type == Material.DETECTOR_RAIL)
-				Bukkit.getScheduler().scheduleSyncDelayedTask(CreeperHeal.getInstance(), new ReorientRails(this));//enforce the rails' direction, as it sometimes get messed up by the other rails around
-			else if(hasPhysics(getTypeId()))
-			{
-				if(CreeperConfig.preventBlockFall)
-					CreeperHeal.getPreventBlockFall().put(getBlock().getLocation(), new Date());
-					update(true);
-			}
-			else         //rest of it, just normal
-				update(true);
-		}
+    /*
+     * (non-Javadoc)
+     * @see com.nitnelave.CreeperHeal.block.Replaceable#getBlock()
+     */
+    @Override
+    public Block getBlock () {
+        return blockState.getBlock ();
+    }
 
-		checkForAscendingRails(CreeperHeal.getPreventUpdate());
-
-		return true;
-	}
+    /*
+     * (non-Javadoc)
+     * @see com.nitnelave.CreeperHeal.block.Replaceable#getTypeId()
+     */
+    @Override
+    public int getTypeId () {
+        return blockState.getTypeId ();
+    }
 
 
-	private boolean isEmpty(int typeId) {
-		return EMPTY_BLOCKS.contains(typeId);
-	}
+    /**
+     * Get the block's raw data.
+     * 
+     * @return The block's raw data.
+     */
+    public byte getRawData () {
+        return blockState.getRawData ();
+    }
 
-	private void delay_replacement()	//the block is dependent on a block that is just air. Schedule it for a later replacement
-	{
-		delay_replacement(0);
-	}
+    /**
+     * Drop the corresponding items on the ground.
+     */
+    @Override
+    public void drop () {
+        Location loc = blockState.getBlock ().getLocation ();
+        World w = loc.getWorld ();
 
-	public void delay_replacement(int count)
-	{
-		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(CreeperHeal.getInstance(), new DelayReplacement(this, count), (long) Math.ceil((double)CreeperConfig.blockPerBlockInterval / 20));
-	}
+        Collection<ItemStack> drop = blockState.getBlock ().getDrops ();
+        for (ItemStack s : drop)
+            w.dropItemNaturally (loc, s);
 
-	public static boolean hasPhysics(int typeId) {
-		return PHYSICS_BLOCKS.contains(typeId);
-	}
+    }
 
-	public static boolean isDependentDown(int typeId) {
-		return DEPENDENT_DOWN_BLOCKS.contains(typeId);
-	}
+    /*
+     * (non-Javadoc)
+     * @see com.nitnelave.CreeperHeal.block.Replaceable#replace(boolean)
+     */
+    @Override
+    public boolean replace (boolean shouldDrop) {
+        Block block = getBlock ();
+        int blockId = block.getTypeId ();
 
-	public static boolean isSolid(int typeId) {
-		return !NOT_SOLID_BLOCKS.contains(typeId);
-	}
+        if (!CreeperConfig.overwriteBlocks && !isEmpty (blockId))
+        {
+            if (CreeperConfig.dropDestroyedBlocks)
+                drop ();
+            return true;
+        }
+        else if (CreeperConfig.overwriteBlocks && !isEmpty (blockId) && CreeperConfig.dropDestroyedBlocks)
+        {
+            CreeperBlock.newBlock (block.getState ()).drop ();
+            block.setTypeIdAndData (0, (byte) 0, false);
+        }
 
-	public static boolean isDependent(int typeId) {
-		return DEPENDENT_BLOCKS.contains(typeId);
-	}
+        if (!shouldDrop && isDependent (getTypeId ()) && isEmpty (getBlock ().getRelative (getAttachingFace ()).getTypeId ()))
+        {
+            delay_replacement ();
+            return true;
+        }
+        else
+                update ();
 
-	public static HashSet<Byte> getTransparentBlocks() {
-		return TRANSPARENT_BLOCKS;
-	}
+        //TODO: Check the necessity, and move to CreeperRail if possible.
+        checkForAscendingRails ();
 
-	public static boolean isRedstone(int typeId) {
-		return REDSTONE_BLOCKS.contains(typeId);
-	}
+        return true;
+    }
 
-	public void checkForAscendingRails(Map<CreeperBlock, Date> preventUpdate)
-	{
-		BlockFace[] cardinals = {BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP};
-		Block block = blockState.getBlock();
-		for(BlockFace face : cardinals)
-		{
-			Block tmp_block = block.getRelative(face);
-			if(tmp_block.getState() instanceof Rails)
-			{
-				byte data = tmp_block.getData();
-				if(data>1 && data < 6)
-				{
-					BlockFace facing = null;
-					if(data == 2)
-						facing = BlockFace.EAST;
-					else if(data == 3)
-						facing = BlockFace.WEST;
-					else if(data == 4)
-						facing = BlockFace.NORTH;
-					else if(data == 5)
-						facing = BlockFace.SOUTH;
-					if(tmp_block.getRelative(facing).getType() == Material.AIR)
-						preventUpdate.put(CreeperBlock.newBlock(tmp_block.getState()), new Date());
-				}
-			}
-		}
-	}
+    /*
+     * Get whether the block is empty, i.e. if a player can breathe inside it
+     * and if it can be replaced by other blocks (snow, water...)
+     */
+    private static boolean isEmpty (int typeId) {
+        return EMPTY_BLOCKS.contains (typeId);
+    }
 
-	public BlockFace getAttachingFace() {
-		return getAttachingFace(blockState);
-	}
+    /*
+     * Delay the replacement of the block.
+     */
+    private void delay_replacement () {
+        long delay = (long) Math.ceil ((double) CreeperConfig.blockPerBlockInterval / 20);
+        Bukkit.getServer ().getScheduler ().scheduleSyncDelayedTask (CreeperHeal.getInstance (), new DelayReplacement (this, 0), delay);
+    }
 
-	public static BlockFace getAttachingFace(BlockState block)
-	{
-		if(block.getData() instanceof Attachable)
-			return ((Attachable)block.getData()).getAttachedFace();
-		switch(block.getType()) {
-		case WOODEN_DOOR:
-		case IRON_DOOR:
-			return BlockFace.DOWN;
-		case RAILS:
-		case DETECTOR_RAIL:
-		case POWERED_RAIL:
-			switch(block.getRawData()){
-			case 5: return BlockFace.WEST;
-			case 4: return BlockFace.EAST;
-			case 3: return BlockFace.NORTH;
-			case 2: return BlockFace.SOUTH;
-			default: return BlockFace.DOWN;
-			}
-		default:
-			return BlockFace.DOWN;
+    /**
+     * Get whether blocks of a type are affected by gravity.
+     * 
+     * @param typeId
+     *            The block type.
+     * @return Whether the blocks are affected by gravity.
+     */
+    public static boolean hasPhysics (int typeId) {
+        return PHYSICS_BLOCKS.contains (typeId);
+    }
 
-		}
-	}
+    /**
+     * Get whether blocks of a type are dependent on the block under.
+     * 
+     * @param typeId
+     *            The type of the block.
+     * @return Whether the block is dependent.
+     */
+    public static boolean isDependentDown (int typeId) {
+        return DEPENDENT_DOWN_BLOCKS.contains (typeId);
+    }
+
+    /**
+     * Get whether blocks of a type are solid.
+     * 
+     * @param typeId
+     *            The type of the block.
+     * @return Whether the block is solid.
+     */
+    public static boolean isSolid (int typeId) {
+        return Material.getMaterial (typeId).isSolid ();
+    }
+
+    /**
+     * Get whether blocks of a type are solid.
+     * 
+     * @param typeId
+     *            The type of the block.
+     * @return Whether the block is solid.
+     */
+    public static boolean isSolid (Block b) {
+        return b.getType ().isSolid ();
+    }
+
+    /**
+     * Get whether blocks of a type are dependent on another block .
+     * 
+     * @param typeId
+     *            The type of the block.
+     * @return Whether the block is dependent.
+     */
+    public static boolean isDependent (int typeId) {
+        return DEPENDENT_BLOCKS.contains (typeId) || isDependentDown (typeId);
+    }
 
 
+    /*
+     * Test the blocks directly in contact, and if they are ascending rails, add
+     * them to the updatePrevention list.
+     */
+    private void checkForAscendingRails () {
+        BlockFace[] cardinals = {BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP};
+        Block block = blockState.getBlock ();
+        for (BlockFace face : cardinals)
+        {
+            Block tmp_block = block.getRelative (face);
+            if (tmp_block.getState () instanceof Rails)
+            {
+                byte data = tmp_block.getData ();
+                if (data > 1 && data < 6)
+                {
+                    BlockFace facing = null;
+                    if (data == 2)
+                        facing = BlockFace.EAST;
+                    else if (data == 3)
+                        facing = BlockFace.WEST;
+                    else if (data == 4)
+                        facing = BlockFace.NORTH;
+                    else if (data == 5)
+                        facing = BlockFace.SOUTH;
+                    if (tmp_block.getRelative (facing).getType () == Material.AIR)
+                        BlockManager.putUpdatePrevention (CreeperBlock.newBlock (tmp_block.getState ()));
+                }
+            }
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.nitnelave.CreeperHeal.block.Replaceable#getAttachingFace()
+     */
+    @Override
+    public BlockFace getAttachingFace () {
+        return getAttachingFace (blockState);
+    }
+
+    /**
+     * Get the face a blockState is dependent on.
+     * 
+     * @param blockState
+     *            The blockState.
+     * @return The face the blockState i s attached by.
+     */
+    public static BlockFace getAttachingFace (BlockState blockState) {
+        if (blockState.getData () instanceof Attachable)
+            return ((Attachable) blockState.getData ()).getAttachedFace ();
+        if (blockState instanceof Rails)
+            switch (blockState.getRawData ())
+            {
+                case 5:
+                    return BlockFace.WEST;
+                case 4:
+                    return BlockFace.EAST;
+                case 3:
+                    return BlockFace.NORTH;
+                case 2:
+                    return BlockFace.SOUTH;
+                default:
+                    return BlockFace.DOWN;
+            }
+        if (DEPENDENT_DOWN_BLOCKS.contains (blockState.getTypeId ()))
+            return BlockFace.DOWN;
+        return BlockFace.SELF;
+
+    }
+
+
+    /*
+     * Remove the block recorded from the world.
+     */
+    protected void remove () {
+        getBlock ().setType (Material.AIR);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.nitnelave.CreeperHeal.block.Replaceable#isDependent()
+     */
+    @Override
+    public boolean isDependent () {
+        return getAttachingFace () != BlockFace.SELF;
+    }
 
 }
