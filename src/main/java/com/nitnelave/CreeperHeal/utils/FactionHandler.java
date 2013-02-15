@@ -3,40 +3,62 @@ package com.nitnelave.CreeperHeal.utils;
 import java.util.List;
 
 import org.bukkit.block.Block;
-import org.bukkit.plugin.PluginManager;
 
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.FLocation;
-import com.massivecraft.factions.P;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 
-public class FactionHandler {
+/**
+ * A handler for the Factions plugin.
+ * 
+ * @author nitnelave
+ * 
+ */
+public abstract class FactionHandler {
 
-	private boolean isFactionsEnabled = false;
+    private static boolean isFactionsEnabled = false;
 
-	public FactionHandler(PluginManager pluginManager) {
-		P factions = (P) pluginManager.getPlugin("Factions");
-		isFactionsEnabled = factions != null;
-	}
-	
-	public boolean shouldIgnore(List<Block> list, WorldConfig world) {
-		if (!isFactionsEnabled)
-			return false;
-		
-		if(world.ignoreFactionsWilderness == world.ignoreFactionsTerritory)
-			return world.ignoreFactionsWilderness;
-		
-		boolean wild = world.ignoreFactionsTerritory;
-		
-		for(Block block : list) {
-			if(wild == Board.getFactionAt(new FLocation(block.getLocation())).isNone())
-				return false;
-		}
-		return true;
-	}
+    /**
+     * Set whether the Factions plugin is enabled.
+     * 
+     * @param enabled
+     *            Whether it is enabled.
+     */
+    public static void setFactionsEnabled (boolean enabled) {
+        isFactionsEnabled = enabled;
+    }
 
-	public boolean isFactionsEnabled() {
-		return isFactionsEnabled;
-	}
+    /**
+     * Check if an explosion should be ignored (blocks not replaced).
+     * 
+     * @param list
+     *            The list of exploded blocks.
+     * @param world
+     *            The CH configuration for the world.
+     * @return Whether the explosion should be ignored.
+     */
+    public static boolean shouldIgnore (List<Block> list, WorldConfig world) {
+        if (!isFactionsEnabled)
+            return false;
+
+        if (world.ignoreFactionsWilderness == world.ignoreFactionsTerritory)
+            return world.ignoreFactionsWilderness;
+
+        boolean wild = world.ignoreFactionsTerritory;
+
+        for (Block block : list)
+            if (wild == Board.getFactionAt (new FLocation (block.getLocation ())).isNone ())
+                return false;
+        return true;
+    }
+
+    /**
+     * Get whether the Factions plugin is enabled.
+     * 
+     * @return true if Factions is enabled, false otherwise.
+     */
+    public static boolean isFactionsEnabled () {
+        return isFactionsEnabled;
+    }
 
 }

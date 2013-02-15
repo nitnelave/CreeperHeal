@@ -2,16 +2,29 @@ package com.nitnelave.CreeperHeal.block;
 
 import org.bukkit.block.NoteBlock;
 
+/**
+ * NoteBlock implementation of CreeperBlock, to hold the note.
+ * 
+ * @author nitnelave
+ * 
+ */
 public class CreeperNoteBlock extends CreeperBlock{
 
-	public CreeperNoteBlock(NoteBlock blockState) {
-		super(blockState);
-	}
-	
-	@Override
-	public void update(boolean force) {
-		super.update(force);
-		((NoteBlock)getBlock().getState()).setRawNote(((NoteBlock)getState()).getRawNote());
-	}
+    /*
+     * Constructor.
+     */
+    protected CreeperNoteBlock (NoteBlock blockState) {
+        super(blockState);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.nitnelave.CreeperHeal.block.CreeperBlock#update(boolean)
+     */
+    @Override
+    public void update () {
+        blockState.update (true);
+        ((NoteBlock) getBlock ().getState ()).setRawNote (((NoteBlock) blockState).getRawNote ());
+    }
 
 }

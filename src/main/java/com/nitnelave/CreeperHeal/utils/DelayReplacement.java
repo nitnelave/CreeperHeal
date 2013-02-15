@@ -9,38 +9,65 @@ import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.block.Replaceable;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
-public class DelayReplacement implements Runnable
-{
-	private int counter;
-	private Replaceable blockState;
+/**
+ * This class is a task to replace a CreeperBlock later. If the block cannot be
+ * safely replaced, then the replacement is postponed. After a numberof tries,
+ * the block is dropped to the ground.
+ * 
+ * @author nitnelave
+ * 
+ */
+public class DelayReplacement implements Runnable {
+    /*
+     * The block to be replaced.
+     */
+    private final Replaceable blockState;
+    /*
+     * The number of times a replacement has been attempted.
+     */
+    private int counter;
 
-	public DelayReplacement(Replaceable creeperBlock, int i)
-	{
-		this.blockState = creeperBlock;
-		this.counter = ++i;
-	}
+    /**
+     * Constructor for a new task.
+     * 
+     * @param replaceable
+     *            The block to be replaced.
+     * @param replaced
+     *            The number of times a replacement has already been attempted.
+     */
+    public DelayReplacement (Replaceable replaceable, int replaced) {
+        this.blockState = replaceable;
+        this.counter = replaced + 1;
+    }
 
-	@Override
-	public void run()
-	{
-		if(counter < 150)
-		{
-			if(blockState instanceof Attachable && blockState.getBlock().getRelative(((Attachable) blockState).getAttachedFace()).getType() == Material.AIR)
-				delay_replacement();
-			else if(blockState.getBlock().getRelative(BlockFace.DOWN).getType() == Material.AIR)
-				delay_replacement();
-			else
-				blockState.replace(true);
-		}
-		else
-			blockState.replace(true);
+    /*
+     * (non-Javadoc) The task attempts to replace the block, and in case of
+     * failure either re-schedule the replacement for later or drop the block.
+     */
+    @Override
+    public void run () {
+        if (counter < 150)
+        {
+            if (blockState instanceof Attachable
+                    && blockState.getBlock ().getRelative (((Attachable) blockState).getAttachedFace ()).getType () == Material.AIR)
+                delay_replacement ();
+            else if (blockState.getBlock ().getRelative (BlockFace.DOWN).getType () == Material.AIR)
+                delay_replacement ();
+            else
+                blockState.replace (true);
+        }
+        else
+            blockState.replace (true);
 
-	}
-	
-	private void delay_replacement() {
-		counter++;
-		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(CreeperHeal.getInstance(), this, (long) Math.ceil((double)CreeperConfig.blockPerBlockInterval / 20));
+    }
 
-	}
+    /**
+     * Re-schedule the replacement later.
+     */
+    private void delay_replacement () {
+        counter++;
+        Bukkit.getServer ().getScheduler ()
+                .scheduleSyncDelayedTask (CreeperHeal.getInstance (), this, (long) Math.ceil ((double) CreeperConfig.blockPerBlockInterval / 20));
+    }
 
 }
