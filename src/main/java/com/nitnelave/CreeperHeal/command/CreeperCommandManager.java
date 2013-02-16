@@ -314,11 +314,11 @@ public class CreeperCommandManager implements CommandExecutor {
                 return;
             }
 
-            long since = 0;
+            int since = 0;
             if (args.length > 1)
                 try
             {
-                    since = Long.parseLong (args[1]);
+                    since = Integer.parseInt (args[1]);
             } catch (Exception e)
             {
                 sender.sendMessage ("/ch " + cmd + " (seconds) (world_name | all)");
