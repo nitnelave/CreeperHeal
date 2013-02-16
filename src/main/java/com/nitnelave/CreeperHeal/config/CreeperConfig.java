@@ -440,12 +440,12 @@ public class CreeperConfig {
             try
         {
                 returnValue = new WorldConfig (name, getDataFolder ());
+                world_config.put (name, returnValue);
         } catch (Exception e)
         {
             log.severe ("[CreeperHeal] Could not load configuration for world : " + name);
             log.severe (e.getMessage ());
         }
-        world_config.put (name, returnValue);
         return returnValue;
     }
 
