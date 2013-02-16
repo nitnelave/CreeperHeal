@@ -77,20 +77,18 @@ public class ExplodedBlockManager {
      *            The player around whom the explosions are replaced.
      */
     public static void replaceNear (Player target) {
-        int k = CreeperConfig.distanceNear;
         Location playerLoc = target.getLocation ();
-
-        World w = playerLoc.getWorld ();
+        World w = target.getWorld ();
         Iterator<CreeperExplosion> iter = explosionList.iterator ();
         while (iter.hasNext ())
         {
             CreeperExplosion cEx = iter.next ();
             Location loc = cEx.getLocation ();
-            if (loc.getWorld () == w && loc.distance (playerLoc) < k)
+            if (loc.getWorld () == w && loc.distance (playerLoc) < CreeperConfig.distanceNear)
             {
                 cEx.replace_blocks ();
                 if (!CreeperConfig.lightweightMode)
-                    explosionIndex.removeElement (cEx, cEx.getLocation ().getX (), cEx.getLocation ().getZ ());
+                    explosionIndex.removeElement (cEx, loc.getX (), loc.getZ ());
                 iter.remove ();
             }
         }
