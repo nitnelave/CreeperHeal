@@ -76,7 +76,6 @@ public abstract class NeighborFinder<T> {
         if (hasNeighbor (loc, list))
             return true;
         for (int i = -1; i < 2; i++)
-        {
             for (int j = -1; j < 2; j++)
             {
                 if (i == 0 && j == 0)
@@ -85,7 +84,6 @@ public abstract class NeighborFinder<T> {
                 if (hasNeighbor (loc, list))
                     return true;
             }
-        }
         return false;
     }
 
@@ -104,4 +102,11 @@ public abstract class NeighborFinder<T> {
      * Clean the map by removing useless elements in zones, and empty zones.
      */
     public abstract void clean ();
+
+    /**
+     * Clear the map of all elements.
+     */
+    public void clear () {
+        map.clear ();
+    }
 }
