@@ -32,7 +32,7 @@ public class CreeperChest extends CreeperBlock {
      */
     protected CreeperChest (BlockState blockState) {
         super (blockState);
-        chest = blockState.getBlock ();
+        chest = getBlock ();
         Inventory inv = ((InventoryHolder) blockState).getInventory ();
         storedInventory = inv.getContents ();
         if (inv.getType () == InventoryType.CHEST)
@@ -45,18 +45,21 @@ public class CreeperChest extends CreeperBlock {
 
                 storedInventory = mainInv.getContents ();
                 neighborInventory = otherInv.getContents ();
-
-                inv.clear ();
-                neighbor.getChest ().getBlock ().setTypeIdAndData (0, (byte) 0, false);
-
             }
-            else
-                inv.clear ();
         }
-        else
-            inv.clear ();
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.nitnelave.CreeperHeal.block.CreeperBlock#remove()
+     */
+    @Override
+    public void remove () {
+        ((InventoryHolder) blockState).getInventory ().clear ();
+        getBlock ().setType (Material.AIR);
+        if (neighbor != null)
+            neighbor.getBlock ().setType (Material.AIR);
+    }
     /*
      * (non-Javadoc)
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#dropBlock()
