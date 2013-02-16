@@ -95,7 +95,6 @@ public class ExplodedBlockManager {
 
     }
 
-    //TODO: date.
     /**
      * Force the replacement of all explosions in the specified world.
      * 
@@ -299,6 +298,7 @@ public class ExplodedBlockManager {
     }
 
 
+    //TODO: date.
     /**
      * Check to see if any block has to be replaced in the explosions.
      */
