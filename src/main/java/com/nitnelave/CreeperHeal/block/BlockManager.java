@@ -163,6 +163,21 @@ public abstract class BlockManager {
     }
 
     /**
+     * Schedule the timed repair task.
+     */
+    public static void scheduleTimeRepairs () {
+        Bukkit.getScheduler ().runTaskTimerAsynchronously (CreeperHeal.getInstance (), new Runnable () {
+            @Override
+            public void run () {
+                checkReplaceTime ();
+            }
+        }, 200, 1200);
+
+        CreeperLog.warning ("[CreeperHeal] Impossible to schedule the time-repair task. Time repairs will not work");
+
+    }
+
+    /**
      * Get whether the location is next to a block whose fall is prevented.
      * 
      * @param loc
@@ -207,21 +222,6 @@ public abstract class BlockManager {
      */
     public static void putUpdatePrevention (CreeperBlock block) {
         updateIndex.put (block, new Date ());
-    }
-
-    /**
-     * Schedule the timed repair task.
-     */
-    public static void scheduleTimeRepairs () {
-        Bukkit.getScheduler ().runTaskTimerAsynchronously (CreeperHeal.getInstance (), new Runnable () {
-            @Override
-            public void run () {
-                checkReplaceTime ();
-            }
-        }, 200, 1200);
-
-        CreeperLog.warning ("[CreeperHeal] Impossible to schedule the time-repair task. Time repairs will not work");
-
     }
 
     /**
