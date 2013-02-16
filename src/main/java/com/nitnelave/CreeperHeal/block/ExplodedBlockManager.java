@@ -159,6 +159,7 @@ public class ExplodedBlockManager {
      */
     //TODO: Ascending rails pop if their support is gone. Maybe related to dependent blocks.
     //TODO: Cleanup.
+    //TODO: Check several blocks for bed (protection, dropping...)
     protected static void processExplosion (List<Block> blocks, Location location, Entity entity, boolean timed) {
         if (PluginHandler.isInArena (location))
             return;
@@ -250,6 +251,7 @@ public class ExplodedBlockManager {
      * Record one block and remove it. If it is protected, add to the
      * replace-immediately list. Check for dependent blocks around.
      */
+    //TODO: Check several blocks for protection, etc in case of bed, door. Should be delegated to CreeperBlock?
     private static void record (Block block, List<Replaceable> listState, WorldConfig world) {
         if (block.getType () == Material.AIR)
             return;
@@ -271,9 +273,6 @@ public class ExplodedBlockManager {
         {
             // The block should be replaced.
 
-            //TODO: Check for dependent block all around.
-            //            if (CreeperBlock.isDependentDown (block.getRelative (BlockFace.UP).getTypeId ()))
-            //                record (block.getRelative (BlockFace.UP), listState, world);
             for (BlockFace face : CARDINALS)
             {
                 Block b = block.getRelative (face);
