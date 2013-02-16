@@ -97,33 +97,33 @@ public class ExplodedBlockManager {
 
     //TODO: date.
     /**
-     * Force the replacement of all explosions since x seconds in the specified
-     * world. If x == 0, burnt blocks are also replaced.
+     * Force the replacement of all explosions in the specified world.
      * 
-     * @param x
-     *            The number of seconds.
      * @param world
      *            The world in which the explosions happened.
      */
-    public static void forceReplace (int x, WorldConfig world)
+    public static void forceReplace (WorldConfig world)
     {
-        Date now = new Date (new Date ().getTime () - x * 1000);
+        World w = Bukkit.getServer ().getWorld (world.getName ());
 
-        Iterator<CreeperExplosion> iterator = explosionList.iterator ();
-        while (iterator.hasNext ())
+        synchronized (explosionList)
         {
-            CreeperExplosion cEx = iterator.next ();
-            if ((x == 0 || cEx.getTime ().after (now)) && cEx.getLocation ().getWorld ().getName ().equals (world.getName ()))
+            Iterator<CreeperExplosion> iter = explosionList.iterator ();
+            while (iter.hasNext ())
             {
-                cEx.replace_blocks ();
-                if (!CreeperConfig.lightweightMode)
-                    explosionIndex.removeElement (cEx, cEx.getLocation ().getX (), cEx.getLocation ().getZ ());
-                iterator.remove ();
+                CreeperExplosion ex = iter.next ();
+                if (ex.getLocation ().getWorld ().equals (w))
+                {
+                    ex.replace_blocks ();
+                    iter.remove ();
+                    if (!CreeperConfig.lightweightMode)
+                        explosionIndex.removeElement (ex);
+                }
             }
         }
+
+        BurntBlockManager.forceReplaceBurnt (world);
         HangingsManager.replaceHangings ();
-        if (x == 0)
-            BurntBlockManager.forceReplaceBurnt (0L, world);
     }
 
     /**

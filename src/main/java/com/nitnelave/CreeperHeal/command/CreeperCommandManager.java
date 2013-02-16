@@ -314,38 +314,11 @@ public class CreeperCommandManager implements CommandExecutor {
                 return;
             }
 
-            int since = 0;
-            if (args.length > 1)
-                try
-            {
-                    since = Integer.parseInt (args[1]);
-            } catch (Exception e)
-            {
-                sender.sendMessage ("/ch " + cmd + " (seconds) (world_name | all)");
-                sender.sendMessage ("If a time is specified, heals all " + msg + " since x seconds ago. Otherwise, heals all.");
-                return;
-            }
-
             boolean burnt = cmd.equalsIgnoreCase ("healBurnt");
-            if (args.length > 2)
-            {
-                if (args[2].equalsIgnoreCase ("all"))
-                {
-                    for (WorldConfig w : CreeperConfig.world_config.values ())
-                        if (burnt)
-                            BurntBlockManager.forceReplaceBurnt (since, w);
-                        else
-                            ExplodedBlockManager.forceReplace (since, w);
-                }
-                else if (burnt)
-                    BurntBlockManager.forceReplaceBurnt (since, currentWorld);
-                else
-                    ExplodedBlockManager.forceReplace (since, currentWorld);
-            }
-            else if (burnt)
-                BurntBlockManager.forceReplaceBurnt (since, currentWorld);
+            if (burnt)
+                BurntBlockManager.forceReplaceBurnt (currentWorld);
             else
-                ExplodedBlockManager.forceReplace (since, currentWorld);
+                ExplodedBlockManager.forceReplace (currentWorld);
 
             sender.sendMessage (ChatColor.GREEN + "Explosions healed");
         }

@@ -63,4 +63,9 @@ public class NeighborFire extends NeighborFinder<CreeperBurntBlock> {
         }
     }
 
+    public void removeElement (CreeperBurntBlock cBlock) {
+        Location l = cBlock.getLocation ();
+        removeElement (cBlock, l.getX (), l.getZ ());
+    }
+
 }

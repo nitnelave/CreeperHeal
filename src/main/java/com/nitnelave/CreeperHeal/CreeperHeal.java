@@ -97,8 +97,8 @@ public class CreeperHeal extends JavaPlugin {
     @Override
     public void onDisable() {
         for(WorldConfig w : CreeperConfig.world_config.values()) {
-            ExplodedBlockManager.forceReplace(0, w);        //replace blocks still in memory, so they are not lost
-            BurntBlockManager.forceReplaceBurnt(0, w);    //same for burnt_blocks
+            ExplodedBlockManager.forceReplace (w); //replace blocks still in memory, so they are not lost
+            BurntBlockManager.forceReplaceBurnt (w); //same for burnt_blocks
         }
         logInfo("CreeperHeal Disabled", 0);
     }

@@ -61,4 +61,15 @@ public class NeighborExplosion extends NeighborFinder<CreeperExplosion> {
         }
     }
 
+    /**
+     * Remove an CreeperExplosion.
+     * 
+     * @param ex
+     *            The explosion to remove.
+     */
+    public void removeElement (CreeperExplosion ex) {
+        Location l = ex.getLocation ();
+        removeElement (ex, l.getX (), l.getZ ());
+    }
+
 }

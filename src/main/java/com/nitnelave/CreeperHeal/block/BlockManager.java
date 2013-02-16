@@ -165,8 +165,8 @@ public abstract class BlockManager {
             long time = Bukkit.getServer ().getWorld (w.name).getTime ();
             if (w.repairTime != -1 && ((Math.abs (w.repairTime - time) < 600) || (Math.abs (Math.abs (w.repairTime - time) - 24000)) < 600))
             {
-                ExplodedBlockManager.forceReplace (0, w);
-                BurntBlockManager.forceReplaceBurnt (0, w);
+                ExplodedBlockManager.forceReplace (w);
+                BurntBlockManager.forceReplaceBurnt (w);
                 HangingsManager.replaceHangings ();
             }
         }
