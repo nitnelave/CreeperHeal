@@ -214,7 +214,7 @@ public class CreeperBlock implements Replaceable {
             return true;
         }
         else
-                update ();
+            update ();
 
         //TODO: Check the necessity, and move to CreeperRail if possible.
         checkForAscendingRails ();
@@ -331,38 +331,13 @@ public class CreeperBlock implements Replaceable {
      */
     @Override
     public BlockFace getAttachingFace () {
-        return getAttachingFace (blockState);
-    }
-
-    /**
-     * Get the face a blockState is dependent on.
-     * 
-     * @param blockState
-     *            The blockState.
-     * @return The face the blockState i s attached by.
-     */
-    public static BlockFace getAttachingFace (BlockState blockState) {
         if (blockState.getData () instanceof Attachable)
             return ((Attachable) blockState.getData ()).getAttachedFace ();
-        if (blockState instanceof Rails)
-            switch (blockState.getRawData ())
-            {
-                case 5:
-                    return BlockFace.WEST;
-                case 4:
-                    return BlockFace.EAST;
-                case 3:
-                    return BlockFace.NORTH;
-                case 2:
-                    return BlockFace.SOUTH;
-                default:
-                    return BlockFace.DOWN;
-            }
         if (DEPENDENT_DOWN_BLOCKS.contains (blockState.getTypeId ()))
             return BlockFace.DOWN;
         return BlockFace.SELF;
-
     }
+
 
 
     /*

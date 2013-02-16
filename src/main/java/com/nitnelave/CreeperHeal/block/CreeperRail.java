@@ -36,6 +36,23 @@ public class CreeperRail extends CreeperBlock {
         });
     }
 
+    @Override
+    public BlockFace getAttachingFace () {
+        switch (blockState.getRawData ())
+        {
+            case 5:
+                return BlockFace.WEST;
+            case 4:
+                return BlockFace.EAST;
+            case 3:
+                return BlockFace.NORTH;
+            case 2:
+                return BlockFace.SOUTH;
+            default:
+                return BlockFace.DOWN;
+        }
+    }
+
     /*
      * Replace the rail and enforce the rails' direction, as it sometimes get
      * messed up by the other rails around.
