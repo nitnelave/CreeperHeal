@@ -21,7 +21,6 @@ import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.PluginHandler;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
-import com.nitnelave.CreeperHeal.utils.CreeperComparator;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.NeighborExplosion;
 
@@ -89,7 +88,7 @@ public class ExplodedBlockManager {
             Location loc = cEx.getLocation ();
             if (loc.getWorld () == w && loc.distance (playerLoc) < k)
             {
-                BlockManager.replace_blocks (cEx.getBlockList ());
+                cEx.replace_blocks ();
                 if (!CreeperConfig.lightweightMode)
                     explosionIndex.removeElement (cEx, cEx.getLocation ().getX (), cEx.getLocation ().getZ ());
                 iter.remove ();
@@ -118,7 +117,7 @@ public class ExplodedBlockManager {
             CreeperExplosion cEx = iterator.next ();
             if ((cEx.getTime ().after (now) || x == 0) && cEx.getLocation ().getWorld ().getName ().equals (world.getName ()))
             {
-                BlockManager.replace_blocks (cEx.getBlockList ());
+                cEx.replace_blocks ();
                 if (!CreeperConfig.lightweightMode)
                     explosionIndex.removeElement (cEx, cEx.getLocation ().getX (), cEx.getLocation ().getZ ());
                 iterator.remove ();
@@ -205,16 +204,16 @@ public class ExplodedBlockManager {
      * Check for dependent blocks and record them first.
      */
     private static void recordBlocks (List<Block> blocks, List<Replaceable> blockList, WorldConfig world) {
-        //        Iterator<Block> iter = blocks.iterator ();
-        //        while (iter.hasNext ())
-        //        {
-        //            Block b = iter.next ();
-        //            if (CreeperBlock.isDependent (b.getTypeId ()))
-        //            {
-        //                record (b, blockList, world);
-        //                iter.remove ();
-        //            }
-        //        }
+        Iterator<Block> iter = blocks.iterator ();
+        while (iter.hasNext ())
+        {
+            Block b = iter.next ();
+            if (CreeperBlock.isDependent (b.getTypeId ()))
+            {
+                record (b, blockList, world);
+                iter.remove ();
+            }
+        }
         for (Block b : blocks)
             record (b, blockList, world);
 
@@ -317,22 +316,20 @@ public class ExplodedBlockManager {
             List<Replaceable> blockList = cEx.getBlockList ();
             Date after = new Date (time.getTime () + CreeperConfig.waitBeforeHeal * 1000);
             if (after.before (now))
-            { //if enough time went by
-                if (!CreeperConfig.blockPerBlock)
-                { //all blocks at once
-                    BlockManager.replace_blocks (blockList); //replace the blocks
-                    iter.remove (); //remove the explosion from the record
-                }
-                else
-                { //block per block
-                    if (!blockList.isEmpty ()) //still some blocks left to be replaced
-                        BlockManager.replace_one_block (blockList); //replace one
-                    if (blockList.isEmpty ()) //if empty, remove from list
+            {
+                if (CreeperConfig.blockPerBlock)
+                {
+                    if (!blockList.isEmpty () && !cEx.replace_one_block ())
                     {
                         if (!CreeperConfig.lightweightMode)
                             explosionIndex.removeElement (cEx, cEx.getLocation ().getX (), cEx.getLocation ().getZ ());
                         iter.remove ();
                     }
+                }
+                else
+                {
+                    cEx.replace_blocks ();
+                    iter.remove ();
                 }
 
             }

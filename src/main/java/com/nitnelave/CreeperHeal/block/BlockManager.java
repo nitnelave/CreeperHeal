@@ -72,14 +72,6 @@ public abstract class BlockManager {
         toReplace.clear ();
     }
 
-    /*
-     * Replace the first block in the list.
-     */
-    protected static void replace_one_block (List<Replaceable> list) {
-        list.get (0).replace (false);
-        check_player_one_block (list.get (0).getBlock ().getLocation ());
-        list.remove (0);
-    }
 
     /*
      * Check the living entities in the chunk for suffocating ones, and save
@@ -93,47 +85,6 @@ public abstract class BlockManager {
                 if (en instanceof LivingEntity && loc.distance (en.getLocation ()) < 2)
                     check_player_suffocate ((LivingEntity) en);
         }
-    }
-
-    /*
-     * Replace all the blocks in the list.
-     */
-    protected static void replace_blocks (List<Replaceable> list) {
-        if (list != null)
-        {
-            //TODO: fix this, and move it to CreeperExplosion.
-            while (!list.isEmpty ())
-            {
-                Iterator<Replaceable> iter = list.iterator ();
-                while (iter.hasNext ())
-                {
-                    Replaceable block = iter.next ();
-                    if (!CreeperBlock.hasPhysics (block.getTypeId ()))
-                    {
-                        block.replace (false);
-                        iter.remove ();
-                    }
-                }
-                iter = list.iterator ();
-                while (iter.hasNext ())
-                {
-                    Replaceable block = iter.next ();
-                    if (CreeperBlock.hasPhysics (block.getTypeId ()))
-                    {
-                        block.replace (false);
-                        iter.remove ();
-                    }
-                }
-
-            }
-            if (CreeperConfig.teleportOnSuffocate)
-            {
-                Player[] player_list = Bukkit.getServer ().getOnlinePlayers ();
-                for (Player player : player_list)
-                    check_player_suffocate (player);
-            }
-        }
-
     }
 
     /*
