@@ -150,16 +150,15 @@ public abstract class BurntBlockManager {
      */
     private static void recordAttachedBurntBlock (Block block, Date now, BlockFace face) {
         BlockState block_up = block.getRelative (face).getState ();
-        if (CreeperBlock.isDependent (block_up.getTypeId ()))
-            if (CreeperBlock.getAttachingFace (block_up) == rotateCClockWise (face))
-            {
-                CreeperBurntBlock cBB = new CreeperBurntBlock (new Date (now.getTime () + 100), block_up);
-                burntList.add (cBB);
-                if (!CreeperConfig.lightweightMode)
-                    fireIndex.addElement (cBB, cBB.getLocation ().getX (), cBB.getLocation ().getZ ());
-                block_up.getBlock ().setTypeIdAndData (0, (byte) 0, false);
+        CreeperBurntBlock cBB = new CreeperBurntBlock (new Date (now.getTime () + 100), block_up);
+        if (cBB.getAttachingFace () == rotateCClockWise (face))
+        {
+            burntList.add (cBB);
+            if (!CreeperConfig.lightweightMode)
+                fireIndex.addElement (cBB, cBB.getLocation ().getX (), cBB.getLocation ().getZ ());
+            block_up.getBlock ().setTypeIdAndData (0, (byte) 0, false);
 
-            }
+        }
     }
 
     /*

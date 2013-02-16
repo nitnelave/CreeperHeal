@@ -2,6 +2,10 @@ package com.nitnelave.CreeperHeal.block;
 
 import java.util.Date;
 
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 
 /**
@@ -10,8 +14,9 @@ import org.bukkit.block.BlockState;
  * @author nitnelave
  * 
  */
-public class CreeperBurntBlock extends CreeperBlock {
+public class CreeperBurntBlock implements Replaceable {
     private Date time;
+    private final CreeperBlock block;
 
     /**
      * Constructor.
@@ -22,7 +27,7 @@ public class CreeperBurntBlock extends CreeperBlock {
      *            The burnt block.
      */
     public CreeperBurntBlock (Date now, BlockState block) {
-        super (block);
+        this.block = CreeperBlock.newBlock (block);
         time = now;
     }
 
@@ -44,6 +49,46 @@ public class CreeperBurntBlock extends CreeperBlock {
      */
     public Date getTime () {
         return time;
+    }
+
+    @Override
+    public boolean replace (boolean shouldDrop) {
+        return block.replace (shouldDrop);
+    }
+
+    @Override
+    public Block getBlock () {
+        return block.getBlock ();
+    }
+
+    @Override
+    public World getWorld () {
+        return block.getWorld ();
+    }
+
+    @Override
+    public int getTypeId () {
+        return block.getTypeId ();
+    }
+
+    @Override
+    public BlockFace getAttachingFace () {
+        return block.getAttachingFace ();
+    }
+
+    @Override
+    public Location getLocation () {
+        return block.getLocation ();
+    }
+
+    @Override
+    public boolean isDependent () {
+        return block.isDependent ();
+    }
+
+    @Override
+    public void drop () {
+        block.drop ();
     }
 
 }
