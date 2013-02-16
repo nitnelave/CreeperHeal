@@ -58,6 +58,16 @@ public abstract class BlockManager {
         }
     }
 
+    /**
+     * Add a block to the list of blocks to be replaced immediately.
+     * 
+     * @param block
+     *            The block to add.
+     */
+    public static void addToReplace (CreeperBlock block) {
+        toReplace.put (block.getLocation (), block);
+    }
+
     /*
      * Replace the blocks that should be immediately replaced after an
      * explosion.
@@ -222,16 +232,6 @@ public abstract class BlockManager {
      */
     public static void putUpdatePrevention (CreeperBlock block) {
         updateIndex.put (block, new Date ());
-    }
-
-    /**
-     * Add a block to the list of blocks to be replaced immediately.
-     * 
-     * @param block
-     *            The block to add.
-     */
-    public static void addToReplace (CreeperBlock block) {
-        toReplace.put (block.getLocation (), block);
     }
 
     /*
