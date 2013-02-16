@@ -105,15 +105,15 @@ public class ExplodedBlockManager {
      * @param world
      *            The world in which the explosions happened.
      */
-    public static void forceReplace (long x, WorldConfig world)
+    public static void forceReplace (int x, WorldConfig world)
     {
-        Date now = new Date (new Date ().getTime () - x);
+        Date now = new Date (new Date ().getTime () - x * 1000);
 
         Iterator<CreeperExplosion> iterator = explosionList.iterator ();
         while (iterator.hasNext ())
         {
             CreeperExplosion cEx = iterator.next ();
-            if ((cEx.getTime ().after (now) || x == 0) && cEx.getLocation ().getWorld ().getName ().equals (world.getName ()))
+            if ((x == 0 || cEx.getTime ().after (now)) && cEx.getLocation ().getWorld ().getName ().equals (world.getName ()))
             {
                 cEx.replace_blocks ();
                 if (!CreeperConfig.lightweightMode)
