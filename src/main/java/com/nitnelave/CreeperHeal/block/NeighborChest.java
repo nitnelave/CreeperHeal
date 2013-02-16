@@ -63,4 +63,8 @@ public class NeighborChest {
     public BlockState getChest() {
         return chest;
     }
+
+    public Block getBlock () {
+        return chest.getBlock ();
+    }
 }
