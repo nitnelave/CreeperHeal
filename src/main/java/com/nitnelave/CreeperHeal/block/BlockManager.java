@@ -68,7 +68,7 @@ public abstract class BlockManager {
     protected static void replaceProtected () {
         Iterator<Replaceable> iter = toReplace.values ().iterator ();
         while (iter.hasNext ())
-            iter.next ().replace (false);
+            iter.next ().replace (true);
         toReplace.clear ();
     }
 
