@@ -4,16 +4,13 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
@@ -83,7 +80,7 @@ public abstract class BlockManager {
             Entity[] play_list = loc.getBlock ().getChunk ().getEntities ();
             for (Entity en : play_list)
                 if (en instanceof LivingEntity && loc.distance (en.getLocation ()) < 2)
-                    check_player_suffocate ((LivingEntity) en);
+                    en.teleport (check_player_suffocate ((LivingEntity) en));
         }
     }
 
@@ -91,60 +88,62 @@ public abstract class BlockManager {
      * Check if the block at the coordinates, or one above or below is suitable
      * to put a living being.
      */
-    private static boolean check_free_horizontal (World w, int x, int y, int z, LivingEntity en) {
+    private static boolean check_free_horizontal (Location loc) {
+        loc.add (0, -1, 0);
         for (int k = -1; k < 2; k++)
-            if (check_free (w, x, y + k, z, en))
+        {
+            loc.add (0, 1, 0);
+            if (check_free (loc))
                 return true;
+        }
+        loc.add (0, -1, 0);
         return false;
     }
 
-    //TODO: Move the entity teleportation to the calling method.
     /*
      * Get whether the location is suitable ground so a player doesn't
      * suffocate.
      */
-    private static boolean check_free (World w, int x, int y, int z, LivingEntity en) {
-        Block block = w.getBlockAt (x, y, z);
+    private static boolean check_free (Location loc) {
+        Block block = loc.getBlock ();
         if (!CreeperBlock.isSolid (block) && !CreeperBlock.isSolid (block.getRelative (0, 1, 0)) && CreeperBlock.isSolid (block.getRelative (0, -1, 0)))
         {
-            Location loc = new Location (w, x, y + 0.5, z + 0.5);
-            loc.setYaw (en.getLocation ().getYaw ());
-            loc.setPitch (en.getLocation ().getPitch ());
-            en.teleport (loc);
+            loc.add (0.5, 0, 0.5);
             return true;
         }
         return false;
     }
 
-    //TODO: Change this to a simple getter.
     /*
-     * Get whether a living entity is suffocating.
+     * Get the location to which an entity should be teleported for safety.
      */
-    private static void check_player_suffocate (LivingEntity en) {
+    private static Location check_player_suffocate (LivingEntity en) {
         Location loc = en.getLocation ();
-        int x = loc.getBlockX ();
-        int y = loc.getBlockY ();
-        int z = loc.getBlockZ ();
-        World w = en.getWorld ();
 
         if (CreeperBlock.isSolid (loc.getBlock ()) || CreeperBlock.isSolid (loc.getBlock ().getRelative (0, 1, 0)))
-            for (int k = 1; k + y < 127; k++)
+            for (int k = 1; k + loc.getBlockY () < 127; k++)
             {
-                if (check_free (w, x, y + k, z, en))
-                    break;
+                Location l = loc.clone ().add (0, k, 0);
+                if (check_free (l))
+                    return l;
 
-                if (check_free_horizontal (w, x + k, y, z, en))
-                    break;
+                l.add (k, -k, 0);
+                if (check_free_horizontal (l))
+                    return l;
 
-                if (check_free_horizontal (w, x - k, y, z, en))
-                    break;
+                l.add (-2 * k, 0, 0);
+                if (check_free_horizontal (l))
+                    return l;
 
-                if (check_free_horizontal (w, x, y, z + k, en))
-                    break;
+                l.add (k, 0, k);
+                if (check_free_horizontal (l))
+                    return l;
 
-                if (check_free_horizontal (w, x, y, z - k, en))
-                    break;
+                l.add (0, 0, -2 * k);
+                if (check_free_horizontal (l))
+                    return l;
             }
+        return loc;
     }
 
     /*
