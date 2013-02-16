@@ -163,9 +163,8 @@ public class ExplodedBlockManager {
 
         Date now = timed ? new Date (new Date ().getTime () + 1200000) : new Date ();
         List<Replaceable> blockList = new LinkedList<Replaceable> ();
-        WorldConfig world = CreeperConfig.loadWorld (location.getWorld ());
 
-        recordBlocks (blocks, blockList, world);
+        recordBlocks (blocks, blockList);
 
         if (CreeperConfig.explodeObsidian)
             checkForObsidian (location, blockList);
@@ -198,23 +197,27 @@ public class ExplodedBlockManager {
 
     }
 
+    //TODO: Move the world loading to the record method?
     /*
      * Check for dependent blocks and record them first.
      */
-    private static void recordBlocks (List<Block> blocks, List<Replaceable> blockList, WorldConfig world) {
-        Iterator<Block> iter = blocks.iterator ();
-        while (iter.hasNext ())
+    private static void recordBlocks (List<Block> blocks, List<Replaceable> blockList) {
+        if (!blocks.isEmpty ())
         {
-            Block b = iter.next ();
-            if (CreeperBlock.isDependent (b.getTypeId ()))
+            WorldConfig world = CreeperConfig.loadWorld (blocks.get (0).getWorld ());
+            Iterator<Block> iter = blocks.iterator ();
+            while (iter.hasNext ())
             {
-                record (b, blockList, world);
-                iter.remove ();
+                Block b = iter.next ();
+                if (CreeperBlock.isDependent (b.getTypeId ()))
+                {
+                    record (b, blockList, world);
+                    iter.remove ();
+                }
             }
+            for (Block b : blocks)
+                record (b, blockList, world);
         }
-        for (Block b : blocks)
-            record (b, blockList, world);
-
     }
 
 
