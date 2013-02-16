@@ -74,27 +74,26 @@ public abstract class BurntBlockManager {
      * Force immediate replacement of all blocks burnt in the past few seconds,
      * or all of them.
      * 
-     * @param since
-     *            The number of seconds. 0 to replace all blocks.
      * @param worldConfig
      *            The world in which to replace the blocks.
      */
-    public static void forceReplaceBurnt (long since, WorldConfig worldConfig) { //replace all of the burnt blocks since "since"
+    public static void forceReplaceBurnt (WorldConfig worldConfig) { //replace all of the burnt blocks since "since"
         World world = Bukkit.getServer ().getWorld (worldConfig.getName ());
 
         synchronized (burntList)
         {
-            Date now = new Date ();
             Iterator<CreeperBurntBlock> iter = burntList.iterator ();
             while (iter.hasNext ())
             {
                 CreeperBurntBlock cBlock = iter.next ();
-                Date time = cBlock.getTime ();
-                if (cBlock.getWorld () == world && (new Date (time.getTime () + since * 1000).after (now) || since == 0))
+                if (cBlock.getWorld () == world)
                 {
                     cBlock.replace (false);
                     if (!CreeperConfig.lightweightMode)
+                    {
                         recentlyBurnt.put (cBlock.getLocation (), new Date (System.currentTimeMillis () + 1000 * CreeperConfig.waitBeforeBurnAgain));
+                        fireIndex.removeElement (cBlock);
+                    }
                     iter.remove ();
                 }
             }
