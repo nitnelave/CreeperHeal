@@ -38,7 +38,8 @@ public class CreeperConfig {
     public static int waitBeforeHeal, logLevel = -42, blockPerBlockInterval, waitBeforeHealBurnt, dropChance, distanceNear, obsidianChance, obsidianRadius,
             waitBeforeBurnAgain;
     public static boolean dropReplacedBlocks, blockPerBlock, teleportOnSuffocate, dropDestroyedBlocks, crackDestroyedBricks, lockette, replaceAllChests,
-    replaceProtectedChests, overwriteBlocks, preventBlockFall, lightweightMode, opEnforce, logWarnings, preventChainReaction, explodeObsidian, debug;
+            replaceProtectedChests, overwriteBlocks, preventBlockFall, lightweightMode, opEnforce, logWarnings, preventChainReaction, explodeObsidian, debug,
+            grief;
 
     public static String alias;
     public static double configVersion;
@@ -312,6 +313,7 @@ public class CreeperConfig {
                     world.migrate6to7 ();
                 world_config.put (name, world);
                 timeRepairs = timeRepairs || world.repairTime > -1;
+                grief = grief || world.hasGriefProtection ();
             }
         } catch (Exception e)
         {
