@@ -69,7 +69,7 @@ public class CreeperDoor extends CreeperBlock {
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#getNeighbors()
      */
     @Override
-    public List<NeighborBlock> getNeighbors () {
+    public List<NeighborBlock> getDependentNeighbors () {
         return new ArrayList<NeighborBlock> ();
     }
 
