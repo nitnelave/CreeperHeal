@@ -15,7 +15,6 @@ import com.nitnelave.CreeperHeal.listeners.FancyListener;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.CreeperMessenger;
 
-
 /**
  * The main class of the CreeperHeal plugin. The main aim of this plugin is to
  * replace the damage created by Creepers or TNT, but in a natural way, one
@@ -29,11 +28,11 @@ public class CreeperHeal extends JavaPlugin {
     private static CreeperHeal instance;
 
     @Override
-    public void onEnable() {
+    public void onEnable () {
 
         instance = this;
 
-        new CreeperConfig(this);
+        new CreeperConfig (this);
 
         new CreeperLog (this);
 
@@ -43,7 +42,7 @@ public class CreeperHeal extends JavaPlugin {
 
         CreeperCommandManager.registerCommands ();
 
-        PluginHandler.init();
+        PluginHandler.init ();
 
         CreeperLog.logInfo ("CreeperHeal v" + getDescription ().getVersion () + " enabled", 0);
     }
@@ -52,22 +51,21 @@ public class CreeperHeal extends JavaPlugin {
         PluginManager pm = getServer ().getPluginManager ();
 
         pm.registerEvents (new CreeperListener (), this);
-        pm.registerEvents(new CreeperBlockListener(), this);
+        pm.registerEvents (new CreeperBlockListener (), this);
         if (CreeperConfig.debug)
-            pm.registerEvents(new CreatureSpawnListener(), this);
+            pm.registerEvents (new CreatureSpawnListener (), this);
 
-        if(!(CreeperConfig.lightweightMode))
-            pm.registerEvents(new FancyListener(), this);
+        if (!(CreeperConfig.lightweightMode))
+            pm.registerEvents (new FancyListener (), this);
 
         if (CreeperConfig.grief)
             pm.registerEvents (new GriefListener (), this);
-
     }
 
-
     @Override
-    public void onDisable() {
-        for(WorldConfig w : CreeperConfig.world_config.values()) {
+    public void onDisable () {
+        for (WorldConfig w : CreeperConfig.world_config.values ())
+        {
             ExplodedBlockManager.forceReplace (w); //replace blocks still in memory, so they are not lost
             BurntBlockManager.forceReplaceBurnt (w); //same for burnt_blocks
         }
