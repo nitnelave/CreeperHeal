@@ -65,7 +65,7 @@ public class CreeperHeal extends JavaPlugin {
 
         CreeperMessenger.populateWarnList ();
 
-        logInfo("CreeperHeal v" + getDescription().getVersion() + " enabled", 0);
+        CreeperLog.logInfo ("CreeperHeal v" + getDescription ().getVersion () + " enabled", 0);
     }
 
 
@@ -100,18 +100,8 @@ public class CreeperHeal extends JavaPlugin {
             ExplodedBlockManager.forceReplace (w); //replace blocks still in memory, so they are not lost
             BurntBlockManager.forceReplaceBurnt (w); //same for burnt_blocks
         }
-        logInfo("CreeperHeal Disabled", 0);
+        CreeperLog.logInfo ("CreeperHeal Disabled", 0);
     }
-
-
-
-    public static void logInfo(String msg, int level) {        //logs a message, according to the log_level
-        CreeperLog.logInfo(msg, level);
-    }
-
-
-
-
 
     public static CreeperHeal getInstance () {
         return instance;
