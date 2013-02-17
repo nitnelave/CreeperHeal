@@ -231,8 +231,8 @@ public class ExplodedBlockManager {
     }
 
     /*
-     * Clean the explosion map from useless exmpty explosions. Do not use when
-     * in light weight mode.
+     * Clean the explosion map from useless empty explosions. Do not use when in
+     * light weight mode.
      */
     private static void cleanIndex () {
         explosionIndex.clean ();
