@@ -23,7 +23,7 @@ public class CreeperDoor extends CreeperBlock {
     /*
      * Constructor.
      */
-    protected CreeperDoor(BlockState blockState) {
+    protected CreeperDoor (BlockState blockState) {
         Block block = blockState.getBlock ();
         if ((blockState.getRawData () & 8) != 0)
             block = block.getRelative (BlockFace.DOWN);
@@ -37,21 +37,21 @@ public class CreeperDoor extends CreeperBlock {
      */
     @Override
     public void update () {
-        Block blockUp = blockState.getBlock().getRelative(BlockFace.UP);
+        Block blockUp = blockState.getBlock ().getRelative (BlockFace.UP);
         if (!CreeperConfig.overwriteBlocks && !EMPTY_BLOCKS.contains (blockUp.getTypeId ()))
         {
-            if(CreeperConfig.dropDestroyedBlocks)
+            if (CreeperConfig.dropDestroyedBlocks)
                 drop ();
             return;
         }
-        else if(CreeperConfig.overwriteBlocks && !EMPTY_BLOCKS.contains(blockUp.getTypeId()) && CreeperConfig.dropDestroyedBlocks)
+        else if (CreeperConfig.overwriteBlocks && !EMPTY_BLOCKS.contains (blockUp.getTypeId ()) && CreeperConfig.dropDestroyedBlocks)
         {
             CreeperBlock.newBlock (blockUp.getState ()).drop ();
-            blockUp.setTypeIdAndData(0, (byte)0, false);
+            blockUp.setTypeIdAndData (0, (byte) 0, false);
         }
-        blockState.update(true);
+        blockState.update (true);
         byte b = (byte) (8 + (hingeRight ? 0 : 1));
-        blockUp.setTypeIdAndData(getTypeId(), b, false);
+        blockUp.setTypeIdAndData (getTypeId (), b, false);
     }
 
     /*
