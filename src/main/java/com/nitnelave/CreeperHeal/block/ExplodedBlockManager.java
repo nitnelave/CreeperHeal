@@ -148,7 +148,6 @@ public class ExplodedBlockManager {
      * don't drop.
      */
     //TODO: Ascending rails pop if their support is gone. Maybe related to dependent blocks.
-    //TODO: Check several blocks for bed (protection, dropping...)
     protected static void processExplosion (List<Block> blocks, Location location, Entity entitytimed) {
         if (PluginHandler.isInArena (location))
             return;
