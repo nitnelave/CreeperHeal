@@ -200,7 +200,6 @@ public class CreeperExplosion {
      * Record one block and remove it. If it is protected, add to the
      * replace-immediately list. Check for dependent blocks around.
      */
-    //TODO: Check several blocks for protection, etc in case of bed, door. Should be delegated to CreeperBlock?
     private void record (Block block) {
         if (block.getType () == Material.AIR)
             return;
@@ -271,6 +270,11 @@ public class CreeperExplosion {
             return false;
     }
 
+    /**
+     * Get whether the list of blocks to be replaced is empty.
+     * 
+     * @return Whether the list is empty.
+     */
     public boolean isEmpty () {
         return blockList.isEmpty ();
     }
