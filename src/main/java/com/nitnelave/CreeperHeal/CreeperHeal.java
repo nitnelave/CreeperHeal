@@ -59,6 +59,9 @@ public class CreeperHeal extends JavaPlugin {
         if(!(CreeperConfig.lightweightMode))
             pm.registerEvents(new FancyListener(), this);
 
+        if (CreeperConfig.grief)
+            pm.registerEvents (new GriefListener (), this);
+
     }
 
 

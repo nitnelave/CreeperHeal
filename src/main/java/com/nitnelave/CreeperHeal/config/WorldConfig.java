@@ -109,6 +109,8 @@ public class WorldConfig {
     }
 
     private String formatList (HashSet<BlockId> list) {
+        if (list.isEmpty ())
+            return "0";
         StringBuilder b = new StringBuilder ();
         for (BlockId block : list)
         {
@@ -366,5 +368,14 @@ public class WorldConfig {
         else
             blockBlackList = set;
         set ("replace.restrict-list", null);
+    }
+
+    public boolean hasGriefProtection () {
+        return blockLava || blockIgnite || blockPvP || blockSpawnEggs || blockTNT || warnIgnite || warnLava || warnPvP || warnSpawnEggs || warnTNT
+                || !placeList.isEmpty ();
+    }
+
+    public boolean isBlackListed (Block block) {
+        return placeList.contains (new BlockId (block)) ^ whitePlaceList;
     }
 }
