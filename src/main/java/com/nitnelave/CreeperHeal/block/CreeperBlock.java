@@ -363,7 +363,7 @@ public class CreeperBlock implements Replaceable {
      * 
      * @return The list of potentially dependent blocks.
      */
-    public List<NeighborBlock> getNeighbors () {
+    public List<NeighborBlock> getDependentNeighbors () {
         List<NeighborBlock> neighbors = new ArrayList<NeighborBlock> ();
         Block block = getBlock ();
         for (BlockFace face : CARDINALS)

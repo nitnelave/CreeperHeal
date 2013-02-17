@@ -223,7 +223,7 @@ public class CreeperExplosion {
             // The block should be replaced.
             CreeperBlock cBlock = CreeperBlock.newBlock (block.getState ());
 
-            for (NeighborBlock b : cBlock.getNeighbors ())
+            for (NeighborBlock b : cBlock.getDependentNeighbors ())
             {
                 if (b.isNeighbor ())
                     record (b.getBlock ());
