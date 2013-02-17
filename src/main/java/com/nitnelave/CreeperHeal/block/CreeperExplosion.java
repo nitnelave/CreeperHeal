@@ -1,7 +1,7 @@
 package com.nitnelave.CreeperHeal.block;
 
 import java.util.Date;
-import java.util.List;
+import java.util.LinkedList;
 
 import org.bukkit.Location;
 
@@ -14,10 +14,9 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
  * @author nitnelave
  * 
  */
-public class CreeperExplosion
-{
+public class CreeperExplosion {
     private final Date time;
-    private final List<Replaceable> blockList;
+    private final LinkedList<Replaceable> blockList;
     private final Location loc;
     private final double radius;
 
@@ -33,8 +32,7 @@ public class CreeperExplosion
      * @param radius
      *            The radius of the explosion.
      */
-    public CreeperExplosion (Date time, List<Replaceable> blockList, Location loc)
-    {
+    public CreeperExplosion (Date time, LinkedList<Replaceable> blockList, Location loc) {
         this.time = time;
         this.blockList = blockList;
         this.loc = loc;
@@ -46,7 +44,7 @@ public class CreeperExplosion
      * 
      * @return The list of blocks still to be replaced.
      */
-    public List<Replaceable> getBlockList () {
+    public LinkedList<Replaceable> getBlockList () {
         return blockList;
     }
 
@@ -63,7 +61,7 @@ public class CreeperExplosion
     /*
      * Get the distance between the explosion's location and the furthest block.
      */
-    private static double computeRadius (List<Replaceable> list, Location loc) {
+    private static double computeRadius (LinkedList<Replaceable> list, Location loc) {
         double r = 0;
         for (Replaceable b : list)
         {
@@ -112,9 +110,9 @@ public class CreeperExplosion
      * @return False if the list is now empty.
      */
     protected boolean replace_one_block () {
-        blockList.get (0).replace (false);
-        BlockManager.check_player_one_block (blockList.get (0).getBlock ().getLocation ());
-        blockList.remove (0);
+        Replaceable block = blockList.poll ();
+        block.replace (false);
+        BlockManager.check_player_one_block (block.getBlock ().getLocation ());
         return !blockList.isEmpty ();
     }
 
