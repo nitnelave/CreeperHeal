@@ -16,7 +16,14 @@ import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.CreeperMessenger;
 
 
-
+/**
+ * The main class of the CreeperHeal plugin. The main aim of this plugin is to
+ * replace the damage created by Creepers or TNT, but in a natural way, one
+ * block at a time, over time.
+ * 
+ * @author nitnelave
+ * 
+ */
 public class CreeperHeal extends JavaPlugin {
 
     private static CreeperHeal instance;
