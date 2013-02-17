@@ -301,10 +301,11 @@ public class CreeperBlock implements Replaceable {
      * them to the updatePrevention list.
      */
     private void checkForAscendingRails () {
-        BlockFace[] cardinals = {BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP};
         Block block = blockState.getBlock ();
-        for (BlockFace face : cardinals)
+        for (BlockFace face : CARDINALS)
         {
+            if (face == BlockFace.DOWN)
+                continue;
             Block tmp_block = block.getRelative (face);
             if (tmp_block.getState () instanceof Rails)
             {
