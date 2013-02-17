@@ -2,18 +2,14 @@ package com.nitnelave.CreeperHeal.block;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -41,8 +37,6 @@ public class ExplodedBlockManager {
      * Map of the explosions, if the plugin is not in lightweight mode.
      */
     private static NeighborExplosion explosionIndex;
-
-    private final static BlockFace[] CARDINALS = {BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH, BlockFace.UP, BlockFace.DOWN};
 
     static
     {
@@ -133,7 +127,7 @@ public class ExplodedBlockManager {
      *            The config for the explosion's world.
      */
     public static void processExplosion (EntityExplodeEvent event, WorldConfig world) {
-        processExplosion (event.blockList (), event.getLocation (), event.getEntity (), world.isRepairTimed ());
+        processExplosion (event.blockList (), event.getLocation ());
     }
 
     /**
@@ -146,7 +140,7 @@ public class ExplodedBlockManager {
      *            The location of the explosion.
      */
     public static void processExplosion (List<Block> list, Location location) {
-        processExplosion (list, location, null, CreeperConfig.loadWorld (location.getWorld ()).isRepairTimed ());
+        processExplosion (list, location, null);
     }
 
     /*
@@ -155,21 +149,11 @@ public class ExplodedBlockManager {
      */
     //TODO: Ascending rails pop if their support is gone. Maybe related to dependent blocks.
     //TODO: Check several blocks for bed (protection, dropping...)
-    protected static void processExplosion (List<Block> blocks, Location location, Entity entity, boolean timed) {
+    protected static void processExplosion (List<Block> blocks, Location location, Entity entitytimed) {
         if (PluginHandler.isInArena (location))
             return;
 
-        Date now = timed ? new Date (new Date ().getTime () + 1200000) : new Date ();
-        LinkedList<Replaceable> blockList = new LinkedList<Replaceable> ();
-
-        recordBlocks (blocks, blockList);
-
-        if (CreeperConfig.explodeObsidian)
-            checkForObsidian (location, blockList);
-
-        Collections.sort (blockList, new CreeperComparator ());
-
-        CreeperExplosion cEx = new CreeperExplosion (now, blockList, location);
+        CreeperExplosion cEx = new CreeperExplosion (blocks, location);
 
         explosionList.add (cEx);
         if (!CreeperConfig.lightweightMode)
@@ -192,107 +176,6 @@ public class ExplodedBlockManager {
                 BlockManager.replaceProtected ();
             }
         });
-
-    }
-
-    //TODO: Move the world loading to the record method?
-    /*
-     * Check for dependent blocks and record them first.
-     */
-    private static void recordBlocks (List<Block> blocks, List<Replaceable> blockList) {
-        if (!blocks.isEmpty ())
-        {
-            WorldConfig world = CreeperConfig.loadWorld (blocks.get (0).getWorld ());
-            Iterator<Block> iter = blocks.iterator ();
-            while (iter.hasNext ())
-            {
-                Block b = iter.next ();
-                if (CreeperBlock.isDependent (b.getTypeId ()))
-                {
-                    record (b, blockList, world);
-                    iter.remove ();
-                }
-            }
-            for (Block b : blocks)
-                record (b, blockList, world);
-        }
-    }
-
-    /*
-     * In case of possible obsidian destruction, check for obsidian around, and
-     * give them a chance to be destroyed.
-     */
-    private static void checkForObsidian (Location location, List<Replaceable> listState) {
-        int radius = CreeperConfig.obsidianRadius;
-        double chance = ((float) CreeperConfig.obsidianChance) / 100;
-        World w = location.getWorld ();
-        WorldConfig wcfg = CreeperConfig.loadWorld (w);
-
-        Random r = new Random (System.currentTimeMillis ());
-
-        for (int i = location.getBlockX () - radius; i < location.getBlockX () + radius; i++)
-            for (int j = Math.max (0, location.getBlockY () - radius); j < Math.min (w.getMaxHeight (), location.getBlockY () + radius); j++)
-                for (int k = location.getBlockZ () - radius; k < location.getBlockZ () + radius; k++)
-                {
-                    Location l = new Location (w, i, j, k);
-                    if (l.distance (location) > radius)
-                        continue;
-                    Block b = w.getBlockAt (l);
-                    if (b.getType () == Material.OBSIDIAN && r.nextDouble () < chance)
-                        record (b, listState, wcfg);
-                }
-    }
-
-    /*
-     * Record one block and remove it. If it is protected, add to the
-     * replace-immediately list. Check for dependent blocks around.
-     */
-    //TODO: Check several blocks for protection, etc in case of bed, door. Should be delegated to CreeperBlock?
-    private static void record (Block block, List<Replaceable> listState, WorldConfig world) {
-        if (block.getType () == Material.AIR)
-            return;
-
-        if ((CreeperConfig.preventChainReaction && block.getType ().equals (Material.TNT))
-                || (CreeperConfig.replaceProtectedChests && PluginHandler.isProtected (block) || world.isProtected (block)))
-        {
-            CreeperBlock b = CreeperBlock.newBlock (block.getState ());
-            if (b != null)
-            {
-                BlockManager.addToReplace (b);
-                b.remove ();
-            }
-            return;
-        }
-
-        BlockId id = new BlockId (block);
-        if (world.blockWhiteList.contains (id) || !world.blockBlackList.contains (id))
-        {
-            // The block should be replaced.
-
-            for (BlockFace face : CARDINALS)
-            {
-                Block b = block.getRelative (face);
-                CreeperBlock cb = CreeperBlock.newBlock (b.getState ());
-                if (cb != null && cb.getAttachingFace () == face.getOppositeFace ())
-                    record (b, listState, world);
-            }
-
-            CreeperBlock b = CreeperBlock.newBlock (block.getState ());
-            if (b != null)
-            {
-                listState.add (b);
-                b.remove ();
-            }
-        }
-        else if (CreeperConfig.dropDestroyedBlocks)
-        {
-            // The block should not be replaced, check if it drops
-            Random generator = new Random ();
-            if (generator.nextInt (100) < CreeperConfig.dropChance) //percentage
-                CreeperBlock.newBlock (block.getState ()).drop ();
-            block.setType (Material.AIR);
-
-        }
 
     }
 
