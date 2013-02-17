@@ -29,6 +29,7 @@ public class CreeperExplosion {
     private final Location loc;
     private final double radius;
     private final WorldConfig world;
+    private final boolean timed;
 
     /**
      * Constructor. Record every block in the list and remove them from the
@@ -41,7 +42,8 @@ public class CreeperExplosion {
      */
     public CreeperExplosion (List<Block> blocks, Location loc) {
         world = CreeperConfig.loadWorld (loc.getWorld ());
-        time = world.isRepairTimed () ? new Date (new Date ().getTime () + 1200000) : new Date ();
+        timed = world.isRepairTimed ();
+        time = timed ? new Date (new Date ().getTime () + 1200000) : new Date ();
         blockList = new LinkedList<Replaceable> ();
         this.loc = loc;
 
@@ -55,7 +57,6 @@ public class CreeperExplosion {
         radius = computeRadius ();
     }
 
-    //TODO: Find a way to improve the time repairs. Problem : time check. They might come first even though they shouldn't.
     /**
      * Get the list of blocks destroyed still to be replaced.
      * 
@@ -267,7 +268,7 @@ public class CreeperExplosion {
 
         }
         else
-            return false;
+            return timed;
     }
 
     /**
