@@ -288,49 +288,14 @@ public class WorldConfig {
     public boolean shouldReplace (Entity entity) {
         if (entity != null)
         {
-
-            if (entity instanceof Creeper)
-            {
-                if (replaceAbove)
-                {
-                    if (isAbove (entity.getLocation ()))
-                        return creepers;
-                    return false;
-                }
-                return creepers;
-            }
-            else if (entity instanceof TNTPrimed)
-            {
-                if (replaceAbove)
-                {
-                    if (isAbove (entity.getLocation ()))
-                        return tnt;
-                    return false;
-                }
-                else
-                    return tnt;
-            }
-            else if (entity instanceof Fireball)
-            {
-                if (replaceAbove)
-                {
-                    if (isAbove (entity.getLocation ()))
-                        return ghast;
-                    return false;
-                }
-                else
-                    return ghast;
-            }
+            if (entity instanceof Creeper && creepers || entity instanceof TNTPrimed && tnt || entity instanceof Fireball && ghast)
+                return isAbove (entity.getLocation ());
             else if (entity instanceof EnderDragon)
                 return dragons;
             else if (entity instanceof Wither)
                 return wither;
-            else
-                return magical;
-
         }
-        else
-            return magical;
+        return magical;
     }
 
     /**
@@ -342,7 +307,7 @@ public class WorldConfig {
      * @return Whether the location is above the limit.
      */
     public boolean isAbove (Location loc) {
-        return loc.getBlockY () >= replaceLimit;
+        return !replaceAbove || loc.getBlockY () >= replaceLimit;
     }
 
     /**
