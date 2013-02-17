@@ -53,8 +53,7 @@ public class CreeperExplosion {
      * 
      * @return The time of the explosion.
      */
-    public Date getTime()
-    {
+    public Date getTime () {
         return time;
     }
 
@@ -76,11 +75,9 @@ public class CreeperExplosion {
      * 
      * @return The location of the explosion.
      */
-    public Location getLocation()
-    {
+    public Location getLocation () {
         return loc;
     }
-
 
     /**
      * Get the radius of the explosion (i.e. the distance between the location
@@ -88,7 +85,7 @@ public class CreeperExplosion {
      * 
      * @return The radius of the explosion.
      */
-    public double getRadius() {
+    public double getRadius () {
         return radius;
     }
 
@@ -133,10 +130,8 @@ public class CreeperExplosion {
      * @see java.lang.Object#hashCode()
      */
     @Override
-    public int hashCode ()
-    {
-        return (int) (time.hashCode() + radius + loc.hashCode());
+    public int hashCode () {
+        return (int) (time.hashCode () + radius + loc.hashCode ());
     }
-
 
 }
