@@ -73,7 +73,9 @@ public class CreeperBurntBlock implements Replaceable {
 
     @Override
     public BlockFace getAttachingFace () {
-        return block.getAttachingFace ();
+        if (block != null)
+            return block.getAttachingFace ();
+        return BlockFace.SELF;
     }
 
     @Override
