@@ -55,6 +55,7 @@ public class CreeperMessenger {
         CreeperMessenger.plugin = plugin;
         pluginFolder = plugin.getDataFolder ();
         load ();
+        populateWarnList ();
     }
 
     /*
@@ -201,7 +202,7 @@ public class CreeperMessenger {
     /**
      * Initialize the warn list with all concerned players.
      */
-    public static void populateWarnList () {
+    private static void populateWarnList () {
         warnList.clear ();
         for (Player p : Bukkit.getServer ().getOnlinePlayers ())
             registerPlayer (new CreeperPlayer (p));

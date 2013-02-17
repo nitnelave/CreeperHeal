@@ -1,15 +1,10 @@
 package com.nitnelave.CreeperHeal;
 
-import java.lang.reflect.Field;
-
-import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
-import com.nitnelave.CreeperHeal.command.CreeperCommand;
 import com.nitnelave.CreeperHeal.command.CreeperCommandManager;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
@@ -24,7 +19,6 @@ import com.nitnelave.CreeperHeal.utils.CreeperMessenger;
 
 public class CreeperHeal extends JavaPlugin {
 
-
     private static CreeperHeal instance;
 
     @Override
@@ -32,30 +26,25 @@ public class CreeperHeal extends JavaPlugin {
 
         instance = this;
 
-
-
         new CreeperConfig(this);
 
         new CreeperLog (this);
 
         new CreeperMessenger (this);
 
+        registerEvents ();
 
-        registerCommands ();
-
-        /*
-         * Recurrent tasks
-         */
-
-
-        PluginManager pm = getServer().getPluginManager();
+        CreeperCommandManager.registerCommands ();
 
         PluginHandler.init();
-        /**
-         * Listeners
-         */
 
-        pm.registerEvents(new CreeperListener(), this);
+        CreeperLog.logInfo ("CreeperHeal v" + getDescription ().getVersion () + " enabled", 0);
+    }
+
+    private void registerEvents () {
+        PluginManager pm = getServer ().getPluginManager ();
+
+        pm.registerEvents (new CreeperListener (), this);
         pm.registerEvents(new CreeperBlockListener(), this);
         if (CreeperConfig.debug)
             pm.registerEvents(new CreatureSpawnListener(), this);
@@ -63,35 +52,7 @@ public class CreeperHeal extends JavaPlugin {
         if(!(CreeperConfig.lightweightMode))
             pm.registerEvents(new FancyListener(), this);
 
-        CreeperMessenger.populateWarnList ();
-
-        CreeperLog.logInfo ("CreeperHeal v" + getDescription ().getVersion () + " enabled", 0);
     }
-
-
-    private void registerCommands () {
-        CommandMap commandMap = null;
-        try
-        {
-            Field field = SimplePluginManager.class.getDeclaredField ("commandMap");
-            field.setAccessible (true);
-            commandMap = (CommandMap) (field.get (getServer ().getPluginManager ()));
-        } catch (NoSuchFieldException e)
-        {
-            e.printStackTrace ();
-        } catch (IllegalAccessException e)
-        {
-            e.printStackTrace ();
-        }
-
-        String[] aliases = {"CreeperHeal", CreeperConfig.alias};
-        CreeperCommand com = new CreeperCommand (aliases, "", "", new CreeperCommandManager ());
-
-        if (commandMap != null)
-            commandMap.register ("_", com);
-
-    }
-
 
 
     @Override
