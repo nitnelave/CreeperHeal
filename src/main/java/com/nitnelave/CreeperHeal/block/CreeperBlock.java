@@ -356,6 +356,13 @@ public class CreeperBlock implements Replaceable {
         return getAttachingFace () != BlockFace.SELF;
     }
 
+    /**
+     * Get the list of blocks that are possibly dependent on this block. To
+     * check if they really are, simply check that neighborBlock.isNeighbor() is
+     * true.
+     * 
+     * @return The list of potentially dependent blocks.
+     */
     public List<NeighborBlock> getNeighbors () {
         List<NeighborBlock> neighbors = new ArrayList<NeighborBlock> ();
         Block block = getBlock ();
