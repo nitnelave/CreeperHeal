@@ -22,7 +22,7 @@ import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.NeighborExplosion;
 
 /**
- * Manager for the explosions and the resulting blocks to be replaced.
+ * Manager for the explosions list and the explosion index.
  * 
  * @author nitnelave
  * 
@@ -184,37 +184,23 @@ public class ExplodedBlockManager {
      * Check to see if any block has to be replaced in the explosions.
      */
     public static void checkReplace () { //check to see if any block has to be replaced
-        Date now = new Date ();
-
         ListIterator<CreeperExplosion> iter = explosionList.listIterator ();
         while (iter.hasNext ())
         {
-            CreeperExplosion cEx = iter.next ();
-            Date time = cEx.getTime ();
-            List<Replaceable> blockList = cEx.getBlockList ();
-            Date after = new Date (time.getTime () + CreeperConfig.waitBeforeHeal * 1000);
-            if (after.before (now))
+            CreeperExplosion ex = iter.next ();
+            if (ex.checkReplace ())
             {
-                if (CreeperConfig.blockPerBlock)
+                if (ex.isEmpty ())
                 {
-                    if (!blockList.isEmpty () && !cEx.replace_one_block ())
-                    {
-                        if (!CreeperConfig.lightweightMode)
-                            explosionIndex.removeElement (cEx, cEx.getLocation ().getX (), cEx.getLocation ().getZ ());
-                        iter.remove ();
-                    }
-                }
-                else
-                {
-                    cEx.replace_blocks ();
                     iter.remove ();
+                    if (!CreeperConfig.lightweightMode)
+                        explosionIndex.removeElement (ex);
                 }
-
             }
             else
                 break;
         }
-        HangingsManager.replaceHangings (now);
+        HangingsManager.replaceHangings (new Date ());
 
     }
 

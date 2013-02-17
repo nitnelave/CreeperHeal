@@ -250,4 +250,31 @@ public class CreeperExplosion {
 
     }
 
+    /**
+     * Check if the explosion has blocks to repair, and repair them (or one of
+     * them in case of block per block).
+     * 
+     * @return False if the explosion has not started its replacements yet
+     *         because it is not time.
+     */
+    public boolean checkReplace () {
+        Date now = new Date ();
+        Date after = new Date (time.getTime () + CreeperConfig.waitBeforeHeal * 1000);
+        if (after.before (now))
+        {
+            if (CreeperConfig.blockPerBlock)
+                replace_one_block ();
+            else
+                replace_blocks ();
+            return true;
+
+        }
+        else
+            return false;
+    }
+
+    public boolean isEmpty () {
+        return blockList.isEmpty ();
+    }
+
 }
