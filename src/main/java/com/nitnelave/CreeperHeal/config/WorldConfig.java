@@ -300,11 +300,12 @@ public class WorldConfig {
 
     /**
      * Get whether the location is above the replace limit defined in this
-     * world.
+     * world, if height replacement is enabled.
      * 
      * @param loc
      *            The location to test.
-     * @return Whether the location is above the limit.
+     * @return Whether the location is above the limit, or true if height
+     *         replacement is not enabled.
      */
     public boolean isAbove (Location loc) {
         return !replaceAbove || loc.getBlockY () >= replaceLimit;
@@ -335,12 +336,25 @@ public class WorldConfig {
         set ("replace.restrict-list", null);
     }
 
+    /**
+     * Get whether any grief protection feature is enabled, thus requiring to
+     * listen to the grief events.
+     * 
+     * @return Whether any grief protection is enabled.
+     */
     public boolean hasGriefProtection () {
         return blockLava || blockIgnite || blockPvP || blockSpawnEggs || blockTNT || warnIgnite || warnLava || warnPvP || warnSpawnEggs || warnTNT
                 || !placeList.isEmpty ();
     }
 
-    public boolean isBlackListed (Block block) {
+    /**
+     * Get whether the block is in the grief blackList (or not in the whitelist,
+     * if the whitelist is used).
+     * 
+     * @param block
+     * @return Whether the block is blacklisted.
+     */
+    public boolean isGriefBlackListed (Block block) {
         return placeList.contains (new BlockId (block)) ^ whitePlaceList;
     }
 }
