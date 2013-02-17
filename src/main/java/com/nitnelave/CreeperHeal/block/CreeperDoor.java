@@ -1,5 +1,8 @@
 package com.nitnelave.CreeperHeal.block;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -60,4 +63,14 @@ public class CreeperDoor extends CreeperBlock {
         getBlock ().setType (Material.AIR);
         getBlock ().getRelative (BlockFace.UP).setType (Material.AIR);
     }
+
+    /*
+     * (non-Javadoc)
+     * @see com.nitnelave.CreeperHeal.block.CreeperBlock#getNeighbors()
+     */
+    @Override
+    public List<NeighborBlock> getNeighbors () {
+        return new ArrayList<NeighborBlock> ();
+    }
+
 }

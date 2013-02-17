@@ -11,7 +11,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 
 import com.nitnelave.CreeperHeal.PluginHandler;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
@@ -30,7 +29,6 @@ public class CreeperExplosion {
     private final Location loc;
     private final double radius;
     private final WorldConfig world;
-    private final static BlockFace[] CARDINALS = {BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH, BlockFace.UP, BlockFace.DOWN};
 
     /**
      * Constructor. Record every block in the list and remove them from the
@@ -57,6 +55,7 @@ public class CreeperExplosion {
         radius = computeRadius ();
     }
 
+    //TODO: Find a way to improve the time repairs. Problem : time check. They might come first even though they shouldn't.
     /**
      * Get the list of blocks destroyed still to be replaced.
      * 
@@ -222,13 +221,12 @@ public class CreeperExplosion {
         if (world.blockWhiteList.contains (id) || !world.blockBlackList.contains (id))
         {
             // The block should be replaced.
+            CreeperBlock cBlock = CreeperBlock.newBlock (block.getState ());
 
-            for (BlockFace face : CARDINALS)
+            for (NeighborBlock b : cBlock.getNeighbors ())
             {
-                Block b = block.getRelative (face);
-                CreeperBlock cb = CreeperBlock.newBlock (b.getState ());
-                if (cb != null && cb.getAttachingFace () == face.getOppositeFace ())
-                    record (b);
+                if (b.isNeighbor ())
+                    record (b.getBlock ());
             }
 
             CreeperBlock b = CreeperBlock.newBlock (block.getState ());
