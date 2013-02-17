@@ -1,6 +1,8 @@
 package com.nitnelave.CreeperHeal.block;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -50,6 +52,8 @@ public class CreeperBlock implements Replaceable {
      * Blocks a player can breathe in and that are replaced by other blocks.
      */
     protected final static Set<Integer> EMPTY_BLOCKS = CreeperUtils.createFinalHashSet (0, 8, 9, 10, 11, 51, 78);
+
+    public final static BlockFace[] CARDINALS = {BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH, BlockFace.UP, BlockFace.DOWN};
 
     /*
      * The block represented.
@@ -354,6 +358,14 @@ public class CreeperBlock implements Replaceable {
     @Override
     public boolean isDependent () {
         return getAttachingFace () != BlockFace.SELF;
+    }
+
+    public List<NeighborBlock> getNeighbors () {
+        List<NeighborBlock> neighbors = new ArrayList<NeighborBlock> ();
+        Block block = getBlock ();
+        for (BlockFace face : CARDINALS)
+            neighbors.add (new NeighborBlock (block.getRelative (face), face));
+        return neighbors;
     }
 
 }
