@@ -66,7 +66,6 @@ public class ExplodedBlockManager {
         }, 200, CreeperConfig.blockPerBlock ? CreeperConfig.blockPerBlockInterval : 100) == -1)
             CreeperLog.warning ("[CreeperHeal] Impossible to schedule the re-filling task. Auto-refill will not work");
 
-
     }
 
     /**
@@ -101,8 +100,7 @@ public class ExplodedBlockManager {
      * @param world
      *            The world in which the explosions happened.
      */
-    public static void forceReplace (WorldConfig world)
-    {
+    public static void forceReplace (WorldConfig world) {
         World w = Bukkit.getServer ().getWorld (world.getName ());
 
         synchronized (explosionList)
@@ -155,7 +153,6 @@ public class ExplodedBlockManager {
      * don't drop.
      */
     //TODO: Ascending rails pop if their support is gone. Maybe related to dependent blocks.
-    //TODO: Cleanup.
     //TODO: Check several blocks for bed (protection, dropping...)
     protected static void processExplosion (List<Block> blocks, Location location, Entity entity, boolean timed) {
         if (PluginHandler.isInArena (location))
@@ -220,8 +217,6 @@ public class ExplodedBlockManager {
         }
     }
 
-
-
     /*
      * In case of possible obsidian destruction, check for obsidian around, and
      * give them a chance to be destroyed.
@@ -280,7 +275,6 @@ public class ExplodedBlockManager {
                     record (b, listState, world);
             }
 
-
             CreeperBlock b = CreeperBlock.newBlock (block.getState ());
             if (b != null)
             {
@@ -299,7 +293,6 @@ public class ExplodedBlockManager {
         }
 
     }
-
 
     //TODO: date.
     /**
