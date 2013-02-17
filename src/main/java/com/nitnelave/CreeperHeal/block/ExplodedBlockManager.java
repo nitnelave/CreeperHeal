@@ -271,7 +271,8 @@ public class ExplodedBlockManager {
             for (BlockFace face : CARDINALS)
             {
                 Block b = block.getRelative (face);
-                if (CreeperBlock.newBlock (b.getState ()).getAttachingFace () == face.getOppositeFace ())
+                CreeperBlock cb = CreeperBlock.newBlock (b.getState ());
+                if (cb != null && cb.getAttachingFace () == face.getOppositeFace ())
                     record (b, listState, world);
             }
 
