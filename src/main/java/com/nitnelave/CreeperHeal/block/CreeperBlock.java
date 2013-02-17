@@ -123,7 +123,6 @@ public class CreeperBlock implements Replaceable {
     protected CreeperBlock () {
     }
 
-
     /**
      * Replace the block in the world.
      */
@@ -167,7 +166,6 @@ public class CreeperBlock implements Replaceable {
         return blockState.getTypeId ();
     }
 
-
     /**
      * Get the block's raw data.
      * 
@@ -196,7 +194,7 @@ public class CreeperBlock implements Replaceable {
      * @see com.nitnelave.CreeperHeal.block.Replaceable#replace(boolean)
      */
     @Override
-    public boolean replace (boolean shouldDrop) {
+    public final boolean replace (boolean shouldDrop) {
         Block block = getBlock ();
         int blockId = block.getTypeId ();
 
@@ -208,8 +206,9 @@ public class CreeperBlock implements Replaceable {
         }
         else if (CreeperConfig.overwriteBlocks && !isEmpty (blockId) && CreeperConfig.dropDestroyedBlocks)
         {
-            CreeperBlock.newBlock (block.getState ()).drop ();
-            block.setTypeIdAndData (0, (byte) 0, false);
+            CreeperBlock b = CreeperBlock.newBlock (block.getState ());
+            b.drop ();
+            b.remove ();
         }
 
         if (!shouldDrop && isDependent (getTypeId ()) && isEmpty (getBlock ().getRelative (getAttachingFace ()).getTypeId ()))
@@ -297,7 +296,6 @@ public class CreeperBlock implements Replaceable {
         return DEPENDENT_BLOCKS.contains (typeId) || isDependentDown (typeId);
     }
 
-
     /*
      * Test the blocks directly in contact, and if they are ascending rails, add
      * them to the updatePrevention list.
@@ -341,8 +339,6 @@ public class CreeperBlock implements Replaceable {
             return BlockFace.DOWN;
         return BlockFace.SELF;
     }
-
-
 
     /*
      * Remove the block recorded from the world.
