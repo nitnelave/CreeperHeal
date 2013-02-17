@@ -238,13 +238,14 @@ public class WorldConfig {
             String[] split = tmp_str1.split (",");
             for (String elem : split)
             {
-                returnList.add (new BlockId (elem));
+                BlockId bId = new BlockId (elem);
+                if (bId.getId () != 0)
+                    returnList.add (bId);
             }
         } catch (NumberFormatException e)
         {
             CreeperLog.warning ("[CreeperHeal] Wrong values for " + path + " field for world " + name);
             returnList.clear ();
-            returnList.add (new BlockId (0));
         }
         return returnList;
     }
