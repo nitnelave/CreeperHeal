@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -78,7 +79,7 @@ public class ExplodedBlockManager {
     public static void replaceNear (Player target) {
         Location playerLoc = target.getLocation ();
         World w = target.getWorld ();
-        Iterator<CreeperExplosion> iter = explosionList.iterator ();
+        ListIterator<CreeperExplosion> iter = explosionList.listIterator ();
         while (iter.hasNext ())
         {
             CreeperExplosion cEx = iter.next ();
@@ -105,7 +106,7 @@ public class ExplodedBlockManager {
 
         synchronized (explosionList)
         {
-            Iterator<CreeperExplosion> iter = explosionList.iterator ();
+            ListIterator<CreeperExplosion> iter = explosionList.listIterator ();
             while (iter.hasNext ())
             {
                 CreeperExplosion ex = iter.next ();
@@ -159,7 +160,7 @@ public class ExplodedBlockManager {
             return;
 
         Date now = timed ? new Date (new Date ().getTime () + 1200000) : new Date ();
-        List<Replaceable> blockList = new LinkedList<Replaceable> ();
+        LinkedList<Replaceable> blockList = new LinkedList<Replaceable> ();
 
         recordBlocks (blocks, blockList);
 
@@ -302,7 +303,7 @@ public class ExplodedBlockManager {
     public static void checkReplace () { //check to see if any block has to be replaced
         Date now = new Date ();
 
-        Iterator<CreeperExplosion> iter = explosionList.iterator ();
+        ListIterator<CreeperExplosion> iter = explosionList.listIterator ();
         while (iter.hasNext ())
         {
             CreeperExplosion cEx = iter.next ();
