@@ -56,7 +56,7 @@ public class GriefListener implements Listener {
             if (world.warnTNT)
                 CreeperMessenger.warn (CreeperPlayer.WarningCause.TNT, player, blocked, null);
         }
-        else if (world.isBlackListed (event.getBlock ()) && !CreeperPermissionManager.checkPermissions (player, false, "bypass.place-blacklist"))
+        else if (world.isGriefBlackListed (event.getBlock ()) && !CreeperPermissionManager.checkPermissions (player, false, "bypass.place-blacklist"))
         {
             boolean blocked = world.griefBlockList;
             if (blocked)
