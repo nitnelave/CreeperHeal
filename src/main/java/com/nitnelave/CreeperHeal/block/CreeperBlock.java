@@ -221,7 +221,6 @@ public class CreeperBlock implements Replaceable {
         else
             update ();
 
-        //TODO: Check the necessity, and move to CreeperRail if possible.
         checkForAscendingRails ();
 
         return true;
