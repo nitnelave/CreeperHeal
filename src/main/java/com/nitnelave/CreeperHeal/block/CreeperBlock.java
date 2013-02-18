@@ -18,7 +18,6 @@ import org.bukkit.block.Sign;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Attachable;
-import org.bukkit.material.Rails;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.PluginHandler;
@@ -309,25 +308,9 @@ public class CreeperBlock implements Replaceable {
         {
             if (face == BlockFace.DOWN)
                 continue;
-            Block tmp_block = block.getRelative (face);
-            if (tmp_block.getState () instanceof Rails)
-            {
-                byte data = tmp_block.getData ();
-                if (data > 1 && data < 6)
-                {
-                    BlockFace facing = null;
-                    if (data == 2)
-                        facing = BlockFace.EAST;
-                    else if (data == 3)
-                        facing = BlockFace.WEST;
-                    else if (data == 4)
-                        facing = BlockFace.NORTH;
-                    else if (data == 5)
-                        facing = BlockFace.SOUTH;
-                    if (tmp_block.getRelative (facing).getType () == Material.AIR)
-                        BlockManager.putUpdatePrevention (CreeperBlock.newBlock (tmp_block.getState ()));
-                }
-            }
+            CreeperBlock cb = CreeperBlock.newBlock (block.getRelative (face).getState ());
+            if (cb instanceof CreeperRail && ((CreeperRail) cb).isAscending ())
+                BlockManager.putUpdatePrevention (cb);
         }
     }
 
