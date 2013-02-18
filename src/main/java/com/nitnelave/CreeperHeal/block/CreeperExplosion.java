@@ -2,6 +2,7 @@ package com.nitnelave.CreeperHeal.block;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.bukkit.block.Block;
 import com.nitnelave.CreeperHeal.PluginHandler;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
+import com.nitnelave.CreeperHeal.utils.ShortLocation;
 
 /**
  * Represents an explosion, with the list of blocks destroyed, the time of the
@@ -30,6 +32,7 @@ public class CreeperExplosion {
     private final double radius;
     private final WorldConfig world;
     private final boolean timed;
+    private final HashSet<ShortLocation> checked = new HashSet<ShortLocation> ();
 
     /**
      * Constructor. Record every block in the list and remove them from the
@@ -192,8 +195,10 @@ public class CreeperExplosion {
      * Record one block and remove it. If it is protected, add to the
      * replace-immediately list. Check for dependent blocks around.
      */
-    private void record (Block block) {
-        if (block.getType () == Material.AIR)
+    public void record (Block block) {
+        CreeperBlock cBlock = CreeperBlock.newBlock (block.getState ());
+
+        if (cBlock == null || checked.contains (new ShortLocation (block)))
             return;
 
         if ((CreeperConfig.preventChainReaction && block.getType ().equals (Material.TNT))
@@ -212,13 +217,10 @@ public class CreeperExplosion {
         if (world.blockWhiteList.contains (id) || !world.blockBlackList.contains (id))
         {
             // The block should be replaced.
-            CreeperBlock cBlock = CreeperBlock.newBlock (block.getState ());
 
             for (NeighborBlock b : cBlock.getDependentNeighbors ())
-            {
                 if (b.isNeighbor ())
                     record (b.getBlock ());
-            }
 
             CreeperBlock b = CreeperBlock.newBlock (block.getState ());
             if (b != null)
@@ -232,7 +234,7 @@ public class CreeperExplosion {
             // The block should not be replaced, check if it drops
             Random generator = new Random ();
             if (generator.nextInt (100) < CreeperConfig.dropChance) //percentage
-                CreeperBlock.newBlock (block.getState ()).drop ();
+                cBlock.drop ();
             block.setType (Material.AIR);
 
         }

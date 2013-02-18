@@ -38,7 +38,7 @@ public class CreeperRail extends CreeperBlock {
 
     @Override
     public BlockFace getAttachingFace () {
-        switch (blockState.getRawData ())
+        switch (getRawData ())
         {
             case 5:
                 return BlockFace.WEST;
@@ -85,5 +85,9 @@ public class CreeperRail extends CreeperBlock {
                     tmpBlock = tmpBlock.getRelative (BlockFace.DOWN);
                 tmpBlock.setData (railData[i][j]);
             }
+    }
+
+    public boolean isAscending () {
+        return getRawData () > 1;
     }
 }
