@@ -56,7 +56,7 @@ public class CreeperExplosion {
         if (CreeperConfig.explodeObsidian)
             checkForObsidian ();
 
-        Collections.sort (blockList, new CreeperComparator ());
+        Collections.sort (blockList, new CreeperComparator (loc));
 
         radius = computeRadius ();
     }

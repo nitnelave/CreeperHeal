@@ -2,6 +2,9 @@ package com.nitnelave.CreeperHeal.block;
 
 import java.util.Comparator;
 
+import org.bukkit.Location;
+
+import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 /**
  * Comparator to sort Replaceable in an explosion. Dependent blocks are put at
@@ -12,6 +15,27 @@ import java.util.Comparator;
  * 
  */
 public class CreeperComparator implements Comparator<Replaceable> {
+
+    private final Location loc;
+
+    /**
+     * Constructor. Order between blocks with the same dependency status and at
+     * the same level is undefined.
+     */
+    public CreeperComparator () {
+        loc = null;
+    }
+
+    /**
+     * Constructor. The blocks are ordered as a last criterion by distance fron
+     * the explosion, the closest first.
+     * 
+     * @param loc
+     *            The center of the explosion.
+     */
+    public CreeperComparator (Location loc) {
+        this.loc = loc;
+    }
 
     @Override
     public int compare (Replaceable b1, Replaceable b2) {
@@ -32,8 +56,11 @@ public class CreeperComparator implements Comparator<Replaceable> {
             return 1;
         else if (pos1 < pos2)
             return -1;
-        else
+        if (loc == null || CreeperConfig.lightweightMode)
             return 0;
+        if (b1.getLocation ().distance (loc) < b2.getLocation ().distance (loc))
+            return 1;
+        return -1;
     }
 
 }
