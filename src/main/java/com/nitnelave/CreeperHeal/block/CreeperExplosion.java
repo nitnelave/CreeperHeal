@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Random;
 
 import org.bukkit.Location;
@@ -119,7 +120,14 @@ public class CreeperExplosion {
      * @return False if the list is now empty.
      */
     protected boolean replace_one_block () {
-        Replaceable block = blockList.remove ();
+        Replaceable block;
+        try
+        {
+            block = blockList.remove ();
+        } catch (NoSuchElementException ex)
+        {
+            return true;
+        }
         block.replace (false);
         BlockManager.check_player_one_block (block.getBlock ().getLocation ());
         return !blockList.isEmpty ();
