@@ -195,6 +195,8 @@ public class CreeperExplosion {
      * Record one block and remove it. If it is protected, add to the
      * replace-immediately list. Check for dependent blocks around.
      */
+    //TODO: redstone recording sometimes fails.
+    //TODO: Chest recording consistently fails.
     public void record (Block block) {
         CreeperBlock cBlock = CreeperBlock.newBlock (block.getState ());
 
