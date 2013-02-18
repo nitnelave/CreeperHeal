@@ -58,15 +58,6 @@ public class CreeperExplosion {
     }
 
     /**
-     * Get the list of blocks destroyed still to be replaced.
-     * 
-     * @return The list of blocks still to be replaced.
-     */
-    public LinkedList<Replaceable> getBlockList () {
-        return blockList;
-    }
-
-    /**
      * Get the time of the explosion.
      * 
      * @return The time of the explosion.
