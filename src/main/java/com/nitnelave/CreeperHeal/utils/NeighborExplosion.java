@@ -53,7 +53,7 @@ public class NeighborExplosion extends NeighborFinder<CreeperExplosion> {
             while (it.hasNext ())
             {
                 CreeperExplosion e = it.next ();
-                if (e.getBlockList ().isEmpty ())
+                if (e.isEmpty ())
                     it.remove ();
             }
             if (list.isEmpty ())

@@ -207,8 +207,11 @@ public class CreeperBlock implements Replaceable {
         else if (CreeperConfig.overwriteBlocks && !isEmpty (blockId) && CreeperConfig.dropDestroyedBlocks)
         {
             CreeperBlock b = CreeperBlock.newBlock (block.getState ());
-            b.drop ();
-            b.remove ();
+            if (b != null)
+            {
+                b.drop ();
+                b.remove ();
+            }
         }
 
         if (!shouldDrop && isDependent (getTypeId ()) && isEmpty (getBlock ().getRelative (getAttachingFace ()).getTypeId ()))
