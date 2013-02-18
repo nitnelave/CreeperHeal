@@ -119,7 +119,7 @@ public class CreeperExplosion {
      * @return False if the list is now empty.
      */
     protected boolean replace_one_block () {
-        Replaceable block = blockList.poll ();
+        Replaceable block = blockList.remove ();
         block.replace (false);
         BlockManager.check_player_one_block (block.getBlock ().getLocation ());
         return !blockList.isEmpty ();
@@ -200,6 +200,8 @@ public class CreeperExplosion {
 
         if (cBlock == null || checked.contains (new ShortLocation (block)))
             return;
+
+        checked.add (new ShortLocation (block));
 
         if ((CreeperConfig.preventChainReaction && block.getType ().equals (Material.TNT))
                 || (CreeperConfig.replaceProtectedChests && PluginHandler.isProtected (block) || world.isProtected (block)))
