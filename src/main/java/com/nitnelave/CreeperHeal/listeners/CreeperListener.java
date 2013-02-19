@@ -72,14 +72,11 @@ public class CreeperListener implements Listener {
             {
                 WorldConfig world = CreeperConfig.loadWorld (remover.getWorld ());
                 if (world.shouldReplace (remover))
-                    HangingsManager.checkHanging (h, world.isRepairTimed (), false);
+                    HangingsManager.checkHanging (h, false);
             }
         }
         else if (event.getCause () == RemoveCause.EXPLOSION)
-        {
-            WorldConfig world = CreeperConfig.loadWorld (event.getEntity ().getWorld ());
-            HangingsManager.checkHanging (h, world.isRepairTimed (), false);
-        }
+            HangingsManager.checkHanging (h, false);
         else if (event.getCause () == RemoveCause.PHYSICS && !CreeperConfig.lightweightMode)
         {
             Location paintLoc = h.getLocation ();
@@ -92,14 +89,14 @@ public class CreeperListener implements Listener {
                 if (world.replaceAbove && paintLoc.getY () < world.replaceLimit)
                     should = false;
                 if (should)
-                    HangingsManager.checkHanging (h, world.isRepairTimed (), false);
+                    HangingsManager.checkHanging (h, false);
             }
             else if (BurntBlockManager.isNextToFire (paintLoc))
             {
                 //TODO: Not all paintings are caught.
                 WorldConfig world = CreeperConfig.loadWorld (w);
                 if (world.fire)
-                    HangingsManager.checkHanging (h, world.isRepairTimed (), true);
+                    HangingsManager.checkHanging (h, true);
             }
 
         }
