@@ -66,6 +66,7 @@ public class CreeperListener implements Listener {
         Hanging h = event.getEntity ();
         if (event instanceof HangingBreakByEntityEvent)
         {
+            //TODO:useless
             Entity remover = ((HangingBreakByEntityEvent) event).getRemover ();
             if (remover instanceof Creeper || remover instanceof TNTPrimed || remover instanceof Fireball || remover instanceof EnderDragon)
             {
@@ -85,6 +86,7 @@ public class CreeperListener implements Listener {
             World w = paintLoc.getWorld ();
             if (ExplodedBlockManager.isNextToExplosion (paintLoc))
             {
+                //TODO: Check, but probably useless
                 WorldConfig world = CreeperConfig.loadWorld (w);
                 boolean should = world.creepers;
                 if (world.replaceAbove && paintLoc.getY () < world.replaceLimit)
@@ -94,6 +96,7 @@ public class CreeperListener implements Listener {
             }
             else if (BurntBlockManager.isNextToFire (paintLoc))
             {
+                //TODO: Not all paintings are caught.
                 WorldConfig world = CreeperConfig.loadWorld (w);
                 if (world.fire)
                     HangingsManager.checkHanging (h, world.isRepairTimed (), true);

@@ -116,6 +116,7 @@ public class GriefListener implements Listener {
         Entity en = event.getEntity ();
         if (en instanceof Painting && event instanceof EntityDamageByEntityEvent)
         {
+            //TODO:useless
             EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
             Entity entity = e.getDamager ();
             if (entity instanceof Creeper || entity instanceof TNTPrimed || entity instanceof Fireball || entity instanceof EnderDragon)

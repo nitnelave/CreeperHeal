@@ -30,6 +30,7 @@ import com.nitnelave.CreeperHeal.utils.NeighborFire;
  */
 public abstract class BurntBlockManager {
 
+    //TODO: burnt blocks
     /*
      * The list of burnt blocks waiting to be replaced.
      */
