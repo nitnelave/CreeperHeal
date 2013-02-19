@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
@@ -79,19 +80,36 @@ public abstract class BlockManager {
         toReplace.clear ();
     }
 
-
     /*
      * Check the living entities in the chunk for suffocating ones, and save
      * them.
      */
-    protected static void check_player_one_block (Location loc) {
-        if (CreeperConfig.teleportOnSuffocate)
-        {
-            Entity[] play_list = loc.getBlock ().getChunk ().getEntities ();
-            for (Entity en : play_list)
-                if (en instanceof LivingEntity && loc.distance (en.getLocation ()) < 2)
-                    en.teleport (check_player_suffocate ((LivingEntity) en));
-        }
+    protected static void checkPlayerOneBlock (Location loc) {
+        Entity[] play_list = loc.getBlock ().getChunk ().getEntities ();
+        for (Entity en : play_list)
+            if (en instanceof LivingEntity && loc.distance (en.getLocation ()) < 2)
+                en.teleport (check_player_suffocate ((LivingEntity) en));
+    }
+
+    /**
+     * Check the players and other animals (except in lightweight mode) to see
+     * if they were trapped by the explosion's replacement.
+     * 
+     * @param loc
+     *            The center of the explosion.
+     * @param radius
+     *            The radius of the explosion.
+     */
+    public static void checkPlayerExplosion (Location loc, double radius) {
+        List<? extends Entity> entityList;
+        if (CreeperConfig.lightweightMode)
+            entityList = loc.getWorld ().getPlayers ();
+        else
+            entityList = loc.getWorld ().getEntities ();
+        for (Entity en : entityList)
+            if (en instanceof LivingEntity && loc.distance (en.getLocation ()) < radius + 3)
+                en.teleport (check_player_suffocate ((LivingEntity) en));
+
     }
 
     /*
