@@ -205,7 +205,7 @@ public class CreeperExplosion {
      * replace-immediately list. Check for dependent blocks around.
      */
     //TODO: redstone recording sometimes fails.
-    //TODO: Chest recording consistently fails.
+    //TODO: Chest drop their inventory twice on blacklist?
     public void record (Block block) {
         CreeperBlock cBlock = CreeperBlock.newBlock (block.getState ());
 
