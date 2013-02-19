@@ -60,6 +60,7 @@ public class CreeperChest extends CreeperBlock {
         if (neighbor != null)
             neighbor.getBlock ().setType (Material.AIR);
     }
+
     /*
      * (non-Javadoc)
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#dropBlock()
@@ -146,8 +147,7 @@ public class CreeperChest extends CreeperBlock {
     /*
      * Get the other chest of the double chest. null if it is a simple chest.
      */
-    private static NeighborChest scanForNeighborChest (World world, int x, int y, int z, short d)
-    {
+    private static NeighborChest scanForNeighborChest (World world, int x, int y, int z, short d) {
         Block neighbor;
         if (d <= 3)
         {
