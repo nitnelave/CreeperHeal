@@ -5,7 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashSet;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -287,14 +289,12 @@ public class WorldConfig {
      */
     public boolean shouldReplace (Entity entity) {
         if (entity != null)
-        {
             if (entity instanceof Creeper && creepers || entity instanceof TNTPrimed && tnt || entity instanceof Fireball && ghast)
                 return isAbove (entity.getLocation ());
             else if (entity instanceof EnderDragon)
                 return dragons;
             else if (entity instanceof Wither)
                 return wither;
-        }
         return magical;
     }
 
@@ -356,5 +356,9 @@ public class WorldConfig {
      */
     public boolean isGriefBlackListed (Block block) {
         return placeList.contains (new BlockId (block)) ^ whitePlaceList;
+    }
+
+    public World getWorld () {
+        return Bukkit.getWorld (name);
     }
 }

@@ -71,20 +71,35 @@ public class ExplodedBlockManager {
      *            The player around whom the explosions are replaced.
      */
     public static void replaceNear (Player target) {
-        Location playerLoc = target.getLocation ();
-        World w = target.getWorld ();
-        ListIterator<CreeperExplosion> iter = explosionList.listIterator ();
-        while (iter.hasNext ())
+        removeExplosionsAround (target.getLocation (), CreeperConfig.distanceNear);
+    }
+
+    /*
+     * Remove all the explosions close enough around the location.
+     */
+    private static void removeExplosionsAround (Location loc, float distanceNear) {
+        World w = loc.getWorld ();
+        LinkedList<CreeperExplosion> pass = new LinkedList<CreeperExplosion> ();
+        synchronized (explosionList)
         {
-            CreeperExplosion cEx = iter.next ();
-            Location loc = cEx.getLocation ();
-            if (loc.getWorld () == w && loc.distance (playerLoc) < CreeperConfig.distanceNear)
+            ListIterator<CreeperExplosion> iter = explosionList.listIterator ();
+            while (iter.hasNext ())
             {
-                cEx.replace_blocks ();
-                if (!CreeperConfig.lightweightMode)
-                    explosionIndex.removeElement (cEx, loc.getX (), loc.getZ ());
-                iter.remove ();
+                CreeperExplosion ex = iter.next ();
+                Location l = ex.getLocation ();
+                if (l.getWorld () == w && distanceNear > l.distance (loc))
+                {
+                    ex.replace_blocks (false);
+                    pass.add (ex);
+                    iter.remove ();
+                }
             }
+        }
+        for (CreeperExplosion ex : pass)
+        {
+            ex.replace_blocks (true);
+            if (!CreeperConfig.lightweightMode)
+                explosionIndex.removeElement (ex);
         }
 
     }
@@ -96,24 +111,7 @@ public class ExplodedBlockManager {
      *            The world in which the explosions happened.
      */
     public static void forceReplace (WorldConfig world) {
-        World w = Bukkit.getServer ().getWorld (world.getName ());
-
-        synchronized (explosionList)
-        {
-            ListIterator<CreeperExplosion> iter = explosionList.listIterator ();
-            while (iter.hasNext ())
-            {
-                CreeperExplosion ex = iter.next ();
-                if (ex.getLocation ().getWorld ().equals (w))
-                {
-                    ex.replace_blocks ();
-                    iter.remove ();
-                    if (!CreeperConfig.lightweightMode)
-                        explosionIndex.removeElement (ex);
-                }
-            }
-        }
-
+        removeExplosionsAround (world.getWorld ().getSpawnLocation (), Float.POSITIVE_INFINITY);
         BurntBlockManager.forceReplaceBurnt (world);
         HangingsManager.replaceHangings ();
     }
@@ -147,7 +145,6 @@ public class ExplodedBlockManager {
      * Record the blocks in the list and remove them from the world so they
      * don't drop.
      */
-    //TODO: Ascending rails pop if their support is gone. Maybe related to dependent blocks.
     protected static void processExplosion (List<Block> blocks, Location location, Entity entitytimed) {
         if (PluginHandler.isInArena (location))
             return;

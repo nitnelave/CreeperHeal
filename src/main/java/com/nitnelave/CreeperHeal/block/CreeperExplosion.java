@@ -105,13 +105,21 @@ public class CreeperExplosion {
     /*
      * Replace all the blocks in the list.
      */
-    protected void replace_blocks () {
-        for (Replaceable block : blockList)
-            block.replace (true);
-        blockList.clear ();
+    protected void replace_blocks (boolean shouldDrop) {
+        Iterator<Replaceable> iter = blockList.iterator ();
+        while (iter.hasNext ())
+        {
+            Replaceable block = iter.next ();
+            if (block.replace (shouldDrop))
+                iter.remove ();
+        }
+        if (shouldDrop)
+        {
+            blockList.clear ();
 
-        if (CreeperConfig.teleportOnSuffocate)
-            BlockManager.checkPlayerExplosion (loc, radius);
+            if (CreeperConfig.teleportOnSuffocate)
+                BlockManager.checkPlayerExplosion (loc, radius);
+        }
     }
 
     /**
@@ -204,7 +212,6 @@ public class CreeperExplosion {
      * Record one block and remove it. If it is protected, add to the
      * replace-immediately list. Check for dependent blocks around.
      */
-    //TODO: redstone recording sometimes fails with forced replacement.
     public void record (Block block) {
         CreeperBlock cBlock = CreeperBlock.newBlock (block.getState ());
 
@@ -268,7 +275,7 @@ public class CreeperExplosion {
             if (CreeperConfig.blockPerBlock)
                 replace_one_block ();
             else
-                replace_blocks ();
+                replace_blocks (true);
             return true;
 
         }
