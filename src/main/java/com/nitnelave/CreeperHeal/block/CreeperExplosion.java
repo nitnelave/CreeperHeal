@@ -111,7 +111,7 @@ public class CreeperExplosion {
         blockList.clear ();
 
         if (CreeperConfig.teleportOnSuffocate)
-            BlockManager.check_player_one_block (loc);
+            BlockManager.checkPlayerExplosion (loc, radius);
     }
 
     /**
@@ -129,7 +129,8 @@ public class CreeperExplosion {
             return true;
         }
         block.replace (false);
-        BlockManager.check_player_one_block (block.getBlock ().getLocation ());
+        if (CreeperConfig.teleportOnSuffocate)
+            BlockManager.checkPlayerOneBlock (block.getBlock ().getLocation ());
         return !blockList.isEmpty ();
     }
 
