@@ -123,7 +123,7 @@ public class GriefListener implements Listener {
             {
                 WorldConfig world = CreeperConfig.loadWorld (entity.getWorld ());
                 if (world.shouldReplace (entity))
-                    HangingsManager.checkHanging ((Painting) en, world.isRepairTimed (), false);
+                    HangingsManager.checkHanging ((Painting) en, false);
             }
 
         }
