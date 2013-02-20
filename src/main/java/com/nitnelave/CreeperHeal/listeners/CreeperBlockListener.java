@@ -36,7 +36,7 @@ public class CreeperBlockListener implements Listener {
                     event.setCancelled (true);
                     return;
                 }
-            BurntBlockManager.recordBurn (event.getBlock ());
+            BurntBlockManager.recordBurntBlock (event.getBlock ());
         }
 
     }
