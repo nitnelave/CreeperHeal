@@ -105,25 +105,6 @@ public abstract class CreeperHanging implements Replaceable {
     }
 
     /*
-     * Convert the direction in BlockFace to the int equivalent.
-     */
-    protected int getIntDirection () {
-        BlockFace face = hanging.getAttachedFace ();
-        switch (face)
-        {
-            case NORTH:
-            default:
-                return 0;
-            case EAST:
-                return 1;
-            case SOUTH:
-                return 2;
-            case WEST:
-                return 3;
-        }
-    }
-
-    /*
      * Postpone the replacement of the hanging to a later time, when the
      * block(s) supporting it may be present. Drop it if it has already been
      * postponed.
@@ -167,7 +148,6 @@ public abstract class CreeperHanging implements Replaceable {
 
     @Override
     public void remove () {
-
     }
 
 }
