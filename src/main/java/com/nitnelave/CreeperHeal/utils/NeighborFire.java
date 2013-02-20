@@ -23,19 +23,19 @@ public class NeighborFire extends NeighborFinder<CreeperBurntBlock> {
     /*
      * (non-Javadoc)
      * @see
-     * com.nitnelave.CreeperHeal.utils.NeighborFinder#hasNeighbor(org.bukkit
+     * com.nitnelave.CreeperHeal.utils.NeighborFinder#getNeighbor(org.bukkit
      * .Location, java.util.LinkedList)
      */
     @Override
-    protected boolean hasNeighbor (Location loc, LinkedList<CreeperBurntBlock> list) {
+    protected CreeperBurntBlock getNeighbor (Location loc, LinkedList<CreeperBurntBlock> list) {
         if (list != null)
         {
             World w = loc.getWorld ();
             for (CreeperBurntBlock cB : list)
                 if (cB.getWorld () == w && loc.distance (cB.getLocation ()) < 10)
-                    return true;
+                    return cB;
         }
-        return false;
+        return null;
     }
 
     /*

@@ -71,23 +71,38 @@ public abstract class NeighborFinder<T> {
      * @return Whether the location is close to an element.
      */
     public boolean hasNeighbor (Location loc) {
+        return getNeighbor (loc) != null;
+    }
+
+    /**
+     * Get a neighbor of the location provided. It is not guaranteed to be the
+     * closest, but it is an element which satisfies the condition of a
+     * neighbor.
+     * 
+     * @param loc
+     *            The location to check for neighbors.
+     * @return A neighboring element, null if no such element exists.
+     */
+    public T getNeighbor (Location loc) {
         int x = ((int) loc.getX ()) / BLOCK_SIZE, y = ((int) loc.getZ ()) / BLOCK_SIZE;
         LinkedList<T> list = map.get (new Point (x, y));
-        if (hasNeighbor (loc, list))
-            return true;
+        T neighbor = getNeighbor (loc, list);
+        if (neighbor != null)
+            return neighbor;
         for (int i = -1; i < 2; i++)
             for (int j = -1; j < 2; j++)
             {
                 if (i == 0 && j == 0)
                     continue;
                 list = map.get (new Point (x + i, y + j));
-                if (hasNeighbor (loc, list))
-                    return true;
+                neighbor = getNeighbor (loc, list);
+                if (neighbor != null)
+                    return neighbor;
             }
-        return false;
+        return null;
     }
 
-    protected abstract boolean hasNeighbor (Location loc, LinkedList<T> list);
+    protected abstract T getNeighbor (Location loc, LinkedList<T> list);
 
     /**
      * Get whether the map is completely empty (no zones).
