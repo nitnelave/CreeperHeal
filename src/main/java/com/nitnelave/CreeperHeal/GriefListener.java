@@ -129,35 +129,31 @@ public class GriefListener implements Listener {
         }
         else if (en instanceof Player)
         {
+            Player attacked = (Player) event.getEntity ();
             Player offender = null;
-            String message = "";
+            String message = attacked.getDisplayName ();
             Entity attacker;
             switch (event.getCause ())
             {
                 case ENTITY_ATTACK:
                     attacker = ((EntityDamageByEntityEvent) event).getDamager ();
                     if (attacker instanceof Player)
-                    {
                         offender = (Player) attacker;
-                        message = offender.getItemInHand ().getType ().toString ();
-                    }
                     break;
                 case PROJECTILE:
                 case MAGIC:
-                    if (((EntityDamageByEntityEvent) event).getDamager () instanceof Projectile)
+                    Entity damager = ((EntityDamageByEntityEvent) event).getDamager ();
+                    if (damager instanceof Projectile)
                     {
-                        Projectile projectile = (Projectile) ((EntityDamageByEntityEvent) event).getDamager ();
+                        Projectile projectile = (Projectile) damager;
                         attacker = projectile.getShooter ();
                         if (attacker instanceof Player)
-                        {
                             offender = (Player) attacker;
-                            message = event.getCause () == DamageCause.PROJECTILE ? projectile.getType ().toString () : "magic potion";
-                        }
                     }
                     break;
                 default:
             }
-            if (offender != null && !CreeperPermissionManager.checkPermissions (offender, true, "bypass.pvp"))
+            if (offender != null && !offender.equals (attacked) && !CreeperPermissionManager.checkPermissions (offender, true, "bypass.pvp"))
             {
                 WorldConfig world = CreeperConfig.loadWorld (event.getEntity ().getWorld ());
                 boolean blocked = world.blockPvP;
