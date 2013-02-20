@@ -69,4 +69,13 @@ public class CreeperItemFrame extends CreeperHanging {
             getWorld ().dropItemNaturally (getLocation (), s);
         getWorld ().dropItemNaturally (getLocation (), new ItemStack (389, 1));
     }
+
+    /*
+     * (non-Javadoc)
+     * @see com.nitnelave.CreeperHeal.block.Replaceable#getTypeId()
+     */
+    @Override
+    public int getTypeId () {
+        return 389;
+    }
 }
