@@ -1,16 +1,10 @@
 package com.nitnelave.CreeperHeal;
 
 import org.bukkit.Material;
-import org.bukkit.entity.Creeper;
-import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Fireball;
-import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
-import org.bukkit.entity.TNTPrimed;
-import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -20,14 +14,12 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.nitnelave.CreeperHeal.block.HangingsManager;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperMessenger;
@@ -113,21 +105,7 @@ public class GriefListener implements Listener {
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEntityDamage (EntityDamageEvent event) {
-        Entity en = event.getEntity ();
-        if (en instanceof Painting && event instanceof EntityDamageByEntityEvent)
-        {
-            //TODO:useless
-            EntityDamageByEntityEvent e = (EntityDamageByEntityEvent) event;
-            Entity entity = e.getDamager ();
-            if (entity instanceof Creeper || entity instanceof TNTPrimed || entity instanceof Fireball || entity instanceof EnderDragon)
-            {
-                WorldConfig world = CreeperConfig.loadWorld (entity.getWorld ());
-                if (world.shouldReplace (entity))
-                    HangingsManager.checkHanging ((Painting) en, false);
-            }
-
-        }
-        else if (en instanceof Player)
+        if (event.getEntity () instanceof Player)
         {
             Player attacked = (Player) event.getEntity ();
             Player offender = null;

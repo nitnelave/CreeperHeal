@@ -1,24 +1,16 @@
 package com.nitnelave.CreeperHeal.listeners;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.entity.Creeper;
-import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Hanging;
-import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
-import org.bukkit.event.hanging.HangingBreakEvent.RemoveCause;
 
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
@@ -64,42 +56,23 @@ public class CreeperListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onHangingBreak (HangingBreakEvent event) {
         Hanging h = event.getEntity ();
-        if (event instanceof HangingBreakByEntityEvent)
+        WorldConfig world = CreeperConfig.loadWorld (h.getWorld ());
+        switch (event.getCause ())
         {
-            //TODO:useless
-            Entity remover = ((HangingBreakByEntityEvent) event).getRemover ();
-            if (remover instanceof Creeper || remover instanceof TNTPrimed || remover instanceof Fireball || remover instanceof EnderDragon)
-            {
-                WorldConfig world = CreeperConfig.loadWorld (remover.getWorld ());
-                if (world.shouldReplace (remover))
-                    HangingsManager.checkHanging (h, false);
-            }
-        }
-        else if (event.getCause () == RemoveCause.EXPLOSION)
-            HangingsManager.checkHanging (h, false);
-        else if (event.getCause () == RemoveCause.PHYSICS && !CreeperConfig.lightweightMode)
-        {
-            Location paintLoc = h.getLocation ();
-            World w = paintLoc.getWorld ();
-            if (ExplodedBlockManager.isNextToExplosion (paintLoc))
-            {
-                //TODO: Check, but probably useless
-                WorldConfig world = CreeperConfig.loadWorld (w);
-                boolean should = world.creepers;
-                if (world.replaceAbove && paintLoc.getY () < world.replaceLimit)
-                    should = false;
-                if (should)
-                    HangingsManager.checkHanging (h, false);
-            }
-            else if (BurntBlockManager.isNextToFire (paintLoc))
-            {
-                //TODO: Not all paintings are caught.
-                WorldConfig world = CreeperConfig.loadWorld (w);
-                if (world.fire)
+            case EXPLOSION:
+                HangingsManager.checkHanging (h, false);
+                break;
+            case PHYSICS:
+                if (!CreeperConfig.lightweightMode && BurntBlockManager.isNextToFire (h.getLocation ()) && world.fire)
                     HangingsManager.checkHanging (h, true);
-            }
-
+                break;
+            case OBSTRUCTION:
+                if (!CreeperConfig.lightweightMode && BurntBlockManager.isNextToFire (h.getLocation ()) && world.fire)
+                    HangingsManager.checkHanging (h, true);
+                break;
+            default:
         }
+
     }
 
     /**
