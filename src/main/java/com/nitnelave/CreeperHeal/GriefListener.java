@@ -131,40 +131,35 @@ public class GriefListener implements Listener {
         {
             Player offender = null;
             String message = "";
-            WorldConfig world = CreeperConfig.loadWorld (event.getEntity ().getWorld ());
-            DamageCause cause = event.getCause ();
-            if (cause == DamageCause.ENTITY_ATTACK)
+            Entity attacker;
+            switch (event.getCause ())
             {
-                Entity attacker = ((EntityDamageByEntityEvent) event).getDamager ();
-                if (attacker instanceof Player)
-                {
-                    offender = (Player) attacker;
-                    message = offender.getItemInHand ().getType ().toString ();
-                }
-            }
-            else if (cause == DamageCause.PROJECTILE && ((EntityDamageByEntityEvent) event).getDamager () instanceof Projectile)
-            {
-                Projectile projectile = (Projectile) ((EntityDamageByEntityEvent) event).getDamager ();
-                Entity attacker = projectile.getShooter ();
-                if (attacker instanceof Player)
-                {
-                    offender = (Player) attacker;
-                    message = projectile.getType ().toString ();
-                }
-
-            }
-            else if (cause == DamageCause.MAGIC && ((EntityDamageByEntityEvent) event).getDamager () instanceof Projectile)
-            {
-                Projectile projectile = (Projectile) ((EntityDamageByEntityEvent) event).getDamager ();
-                Entity attacker = projectile.getShooter ();
-                if (projectile instanceof ThrownPotion && attacker instanceof Player)
-                {
-                    offender = (Player) attacker;
-                    message = "magic potion";
-                }
+                case ENTITY_ATTACK:
+                    attacker = ((EntityDamageByEntityEvent) event).getDamager ();
+                    if (attacker instanceof Player)
+                    {
+                        offender = (Player) attacker;
+                        message = offender.getItemInHand ().getType ().toString ();
+                    }
+                    break;
+                case PROJECTILE:
+                case MAGIC:
+                    if (((EntityDamageByEntityEvent) event).getDamager () instanceof Projectile)
+                    {
+                        Projectile projectile = (Projectile) ((EntityDamageByEntityEvent) event).getDamager ();
+                        attacker = projectile.getShooter ();
+                        if (attacker instanceof Player)
+                        {
+                            offender = (Player) attacker;
+                            message = event.getCause () == DamageCause.PROJECTILE ? projectile.getType ().toString () : "magic potion";
+                        }
+                    }
+                    break;
+                default:
             }
             if (offender != null && !CreeperPermissionManager.checkPermissions (offender, true, "bypass.pvp"))
             {
+                WorldConfig world = CreeperConfig.loadWorld (event.getEntity ().getWorld ());
                 boolean blocked = world.blockPvP;
                 if (blocked)
                     event.setCancelled (true);
