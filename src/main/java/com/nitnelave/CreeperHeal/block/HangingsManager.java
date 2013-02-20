@@ -62,6 +62,8 @@ public abstract class HangingsManager {
         Date time = new Date ();
         if (CreeperConfig.loadWorld (h.getWorld ()).isRepairTimed ())
             time = new Date (time.getTime () + 1200000);
+        if (burnt)
+            BurntBlockManager.recordBurntBlock (new CreeperBurntBlock (time, CreeperHanging.newHanging (h, time, true)));
         time = burnt ? new Date (time.getTime () + 1000 * CreeperConfig.waitBeforeHealBurnt + 10000) : new Date (time.getTime () + 1000
                 * CreeperConfig.waitBeforeHeal + 150000 * CreeperConfig.blockPerBlockInterval);
 

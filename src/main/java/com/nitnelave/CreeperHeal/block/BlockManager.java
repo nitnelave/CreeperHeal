@@ -259,8 +259,7 @@ public abstract class BlockManager {
     private static void cleanUp () {
         fallIndex.clean ();
 
-        Date now = new Date ();
-        Date delay = new Date (now.getTime () - 200 * CreeperConfig.blockPerBlockInterval);
+        Date delay = new Date (new Date ().getTime () - 200 * CreeperConfig.blockPerBlockInterval);
         Iterator<Date> iter;
         synchronized (updateIndex)
         {

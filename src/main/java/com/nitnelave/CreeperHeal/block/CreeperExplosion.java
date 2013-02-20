@@ -27,6 +27,9 @@ import com.nitnelave.CreeperHeal.utils.ShortLocation;
  * 
  */
 public class CreeperExplosion {
+    /**
+     * The time after which the block replacements begin.
+     */
     private final Date time;
     private final LinkedList<Replaceable> blockList;
     private final Location loc;
@@ -47,7 +50,7 @@ public class CreeperExplosion {
     public CreeperExplosion (List<Block> blocks, Location loc) {
         world = CreeperConfig.loadWorld (loc.getWorld ());
         timed = world.isRepairTimed ();
-        time = timed ? new Date (new Date ().getTime () + 1200000) : new Date ();
+        time = new Date (new Date ().getTime () + 1000 * CreeperConfig.waitBeforeHeal);
         blockList = new LinkedList<Replaceable> ();
         this.loc = loc;
 
@@ -268,9 +271,9 @@ public class CreeperExplosion {
      *         because it is not time.
      */
     public boolean checkReplace () {
-        Date now = new Date ();
-        Date after = new Date (time.getTime () + CreeperConfig.waitBeforeHeal * 1000);
-        if (after.before (now))
+        if (timed)
+            return true;
+        if (time.before (new Date ()))
         {
             if (CreeperConfig.blockPerBlock)
                 replace_one_block ();
@@ -279,8 +282,7 @@ public class CreeperExplosion {
             return true;
 
         }
-        else
-            return timed;
+        return false;
     }
 
     /**

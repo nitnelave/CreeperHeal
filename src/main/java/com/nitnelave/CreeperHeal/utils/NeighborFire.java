@@ -45,7 +45,7 @@ public class NeighborFire extends NeighborFinder<CreeperBurntBlock> {
     @Override
     public void clean () {
         Iterator<LinkedList<CreeperBurntBlock>> iter = map.values ().iterator ();
-        Date delay = new Date (new Date ().getTime () - 1000 * CreeperConfig.waitBeforeHealBurnt);
+        Date delay = new Date (new Date ().getTime () - 1000 * CreeperConfig.waitBeforeHealBurnt + 4000000 * CreeperConfig.blockPerBlockInterval);
         while (iter.hasNext ())
         {
             LinkedList<CreeperBurntBlock> list = iter.next ();
@@ -65,7 +65,12 @@ public class NeighborFire extends NeighborFinder<CreeperBurntBlock> {
 
     public void removeElement (CreeperBurntBlock cBlock) {
         Location l = cBlock.getLocation ();
-        removeElement (cBlock, l.getX (), l.getZ ());
+        removeElement (cBlock, l.getBlockX (), l.getBlockZ ());
+    }
+
+    public void addElement (CreeperBurntBlock b) {
+        Location l = b.getLocation ();
+        addElement (b, l.getBlockX (), l.getBlockZ ());
     }
 
 }

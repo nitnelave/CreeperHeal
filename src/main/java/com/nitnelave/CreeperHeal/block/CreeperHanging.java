@@ -23,6 +23,7 @@ public abstract class CreeperHanging implements Replaceable {
     private Date date;
     private final boolean fire;
     private boolean postPoned = false;
+    private final boolean timed;
     protected final Location location;
 
     /**
@@ -38,9 +39,10 @@ public abstract class CreeperHanging implements Replaceable {
      */
     protected CreeperHanging (Hanging hanging, Date time, boolean fire) {
         this.hanging = hanging;
-        date = time;
+        date = new Date (time.getTime () + 1000 * CreeperConfig.waitBeforeHealBurnt);
         this.fire = fire;
         location = computeLocation ();
+        timed = CreeperConfig.loadWorld (getWorld ()).isRepairTimed ();
     }
 
     public static CreeperHanging newHanging (Hanging hanging, Date time, boolean fire) {
@@ -148,6 +150,17 @@ public abstract class CreeperHanging implements Replaceable {
 
     @Override
     public void remove () {
+    }
+
+    public boolean checkReplace () {
+        if (timed)
+            return true;
+        if (date.before (new Date ()))
+        {
+            replace (false);
+            return true;
+        }
+        return false;
     }
 
 }
