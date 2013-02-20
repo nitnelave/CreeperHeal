@@ -16,9 +16,9 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
  * 
  */
 public class CreeperBurntBlock {
-    private Date time;
     private final Replaceable block;
-    private final boolean timed;
+    private final ReplacementTimer timer;
+    private boolean replaced = false;
 
     /**
      * Constructor.
@@ -30,32 +30,11 @@ public class CreeperBurntBlock {
      */
     public CreeperBurntBlock (Date now, Replaceable block) {
         this.block = block;
-        time = new Date (now.getTime () + 1000 * CreeperConfig.waitBeforeHealBurnt);
-        timed = block == null ? false : CreeperConfig.loadWorld (getWorld ()).isRepairTimed ();
+        timer = new ReplacementTimer (now, block == null ? false : CreeperConfig.loadWorld (getWorld ()).isRepairTimed ());
     }
 
     public CreeperBurntBlock (Date now, BlockState state) {
         this (now, CreeperBlock.newBlock (state));
-    }
-
-    /**
-     * Postpone the block's replacement.
-     * 
-     * @param delay
-     *            The amount of time to postpone by, in milliseconds.
-     */
-    public void postPone (int delay) {
-        time = new Date (time.getTime () + delay);
-    }
-
-    /**
-     * Get the recorded time.
-     * 
-     * @return The recorded time. Either the time the block was burnt or later
-     *         if the replacement has been delayed.
-     */
-    public Date getTime () {
-        return time;
     }
 
     public boolean replace (boolean shouldDrop) {
@@ -89,19 +68,36 @@ public class CreeperBurntBlock {
     }
 
     /**
-     * Check if the block should be repaired, and repair it.
+     * Postpone the replacement of the block.
      * 
-     * @return False if it is not time to replace it yet.
+     * @param delay
+     *            The amount of time to postpone by, in sec.
      */
+    public void postPone (int delay) {
+        if (!timer.postPone (delay))
+            block.drop ();
+    }
+
+    public Date getTime () {
+        return timer.getTime ();
+    }
+
     public boolean checkReplace () {
-        if (timed)
+        if (timer.isTimed ())
             return true;
-        if (time.before (new Date ()))
+        if (timer.checkReplace ())
         {
-            replace (false);
+            if (replace (false))
+                replaced = true;
+            else
+                postPone (CreeperConfig.waitBeforeHeal);
             return true;
         }
         return false;
+    }
+
+    public boolean wasReplaced () {
+        return replaced;
     }
 
 }

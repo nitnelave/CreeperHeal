@@ -1,7 +1,5 @@
 package com.nitnelave.CreeperHeal.block;
 
-import java.util.Date;
-
 import org.bukkit.Art;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
@@ -26,8 +24,8 @@ public class CreeperPainting extends CreeperHanging {
      * @param fire
      *            Whether the painting was burnt.
      */
-    public CreeperPainting (Painting painting, Date time, boolean fire) {
-        super (painting, time, fire);
+    public CreeperPainting (Painting painting) {
+        super (painting);
     }
 
     /*

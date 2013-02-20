@@ -185,7 +185,6 @@ public abstract class BlockManager {
             {
                 ExplodedBlockManager.forceReplace (w);
                 BurntBlockManager.forceReplaceBurnt (w);
-                HangingsManager.replaceHangings ();
             }
         }
     }
