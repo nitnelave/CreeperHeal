@@ -1,7 +1,5 @@
 package com.nitnelave.CreeperHeal.block;
 
-import java.util.Date;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -26,8 +24,8 @@ public class CreeperItemFrame extends CreeperHanging {
      * @param fire
      *            Whether the frame was destroyed by fire.
      */
-    public CreeperItemFrame (ItemFrame frame, Date time, boolean fire) {
-        super (frame, time, fire);
+    public CreeperItemFrame (ItemFrame frame) {
+        super (frame);
     }
 
     /*

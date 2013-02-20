@@ -30,13 +30,12 @@ public class CreeperExplosion {
     /**
      * The time after which the block replacements begin.
      */
-    private final Date time;
     private final LinkedList<Replaceable> blockList;
     private final Location loc;
     private final double radius;
     private final WorldConfig world;
-    private final boolean timed;
     private final HashSet<ShortLocation> checked = new HashSet<ShortLocation> ();
+    private final ReplacementTimer timer;
 
     /**
      * Constructor. Record every block in the list and remove them from the
@@ -49,8 +48,7 @@ public class CreeperExplosion {
      */
     public CreeperExplosion (List<Block> blocks, Location loc) {
         world = CreeperConfig.loadWorld (loc.getWorld ());
-        timed = world.isRepairTimed ();
-        time = new Date (new Date ().getTime () + 1000 * CreeperConfig.waitBeforeHeal);
+        timer = new ReplacementTimer (new Date (new Date ().getTime () + 1000 * CreeperConfig.waitBeforeHeal), world.isRepairTimed ());
         blockList = new LinkedList<Replaceable> ();
         this.loc = loc;
 
@@ -70,7 +68,7 @@ public class CreeperExplosion {
      * @return The time of the explosion.
      */
     public Date getTime () {
-        return time;
+        return timer.getTime ();
     }
 
     /*
@@ -154,7 +152,7 @@ public class CreeperExplosion {
         if (!(o instanceof CreeperExplosion))
             return false;
         CreeperExplosion e = (CreeperExplosion) o;
-        return e.time == time && e.loc == loc && e.radius == radius;
+        return e.timer == timer && e.loc == loc && e.radius == radius;
     }
 
     /*
@@ -163,7 +161,7 @@ public class CreeperExplosion {
      */
     @Override
     public int hashCode () {
-        return (int) (time.hashCode () + radius + loc.hashCode ());
+        return (int) (timer.hashCode () + radius + loc.hashCode ());
     }
 
     /*
@@ -264,6 +262,20 @@ public class CreeperExplosion {
     }
 
     /**
+     * Add a Replaceable to the list, and remove it from the world.
+     * 
+     * @param block
+     *            The Replaceable to add.
+     */
+    public void record (Replaceable block) {
+        if (block != null)
+        {
+            blockList.add (block);
+            block.remove ();
+        }
+    }
+
+    /**
      * Check if the explosion has blocks to repair, and repair them (or one of
      * them in case of block per block).
      * 
@@ -271,9 +283,9 @@ public class CreeperExplosion {
      *         because it is not time.
      */
     public boolean checkReplace () {
-        if (timed)
+        if (timer.isTimed ())
             return true;
-        if (time.before (new Date ()))
+        if (timer.checkReplace ())
         {
             if (CreeperConfig.blockPerBlock)
                 replace_one_block ();

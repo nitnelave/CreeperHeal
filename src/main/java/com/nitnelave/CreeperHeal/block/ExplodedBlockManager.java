@@ -1,7 +1,6 @@
 package com.nitnelave.CreeperHeal.block;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -11,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Hanging;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
@@ -37,6 +37,8 @@ public class ExplodedBlockManager {
      * Map of the explosions, if the plugin is not in lightweight mode.
      */
     private static NeighborExplosion explosionIndex;
+
+    private static List<CreeperHanging> hangingList = new LinkedList<CreeperHanging> ();
 
     static
     {
@@ -113,7 +115,6 @@ public class ExplodedBlockManager {
     public static void forceReplace (WorldConfig world) {
         removeExplosionsAround (world.getWorld ().getSpawnLocation (), Float.POSITIVE_INFINITY);
         BurntBlockManager.forceReplaceBurnt (world);
-        HangingsManager.replaceHangings ();
     }
 
     /**
@@ -151,6 +152,10 @@ public class ExplodedBlockManager {
 
         CreeperExplosion cEx = new CreeperExplosion (blocks, location);
 
+        for (CreeperHanging h : hangingList)
+            cEx.record (h);
+        hangingList.clear ();
+
         explosionList.add (cEx);
         if (!CreeperConfig.lightweightMode)
             explosionIndex.addElement (cEx, location.getX (), location.getZ ());
@@ -175,7 +180,6 @@ public class ExplodedBlockManager {
 
     }
 
-    //TODO: date.
     /**
      * Check to see if any block has to be replaced in the explosions.
      */
@@ -196,7 +200,7 @@ public class ExplodedBlockManager {
             else
                 break;
         }
-        HangingsManager.replaceHangings (new Date ());
+        //        HangingsManager.replaceHangings (new Date ());
 
     }
 
@@ -227,6 +231,15 @@ public class ExplodedBlockManager {
      */
     public static boolean isExplosionListEmpty () {
         return explosionList.isEmpty ();
+    }
+
+    public static void recordHanging (Hanging h) {
+        CreeperHanging hanging = CreeperHanging.newHanging (h);
+        if (hanging != null)
+        {
+            hangingList.add (hanging);
+            hanging.remove ();
+        }
     }
 
 }

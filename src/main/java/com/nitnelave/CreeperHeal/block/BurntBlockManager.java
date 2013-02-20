@@ -114,32 +114,19 @@ public abstract class BurntBlockManager {
             while (iter.hasNext ())
             {
                 CreeperBurntBlock cBlock = iter.next ();
-                Date time = cBlock.getTime ();
-                Block block = cBlock.getBlock ().getBlock ();
-                //TODO: clean up and date.
-                if ((new Date (time.getTime () + CreeperConfig.waitBeforeHealBurnt * 1000).before (now)))
+                if (cBlock.checkReplace ())
                 {
-                    if (CreeperBlock.isDependent (block.getTypeId ()))
+                    if (cBlock.wasReplaced ())
                     {
-                        if (!CreeperBlock.isSolid (block.getRelative (cBlock.getAttachingFace ().getOppositeFace ()).getTypeId ()))
-                            cBlock.postPone (CreeperConfig.waitBeforeHealBurnt * 1000);
-                        else
+                        iter.remove ();
+                        if (!CreeperConfig.lightweightMode)
                         {
-                            cBlock.replace (false);
-                            if (!CreeperConfig.lightweightMode)
-                                recentlyBurnt.put (cBlock.getLocation (), new Date (System.currentTimeMillis () + 1000 * CreeperConfig.waitBeforeBurnAgain));
-                            iter.remove ();
+                            fireIndex.removeElement (cBlock);
+                            recentlyBurnt.put (cBlock.getLocation (), new Date (now.getTime () + 1000 * CreeperConfig.waitBeforeBurnAgain));
                         }
                     }
-                    else
-                    {
-                        cBlock.replace (false);
-                        if (!CreeperConfig.lightweightMode)
-                            recentlyBurnt.put (cBlock.getLocation (), new Date (System.currentTimeMillis () + 1000 * CreeperConfig.waitBeforeBurnAgain));
-                        iter.remove ();
-                    }
                 }
-                else if (!CreeperBlock.isDependent (block.getTypeId ()))
+                else
                     break;
             }
         }

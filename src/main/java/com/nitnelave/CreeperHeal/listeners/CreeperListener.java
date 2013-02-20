@@ -1,5 +1,7 @@
 package com.nitnelave.CreeperHeal.listeners;
 
+import java.util.Date;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
@@ -13,8 +15,9 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
+import com.nitnelave.CreeperHeal.block.CreeperBurntBlock;
+import com.nitnelave.CreeperHeal.block.CreeperHanging;
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
-import com.nitnelave.CreeperHeal.block.HangingsManager;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
@@ -60,15 +63,15 @@ public class CreeperListener implements Listener {
         switch (event.getCause ())
         {
             case EXPLOSION:
-                HangingsManager.checkHanging (h, false);
+                ExplodedBlockManager.recordHanging (h);
                 break;
             case PHYSICS:
                 if (!CreeperConfig.lightweightMode && BurntBlockManager.isNextToFire (h.getLocation ()) && world.fire)
-                    HangingsManager.checkHanging (h, true);
+                    BurntBlockManager.recordBurntBlock (new CreeperBurntBlock (new Date (), CreeperHanging.newHanging (h)));
                 break;
             case OBSTRUCTION:
                 if (!CreeperConfig.lightweightMode && BurntBlockManager.isNextToFire (h.getLocation ()) && world.fire)
-                    HangingsManager.checkHanging (h, true);
+                    BurntBlockManager.recordBurntBlock (new CreeperBurntBlock (new Date (), CreeperHanging.newHanging (h)));
                 break;
             default:
         }
