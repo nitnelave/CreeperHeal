@@ -4,9 +4,10 @@ import java.util.Date;
 
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+
+import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 /**
  * This class represents a burnt block.
@@ -14,9 +15,10 @@ import org.bukkit.block.BlockState;
  * @author nitnelave
  * 
  */
-public class CreeperBurntBlock implements Replaceable {
+public class CreeperBurntBlock {
     private Date time;
-    private final CreeperBlock block;
+    private final Replaceable block;
+    private final boolean timed;
 
     /**
      * Constructor.
@@ -26,9 +28,14 @@ public class CreeperBurntBlock implements Replaceable {
      * @param block
      *            The burnt block.
      */
-    public CreeperBurntBlock (Date now, BlockState block) {
-        this.block = CreeperBlock.newBlock (block);
-        time = now;
+    public CreeperBurntBlock (Date now, Replaceable block) {
+        this.block = block;
+        time = new Date (now.getTime () + 1000 * CreeperConfig.waitBeforeHealBurnt);
+        timed = block == null ? false : CreeperConfig.loadWorld (getWorld ()).isRepairTimed ();
+    }
+
+    public CreeperBurntBlock (Date now, BlockState state) {
+        this (now, CreeperBlock.newBlock (state));
     }
 
     /**
@@ -37,7 +44,7 @@ public class CreeperBurntBlock implements Replaceable {
      * @param delay
      *            The amount of time to postpone by, in milliseconds.
      */
-    public void addTime (int delay) {
+    public void postPone (int delay) {
         time = new Date (time.getTime () + delay);
     }
 
@@ -51,51 +58,50 @@ public class CreeperBurntBlock implements Replaceable {
         return time;
     }
 
-    @Override
     public boolean replace (boolean shouldDrop) {
         return block.replace (shouldDrop);
     }
 
-    @Override
-    public Block getBlock () {
-        return block.getBlock ();
+    public Replaceable getBlock () {
+        return block;
     }
 
-    @Override
     public World getWorld () {
         return block.getWorld ();
     }
 
-    @Override
     public int getTypeId () {
         return block.getTypeId ();
     }
 
-    @Override
     public BlockFace getAttachingFace () {
         if (block != null)
             return block.getAttachingFace ();
         return BlockFace.SELF;
     }
 
-    @Override
     public Location getLocation () {
         return block.getLocation ();
     }
 
-    @Override
-    public boolean isDependent () {
-        return block.isDependent ();
-    }
-
-    @Override
-    public void drop () {
-        block.drop ();
-    }
-
-    @Override
     public void remove () {
         block.remove ();
+    }
+
+    /**
+     * Check if the block should be repaired, and repair it.
+     * 
+     * @return False if it is not time to replace it yet.
+     */
+    public boolean checkReplace () {
+        if (timed)
+            return true;
+        if (time.before (new Date ()))
+        {
+            replace (false);
+            return true;
+        }
+        return false;
     }
 
 }

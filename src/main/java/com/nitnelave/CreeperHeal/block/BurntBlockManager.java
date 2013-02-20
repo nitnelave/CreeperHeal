@@ -14,7 +14,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
@@ -116,13 +115,14 @@ public abstract class BurntBlockManager {
             {
                 CreeperBurntBlock cBlock = iter.next ();
                 Date time = cBlock.getTime ();
-                Block block = cBlock.getBlock ();
+                Block block = cBlock.getBlock ().getBlock ();
+                //TODO: clean up and date.
                 if ((new Date (time.getTime () + CreeperConfig.waitBeforeHealBurnt * 1000).before (now)))
                 {
                     if (CreeperBlock.isDependent (block.getTypeId ()))
                     {
                         if (!CreeperBlock.isSolid (block.getRelative (cBlock.getAttachingFace ().getOppositeFace ()).getTypeId ()))
-                            cBlock.addTime (CreeperConfig.waitBeforeHealBurnt * 1000);
+                            cBlock.postPone (CreeperConfig.waitBeforeHealBurnt * 1000);
                         else
                         {
                             cBlock.replace (false);
@@ -149,34 +149,11 @@ public abstract class BurntBlockManager {
      * If the block relative to the face is dependent on the main block, record
      * it.
      */
-    private static void recordAttachedBurntBlock (Block block, Date now, BlockFace face) {
-        BlockState block_up = block.getRelative (face).getState ();
-        CreeperBurntBlock cBB = new CreeperBurntBlock (new Date (now.getTime () + 100), block_up);
-        if (cBB.getAttachingFace () == rotateCClockWise (face))
-        {
-            burntList.add (cBB);
-            if (!CreeperConfig.lightweightMode)
-                fireIndex.addElement (cBB, cBB.getLocation ().getX (), cBB.getLocation ().getZ ());
-            block_up.getBlock ().setTypeIdAndData (0, (byte) 0, false);
-
-        }
-    }
-
-    /*
-     * Get the counter-clockwise face.
-     */
-    private static BlockFace rotateCClockWise (BlockFace face) {
-        switch (face)
-        {
-            case EAST:
-                return BlockFace.NORTH;
-            case NORTH:
-                return BlockFace.WEST;
-            case WEST:
-                return BlockFace.SOUTH;
-            default:
-                return BlockFace.EAST;
-        }
+    private static void recordAttachedBurntBlock (CreeperBlock block, BlockFace face) {
+        Block block_up = block.getBlock ().getRelative (face);
+        NeighborBlock neighbor = new NeighborBlock (block_up, face);
+        if (neighbor.isNeighbor ())
+            recordBurntBlock (new CreeperBurntBlock (new Date (new Date ().getTime () + 100), block_up.getState ()));
     }
 
     /**
@@ -188,18 +165,20 @@ public abstract class BurntBlockManager {
     public static void recordBurntBlock (Block block) {
         if (block.getType () != Material.TNT)
         {
-            Date now = new Date ();
-            BlockFace[] faces = {BlockFace.UP, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH};
-            for (BlockFace face : faces)
-                recordAttachedBurntBlock (block, now, face);
-            CreeperBurntBlock cBB = new CreeperBurntBlock (now, block.getState ());
-            burntList.add (cBB);
+            CreeperBlock b = CreeperBlock.newBlock (block.getState ());
+            for (BlockFace face : CreeperBlock.CARDINALS)
+                recordAttachedBurntBlock (b, face);
+            recordBurntBlock (new CreeperBurntBlock (new Date (), b));
+        }
+    }
+
+    public static void recordBurntBlock (CreeperBurntBlock block) {
+        if (block.getBlock () != null)
+        {
+            burntList.add (block);
             if (!(CreeperConfig.lightweightMode))
-            {
-                Location l = cBB.getLocation ();
-                fireIndex.addElement (cBB, l.getX (), l.getZ ());
-            }
-            block.setTypeIdAndData (0, (byte) 0, false);
+                fireIndex.addElement (block);
+            block.remove ();
         }
     }
 
