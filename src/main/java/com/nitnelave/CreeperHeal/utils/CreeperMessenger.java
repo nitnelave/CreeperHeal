@@ -232,7 +232,6 @@ public class CreeperMessenger {
 
     }
 
-
     /**
      * Remove a player from the list of players that are warned of an
      * infraction.
