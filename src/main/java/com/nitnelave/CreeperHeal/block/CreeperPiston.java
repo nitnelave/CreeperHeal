@@ -18,7 +18,7 @@ public class CreeperPiston extends CreeperBlock {
     /*
      * Constructor.
      */
-    protected CreeperPiston(BlockState blockState) {
+    protected CreeperPiston (BlockState blockState) {
         this.blockState = blockState;
         BlockFace face;
         switch (getRawData () & 7)
@@ -57,7 +57,7 @@ public class CreeperPiston extends CreeperBlock {
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#remove()
      */
     @Override
-    protected void remove () {
+    public void remove () {
         getBlock ().setType (Material.AIR);
         if (extended)
             getBlock ().getRelative (orientation).setType (Material.AIR);

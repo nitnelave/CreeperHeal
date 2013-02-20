@@ -71,7 +71,7 @@ public class CreeperBed extends CreeperBlock {
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#remove()
      */
     @Override
-    protected void remove () {
+    public void remove () {
         getBlock ().getRelative (orientation).setType (Material.AIR);
         getBlock ().setType (Material.AIR);
     }
