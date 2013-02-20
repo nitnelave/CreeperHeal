@@ -4,9 +4,7 @@ import java.util.Date;
 
 import org.bukkit.Art;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_4_R1.CraftWorld;
 import org.bukkit.entity.Painting;
 import org.bukkit.inventory.ItemStack;
 
@@ -84,22 +82,10 @@ public class CreeperPainting extends CreeperHanging {
     @Override
     public boolean replace (boolean shouldDrop) {
 
-        Block block = location.getBlock ().getRelative (hanging.getAttachedFace ());
-        CraftWorld w = (CraftWorld) block.getWorld ();
-
-        int dir = getIntDirection ();
-        Painting p = (Painting) hanging;
-        net.minecraft.server.v1_4_R1.EntityPainting paint = new net.minecraft.server.v1_4_R1.EntityPainting (w.getHandle (), block.getX (), block.getY (),
-                block.getZ (), dir);
-        net.minecraft.server.v1_4_R1.EnumArt[] array = net.minecraft.server.v1_4_R1.EnumArt.values ();
-        paint.art = array[p.getArt ().getId ()];
-        paint.setDirection (dir);
-        if (!paint.survives ())
-        {
-            paint = null;
-            return postpone ();
-        }
-        w.getHandle ().addEntity (paint);
+        Painting p = getWorld ().spawn (location.getBlock ().getRelative (hanging.getAttachedFace ()).getLocation (), Painting.class);
+        p.teleport (location);
+        p.setFacingDirection (hanging.getFacing (), true);
+        p.setArt (((Painting) hanging).getArt ());
         return true;
     }
 

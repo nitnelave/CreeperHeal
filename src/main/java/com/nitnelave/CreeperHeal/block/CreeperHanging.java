@@ -139,21 +139,6 @@ public abstract class CreeperHanging implements Replaceable {
     }
 
     /*
-     * public boolean replace(boolean shouldDrop) { Location loc =
-     * getAttachingBlock(); CreeperLog.displayBlockLocation(loc.getBlock(),
-     * false); World w = loc.getWorld(); if
-     * (Hanging.class.isAssignableFrom(Painting.class))
-     * CreeperLog.debug("stuff"); if (hanging instanceof Painting) { try{
-     * Painting p = w.spawn(loc, Painting.class); p.setArt(((Painting)
-     * hanging).getArt(), true); p.setFacingDirection(hanging.getFacing(),
-     * true); }catch (IllegalArgumentException e) { CreeperLog.debug("Noo!"); }
-     * } else if (hanging instanceof ItemFrame) { ItemFrame f = w.spawn(loc,
-     * ItemFrame.class); f.setItem(((ItemFrame) hanging).getItem());
-     * f.setRotation(((ItemFrame) hanging).getRotation());
-     * f.setFacingDirection(hanging.getFacing(), true); } return true; }
-     */
-
-    /*
      * (non-Javadoc)
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getBlock()
      */

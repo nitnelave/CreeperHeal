@@ -4,9 +4,7 @@ import java.util.Date;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_4_R1.CraftWorld;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.inventory.ItemStack;
 
@@ -47,25 +45,15 @@ public class CreeperItemFrame extends CreeperHanging {
      * (non-Javadoc)
      * @see com.nitnelave.CreeperHeal.block.Replaceable#replace(boolean)
      */
+    //TODO : frame position is not updated.
     @Override
     public boolean replace (boolean shouldDrop) {
+        ItemFrame f = getWorld ().spawn (location.getBlock ().getRelative (hanging.getAttachedFace ()).getLocation (), ItemFrame.class);
+        f.teleport (location);
+        f.setItem (((ItemFrame) hanging).getItem ());
+        f.setRotation (((ItemFrame) hanging).getRotation ());
+        f.setFacingDirection (hanging.getFacing (), true);
 
-        Block block = location.getBlock ().getRelative (hanging.getAttachedFace ());
-        CraftWorld w = (CraftWorld) block.getWorld ();
-
-        int dir = getIntDirection ();
-        ItemFrame f = (ItemFrame) hanging;
-        net.minecraft.server.v1_4_R1.EntityItemFrame frame = new net.minecraft.server.v1_4_R1.EntityItemFrame (w.getHandle (), block.getX (), block.getY (),
-                block.getZ (), dir);
-        net.minecraft.server.v1_4_R1.ItemStack stack = new net.minecraft.server.v1_4_R1.ItemStack (f.getItem ().getTypeId (), 1, 0);
-        frame.a (stack);
-        //TODO: set item rotation, direction
-        if (!frame.survives ())
-        {
-            frame = null;
-            return postpone ();
-        }
-        w.getHandle ().addEntity (frame);
         return true;
     }
 
