@@ -21,22 +21,22 @@ public class NeighborExplosion extends NeighborFinder<CreeperExplosion> {
     /*
      * (non-Javadoc)
      * @see
-     * com.nitnelave.CreeperHeal.utils.NeighborFinder#hasNeighbor(org.bukkit
+     * com.nitnelave.CreeperHeal.utils.NeighborFinder#getNeighbor(org.bukkit
      * .Location, java.util.LinkedList)
      */
     @Override
-    protected boolean hasNeighbor (Location loc, LinkedList<CreeperExplosion> list) {
+    protected CreeperExplosion getNeighbor (Location loc, LinkedList<CreeperExplosion> list) {
         if (list != null)
         {
             World w = loc.getWorld ();
-            for (CreeperExplosion cEx : list)
+            for (CreeperExplosion ex : list)
             {
-                Location l = cEx.getLocation ();
-                if (l.getWorld () == w && loc.distance (cEx.getLocation ()) < cEx.getRadius ())
-                    return true;
+                Location l = ex.getLocation ();
+                if (l.getWorld () == w && loc.distance (ex.getLocation ()) < ex.getRadius ())
+                    return ex;
             }
         }
-        return false;
+        return null;
     }
 
     /*

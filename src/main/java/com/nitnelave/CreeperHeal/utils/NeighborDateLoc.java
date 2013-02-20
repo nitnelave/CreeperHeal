@@ -20,19 +20,19 @@ public class NeighborDateLoc extends NeighborFinder<DateLoc> {
     /*
      * (non-Javadoc)
      * @see
-     * com.nitnelave.CreeperHeal.utils.NeighborFinder#hasNeighbor(org.bukkit
+     * com.nitnelave.CreeperHeal.utils.NeighborFinder#getNeighbor(org.bukkit
      * .Location, java.util.LinkedList)
      */
     @Override
-    protected boolean hasNeighbor (Location loc, LinkedList<DateLoc> list) {
+    protected DateLoc getNeighbor (Location loc, LinkedList<DateLoc> list) {
         if (list != null)
         {
             World w = loc.getWorld ();
             for (DateLoc dl : list)
                 if (dl.getWorld () == w && loc.distance (dl.getLocation ()) < 10)
-                    return true;
+                    return dl;
         }
-        return false;
+        return null;
     }
 
     /*
