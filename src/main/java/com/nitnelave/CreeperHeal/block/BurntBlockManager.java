@@ -185,7 +185,7 @@ public abstract class BurntBlockManager {
      * @param block
      *            The block to be recorded.
      */
-    public static void recordBurn (Block block) {
+    public static void recordBurntBlock (Block block) {
         if (block.getType () != Material.TNT)
         {
             Date now = new Date ();
