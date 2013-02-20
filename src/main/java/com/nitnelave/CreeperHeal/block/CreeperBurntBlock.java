@@ -93,4 +93,9 @@ public class CreeperBurntBlock implements Replaceable {
         block.drop ();
     }
 
+    @Override
+    public void remove () {
+        block.remove ();
+    }
+
 }

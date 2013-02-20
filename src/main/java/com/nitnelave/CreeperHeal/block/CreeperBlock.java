@@ -329,7 +329,8 @@ public class CreeperBlock implements Replaceable {
     /*
      * Remove the block recorded from the world.
      */
-    protected void remove () {
+    @Override
+    public void remove () {
         getBlock ().setType (Material.AIR);
     }
 

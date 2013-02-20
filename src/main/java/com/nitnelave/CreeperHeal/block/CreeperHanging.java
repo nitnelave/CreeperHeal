@@ -165,4 +165,9 @@ public abstract class CreeperHanging implements Replaceable {
         return true;
     }
 
+    @Override
+    public void remove () {
+
+    }
+
 }

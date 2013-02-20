@@ -23,28 +23,28 @@ public interface Replaceable {
      *            be postponed.
      * @return False if the replacement was postponed.
      */
-    public boolean replace(boolean shouldDrop);
+    public boolean replace (boolean shouldDrop);
 
     /**
      * Get the block represented.
      * 
      * @return The block represented.
      */
-    public Block getBlock();
+    public Block getBlock ();
 
     /**
      * Get the world containing the block.
      * 
      * @return The world containing the block.
      */
-    public World getWorld();
+    public World getWorld ();
 
     /**
      * Get the type id of the block represented.
      * 
      * @return The type id of the block represented.
      */
-    public int getTypeId();
+    public int getTypeId ();
 
     /**
      * Get the face the block is attached by. SELF if the block is not
@@ -73,4 +73,9 @@ public interface Replaceable {
      * Drop the item on the ground.
      */
     public void drop ();
+
+    /**
+     * Remove the block from the world.
+     */
+    public void remove ();
 }

@@ -59,7 +59,7 @@ public class CreeperDoor extends CreeperBlock {
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#remove()
      */
     @Override
-    protected void remove () {
+    public void remove () {
         getBlock ().setType (Material.AIR);
         getBlock ().getRelative (BlockFace.UP).setType (Material.AIR);
     }
