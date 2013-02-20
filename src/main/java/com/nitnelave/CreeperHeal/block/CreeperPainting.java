@@ -98,4 +98,13 @@ public class CreeperPainting extends CreeperHanging {
         getWorld ().dropItemNaturally (getLocation (), new ItemStack (321, 1));
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.nitnelave.CreeperHeal.block.Replaceable#getTypeId()
+     */
+    @Override
+    public int getTypeId () {
+        return 321;
+    }
+
 }

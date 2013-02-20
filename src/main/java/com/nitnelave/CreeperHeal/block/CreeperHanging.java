@@ -149,15 +149,6 @@ public abstract class CreeperHanging implements Replaceable {
 
     /*
      * (non-Javadoc)
-     * @see com.nitnelave.CreeperHeal.block.Replaceable#getTypeId()
-     */
-    @Override
-    public int getTypeId () {
-        return 0;
-    }
-
-    /*
-     * (non-Javadoc)
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getAttachingFace()
      */
     @Override
