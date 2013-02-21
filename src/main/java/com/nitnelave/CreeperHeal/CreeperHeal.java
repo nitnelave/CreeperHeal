@@ -5,7 +5,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
-import com.nitnelave.CreeperHeal.command.CreeperCommandManager;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.listeners.CreatureSpawnListener;
@@ -32,8 +31,6 @@ public class CreeperHeal extends JavaPlugin {
         instance = this;
 
         registerEvents ();
-
-        CreeperCommandManager.registerCommands ();
 
         CreeperLog.logInfo ("CreeperHeal v" + getDescription ().getVersion () + " enabled", 0);
     }

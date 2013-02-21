@@ -30,6 +30,33 @@ public class CreeperCommandManager implements CommandExecutor {
     private final static String green = ChatColor.GREEN.toString (), purple = ChatColor.DARK_PURPLE.toString ();
 
     /*
+     * Register commands.
+     */
+    static
+    {
+        CommandMap commandMap = null;
+        try
+        {
+            Field field = SimplePluginManager.class.getDeclaredField ("commandMap");
+            field.setAccessible (true);
+            commandMap = (CommandMap) (field.get (Bukkit.getServer ().getPluginManager ()));
+        } catch (NoSuchFieldException e)
+        {
+            e.printStackTrace ();
+        } catch (IllegalAccessException e)
+        {
+            e.printStackTrace ();
+        }
+
+        String[] aliases = {"CreeperHeal", CreeperConfig.alias};
+        CreeperCommand com = new CreeperCommand (aliases, "", "", new CreeperCommandManager ());
+
+        if (commandMap != null)
+            commandMap.register ("_", com);
+
+    }
+
+    /*
      * (non-Javadoc)
      * @see
      * org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender
@@ -329,29 +356,6 @@ public class CreeperCommandManager implements CommandExecutor {
             ExplodedBlockManager.replaceNear (target);
 
         }
-    }
-
-    public static void registerCommands () {
-        CommandMap commandMap = null;
-        try
-        {
-            Field field = SimplePluginManager.class.getDeclaredField ("commandMap");
-            field.setAccessible (true);
-            commandMap = (CommandMap) (field.get (Bukkit.getServer ().getPluginManager ()));
-        } catch (NoSuchFieldException e)
-        {
-            e.printStackTrace ();
-        } catch (IllegalAccessException e)
-        {
-            e.printStackTrace ();
-        }
-
-        String[] aliases = {"CreeperHeal", CreeperConfig.alias};
-        CreeperCommand com = new CreeperCommand (aliases, "", "", new CreeperCommandManager ());
-
-        if (commandMap != null)
-            commandMap.register ("_", com);
-
     }
 
     /*
