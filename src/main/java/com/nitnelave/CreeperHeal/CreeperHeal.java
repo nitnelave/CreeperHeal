@@ -24,6 +24,10 @@ public class CreeperHeal extends JavaPlugin {
 
     private static CreeperHeal instance;
 
+    /*
+     * (non-Javadoc)
+     * @see org.bukkit.plugin.java.JavaPlugin#onEnable()
+     */
     @Override
     public void onEnable () {
 
@@ -32,6 +36,9 @@ public class CreeperHeal extends JavaPlugin {
         registerEvents ();
     }
 
+    /*
+     * Register the listeners.
+     */
     private void registerEvents () {
         PluginManager pm = getServer ().getPluginManager ();
 
@@ -47,6 +54,10 @@ public class CreeperHeal extends JavaPlugin {
             pm.registerEvents (new GriefListener (), this);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see org.bukkit.plugin.java.JavaPlugin#onDisable()
+     */
     @Override
     public void onDisable () {
         for (WorldConfig w : CreeperConfig.world_config.values ())
@@ -56,6 +67,11 @@ public class CreeperHeal extends JavaPlugin {
         }
     }
 
+    /**
+     * Get the instance of the CreeperHeal plugin.
+     * 
+     * @return The instance of CreeperHeal.
+     */
     public static CreeperHeal getInstance () {
         return instance;
     }

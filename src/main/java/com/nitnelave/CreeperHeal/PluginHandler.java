@@ -87,14 +87,32 @@ public class PluginHandler {
         return playerHeads;
     }
 
+    /**
+     * Meant only for CreeperTrap to call, on plugin startup. Register
+     * CreeperTrap as enabled on the server.
+     */
     public static void setCreeperTrapEnabled () {
         creeperTrap = true;
     }
 
+    /**
+     * Get whether CreeperTrap is enabled or not.
+     * 
+     * @return True if CreeperTrap is enabled.
+     */
     public static boolean isCreeperTrapEnabled () {
         return creeperTrap;
     }
 
+    /**
+     * Forward a command to the CreeperTrap plugin.
+     * 
+     * @param sender
+     *            The command's sender.
+     * @param args
+     *            The command's arguments
+     * @return False in case of a syntax error in the command.
+     */
     public static boolean trapCommand (CommandSender sender, String[] args) {
         if (!isCreeperTrapEnabled ())
         {
