@@ -12,13 +12,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.SimplePluginManager;
 
-import com.nitnelave.CreeperHeal.CreeperTrapHandler;
+import com.nitnelave.CreeperHeal.PluginHandler;
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
-import com.nitnelave.CreeperHeal.economy.TransactionFailedException;
-import com.nitnelave.CreeperHeal.economy.VaultNotDetectedException;
 import com.nitnelave.CreeperHeal.utils.CreeperMessenger;
 import com.nitnelave.CreeperHeal.utils.CreeperPermissionManager;
 
@@ -39,9 +37,11 @@ public class CreeperCommandManager implements CommandExecutor {
      */
     @Override
     public boolean onCommand (CommandSender sender, Command command, String commandLabel, String[] args) {
-        //if it's just /ch, display help
         if (args.length != 0)
         {
+            String cmd = args[0];
+            if (cmd.equalsIgnoreCase ("trap"))
+                return PluginHandler.trapCommand (sender, args);
 
             boolean allWorlds = false;
             //the last argument can be a world
@@ -56,8 +56,6 @@ public class CreeperCommandManager implements CommandExecutor {
                     sender.sendMessage ("No world specified, defaulting to " + currentWorld.getName ());
                     allWorlds = true;
                 }
-
-            String cmd = args[0];
 
             if (cmd.equalsIgnoreCase ("creeper"))
                 currentWorld.creepers = booleanCmd (currentWorld.creepers, args, "Creepers explosions", sender);
@@ -91,46 +89,6 @@ public class CreeperCommandManager implements CommandExecutor {
 
             else if (cmd.equalsIgnoreCase ("trap"))
             {
-                if (!CreeperTrapHandler.isLoaded ())
-                {
-                    sender.sendMessage ("You have to install the CreeperTrap plugin to use traps");
-                    return true;
-                }
-                if (args.length == 2 && sender instanceof Player)
-                {
-                    if (args[1].equalsIgnoreCase ("create") || args[1].equalsIgnoreCase ("make"))
-                        try
-                    {
-                            CreeperTrapHandler.createTrap ((Player) sender);
-                    } catch (VaultNotDetectedException e)
-                    {
-                        sender.sendMessage (ChatColor.RED + "[CreeperTrap] Vault is required for all economy transactions");
-                        e.printStackTrace ();
-                    } catch (TransactionFailedException e)
-                    {
-                        sender.sendMessage (ChatColor.RED + "[CreeperTrap] Critical error in the transaction");
-                        e.printStackTrace ();
-                    }
-                    else if (args[1].equalsIgnoreCase ("remove") || args[1].equalsIgnoreCase ("delete"))
-                        CreeperTrapHandler.deleteTrap ((Player) sender);
-                    else if (args[1].equalsIgnoreCase ("removeall") || args[1].equalsIgnoreCase ("deleteall"))
-                        CreeperTrapHandler.deleteAllTraps (sender, ((Player) sender).getName ());
-                    else
-                        sender.sendMessage ("/ch trap (create|remove)");
-                }
-                else if (args.length > 1 && (args[1].equalsIgnoreCase ("removeall") || args[1].equalsIgnoreCase ("deleteall")))
-                {
-                    if (args.length == 3)
-                        CreeperTrapHandler.deleteAllTraps (sender, args[2]);
-                    else
-                        sender.sendMessage ("/ch trap removeAll (player)");
-                }
-                else if (!(sender instanceof Player))
-                    sender.sendMessage ("Player only command");
-                else
-                    //misused the command, display the help
-                    sender.sendMessage ("/ch trap (create|remove|removeall)");
-
             }
 
             else if (cmd.equalsIgnoreCase ("reload"))
@@ -202,7 +160,7 @@ public class CreeperCommandManager implements CommandExecutor {
             sender.sendMessage (green + "/ch healNear" + (healNear ? " (player)" : "") + " :" + purple + " Heals all explosions around"
                     + (healNear ? " the given player" : ""));
 
-        if (trap && !CreeperTrapHandler.isLoaded ())
+        if (trap && !PluginHandler.isCreeperTrapEnabled ())
             sender.sendMessage (getMessage ("plugin-help-traps", null, sender.getName (), null, null, null, null));
 
     }
@@ -330,8 +288,11 @@ public class CreeperCommandManager implements CommandExecutor {
 
     /**
      * Replace all explosions near a player.
-     * @param sender The sender. If it is the console, then the command is ignored.
-     * @param args The command arguments.
+     * 
+     * @param sender
+     *            The sender. If it is the console, then the command is ignored.
+     * @param args
+     *            The command arguments.
      */
     private void healNear (CommandSender sender, String[] args) {
         if (sender instanceof Player)

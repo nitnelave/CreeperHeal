@@ -3,6 +3,7 @@ package com.nitnelave.CreeperHeal;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.yi.acru.bukkit.Lockette.Lockette;
 
@@ -12,16 +13,16 @@ import com.griefcraft.lwc.LWCPlugin;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.FactionHandler;
-import com.nitnelave.CreeperTrap.CreeperTrap;
+import com.nitnelave.CreeperTrap.CreeperTrapCommands;
 
 public class PluginHandler {
 
-
     private static MobArenaHandler maHandler = null;
     private static LWC lwc = null;
-    private static boolean playerHeads = false;
+    private static boolean playerHeads = false, creeperTrap = false;
 
-    protected static void init () {
+    static
+    {
         Plugin lwcp = detectPlugin ("LWC");
         if (lwcp != null)
             lwc = ((LWCPlugin) lwcp).getLWC ();
@@ -30,10 +31,6 @@ public class PluginHandler {
 
         if (detectPlugin ("MobArena") != null)
             maHandler = new MobArenaHandler ();
-
-        Plugin cTrap = detectPlugin ("CreeperTrap");
-        if (cTrap != null)
-            new CreeperTrapHandler ((CreeperTrap) cTrap);
 
         FactionHandler.setFactionsEnabled (detectPlugin ("Factions") != null);
 
@@ -59,13 +56,13 @@ public class PluginHandler {
      * @return Whether the block is protected.
      */
     public static boolean isProtected (Block block) {
-        if(lwc!=null)
-            return lwc.findProtection(block) != null;
-        else if(CreeperConfig.lockette)
-            return Lockette.isProtected(block);
-        else return false;
+        if (lwc != null)
+            return lwc.findProtection (block) != null;
+        else if (CreeperConfig.lockette)
+            return Lockette.isProtected (block);
+        else
+            return false;
     }
-
 
     /**
      * Get whether the block is inside a mob arena.
@@ -74,10 +71,10 @@ public class PluginHandler {
      *            The location of the block.
      * @return Whether the block is inside an arena.
      */
-    public static boolean isInArena(Location location) {
-        if(maHandler != null)
-            if (maHandler.inRegion(location))
-                return true;		//Explosion inside a mob arena
+    public static boolean isInArena (Location location) {
+        if (maHandler != null)
+            if (maHandler.inRegion (location))
+                return true; //Explosion inside a mob arena
         return false;
     }
 
@@ -86,10 +83,25 @@ public class PluginHandler {
      * 
      * @return
      */
-    public static boolean isPlayerHeadsActivated() {
+    public static boolean isPlayerHeadsActivated () {
         return playerHeads;
     }
 
+    public static void setCreeperTrapEnabled () {
+        creeperTrap = true;
+    }
 
+    public static boolean isCreeperTrapEnabled () {
+        return creeperTrap;
+    }
+
+    public static boolean trapCommand (CommandSender sender, String[] args) {
+        if (!isCreeperTrapEnabled ())
+        {
+            sender.sendMessage ("You have to install the CreeperTrap plugin to use traps");
+            return true;
+        }
+        return CreeperTrapCommands.onCommand (sender, args);
+    }
 
 }

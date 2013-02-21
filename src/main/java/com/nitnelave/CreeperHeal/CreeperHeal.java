@@ -35,8 +35,6 @@ public class CreeperHeal extends JavaPlugin {
 
         CreeperCommandManager.registerCommands ();
 
-        PluginHandler.init ();
-
         CreeperLog.logInfo ("CreeperHeal v" + getDescription ().getVersion () + " enabled", 0);
     }
 

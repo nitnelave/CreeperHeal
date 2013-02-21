@@ -1,6 +1,6 @@
 name: CreeperHeal
 main: com.nitnelave.CreeperHeal.CreeperHeal
-version: 5.8.5
+version: 6.0
 author: nitnelave
 description: Replaces terrain destroyed by creeper explosions
 softdepend: [Vault, CreeperTrap, LWC, Lockette, MobArena, Factions, bPermissions, PlayerHeads]
@@ -9,6 +9,7 @@ softdepend: [Vault, CreeperTrap, LWC, Lockette, MobArena, Factions, bPermissions
 #    CreeperHeal:
 #        description: CreeperHeal commands
 #        usage: /<command> help
+#        alias: ch
 
 permissions:
     CreeperHeal.*:
@@ -16,34 +17,11 @@ permissions:
         children:
             CreeperHeal.admin: true
             CreeperHeal.heal: true
-            CreeperHeal.trap.*: true
     CreeperHeal.admin:
         description: Config and heal commands
         default: op
     CreeperHeal.heal:
         description: Heal explosions (heal and healBurnt commands)
-        default: op
-    CreeperHeal.trap.*:
-        description: Manage every trap (delete/create)
-        children:
-            CreeperHeal.trap.create: true
-            CreeperHeal.trap.remove.all: true
-            CreeperHeal.trap.bypass.fee: true
-            CreeperHeal.trap.bypass.maxTraps: true
-    CreeperHeal.trap.create:
-        description: Allows to create a trap
-        default: true
-    CreeperHeal.trap.remove.all:
-        description: Allows to remove any trap (owned by anyone)
-        default: op
-    CreeperHeal.trap.remove.own:
-        description: Allows to remove traps owned by you
-        default: true
-    CreeperHeal.trap.bypass.fee:
-        description: Allows you to buy a trap without paying the fee set in the config.
-        default: op
-    CreeperHeal.trap.bypass.maxTraps:
-        description: Allows you to have more than the maximum number of traps set in the config.
         default: op
     CreeperHeal.healNear.self:
         description: Heal explosions nearby (/ch healNear)
