@@ -13,7 +13,6 @@ import com.nitnelave.CreeperHeal.listeners.CreeperBlockListener;
 import com.nitnelave.CreeperHeal.listeners.CreeperListener;
 import com.nitnelave.CreeperHeal.listeners.FancyListener;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
-import com.nitnelave.CreeperHeal.utils.CreeperMessenger;
 
 /**
  * The main class of the CreeperHeal plugin. The main aim of this plugin is to
@@ -31,12 +30,6 @@ public class CreeperHeal extends JavaPlugin {
     public void onEnable () {
 
         instance = this;
-
-        new CreeperConfig (this);
-
-        new CreeperLog (this);
-
-        new CreeperMessenger (this);
 
         registerEvents ();
 
