@@ -30,39 +30,91 @@ public class CreeperBurntBlock {
      */
     public CreeperBurntBlock (Date now, Replaceable block) {
         this.block = block;
-        timer = new ReplacementTimer (now, block == null ? false : CreeperConfig.loadWorld (getWorld ()).isRepairTimed ());
+        boolean timed = block == null ? false : CreeperConfig.loadWorld (getWorld ()).isRepairTimed ();
+        timer = new ReplacementTimer (new Date (now.getTime () + 1000 * CreeperConfig.waitBeforeHealBurnt), timed);
     }
 
+    /**
+     * Constructor.
+     * 
+     * @param now
+     *            The date at which the block burnt.
+     * @param state
+     *            The blockState to be represented.
+     */
     public CreeperBurntBlock (Date now, BlockState state) {
         this (now, CreeperBlock.newBlock (state));
     }
 
+    /**
+     * Replace the block.
+     * 
+     * @param shouldDrop
+     *            If true, in case of failure, the replacement isn't postponed,
+     *            but the block is dropped.
+     * @return False if the replacement was postponed.
+     */
     public boolean replace (boolean shouldDrop) {
         return block.replace (shouldDrop);
     }
 
+    /**
+     * Get the Replaceable represented.
+     * 
+     * @return The Replaceable represented.
+     */
     public Replaceable getBlock () {
         return block;
     }
 
-    public World getWorld () {
+    /**
+     * Get the block's world.
+     * 
+     * @return The block's world.
+     * @throws NullPointerException
+     *             If the block is invalid.
+     */
+    public World getWorld () throws NullPointerException {
         return block.getWorld ();
     }
 
-    public int getTypeId () {
+    /**
+     * Get the block's type id.
+     * 
+     * @return The block's type id.
+     * @throws NullPointerException
+     *             If the block is invalid.
+     */
+    public int getTypeId () throws NullPointerException {
         return block.getTypeId ();
     }
 
+    /**
+     * Get the block's attaching face.
+     * 
+     * @return The block's attaching face, or BlockFace.SELF if the block is
+     *         invalid.
+     */
     public BlockFace getAttachingFace () {
         if (block != null)
             return block.getAttachingFace ();
         return BlockFace.SELF;
     }
 
-    public Location getLocation () {
+    /**
+     * Get the block's location.
+     * 
+     * @return The block's location.
+     * @throws NullPointerException
+     *             If the block is invalid.
+     */
+    public Location getLocation () throws NullPointerException {
         return block.getLocation ();
     }
 
+    /**
+     * Remove the block from the world.
+     */
     public void remove () {
         block.remove ();
     }
@@ -72,16 +124,31 @@ public class CreeperBurntBlock {
      * 
      * @param delay
      *            The amount of time to postpone by, in sec.
+     * @return True if the block was postponed, false otherwise.
      */
-    public void postPone (int delay) {
+    public boolean postPone (int delay) {
         if (!timer.postPone (delay))
+        {
             block.drop ();
+            return false;
+        }
+        return true;
     }
 
+    /**
+     * Get the time after which the block should be replaced.
+     * 
+     * @return The time.
+     */
     public Date getTime () {
         return timer.getTime ();
     }
 
+    /**
+     * Check if the block should be replaced, and replace it.
+     * 
+     * @return False if it is not time to replace it yet.
+     */
     public boolean checkReplace () {
         if (timer.isTimed ())
             return true;
@@ -96,6 +163,11 @@ public class CreeperBurntBlock {
         return false;
     }
 
+    /**
+     * Check if the block was already replaced.
+     * 
+     * @return True if the block was already replaced.
+     */
     public boolean wasReplaced () {
         return replaced;
     }

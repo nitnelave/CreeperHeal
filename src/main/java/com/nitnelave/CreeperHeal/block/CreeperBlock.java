@@ -214,10 +214,7 @@ public class CreeperBlock implements Replaceable {
         }
 
         if (!shouldDrop && isDependent (getTypeId ()) && isEmpty (getBlock ().getRelative (getAttachingFace ()).getTypeId ()))
-        {
-            delay_replacement ();
-            return true;
-        }
+            return false;
         else
             update ();
 
@@ -237,7 +234,7 @@ public class CreeperBlock implements Replaceable {
     /*
      * Delay the replacement of the block.
      */
-    private void delay_replacement () {
+    public void delayReplacement () {
         long delay = (long) Math.ceil ((double) CreeperConfig.blockPerBlockInterval / 20);
         Bukkit.getServer ().getScheduler ().scheduleSyncDelayedTask (CreeperHeal.getInstance (), new DelayReplacement (this, 0), delay);
     }

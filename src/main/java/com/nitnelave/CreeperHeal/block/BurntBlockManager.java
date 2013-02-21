@@ -76,7 +76,7 @@ public abstract class BurntBlockManager {
      * @param worldConfig
      *            The world in which to replace the blocks.
      */
-    public static void forceReplaceBurnt (WorldConfig worldConfig) { //replace all of the burnt blocks since "since"
+    public static void forceReplaceBurnt (WorldConfig worldConfig) {
         World world = Bukkit.getServer ().getWorld (worldConfig.getName ());
 
         synchronized (burntList)
@@ -87,7 +87,7 @@ public abstract class BurntBlockManager {
                 CreeperBurntBlock cBlock = iter.next ();
                 if (cBlock.getWorld () == world)
                 {
-                    cBlock.replace (false);
+                    cBlock.replace (true);
                     if (!CreeperConfig.lightweightMode)
                     {
                         recentlyBurnt.put (cBlock.getLocation (), new Date (System.currentTimeMillis () + 1000 * CreeperConfig.waitBeforeBurnAgain));
