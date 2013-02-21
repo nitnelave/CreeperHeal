@@ -89,7 +89,7 @@ public abstract class CreeperConfig {
 
         configVersion = configFile.getDouble ("config-version", 4);
         if (configVersion == 4)
-            ConfigUpdater.importFrom4 ();
+            ConfigUpdater.from4 ();
         else if (configVersion == 5)
         {
 

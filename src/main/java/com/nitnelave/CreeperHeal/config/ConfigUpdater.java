@@ -12,9 +12,9 @@ public class ConfigUpdater extends CreeperConfig {
 
     private final static String[] STRING_BOOLEAN_OPTIONS = {"true", "false", "time"};
 
-    protected static void importFrom4 () {
+    protected static void from4 () {
         log.info ("Importing config from version 4");
-        waitBeforeHeal = getInt (configFile, "wait-before-heal-explosions", 60); //tries to read the value directly from the config
+        waitBeforeHeal = getInt (configFile, "wait-before-heal-explosions", 60);
         logLevel = getInt (configFile, "verbose-level", 1);
         dropReplacedBlocks = getBoolean (configFile, "drop-overwritten-blocks", true);
         String tmp_str;
@@ -24,7 +24,7 @@ public class ConfigUpdater extends CreeperConfig {
         } catch (Exception e)
         {
             log.warning ("[CreeperHeal] Wrong value for replacement method field. Defaulting to block-per-block.");
-            log.info (e.getLocalizedMessage ());
+            log.info (e.getMessage ());
             tmp_str = "block-per-block";
         }
         if (!tmp_str.equalsIgnoreCase ("all-at-once") && !tmp_str.equalsIgnoreCase ("block-per-block"))
@@ -56,7 +56,7 @@ public class ConfigUpdater extends CreeperConfig {
         } catch (Exception e)
         {
             log.warning ("[CreeperHeal] Wrong value for chest protection field. Defaulting to no.");
-            log.info (e.getLocalizedMessage ());
+            log.info (e.getMessage ());
             tmp_str = "no";
         }
 
