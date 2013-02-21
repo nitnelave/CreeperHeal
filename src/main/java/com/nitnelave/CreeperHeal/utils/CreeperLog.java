@@ -12,8 +12,8 @@ import java.util.logging.Logger;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.plugin.java.JavaPlugin;
 
+import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 /**
@@ -22,7 +22,7 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
  * @author nitnelave
  * 
  */
-public class CreeperLog {
+public abstract class CreeperLog {
     /*
      * Log file, for outputting warnings to a file.
      */
@@ -41,14 +41,9 @@ public class CreeperLog {
      */
     private static boolean debug = false;
 
-    /**
-     * Constructor, to initialize the static log file and debug setting.
-     * 
-     * @param f
-     *            The output log file.
-     */
-    public CreeperLog (JavaPlugin plugin) {
-        File warningLogFile = new File (plugin.getDataFolder () + "/log.txt");
+    static
+    {
+        File warningLogFile = new File (CreeperHeal.getInstance ().getDataFolder () + "/log.txt");
         if (!warningLogFile.exists ())
             try
             {

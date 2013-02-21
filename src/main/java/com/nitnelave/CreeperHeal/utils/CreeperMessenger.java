@@ -19,6 +19,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperPlayer.WarningCause;
 
@@ -28,12 +29,11 @@ import com.nitnelave.CreeperHeal.utils.CreeperPlayer.WarningCause;
  * @author nitnelave
  * 
  */
-public class CreeperMessenger {
+public abstract class CreeperMessenger {
     /*
      * The plugin folder, to create the messages.properties file.
      */
-    private static File pluginFolder;
-    private static JavaPlugin plugin;
+    private static JavaPlugin plugin = CreeperHeal.getInstance ();
     /*
      * The properties generated from reading the messages file.
      */
@@ -45,15 +45,8 @@ public class CreeperMessenger {
 
     private static List<CreeperPlayer> warnList = Collections.synchronizedList (new LinkedList<CreeperPlayer> ());
 
-    /**
-     * Constructor. Loads the messages from the file.
-     * 
-     * @param file
-     * @param plugin
-     */
-    public CreeperMessenger (JavaPlugin plugin) {
-        CreeperMessenger.plugin = plugin;
-        pluginFolder = plugin.getDataFolder ();
+    static
+    {
         load ();
         populateWarnList ();
     }
@@ -63,7 +56,7 @@ public class CreeperMessenger {
      */
     private static void load () {
         prop = new Properties ();
-        File messageFile = new File (pluginFolder.getPath () + "/messages.properties");
+        File messageFile = new File (plugin.getDataFolder ().getPath () + "/messages.properties");
         try
         {
             if (!messageFile.exists ())

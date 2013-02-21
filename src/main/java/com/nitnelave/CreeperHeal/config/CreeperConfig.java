@@ -27,7 +27,7 @@ import com.nitnelave.CreeperHeal.block.BlockManager;
  * @author nitnelave
  * 
  */
-public class CreeperConfig {
+public abstract class CreeperConfig {
 
     private final static String[] STRING_BOOLEAN_OPTIONS = {"true", "false", "time"};
 
@@ -51,15 +51,9 @@ public class CreeperConfig {
 
     private static File yml, advanced;
 
-    /**
-     * Constructor. Load the configuration files into memory, and update them if
-     * necessary.
-     * 
-     * @param plugin
-     *            The CreeperHeal plugin.
-     */
-    public CreeperConfig (CreeperHeal instance) {
-        plugin = instance;
+    static
+    {
+        plugin = CreeperHeal.getInstance ();
         yml = new File (getDataFolder () + "/config.yml");
         advanced = new File (getDataFolder () + "/advanced.yml");
         configFile = new YamlConfiguration ();
@@ -440,14 +434,14 @@ public class CreeperConfig {
         WorldConfig returnValue = world_config.get (name);
         if (returnValue == null)
             try
-        {
+            {
                 returnValue = new WorldConfig (name, getDataFolder ());
                 world_config.put (name, returnValue);
-        } catch (Exception e)
-        {
-            log.severe ("[CreeperHeal] Could not load configuration for world : " + name);
-            log.severe (e.getMessage ());
-        }
+            } catch (Exception e)
+            {
+                log.severe ("[CreeperHeal] Could not load configuration for world : " + name);
+                log.severe (e.getMessage ());
+            }
         return returnValue;
     }
 
@@ -504,13 +498,13 @@ public class CreeperConfig {
             log.warning (e.getMessage ());
             if (outStream != null)
                 try
-            {
+                {
                     outStream.flush ();
                     outStream.close ();
-            } catch (IOException e1)
-            {
-                e1.printStackTrace ();
-            }
+                } catch (IOException e1)
+                {
+                    e1.printStackTrace ();
+                }
         }
     }
 
