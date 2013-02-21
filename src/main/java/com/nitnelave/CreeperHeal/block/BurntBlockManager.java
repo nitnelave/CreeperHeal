@@ -29,7 +29,6 @@ import com.nitnelave.CreeperHeal.utils.NeighborFire;
  */
 public abstract class BurntBlockManager {
 
-    //TODO: burnt blocks
     /*
      * The list of burnt blocks waiting to be replaced.
      */
@@ -100,8 +99,6 @@ public abstract class BurntBlockManager {
         }
     }
 
-    //TODO: The dates associated with blocks should all be the date at which they should be replaced.
-
     /**
      * Replace the burnt blocks that have disappeared for long enough.
      */
@@ -159,6 +156,13 @@ public abstract class BurntBlockManager {
         }
     }
 
+    /**
+     * Add a block to the list of burnt blocks to be replaced, and remove it
+     * from the world.
+     * 
+     * @param block
+     *            The block to add.
+     */
     public static void recordBurntBlock (CreeperBurntBlock block) {
         if (block.getBlock () != null)
         {
