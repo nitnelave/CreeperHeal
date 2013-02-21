@@ -338,6 +338,7 @@ public abstract class CreeperConfig {
         OutputStream outStream = null;
         try
         {
+            file.getParentFile ().mkdirs ();
             file.createNewFile ();
             InputStream templateIn = CreeperHeal.getInstance ().getResource (resource);
             outStream = new FileOutputStream (file);
