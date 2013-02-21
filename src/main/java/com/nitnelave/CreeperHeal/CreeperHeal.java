@@ -11,7 +11,6 @@ import com.nitnelave.CreeperHeal.listeners.CreatureSpawnListener;
 import com.nitnelave.CreeperHeal.listeners.CreeperBlockListener;
 import com.nitnelave.CreeperHeal.listeners.CreeperListener;
 import com.nitnelave.CreeperHeal.listeners.FancyListener;
-import com.nitnelave.CreeperHeal.utils.CreeperLog;
 
 /**
  * The main class of the CreeperHeal plugin. The main aim of this plugin is to
@@ -31,8 +30,6 @@ public class CreeperHeal extends JavaPlugin {
         instance = this;
 
         registerEvents ();
-
-        CreeperLog.logInfo ("CreeperHeal v" + getDescription ().getVersion () + " enabled", 0);
     }
 
     private void registerEvents () {
@@ -57,7 +54,6 @@ public class CreeperHeal extends JavaPlugin {
             ExplodedBlockManager.forceReplace (w); //replace blocks still in memory, so they are not lost
             BurntBlockManager.forceReplaceBurnt (w); //same for burnt_blocks
         }
-        CreeperLog.logInfo ("CreeperHeal Disabled", 0);
     }
 
     public static CreeperHeal getInstance () {
