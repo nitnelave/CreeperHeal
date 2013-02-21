@@ -137,7 +137,11 @@ public class CreeperExplosion {
         {
             return true;
         }
-        block.replace (false);
+        if (!block.replace (false))
+            if (block instanceof CreeperBlock)
+                ((CreeperBlock) block).delayReplacement ();
+            else
+                block.drop ();
         if (CreeperConfig.teleportOnSuffocate)
             BlockManager.checkPlayerOneBlock (block.getBlock ().getLocation ());
         return !blockList.isEmpty ();
