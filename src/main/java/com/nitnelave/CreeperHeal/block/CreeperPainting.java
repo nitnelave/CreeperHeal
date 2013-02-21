@@ -80,10 +80,16 @@ public class CreeperPainting extends CreeperHanging {
     @Override
     public boolean replace (boolean shouldDrop) {
 
-        Painting p = getWorld ().spawn (location.getBlock ().getRelative (hanging.getAttachedFace ()).getLocation (), Painting.class);
-        p.teleport (location);
-        p.setFacingDirection (hanging.getFacing (), true);
-        p.setArt (((Painting) hanging).getArt ());
+        try
+        {
+            Painting p = getWorld ().spawn (location.getBlock ().getRelative (hanging.getAttachedFace ()).getLocation (), Painting.class);
+            p.teleport (location);
+            p.setFacingDirection (hanging.getFacing (), true);
+            p.setArt (((Painting) hanging).getArt ());
+        } catch (IllegalArgumentException e)
+        {
+            return false;
+        }
         return true;
     }
 
