@@ -3,10 +3,7 @@ package com.nitnelave.CreeperHeal.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -17,9 +14,9 @@ import java.util.Properties;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
+import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperPlayer.WarningCause;
 
@@ -30,10 +27,6 @@ import com.nitnelave.CreeperHeal.utils.CreeperPlayer.WarningCause;
  * 
  */
 public abstract class CreeperMessenger {
-    /*
-     * The plugin folder, to create the messages.properties file.
-     */
-    private static JavaPlugin plugin = CreeperHeal.getInstance ();
     /*
      * The properties generated from reading the messages file.
      */
@@ -56,11 +49,11 @@ public abstract class CreeperMessenger {
      */
     private static void load () {
         prop = new Properties ();
-        File messageFile = new File (plugin.getDataFolder ().getPath () + "/messages.properties");
+        File messageFile = new File (CreeperHeal.getCHFolder ().getPath () + "/messages.properties");
         try
         {
             if (!messageFile.exists ())
-                createNewFile (messageFile);
+                FileUtils.copyJarConfig (messageFile);
 
             FileInputStream input = new FileInputStream (messageFile);
             prop.load (input);
@@ -72,34 +65,6 @@ public abstract class CreeperMessenger {
         } catch (IOException e)
         {
             CreeperLog.warning ("[CreeperHeal] Failed to read file: messages.properties");
-            e.printStackTrace ();
-        }
-    }
-
-    /*
-     * In case of missing file, create it and load the default file.
-     */
-    private static void createNewFile (File file) {
-        try
-        {
-            file.createNewFile ();
-            InputStream templateIn = plugin.getResource ("messages.properties");
-            OutputStream outStream = new FileOutputStream (file);
-
-            int read = 0;
-            byte[] bytes = new byte[1024];
-
-            while ((read = templateIn.read (bytes)) != -1)
-                outStream.write (bytes, 0, read);
-
-            templateIn.close ();
-            outStream.flush ();
-            outStream.close ();
-            CreeperLog.logInfo ("[CreeperHeal] Default config created", 1);
-
-        } catch (Exception e)
-        {
-            CreeperLog.warning ("[CreeperHeal] Failed to create file: messages.properties");
             e.printStackTrace ();
         }
     }
@@ -216,7 +181,7 @@ public abstract class CreeperMessenger {
     public static void warn (WarningCause cause, Player offender, boolean blocked, String material) {
         String message = CreeperMessenger.getMessage (cause, offender.getName (), offender.getWorld ().getName (), blocked, material, false);
         SimpleDateFormat f = new SimpleDateFormat ("HH:mm:ss");
-        if (CreeperConfig.logWarnings)
+        if (CreeperConfig.getBool (CfgVal.LOG_WARNINGS))
             CreeperLog.record ("[" + f.format (new Date ()) + "] " + ChatColor.stripColor (message));
         message = ChatColor.RED + message;
         offender.sendMessage (CreeperMessenger.getMessage (cause, offender.getName (), offender.getWorld ().getName (), blocked, material, true));

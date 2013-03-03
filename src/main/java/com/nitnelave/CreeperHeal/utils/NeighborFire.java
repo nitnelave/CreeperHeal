@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 import com.nitnelave.CreeperHeal.block.CreeperBurntBlock;
+import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 /**
@@ -45,7 +46,8 @@ public class NeighborFire extends NeighborFinder<CreeperBurntBlock> {
     @Override
     public void clean () {
         Iterator<LinkedList<CreeperBurntBlock>> iter = map.values ().iterator ();
-        Date delay = new Date (new Date ().getTime () - 1000 * CreeperConfig.waitBeforeHealBurnt + 4000000 * CreeperConfig.blockPerBlockInterval);
+        Date delay = new Date (new Date ().getTime () - 1000 * CreeperConfig.getInt (CfgVal.WAIT_BEFORE_HEAL_BURNT) + 4000000
+                * CreeperConfig.getInt (CfgVal.BLOCK_PER_BLOCK_INTERVAL));
         while (iter.hasNext ())
         {
             LinkedList<CreeperBurntBlock> list = iter.next ();

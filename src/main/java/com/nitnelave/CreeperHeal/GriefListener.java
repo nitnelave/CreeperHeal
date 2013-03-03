@@ -21,6 +21,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
+import com.nitnelave.CreeperHeal.config.WCfgVal;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperMessenger;
 import com.nitnelave.CreeperHeal.utils.CreeperPermissionManager;
@@ -39,21 +40,21 @@ public class GriefListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockPlace (BlockPlaceEvent event) {
         Player player = event.getPlayer ();
-        WorldConfig world = CreeperConfig.loadWorld (player.getWorld ());
+        WorldConfig world = CreeperConfig.getWorld (player.getWorld ());
         if (event.getBlockPlaced ().getType () == Material.TNT && !CreeperPermissionManager.checkPermissions (player, false, "bypass.place-tnt"))
         {
-            boolean blocked = world.blockTNT;
+            boolean blocked = world.getBool (WCfgVal.BLOCK_TNT);
             if (blocked)
                 event.setCancelled (true);
-            if (world.warnTNT)
+            if (world.getBool (WCfgVal.WARN_TNT))
                 CreeperMessenger.warn (CreeperPlayer.WarningCause.TNT, player, blocked, null);
         }
         else if (world.isGriefBlackListed (event.getBlock ()) && !CreeperPermissionManager.checkPermissions (player, false, "bypass.place-blacklist"))
         {
-            boolean blocked = world.griefBlockList;
+            boolean blocked = world.getBool (WCfgVal.GRIEF_BLOCK_BLACKLIST);
             if (blocked)
                 event.setCancelled (true);
-            if (world.warnBlackList)
+            if (world.getBool (WCfgVal.WARN_BLACKLIST))
                 CreeperMessenger.warn (CreeperPlayer.WarningCause.BLACKLIST, player, blocked, event.getBlockPlaced ().getType ().toString ());
         }
 
@@ -68,11 +69,11 @@ public class GriefListener implements Listener {
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockIgnite (BlockIgniteEvent event) {
-        WorldConfig world = CreeperConfig.loadWorld (event.getBlock ().getWorld ());
+        WorldConfig world = CreeperConfig.getWorld (event.getBlock ().getWorld ());
 
-        if (event.getCause () == IgniteCause.SPREAD && world.preventFireSpread)
+        if (event.getCause () == IgniteCause.SPREAD && world.getBool (WCfgVal.PREVENT_FIRE_SPREAD))
             event.setCancelled (true);
-        else if (event.getCause () == IgniteCause.LAVA && world.preventFireLava)
+        else if (event.getCause () == IgniteCause.LAVA && world.getBool (WCfgVal.PREVENT_FIRE_LAVA))
             event.setCancelled (true);
     }
 
@@ -87,12 +88,12 @@ public class GriefListener implements Listener {
     public void onBlockSpread (BlockSpreadEvent event) {
         if (!event.getBlock ().getType ().equals (Material.FIRE))
             return;
-        WorldConfig world = CreeperConfig.loadWorld (event.getBlock ().getWorld ());
+        WorldConfig world = CreeperConfig.getWorld (event.getBlock ().getWorld ());
 
         event.getBlock ().setTypeId (0);
         event.getSource ().setTypeId (0);
 
-        if (world.preventFireSpread)
+        if (world.getBool (WCfgVal.PREVENT_FIRE_SPREAD))
             event.setCancelled (true);
     }
 
@@ -133,11 +134,11 @@ public class GriefListener implements Listener {
             }
             if (offender != null && !offender.equals (attacked) && !CreeperPermissionManager.checkPermissions (offender, true, "bypass.pvp"))
             {
-                WorldConfig world = CreeperConfig.loadWorld (event.getEntity ().getWorld ());
-                boolean blocked = world.blockPvP;
+                WorldConfig world = CreeperConfig.getWorld (event.getEntity ().getWorld ());
+                boolean blocked = world.getBool (WCfgVal.BLOCK_PVP);
                 if (blocked)
                     event.setCancelled (true);
-                if (world.warnPvP)
+                if (world.getBool (WCfgVal.WARN_PVP))
                     CreeperMessenger.warn (CreeperPlayer.WarningCause.PVP, offender, blocked, message);
             }
         }
@@ -150,15 +151,16 @@ public class GriefListener implements Listener {
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerBucketEmpty (PlayerBucketEmptyEvent event) {
-        WorldConfig world = CreeperConfig.loadWorld (event.getPlayer ().getWorld ());
+        WorldConfig world = CreeperConfig.getWorld (event.getPlayer ().getWorld ());
 
         Player player = event.getPlayer ();
         if (event.getBucket () == Material.LAVA_BUCKET && !CreeperPermissionManager.checkPermissions (player, true, "bypass.place-lava"))
         {
-            if (world.blockLava)
+            boolean blocked = world.getBool (WCfgVal.BLOCK_LAVA);
+            if (blocked)
                 event.setCancelled (true);
-            if (world.warnLava)
-                CreeperMessenger.warn (CreeperPlayer.WarningCause.LAVA, player, world.blockLava, null);
+            if (world.getBool (WCfgVal.WARN_LAVA))
+                CreeperMessenger.warn (CreeperPlayer.WarningCause.LAVA, player, blocked, null);
         }
     }
 
@@ -175,23 +177,25 @@ public class GriefListener implements Listener {
             return;
 
         Player player = event.getPlayer ();
-        WorldConfig world = CreeperConfig.loadWorld (player.getWorld ());
+        WorldConfig world = CreeperConfig.getWorld (player.getWorld ());
 
         if (item.getType () == Material.MONSTER_EGG && !CreeperPermissionManager.checkPermissions (player, true, "bypass.spawnEgg"))
         {
             String entityType = EntityType.fromId (event.getItem ().getData ().getData ()).getName ();
 
-            if (world.blockSpawnEggs)
+            boolean blocked = world.getBool (WCfgVal.BLOCK_SPAWN_EGGS);
+            if (blocked)
                 event.setCancelled (true);
-            if (world.warnSpawnEggs)
-                CreeperMessenger.warn (CreeperPlayer.WarningCause.SPAWN_EGG, player, world.blockSpawnEggs, entityType);
+            if (world.getBool (WCfgVal.WARN_SPAWN_EGGS))
+                CreeperMessenger.warn (CreeperPlayer.WarningCause.SPAWN_EGG, player, blocked, entityType);
         }
         else if (item.getType () == Material.FLINT_AND_STEEL && !CreeperPermissionManager.checkPermissions (player, true, "bypass.ignite"))
         {
-            if (world.blockIgnite)
+            boolean blocked = world.getBool (WCfgVal.BLOCK_IGNITE);
+            if (blocked)
                 event.setCancelled (true);
-            if (world.warnIgnite)
-                CreeperMessenger.warn (CreeperPlayer.WarningCause.FIRE, player, world.blockIgnite, null);
+            if (world.getBool (WCfgVal.WARN_IGNITE))
+                CreeperMessenger.warn (CreeperPlayer.WarningCause.FIRE, player, blocked, null);
         }
     }
 

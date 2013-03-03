@@ -7,6 +7,7 @@ import org.bukkit.material.Attachable;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.block.Replaceable;
+import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 /**
@@ -36,8 +37,8 @@ public class DelayReplacement implements Runnable {
      *            The number of times a replacement has already been attempted.
      */
     public DelayReplacement (Replaceable replaceable, int replaced) {
-        this.blockState = replaceable;
-        this.counter = replaced + 1;
+        blockState = replaceable;
+        counter = replaced + 1;
     }
 
     /*
@@ -66,8 +67,10 @@ public class DelayReplacement implements Runnable {
      */
     private void delay_replacement () {
         counter++;
-        Bukkit.getServer ().getScheduler ()
-                .scheduleSyncDelayedTask (CreeperHeal.getInstance (), this, (long) Math.ceil ((double) CreeperConfig.blockPerBlockInterval / 20));
+        Bukkit.getServer ()
+                .getScheduler ()
+                .scheduleSyncDelayedTask (CreeperHeal.getInstance (), this,
+                        (long) Math.ceil ((double) CreeperConfig.getInt (CfgVal.BLOCK_PER_BLOCK_INTERVAL) / 20));
     }
 
 }

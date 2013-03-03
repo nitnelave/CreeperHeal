@@ -56,7 +56,7 @@ public class CreeperComparator implements Comparator<Replaceable> {
             return 1;
         else if (pos1 < pos2)
             return -1;
-        if (loc == null || CreeperConfig.lightweightMode)
+        if (loc == null || CreeperConfig.isLightWeight ())
             return 0;
         if (b1.getLocation ().distance (loc) < b2.getLocation ().distance (loc))
             return 1;

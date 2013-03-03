@@ -81,7 +81,7 @@ public class PluginHandler {
     /**
      * Get whether the plugin PlayerHeads is active on the server.
      * 
-     * @return
+     * @return True if PlayerHeads is activated.
      */
     public static boolean isPlayerHeadsActivated () {
         return playerHeads;

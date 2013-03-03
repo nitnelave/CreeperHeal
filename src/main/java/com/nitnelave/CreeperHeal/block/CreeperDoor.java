@@ -8,6 +8,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 
+import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 /**
@@ -35,16 +36,18 @@ public class CreeperDoor extends CreeperBlock {
      * (non-Javadoc)
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#update(boolean)
      */
+    //TODO: check for duplicate code.
     @Override
     public void update () {
         Block blockUp = blockState.getBlock ().getRelative (BlockFace.UP);
-        if (!CreeperConfig.overwriteBlocks && !EMPTY_BLOCKS.contains (blockUp.getTypeId ()))
+        if (!CreeperConfig.getBool (CfgVal.OVERWRITE_BLOCKS) && !EMPTY_BLOCKS.contains (blockUp.getTypeId ()))
         {
-            if (CreeperConfig.dropDestroyedBlocks)
+            if (CreeperConfig.getBool (CfgVal.DROP_DESTROYED_BLOCKS))
                 drop ();
             return;
         }
-        else if (CreeperConfig.overwriteBlocks && !EMPTY_BLOCKS.contains (blockUp.getTypeId ()) && CreeperConfig.dropDestroyedBlocks)
+        else if (CreeperConfig.getBool (CfgVal.OVERWRITE_BLOCKS) && !EMPTY_BLOCKS.contains (blockUp.getTypeId ())
+                && CreeperConfig.getBool (CfgVal.DROP_DESTROYED_BLOCKS))
         {
             CreeperBlock.newBlock (blockUp.getState ()).drop ();
             blockUp.setTypeIdAndData (0, (byte) 0, false);

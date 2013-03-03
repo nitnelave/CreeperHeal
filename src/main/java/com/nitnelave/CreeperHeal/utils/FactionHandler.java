@@ -6,6 +6,7 @@ import org.bukkit.block.Block;
 
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.FLocation;
+import com.nitnelave.CreeperHeal.config.WCfgVal;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 
 /**
@@ -41,10 +42,9 @@ public abstract class FactionHandler {
         if (!isFactionsEnabled)
             return false;
 
-        if (world.ignoreFactionsWilderness == world.ignoreFactionsTerritory)
-            return world.ignoreFactionsWilderness;
-
-        boolean wild = world.ignoreFactionsTerritory;
+        boolean wild = world.getBool (WCfgVal.FACTIONS_IGNORE_WILDERNESS), territory = world.getBool (WCfgVal.FACTIONS_IGNORE_TERRITORY);
+        if (wild == territory)
+            return wild;
 
         for (Block block : list)
             if (wild == Board.getFactionAt (new FLocation (block.getLocation ())).isNone ())

@@ -2,6 +2,7 @@ package com.nitnelave.CreeperHeal.block;
 
 import org.bukkit.block.BlockState;
 
+import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 /**
@@ -25,7 +26,7 @@ public class CreeperPhysicsBlock extends CreeperBlock {
      */
     @Override
     public void update () {
-        if (CreeperConfig.preventBlockFall)
+        if (CreeperConfig.getBool (CfgVal.PREVENT_BLOCK_FALL))
             BlockManager.putFallPrevention (getBlock ().getLocation ());
         blockState.update (true);
     }

@@ -3,6 +3,7 @@ package com.nitnelave.CreeperHeal.config;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import org.bukkit.Bukkit;
@@ -19,9 +20,11 @@ import org.bukkit.entity.TNTPrimed;
 import org.bukkit.entity.Wither;
 import org.bukkit.inventory.InventoryHolder;
 
+import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.PluginHandler;
 import com.nitnelave.CreeperHeal.block.BlockId;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
+import com.nitnelave.CreeperHeal.utils.FileUtils;
 
 /**
  * World configuration settings. Gathers all the settings for a given world.
@@ -30,16 +33,14 @@ import com.nitnelave.CreeperHeal.utils.CreeperLog;
  * 
  */
 public class WorldConfig {
+    //TODO: Apply the same system as the CreeperConfig.
 
-    public boolean enderman, replaceAbove, blockLava, blockTNT, blockIgnite, griefBlockList, grassToDirt, blockSpawnEggs, blockPvP, warnLava, warnTNT,
-            warnIgnite, warnBlackList, warnSpawnEggs, warnPvP, preventFireSpread, preventFireLava, creepers, tnt, fire, ghast, magical, dragons, wither,
-            ignoreFactionsWilderness, ignoreFactionsTerritory, whitePlaceList;
-    public String name;
-    public int repairTime, replaceLimit;
-    public HashSet<BlockId> blockBlackList = new HashSet<BlockId> (), placeList = new HashSet<BlockId> (), protectList = new HashSet<BlockId> (),
-            blockWhiteList = new HashSet<BlockId> ();
-    private File pluginFolder;
-    private YamlConfiguration config;
+    private final HashMap<String, ConfigValue<Boolean>> booleans = new HashMap<String, ConfigValue<Boolean>> ();
+    private final String name;
+    private IntegerConfigValue repairTime, replaceLimit;
+    private BlockIdListValue replaceBlackList, griefPlaceList, protectList, replaceWhiteList;
+    private final YamlConfiguration config = new YamlConfiguration (), advanced = new YamlConfiguration (), grief = new YamlConfiguration ();
+    private final File worldFolder, configFile, advancedFile, griefFile;
 
     /**
      * Main constructor. Load the config from the file, or create a default one
@@ -56,49 +57,56 @@ public class WorldConfig {
      * @throws InvalidConfigurationException
      *             Carry the exception from load.
      */
-    public WorldConfig (String name, File folder) throws FileNotFoundException, IOException, InvalidConfigurationException {
+    public WorldConfig (String name) {
         this.name = name;
-        if (folder != null)
-        {
-            pluginFolder = folder;
-            load ();
-        }
-        else
-        {
-            creepers = tnt = ghast = fire = wither = true;
-            magical = dragons = replaceAbove = enderman = blockLava = blockTNT = blockIgnite = griefBlockList = blockSpawnEggs = blockPvP = warnLava = warnTNT = warnIgnite = warnBlackList = warnSpawnEggs = warnPvP = preventFireSpread = preventFireLava = ignoreFactionsWilderness = ignoreFactionsTerritory = whitePlaceList = grassToDirt = false;
-            replaceLimit = 60;
-            repairTime = -1;
-        }
+        worldFolder = new File (CreeperHeal.getCHFolder ().getPath () + "/" + name);
+        configFile = new File (worldFolder + "/config.yml");
+        advancedFile = new File (worldFolder + "/advanced.yml");
+        griefFile = new File (worldFolder + "/grief.yml");
+        fillMaps ();
     }
 
-    /**
-     * Old constructor, kept for migration compatibility.
-     * 
-     * @param name
-     *            The world's name.
-     * @param l
-     *            The list of Objects corresponding to the settings.
-     */
-    @Deprecated
-    @SuppressWarnings("unchecked")
-    public WorldConfig (String name, Object... l) {
-        this.name = name;
-        creepers = (Boolean) l[0];
-        tnt = (Boolean) l[1];
-        ghast = (Boolean) l[2];
-        dragons = (Boolean) l[3];
-        magical = (Boolean) l[4];
-        fire = (Boolean) l[5];
-        enderman = (Boolean) l[6];
-        replaceAbove = (Boolean) l[7];
-        replaceLimit = (Integer) l[8];
-        blockBlackList = (HashSet<BlockId>) l[9];
-        repairTime = (Integer) l[10];
-        blockLava = blockTNT = blockIgnite = griefBlockList = blockSpawnEggs = blockPvP = warnLava = warnTNT = warnIgnite = warnBlackList = warnSpawnEggs = warnPvP = preventFireSpread = preventFireLava = ignoreFactionsWilderness = whitePlaceList = grassToDirt = ignoreFactionsTerritory = false;
-        wither = true;
-        placeList = new HashSet<BlockId> ();
-        protectList = new HashSet<BlockId> ();
+    private void fillMaps () {
+        for (WCfgVal v : WCfgVal.values ())
+            if (v.getDefaultValue () instanceof Boolean)
+                booleans.put (v.getKey (), new BooleanConfigValue (v, getFile (v)));
+            else
+                switch (v)
+                {
+                    case REPAIR_TIME:
+                        repairTime = new IntegerConfigValue (v, getFile (v));
+                        break;
+                    case REPLACE_LIMIT:
+                        replaceLimit = new IntegerConfigValue (v, getFile (v));
+                        break;
+                    case REPLACE_BLACK_LIST:
+                        replaceBlackList = new BlockIdListValue (v, getFile (v));
+                        break;
+                    case REPLACE_WHITE_LIST:
+                        replaceWhiteList = new BlockIdListValue (v, getFile (v));
+                        break;
+                    case GRIEF_PLACE_LIST:
+                        griefPlaceList = new BlockIdListValue (v, getFile (v));
+                        break;
+                    case PROTECTED_LIST:
+                        protectList = new BlockIdListValue (v, getFile (v));
+                        break;
+                    default:
+                        CreeperLog.warning ("Unknown config value : " + v.toString ());
+                }
+    }
+
+    private YamlConfiguration getFile (WCfgVal v) {
+        switch (v.getFile ())
+        {
+            case ADVANCED:
+                return advanced;
+            case CONFIG:
+                return config;
+            case GRIEF:
+                return grief;
+        }
+        return null;
     }
 
     /**
@@ -110,174 +118,82 @@ public class WorldConfig {
         return name;
     }
 
-    private String formatList (HashSet<BlockId> list) {
-        if (list.isEmpty ())
-            return "0";
-        StringBuilder b = new StringBuilder ();
-        for (BlockId block : list)
-        {
-            b.append (block.toString ());
-            b.append (", ");
-        }
-
-        String blocklist = b.toString ();
-        return blocklist.substring (0, blocklist.length () - 2);
-
-    }
-
     /**
      * Get whether the world has timed repairs enabled.
      * 
      * @return Whether the world has timed repairs enabled.
      */
     public boolean isRepairTimed () {
-        return repairTime > -1;
+        return repairTime.getValue () > -1;
     }
 
     /**
      * Load the config from the file.
-     * 
-     * @throws FileNotFoundException
-     *             If the config file is not found and could not be created.
-     * @throws IOException
-     *             If the config file could not be read.
-     * @throws InvalidConfigurationException
-     *             If the config file is not a valid YAML configuration file.
      */
-    public void load () throws FileNotFoundException, IOException, InvalidConfigurationException {
-        File configFile = new File (pluginFolder.getPath () + "/" + name + ".yml");
+    public void load () {
+        worldFolder.mkdirs ();
         if (!configFile.exists ())
-            CreeperConfig.copyJarConfig (configFile, "world.yml");
-        config = new YamlConfiguration ();
-        config.load (configFile);
+            FileUtils.copyJarConfig (configFile, "world.yml");
+        if (!advancedFile.exists ())
+            FileUtils.copyJarConfig (advancedFile, "world-advanced.yml");
+        if (!griefFile.exists ())
+            FileUtils.copyJarConfig (griefFile, "world-grief.yml");
+        try
+        {
+            config.load (configFile);
+            advanced.load (advancedFile);
+            grief.load (griefFile);
+        } catch (FileNotFoundException e)
+        {
+            e.printStackTrace ();
+            return;
+        } catch (IOException e)
+        {
+            e.printStackTrace ();
+            return;
+        } catch (InvalidConfigurationException e)
+        {
+            e.printStackTrace ();
+            return;
+        }
 
-        creepers = getBoolean ("replace.Creepers", true);
-        tnt = getBoolean ("replace.TNT", true);
-        ghast = getBoolean ("replace.Ghast", true);
-        dragons = getBoolean ("replace.Dragons", false);
-        magical = getBoolean ("replace.Magical", false);
-        fire = getBoolean ("replace.Fire", true);
-        enderman = getBoolean ("replace.Enderman", true);
-        replaceAbove = getBoolean ("replace.replace-above-limit-only", false);
-        replaceLimit = getInt ("replace.replace-limit", 64);
-        blockBlackList = loadList ("replace.restrict.blacklist");
-        blockWhiteList = loadList ("replace.restrict.whitelist");
-        protectList = loadList ("replace.protect-list");
-        repairTime = getInt ("replace.repair-time-of-day", -1);
-        wither = getBoolean ("replace.Wither", true);
-        ignoreFactionsWilderness = getBoolean ("replace.factions.ignore-wilderness", false);
-        ignoreFactionsTerritory = getBoolean ("replace.factions.ignore-territory", false);
-        grassToDirt = getBoolean ("replace.replace-grass-with-dirt", false);
-        blockLava = getBoolean ("grief.block.lava", false);
-        blockTNT = getBoolean ("grief.block.TNT", false);
-        blockIgnite = getBoolean ("grief.block.flint-and-steel", false);
-        griefBlockList = getBoolean ("grief.block.blacklist", false);
-        blockSpawnEggs = getBoolean ("grief.block.spawn-eggs", false);
-        blockPvP = getBoolean ("grief.block.PvP", false);
-        warnLava = getBoolean ("grief.warn.lava", false);
-        warnTNT = getBoolean ("grief.warn.TNT", false);
-        warnIgnite = getBoolean ("grief.warn.flint-and-steel", false);
-        warnBlackList = getBoolean ("grief.warn.blacklist", false);
-        warnSpawnEggs = getBoolean ("grief.warn.spawn-eggs", false);
-        warnPvP = getBoolean ("grief.warn.PvP", false);
-        preventFireSpread = getBoolean ("grief.prevent-fire-spread.fire", false);
-        preventFireLava = getBoolean ("grief.prevent-fire-spread.lava", false);
-        placeList = loadList ("grief.blacklist");
-        whitePlaceList = getBoolean ("grief.white-list", false);
+        for (ConfigValue<Boolean> v : booleans.values ())
+            v.load ();
+        repairTime.load ();
+        replaceLimit.load ();
+        replaceBlackList.load ();
+        replaceWhiteList.load ();
+        protectList.load ();
+        griefPlaceList.load ();
 
     }
 
     /**
      * Write the world's settings to the corresponding file.
-     * 
-     * @throws IOException
-     *             If the file could not be written.
      */
-    public void save () throws IOException {
-        set ("replace.Creepers", creepers);
-        set ("replace.TNT", tnt);
-        set ("replace.Ghast", ghast);
-        set ("replace.Dragons", dragons);
-        set ("replace.Magical", magical);
-        set ("replace.Fire", fire);
-        set ("replace.Enderman", enderman);
-        set ("replace.replace-above-limit-only", replaceAbove);
-        set ("replace.replace-limit", replaceLimit);
-        set ("replace.restrict.blacklist", formatList (blockBlackList));
-        set ("replace.restrict.whitelist", formatList (blockWhiteList));
-        set ("replace.protect-list", formatList (protectList));
-        set ("replace.repair-time-of-day", repairTime);
-        set ("replace.factions.ignore-wilderness", ignoreFactionsWilderness);
-        set ("replace.factions.ignore-territory", ignoreFactionsTerritory);
-        set ("replace.Wither", wither);
-        set ("replace.replace-grass-with-dirt", grassToDirt);
-        set ("grief.block.lava", blockLava);
-        set ("grief.block.TNT", blockTNT);
-        set ("grief.block.flint-and-steel", blockIgnite);
-        set ("grief.block.blacklist", griefBlockList);
-        set ("grief.block.spawn-eggs", blockSpawnEggs);
-        set ("grief.block.PvP", blockPvP);
-        set ("grief.warn.lava", warnLava);
-        set ("grief.warn.TNT", warnTNT);
-        set ("grief.warn.flint-and-steel", warnIgnite);
-        set ("grief.warn.blacklist", warnBlackList);
-        set ("grief.warn.spawn-eggs", warnSpawnEggs);
-        set ("grief.warn.PvP", warnPvP);
-        set ("grief.prevent-fire-spread.fire", preventFireSpread);
-        set ("grief.prevent-fire-spread.lava", preventFireLava);
-        set ("grief.blacklist", formatList (placeList));
-        set ("grief.white-list", whitePlaceList);
-        config.save (pluginFolder.getPath () + "/" + name + ".yml");
-    }
+    public void save () {
+        for (ConfigValue<Boolean> v : booleans.values ())
+            v.write ();
+        repairTime.write ();
+        replaceLimit.write ();
+        replaceBlackList.write ();
+        replaceWhiteList.write ();
+        protectList.write ();
+        griefPlaceList.write ();
 
-    private void set (String path, Object value) {
-        config.set (path, value);
-    }
-
-    private HashSet<BlockId> loadList (String path) {
-        HashSet<BlockId> returnList = new HashSet<BlockId> ();
         try
         {
-            String tmp_str1 = config.getString (path, "").trim ();
-            String[] split = tmp_str1.split (",");
-            for (String elem : split)
-            {
-                BlockId bId = new BlockId (elem);
-                if (bId.getId () != 0)
-                    returnList.add (bId);
-            }
-        } catch (NumberFormatException e)
+            config.save (configFile);
+            advanced.save (advancedFile);
+            grief.save (griefFile);
+        } catch (IOException e)
         {
-            CreeperLog.warning ("[CreeperHeal] Wrong values for " + path + " field for world " + name);
-            returnList.clear ();
+            e.printStackTrace ();
         }
-        return returnList;
     }
 
-    private int getInt (String path, int def) {
-        int tmp;
-        try
-        {
-            tmp = config.getInt (path, def);
-        } catch (Exception e)
-        {
-            CreeperLog.warning ("[CreeperHeal] Wrong value for " + path + " field in world " + name + ". Defaulting to " + Integer.toString (def));
-            tmp = def;
-        }
-        return tmp;
-    }
-
-    private boolean getBoolean (String path, boolean def) {
-        boolean tmp;
-        try
-        {
-            tmp = config.getBoolean (path, def);
-        } catch (Exception e)
-        {
-            CreeperLog.warning ("[CreeperHeal] Wrong value for " + path + " field in world " + name + ". Defaulting to " + Boolean.toString (def));
-            tmp = def;
-        }
-        return tmp;
+    public boolean getBool (WCfgVal v) {
+        return booleans.get (v.getKey ()).getValue ();
     }
 
     /**
@@ -289,13 +205,14 @@ public class WorldConfig {
      */
     public boolean shouldReplace (Entity entity) {
         if (entity != null)
-            if (entity instanceof Creeper && creepers || entity instanceof TNTPrimed && tnt || entity instanceof Fireball && ghast)
+            if (entity instanceof Creeper && getBool (WCfgVal.CREEPERS) || entity instanceof TNTPrimed && getBool (WCfgVal.TNT) || entity instanceof Fireball
+                    && getBool (WCfgVal.GHAST))
                 return isAbove (entity.getLocation ());
             else if (entity instanceof EnderDragon)
-                return dragons;
+                return getBool (WCfgVal.DRAGONS);
             else if (entity instanceof Wither)
-                return wither;
-        return magical;
+                return getBool (WCfgVal.WITHER);
+        return getBool (WCfgVal.MAGICAL);
     }
 
     /**
@@ -308,7 +225,7 @@ public class WorldConfig {
      *         replacement is not enabled.
      */
     public boolean isAbove (Location loc) {
-        return !replaceAbove || loc.getBlockY () >= replaceLimit;
+        return !getBool (WCfgVal.REPLACE_ABOVE) || loc.getBlockY () >= replaceLimit.getValue ();
     }
 
     /**
@@ -319,21 +236,9 @@ public class WorldConfig {
      * @return Whether the block's type is protected.
      */
     public boolean isProtected (Block block) {
-        return protectList.contains (new BlockId (block))
-                || (block.getState () instanceof InventoryHolder && (CreeperConfig.replaceAllChests || CreeperConfig.replaceProtectedChests
-                        && PluginHandler.isProtected (block)));
-    }
-
-    protected void migrate6to7 () {
-        set ("grief.allow-spawn-wither", null);
-        set ("replace.replace-all-TNT-blocks", null);
-        set ("use-restrict-list", null);
-        HashSet<BlockId> set = loadList ("replace.restrict-list");
-        if (getBoolean ("replace.white-block-list", false))
-            blockWhiteList = set;
-        else
-            blockBlackList = set;
-        set ("replace.restrict-list", null);
+        return protectList.getValue ().contains (new BlockId (block))
+                || (block.getState () instanceof InventoryHolder && CreeperConfig.getBool (CfgVal.REPLACE_PROTECTED_CHESTS) && PluginHandler
+                        .isProtected (block));
     }
 
     /**
@@ -343,8 +248,10 @@ public class WorldConfig {
      * @return Whether any grief protection is enabled.
      */
     public boolean hasGriefProtection () {
-        return blockLava || blockIgnite || blockPvP || blockSpawnEggs || blockTNT || warnIgnite || warnLava || warnPvP || warnSpawnEggs || warnTNT
-                || !placeList.isEmpty ();
+        return getBool (WCfgVal.BLOCK_LAVA) || getBool (WCfgVal.BLOCK_IGNITE) || getBool (WCfgVal.BLOCK_PVP) || getBool (WCfgVal.BLOCK_SPAWN_EGGS)
+                || getBool (WCfgVal.BLOCK_TNT) || getBool (WCfgVal.WARN_IGNITE) || getBool (WCfgVal.WARN_LAVA) || getBool (WCfgVal.WARN_PVP)
+                || getBool (WCfgVal.WARN_SPAWN_EGGS) || getBool (WCfgVal.WARN_TNT)
+                || (!griefPlaceList.getValue ().isEmpty () && (getBool (WCfgVal.GRIEF_BLOCK_BLACKLIST) || getBool (WCfgVal.WARN_BLACKLIST)));
     }
 
     /**
@@ -355,10 +262,78 @@ public class WorldConfig {
      * @return Whether the block is blacklisted.
      */
     public boolean isGriefBlackListed (Block block) {
-        return placeList.contains (new BlockId (block)) ^ whitePlaceList;
+        return griefPlaceList.getValue ().contains (new BlockId (block));
     }
 
     public World getWorld () {
         return Bukkit.getWorld (name);
+    }
+
+    /**
+     * Set the boolean value associated with the key.
+     * 
+     * @param val
+     *            The key
+     * @param value
+     *            The value.
+     */
+    public void setBool (WCfgVal val, boolean value) {
+        ConfigValue<Boolean> v = booleans.get (val.getKey ());
+        if (v == null)
+            throw new NullPointerException ("Unknown config key path : " + val.getKey ());
+        v.setValue (value);
+    }
+
+    /**
+     * Set the boolean value associated with the key.
+     * 
+     * @param val
+     *            The key
+     * @param value
+     *            The value.
+     */
+    public void setInt (WCfgVal val, int value) {
+        switch (val)
+        {
+            case REPAIR_TIME:
+                repairTime.setValue (value);
+                break;
+            case REPLACE_LIMIT:
+                replaceLimit.setValue (value);
+                break;
+            default:
+                CreeperLog.warning ("Wrong key type : " + val.toString ());
+        }
+    }
+
+    protected void setList (WCfgVal val, HashSet<BlockId> value) {
+        switch (val)
+        {
+            case REPLACE_BLACK_LIST:
+                replaceBlackList.setValue (value);
+                break;
+            case REPLACE_WHITE_LIST:
+                replaceWhiteList.setValue (value);
+                break;
+            case PROTECTED_LIST:
+                protectList.setValue (value);
+                break;
+            case GRIEF_PLACE_LIST:
+                griefPlaceList.setValue (value);
+                break;
+            default:
+                CreeperLog.warning ("Wrong key type : " + val.toString ());
+        }
+    }
+
+    public int getRepairTime () {
+        return repairTime.getValue ();
+    }
+
+    public boolean isBlackListed (BlockId id) {
+        if (getBool (WCfgVal.USE_REPLACE_WHITE_LIST))
+            return !replaceWhiteList.getValue ().contains (id);
+        else
+            return replaceBlackList.getValue ().contains (id);
     }
 }

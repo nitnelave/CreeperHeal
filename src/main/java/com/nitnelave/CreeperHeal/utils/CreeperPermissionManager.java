@@ -8,6 +8,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
+import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 import de.bananaco.bpermissions.api.ApiLayer;
@@ -53,6 +54,7 @@ public class CreeperPermissionManager {
         return vaultPerms != null;
     }
 
+    //TODO: rework that part, remove Vault use.
     /**
      * Check if a player has certain permissions.
      * 
@@ -75,7 +77,7 @@ public class CreeperPermissionManager {
             for (String node : nodes)
                 if (ApiLayer.hasPermission (player.getWorld ().getName (), CalculableType.USER, player.getName (), "CreeperHeal." + node))
                     return true;
-            if (CreeperConfig.opEnforce && !warning)
+            if (CreeperConfig.getBool (CfgVal.OP_ENFORCE) && !warning)
                 return player.isOp ();
 
         }
@@ -87,7 +89,7 @@ public class CreeperPermissionManager {
                 if (vaultPerms.has (player, "CreeperHeal." + node))
                     return true;
 
-            if (CreeperConfig.opEnforce && !warning)
+            if (CreeperConfig.getBool (CfgVal.OP_ENFORCE) && !warning)
                 return player.isOp ();
         }
 
@@ -100,7 +102,7 @@ public class CreeperPermissionManager {
                     return true;
             if (player.hasPermission ("CreeperHeal.*"))
                 return true;
-            if (CreeperConfig.opEnforce && !warning)
+            if (CreeperConfig.getBool (CfgVal.OP_ENFORCE) && !warning)
                 return player.isOp ();
         }
         return false;

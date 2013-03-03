@@ -16,6 +16,7 @@ import com.nitnelave.CreeperHeal.block.BlockManager;
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.block.CreeperBlock;
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
+import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 /**
@@ -41,7 +42,7 @@ public class FancyListener implements Listener {
         else if (b.getType () == Material.VINE
                 && (ExplodedBlockManager.isNextToExplosion (b.getLocation ()) || BurntBlockManager.isNextToFire (b.getLocation ())))
             event.setCancelled (true);
-        else if (CreeperConfig.preventBlockFall && CreeperBlock.hasPhysics (b.getTypeId ()))
+        else if (CreeperConfig.getBool (CfgVal.PREVENT_BLOCK_FALL) && CreeperBlock.hasPhysics (b.getTypeId ()))
         {
             Location bLoc = b.getLocation ();
             if (BlockManager.isNextToFallPrevention (bLoc) || ExplodedBlockManager.isNextToExplosion (bLoc) || BurntBlockManager.isNextToFire (bLoc))

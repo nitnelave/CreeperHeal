@@ -2,10 +2,8 @@ package com.nitnelave.CreeperHeal.config;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +16,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.block.BlockManager;
+import com.nitnelave.CreeperHeal.utils.CreeperLog;
+import com.nitnelave.CreeperHeal.utils.FileUtils;
 
 /**
  * Configuration management class.
@@ -27,282 +27,233 @@ import com.nitnelave.CreeperHeal.block.BlockManager;
  */
 public abstract class CreeperConfig {
 
-    /**
-     * Config settings
-     */
+    protected static final int CONFIG_VERSION = 8;
 
-    public static int waitBeforeHeal, logLevel = -42, blockPerBlockInterval, waitBeforeHealBurnt, dropChance, distanceNear, obsidianChance, obsidianRadius,
-            waitBeforeBurnAgain;
-    public static boolean dropReplacedBlocks, blockPerBlock, teleportOnSuffocate, dropDestroyedBlocks, crackDestroyedBricks, lockette, replaceAllChests,
-            replaceProtectedChests, overwriteBlocks, preventBlockFall, lightweightMode, opEnforce, logWarnings, preventChainReaction, explodeObsidian, debug,
-            grief;
+    private static int configVersion = CONFIG_VERSION;
+    private static final File CONFIG_FILE = new File (CreeperHeal.getCHFolder () + "/config.yml"), ADVANCED_FILE = new File (CreeperHeal.getCHFolder ()
+            + "/advanced.yml");
 
-    public static String alias;
-    public static double configVersion;
-
-    public static Map<String, WorldConfig> world_config = Collections.synchronizedMap (new HashMap<String, WorldConfig> ());
-    protected static YamlConfiguration advancedFile;
-
-    protected static YamlConfiguration configFile;
-    protected static final Logger log = Logger.getLogger ("Minecraft");
-
-    protected static File yml, advanced;
+    protected static final Logger LOG = Logger.getLogger ("Minecraft");
+    protected static final Map<String, WorldConfig> world_config = Collections.synchronizedMap (new HashMap<String, WorldConfig> ());
+    protected static final Map<String, ConfigValue<Boolean>> booleans = new HashMap<String, ConfigValue<Boolean>> ();
+    protected static final Map<String, ConfigValue<Integer>> integers = new HashMap<String, ConfigValue<Integer>> ();
+    protected static final YamlConfiguration config = new YamlConfiguration (), advanced = new YamlConfiguration ();
+    protected static ConfigValue<String> alias;
+    public static boolean lockette;
 
     static
     {
-        yml = new File (getDataFolder () + "/config.yml");
-        advanced = new File (getDataFolder () + "/advanced.yml");
-        configFile = new YamlConfiguration ();
-        advancedFile = new YamlConfiguration ();
-
-        if (!new File (getDataFolder ().toString ()).exists ())
-            new File (getDataFolder ().toString ()).mkdir ();
-
-        if (!yml.exists ())
-        {
-            log.warning ("[CreeperHeal] Config file not found, creating default.");
-            copyJarConfig (yml, "config.yml"); //write the config with the default values.
-        }
-
+        fillMaps ();
         load ();
-        write ();
+    }
 
+    /*
+     * Put the config values in the maps, with the default values.
+     */
+    private static void fillMaps () {
+        booleans.clear ();
+        integers.clear ();
+        for (CfgVal v : CfgVal.values ())
+            if (v.getDefaultValue () instanceof Boolean)
+                booleans.put (v.getKey (), new BooleanConfigValue (v, getFile (v)));
+            else if (v.getDefaultValue () instanceof Integer)
+                integers.put (v.getKey (), new IntegerConfigValue (v, getFile (v)));
+            else if (v == CfgVal.ALIAS)
+                alias = new StringConfigValue (v, getFile (v));
+            else
+                CreeperLog.warning ("Unknown config value : " + v.toString ());
+
+    }
+
+    private static YamlConfiguration getFile (CfgVal v) {
+        return v.isAdvanced () ? advanced : config;
+    }
+
+    /**
+     * Get the boolean value associated with the CfgVal.
+     * 
+     * @param val
+     *            The config key.
+     * @return The boolean value.
+     */
+    public static boolean getBool (CfgVal val) {
+        ConfigValue<Boolean> v = booleans.get (val.getKey ());
+        if (v == null)
+            throw new NullPointerException ("Missing config value : " + val.getKey ());
+        return v.getValue ();
+    }
+
+    /**
+     * Get the int value associated with the CfgVal.
+     * 
+     * @param val
+     *            The config key.
+     * @return The int value.
+     */
+    public static int getInt (CfgVal val) {
+        ConfigValue<Integer> v = integers.get (val.getKey ());
+        if (v == null)
+            throw new NullPointerException ("Missing config value : " + val.getKey ());
+        return v.getValue ();
+    }
+
+    /**
+     * Set the boolean value associated with the key.
+     * 
+     * @param val
+     *            The key
+     * @param value
+     *            The value.
+     */
+    public static void setBool (CfgVal val, boolean value) {
+        ConfigValue<Boolean> v = booleans.get (val.getKey ());
+        if (v == null)
+            throw new NullPointerException ("Unknown config key path : " + val.getKey ());
+        v.setValue (value);
+    }
+
+    /**
+     * Set the int value associated with the key.
+     * 
+     * @param val
+     *            The key
+     * @param value
+     *            The value.
+     */
+    public static void setInt (CfgVal val, int value) {
+        ConfigValue<Integer> v = integers.get (val.getKey ());
+        if (v == null)
+            throw new NullPointerException ("Unknown config key path : " + val.getKey ());
+        v.setValue (value);
+    }
+
+    /*
+     * Load a file, with all the checks that go with this.
+     */
+    private static void loadFile (YamlConfiguration conf, File f) {
+        try
+        {
+            conf.load (f);
+        } catch (FileNotFoundException e1)
+        {
+            FileUtils.copyJarConfig (f);
+            try
+            {
+                conf.load (f);
+            } catch (Exception e)
+            {
+                e.printStackTrace ();
+                return;
+            }
+        } catch (IOException e1)
+        {
+            e1.printStackTrace ();
+            return;
+        } catch (InvalidConfigurationException e1)
+        {
+            CreeperLog.warning ("Invalid configuration : " + f.getName () + " is not a valid YAML file.");
+            return;
+        }
     }
 
     /**
      * Load/reload the main and advanced configuration.
      */
     public static void load () {
-        try
+        if (!CONFIG_FILE.exists ())
         {
-            configFile.load (new File (getDataFolder () + "/config.yml"));
-        } catch (FileNotFoundException e1)
-        {
-            e1.printStackTrace ();
-        } catch (IOException e1)
-        {
-            e1.printStackTrace ();
-        } catch (InvalidConfigurationException e1)
-        {
-            e1.printStackTrace ();
+            FileUtils.copyJarConfig (CONFIG_FILE);
+            FileUtils.copyJarConfig (ADVANCED_FILE);
         }
-
-        configVersion = configFile.getDouble ("config-version", 4);
-        if (configVersion == 4)
-            ConfigUpdater.from4 ();
-        else if (configVersion == 5)
+        else
         {
-
-            blockPerBlockInterval = getInt (configFile, "replacement.block-per-block.interval", 20);
-            waitBeforeHeal = getInt (configFile, "replacement.wait-before-heal.explosions", 60); //tries to read the value directly from the config
-            blockPerBlock = getBoolean (configFile, "replacement.block-per-block", true);
-            waitBeforeHealBurnt = getInt (configFile, "replacement.wait-before-heal.fire", 45);
-            crackDestroyedBricks = getBoolean (configFile, "replacement.crack-destroyed-bricks", false);
-            replaceAllChests = getBoolean (configFile, "replacement.ignore-chests.all", false);
-            replaceProtectedChests = getBoolean (configFile, "replacement.ignore-chests.protected", false);
-            logLevel = getInt (configFile, "advanced.verbose-level", 1);
-            dropReplacedBlocks = getBoolean (configFile, "advanced.replacement-conflict.drop-overwritten-blocks", true);
-            teleportOnSuffocate = getBoolean (configFile, "advanced.teleport-when-buried", true);
-            dropDestroyedBlocks = getBoolean (configFile, "advanced.drop-destroyed-blocks.enabled", true);
-            dropChance = getInt (configFile, "advanced.drop-destroyed-blocks.chance", 100);
-            opEnforce = getBoolean (configFile, "advanced.op-have-all-permissions", true);
-            overwriteBlocks = getBoolean (configFile, "advanced.replacement-conflict.overwrite", true);
-            preventBlockFall = getBoolean (configFile, "advanced.prevent-block-fall", true);
-            distanceNear = getInt (configFile, "advanced.distance-near", 20);
-            lightweightMode = getBoolean (configFile, "advanced.lightweight-mode", false);
-            alias = configFile.getString ("advanced.command-alias", "ch");
-            logWarnings = getBoolean (configFile, "advanced.log-warnings", true);
-            preventChainReaction = getBoolean (configFile, "advanced.prevent-chain-reaction", false);
-            explodeObsidian = getBoolean (configFile, "advanced.obsidian.explode", false);
-            obsidianRadius = getInt (configFile, "advanced.obsidian.radius", 5);
-            obsidianChance = getInt (configFile, "advanced.obsidian.chance", 20);
-            debug = getBoolean (configFile, "advanced.debug-messages", false);
-            waitBeforeBurnAgain = 240;
-            configVersion = 6;
-            set (configFile, "config-version", 6);
-            set (configFile, "replacement", null);
-            set (configFile, "advanced", null);
-
-            if (!advanced.exists ())
+            loadFile (config, CONFIG_FILE);
+            configVersion = config.getInt ("config-version", 4);
+            if (configVersion < CONFIG_VERSION)
+                ConfigUpdater.importFrom (configVersion);
+            else
             {
-                log.warning ("[CreeperHeal] Migrating to config v 6");
-                copyJarConfig (advanced, "advanced.yml"); //write the config with the default values.
+                if (!ADVANCED_FILE.exists ())
+                    FileUtils.copyJarConfig (ADVANCED_FILE);
+                loadFile (advanced, ADVANCED_FILE);
+                for (ConfigValue<Boolean> v : booleans.values ())
+                    v.load ();
+                for (ConfigValue<Integer> v : integers.values ())
+                    v.load ();
+                alias.load ();
             }
-            write ();
-
-        }
-        else if (configVersion >= 6)
-        {
-
-            blockPerBlockInterval = getInt (configFile, "block-per-block.interval", 20);
-            waitBeforeHeal = getInt (configFile, "wait-before-heal.explosions", 60); //tries to read the value directly from the config
-            blockPerBlock = getBoolean (configFile, "block-per-block.enabled", true);
-            waitBeforeHealBurnt = getInt (configFile, "wait-before-heal.fire", 45);
-            crackDestroyedBricks = getBoolean (configFile, "crack-destroyed-bricks", false);
-            replaceAllChests = getBoolean (configFile, "ignore-chests.all", false);
-            replaceProtectedChests = getBoolean (configFile, "ignore-chests.protected", false);
-
-            if (!advanced.exists ())
-            {
-                log.warning ("[CreeperHeal] Advanced config file not found, creating default.");
-                copyJarConfig (advanced, "advanced.yml"); //write the config with the default values.
-            }
-
-            try
-            {
-                advancedFile.load (advanced);
-            } catch (Exception e)
-            {
-                log.severe ("Error loading advanced configuration file");
-                e.printStackTrace ();
-            }
-            logLevel = getInt (advancedFile, "verbose-level", 1);
-            dropReplacedBlocks = getBoolean (advancedFile, "replacement-conflict.drop-overwritten-blocks", true);
-            teleportOnSuffocate = getBoolean (advancedFile, "teleport-when-buried", true);
-            dropDestroyedBlocks = getBoolean (advancedFile, "drop-destroyed-blocks.enabled", true);
-            dropChance = getInt (advancedFile, "drop-destroyed-blocks.chance", 100);
-            opEnforce = getBoolean (advancedFile, "op-have-all-permissions", true);
-            overwriteBlocks = getBoolean (advancedFile, "replacement-conflict.overwrite", true);
-            preventBlockFall = getBoolean (advancedFile, "prevent-block-fall", true);
-            distanceNear = getInt (advancedFile, "distance-near", 20);
-            lightweightMode = getBoolean (advancedFile, "lightweight-mode", false);
-            alias = advancedFile.getString ("command-alias", "ch");
-            logWarnings = getBoolean (advancedFile, "log-warnings", true);
-            preventChainReaction = getBoolean (advancedFile, "prevent-chain-reaction", false);
-            explodeObsidian = getBoolean (advancedFile, "obsidian.explode", false);
-            obsidianRadius = getInt (advancedFile, "obsidian.radius", 5);
-            obsidianChance = getInt (advancedFile, "obsidian.chance", 20);
-            debug = getBoolean (advancedFile, "debug-messages", false);
-            waitBeforeBurnAgain = getInt (advancedFile, "wait-before-burn-again", 240);
-            set (configFile, "config-version", 7);
-            if (configVersion == 6)
-                log.warning ("[CreeperHeal] Migrating to config v 7");
+            config.set ("config-version", CONFIG_VERSION);
+            configVersion = CONFIG_VERSION;
             write ();
         }
 
-        boolean timeRepairs = false;
+        loadWorlds ();
+    }
+
+    /*
+     * Load every world detected.
+     */
+    private static void loadWorlds () {
         world_config.clear ();
         try
         {
             for (World w : Bukkit.getServer ().getWorlds ())
             {
-                String name = w.getName ();
-                WorldConfig world = new WorldConfig (name, getDataFolder ());
-                if (configVersion == 6)
-                    world.migrate6to7 ();
-                world_config.put (name, world);
-                timeRepairs = timeRepairs || world.repairTime > -1;
-                grief = grief || world.hasGriefProtection ();
+                WorldConfig world = loadWorld (w.getName ());
+                world_config.put (w.getName (), world);
             }
         } catch (Exception e)
         {
-            log.severe ("[CreeperHeal] Could not load world configurations");
-            log.severe (e.getMessage ());
+            CreeperLog.severe ("[CreeperHeal] Could not load world configurations");
+            CreeperLog.severe (e.getMessage ());
         }
-        configVersion = 7;
+    }
 
-        if (timeRepairs)
+    /*
+     * Load a world, and return the loaded world.
+     */
+    private static WorldConfig loadWorld (String name) {
+        WorldConfig w;
+        if (configVersion < CONFIG_VERSION)
+            w = WorldConfigImporter.importFrom (name, configVersion);
+        else
+        {
+            w = new WorldConfig (name);
+            w.load ();
+        }
+        if (w.isRepairTimed ())
             BlockManager.scheduleTimeRepairs ();
-
-    }
-
-    protected static boolean getBoolean (YamlConfiguration config, String path, boolean def) { //read a boolean from the config
-        boolean tmp;
-        try
-        {
-            tmp = config.getBoolean (path, def);
-        } catch (Exception e)
-        {
-            log.warning ("[CreeperHeal] Wrong value for " + path + " field in file " + config.getName () + ". Defaulting to " + Boolean.toString (def));
-            tmp = def;
-        }
-        return tmp;
-    }
-
-    protected static int getInt (YamlConfiguration config, String path, int def) {
-        int tmp;
-        try
-        {
-            tmp = config.getInt (path, def);
-        } catch (Exception e)
-        {
-            log.warning ("[CreeperHeal] Wrong value for " + path + " field in file " + config.getName () + ". Defaulting to " + Integer.toString (def));
-            tmp = def;
-        }
-        return tmp;
+        if (w.hasGriefProtection ())
+            CreeperHeal.registerGriefEvents ();
+        return w;
     }
 
     /**
      * Save the main and advanced configuration to the file.
      */
     public static void write () {
-        if (!yml.exists ())
-        {
-            new File (getDataFolder ().toString ()).mkdir ();
-            try
-            {
-                yml.createNewFile ();
-            } catch (IOException ex)
-            {
-                log.warning ("[CreeperHeal] Cannot create file " + yml.getPath ());
-            }
-        }
+        if (!CONFIG_FILE.exists () && !FileUtils.createNewFile (CONFIG_FILE) || !ADVANCED_FILE.exists () && !FileUtils.createNewFile (ADVANCED_FILE))
+            return;
 
-        if (!advanced.exists ())
-        {
-            new File (getDataFolder ().toString ()).mkdir ();
-            try
-            {
-                advanced.createNewFile ();
-            } catch (IOException ex)
-            {
-                log.warning ("[CreeperHeal] Cannot create file " + advanced.getPath ());
-            }
-        }
+        for (ConfigValue<Boolean> v : booleans.values ())
+            v.write ();
 
-        set (configFile, "wait-before-heal.explosions", waitBeforeHeal);
-        set (configFile, "wait-before-heal.fire", waitBeforeHealBurnt);
-        set (configFile, "block-per-block.enabled", blockPerBlock);
-        set (configFile, "block-per-block.interval", blockPerBlockInterval);
-        set (configFile, "ignore-chests.all", replaceAllChests);
-        set (configFile, "ignore-chests.protected", replaceProtectedChests);
-        set (configFile, "crack-destroyed-bricks", crackDestroyedBricks);
-        set (advancedFile, "replacement-conflict.overwrite", overwriteBlocks);
-        set (advancedFile, "replacement-conflict.drop-overwritten-blocks", dropReplacedBlocks);
-        set (advancedFile, "drop-destroyed-blocks.enabled", dropDestroyedBlocks);
-        set (advancedFile, "drop-destroyed-blocks.chance", dropChance);
-        set (advancedFile, "teleport-when-buried", teleportOnSuffocate);
-        set (advancedFile, "verbose-level", logLevel);
-        set (advancedFile, "op-have-all-permissions", opEnforce);
-        set (advancedFile, "prevent-block-fall", preventBlockFall);
-        set (advancedFile, "distance-near", distanceNear);
-        set (advancedFile, "lightweight-mode", lightweightMode);
-        set (advancedFile, "command-alias", alias);
-        set (advancedFile, "prevent-chain-reaction", preventChainReaction);
-        set (advancedFile, "log-warnings", logWarnings);
-        set (configFile, "config-version", configVersion);
-        set (advancedFile, "obsidian.explode", explodeObsidian);
-        set (advancedFile, "obsidian.radius", obsidianRadius);
-        set (advancedFile, "obsidian.chance", obsidianChance);
-        set (advancedFile, "debug-messages", debug);
-        set (advancedFile, "wait-before-burn-again", waitBeforeBurnAgain);
-        ConfigUpdater.removeOldWorldConfig ();
+        for (ConfigValue<Integer> v : integers.values ())
+            v.write ();
+
+        alias.write ();
+        config.set ("config-version", CONFIG_VERSION);
 
         try
         {
             for (WorldConfig w : world_config.values ())
                 w.save ();
-            configFile.save (yml);
-            advancedFile.save (advanced);
+            config.save (CONFIG_FILE);
+            advanced.save (ADVANCED_FILE);
         } catch (IOException e)
         {
             e.printStackTrace ();
         }
-
-    }
-
-    protected static void set (YamlConfiguration config, String string, Object o) {
-        config.set (string, o);
     }
 
     /**
@@ -313,61 +264,39 @@ public abstract class CreeperConfig {
      *            The world to load.
      * @return The world configuration file.
      */
-    public static WorldConfig loadWorld (World world) {
+    public static WorldConfig getWorld (World world) {
+        return getWorld (world.getName ());
+    }
 
-        String name = world.getName ();
+    public static WorldConfig getWorld (String name) {
         WorldConfig returnValue = world_config.get (name);
         if (returnValue == null)
             try
             {
-                returnValue = new WorldConfig (name, getDataFolder ());
+                returnValue = loadWorld (name);
                 world_config.put (name, returnValue);
             } catch (Exception e)
             {
-                log.severe ("[CreeperHeal] Could not load configuration for world : " + name);
-                log.severe (e.getMessage ());
+                LOG.severe ("[CreeperHeal] Could not load configuration for world : " + name);
+                e.printStackTrace ();
             }
         return returnValue;
     }
 
-    private static File getDataFolder () {
-        return CreeperHeal.getInstance ().getDataFolder ();
+    protected static void setAlias (String cmdAlias) {
+        alias.setValue (cmdAlias);
     }
 
-    protected static void copyJarConfig (File file, String resource) {
-        OutputStream outStream = null;
-        try
-        {
-            file.getParentFile ().mkdirs ();
-            file.createNewFile ();
-            InputStream templateIn = CreeperHeal.getInstance ().getResource (resource);
-            outStream = new FileOutputStream (file);
+    public static String getAlias () {
+        return alias.getValue ();
+    }
 
-            int read = 0;
-            byte[] bytes = new byte[1024];
+    public static Collection<WorldConfig> getWorlds () {
+        return world_config.values ();
+    }
 
-            while ((read = templateIn.read (bytes)) != -1)
-                outStream.write (bytes, 0, read);
-
-            templateIn.close ();
-            outStream.flush ();
-            outStream.close ();
-            log.info ("[CreeperHeal] Default config created");
-
-        } catch (Exception e)
-        {
-            log.warning ("[CreeperHeal] Failed to create file: " + file.getName ());
-            log.warning (e.getMessage ());
-            if (outStream != null)
-                try
-                {
-                    outStream.flush ();
-                    outStream.close ();
-                } catch (IOException e1)
-                {
-                    e1.printStackTrace ();
-                }
-        }
+    public static boolean isLightWeight () {
+        return getBool (CfgVal.LIGHTWEIHGTMODE);
     }
 
 }

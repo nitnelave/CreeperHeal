@@ -7,6 +7,7 @@ import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 
+import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 /**
@@ -30,8 +31,8 @@ public class CreeperBurntBlock {
      */
     public CreeperBurntBlock (Date now, Replaceable block) {
         this.block = block;
-        boolean timed = block == null ? false : CreeperConfig.loadWorld (getWorld ()).isRepairTimed ();
-        timer = new ReplacementTimer (new Date (now.getTime () + 1000 * CreeperConfig.waitBeforeHealBurnt), timed);
+        boolean timed = block == null ? false : CreeperConfig.getWorld (getWorld ()).isRepairTimed ();
+        timer = new ReplacementTimer (new Date (now.getTime () + 1000 * CreeperConfig.getInt (CfgVal.WAIT_BEFORE_HEAL_BURNT)), timed);
     }
 
     /**
@@ -157,7 +158,7 @@ public class CreeperBurntBlock {
             if (replace (false))
                 replaced = true;
             else
-                postPone (CreeperConfig.waitBeforeHeal);
+                postPone (CreeperConfig.getInt (CfgVal.WAIT_BEFORE_HEAL));
             return true;
         }
         return false;

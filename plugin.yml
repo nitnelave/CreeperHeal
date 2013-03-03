@@ -5,11 +5,11 @@ author: nitnelave
 description: Replaces terrain destroyed by creeper explosions
 softdepend: [Vault, CreeperTrap, LWC, Lockette, MobArena, Factions, bPermissions, PlayerHeads]
 
-#commands:
-#    CreeperHeal:
-#        description: CreeperHeal commands
-#        usage: /<command> help
-#        alias: ch
+commands:
+    CreeperHeal:
+        description: CreeperHeal commands
+        usage: /<command> help
+        alias: ch
 
 permissions:
     CreeperHeal.*:

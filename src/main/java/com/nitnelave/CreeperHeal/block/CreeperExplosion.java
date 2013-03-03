@@ -15,6 +15,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 
 import com.nitnelave.CreeperHeal.PluginHandler;
+import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.utils.ShortLocation;
@@ -47,14 +48,14 @@ public class CreeperExplosion {
      *            The location of the explosion.
      */
     public CreeperExplosion (List<Block> blocks, Location loc) {
-        world = CreeperConfig.loadWorld (loc.getWorld ());
-        timer = new ReplacementTimer (new Date (new Date ().getTime () + 1000 * CreeperConfig.waitBeforeHeal), world.isRepairTimed ());
+        world = CreeperConfig.getWorld (loc.getWorld ());
+        timer = new ReplacementTimer (new Date (new Date ().getTime () + 1000 * CreeperConfig.getInt (CfgVal.WAIT_BEFORE_HEAL)), world.isRepairTimed ());
         blockList = new LinkedList<Replaceable> ();
         this.loc = loc;
 
         recordBlocks (blocks);
 
-        if (CreeperConfig.explodeObsidian)
+        if (CreeperConfig.getBool (CfgVal.EXPLODE_OBSIDIAN))
             checkForObsidian ();
 
         Collections.sort (blockList, new CreeperComparator (loc));
@@ -118,7 +119,7 @@ public class CreeperExplosion {
         {
             blockList.clear ();
 
-            if (CreeperConfig.teleportOnSuffocate)
+            if (CreeperConfig.getBool (CfgVal.TELEPORT_ON_SUFFOCATE))
                 BlockManager.checkPlayerExplosion (loc, radius);
         }
     }
@@ -142,7 +143,7 @@ public class CreeperExplosion {
                 ((CreeperBlock) block).delayReplacement ();
             else
                 block.drop ();
-        if (CreeperConfig.teleportOnSuffocate)
+        if (CreeperConfig.getBool (CfgVal.TELEPORT_ON_SUFFOCATE))
             BlockManager.checkPlayerOneBlock (block.getBlock ().getLocation ());
         return !blockList.isEmpty ();
     }
@@ -194,8 +195,8 @@ public class CreeperExplosion {
      * give them a chance to be destroyed.
      */
     private void checkForObsidian () {
-        int radius = CreeperConfig.obsidianRadius;
-        double chance = ((float) CreeperConfig.obsidianChance) / 100;
+        int radius = CreeperConfig.getInt (CfgVal.OBSIDIAN_RADIUS);
+        double chance = ((float) CreeperConfig.getInt (CfgVal.OBSIDIAN_CHANCE)) / 100;
         World w = loc.getWorld ();
 
         Random r = new Random (System.currentTimeMillis ());
@@ -225,8 +226,8 @@ public class CreeperExplosion {
 
         checked.add (new ShortLocation (block));
 
-        if ((CreeperConfig.preventChainReaction && block.getType ().equals (Material.TNT))
-                || (CreeperConfig.replaceProtectedChests && PluginHandler.isProtected (block) || world.isProtected (block)))
+        if ((CreeperConfig.getBool (CfgVal.PREVENT_CHAIN_REACTION) && block.getType ().equals (Material.TNT))
+                || (CreeperConfig.getBool (CfgVal.REPLACE_PROTECTED_CHESTS) && PluginHandler.isProtected (block) || world.isProtected (block)))
         {
             CreeperBlock b = CreeperBlock.newBlock (block.getState ());
             if (b != null)
@@ -238,7 +239,7 @@ public class CreeperExplosion {
         }
 
         BlockId id = new BlockId (block);
-        if (world.blockWhiteList.contains (id) || !world.blockBlackList.contains (id))
+        if (!world.isBlackListed (id))
         {
             // The block should be replaced.
 
@@ -253,11 +254,11 @@ public class CreeperExplosion {
                 b.remove ();
             }
         }
-        else if (CreeperConfig.dropDestroyedBlocks)
+        else if (CreeperConfig.getBool (CfgVal.DROP_DESTROYED_BLOCKS))
         {
             // The block should not be replaced, check if it drops
             Random generator = new Random ();
-            if (generator.nextInt (100) < CreeperConfig.dropChance) //percentage
+            if (generator.nextInt (100) < CreeperConfig.getInt (CfgVal.DROP_CHANCE)) //percentage
                 cBlock.drop ();
             cBlock.remove ();
 
@@ -291,7 +292,7 @@ public class CreeperExplosion {
             return true;
         if (timer.checkReplace ())
         {
-            if (CreeperConfig.blockPerBlock)
+            if (CreeperConfig.getBool (CfgVal.BLOCK_PER_BLOCK))
                 replace_one_block ();
             else
                 replace_blocks (true);

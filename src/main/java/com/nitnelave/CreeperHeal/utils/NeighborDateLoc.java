@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 /**
@@ -42,7 +43,7 @@ public class NeighborDateLoc extends NeighborFinder<DateLoc> {
     @Override
     public void clean () {
         Iterator<LinkedList<DateLoc>> iter = map.values ().iterator ();
-        Date delay = new Date (new Date ().getTime () - 200 * CreeperConfig.blockPerBlockInterval);
+        Date delay = new Date (new Date ().getTime () - 200 * CreeperConfig.getInt (CfgVal.BLOCK_PER_BLOCK_INTERVAL));
         while (iter.hasNext ())
         {
             LinkedList<DateLoc> list = iter.next ();

@@ -14,6 +14,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
+import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
@@ -43,9 +44,14 @@ public abstract class BlockManager {
      */
     private static Map<CreeperBlock, Date> updateIndex;
 
+    /*
+     * Remember if time repairs have already been scheduled.
+     */
+    private static boolean timeRepairsScheduled = false;
+
     static
     {
-        if (!CreeperConfig.lightweightMode)
+        if (!CreeperConfig.isLightWeight ())
         {
             fallIndex = new NeighborDateLoc ();
             updateIndex = Collections.synchronizedMap (new HashMap<CreeperBlock, Date> ());
@@ -102,7 +108,7 @@ public abstract class BlockManager {
      */
     public static void checkPlayerExplosion (Location loc, double radius) {
         List<? extends Entity> entityList;
-        if (CreeperConfig.lightweightMode)
+        if (CreeperConfig.isLightWeight ())
             entityList = loc.getWorld ().getPlayers ();
         else
             entityList = loc.getWorld ().getEntities ();
@@ -178,10 +184,10 @@ public abstract class BlockManager {
      * For each world, check if it is the time for timed repairs, and repair.
      */
     private static void checkReplaceTime () {
-        for (WorldConfig w : CreeperConfig.world_config.values ())
+        for (WorldConfig w : CreeperConfig.getWorlds ())
         {
-            long time = Bukkit.getServer ().getWorld (w.name).getTime ();
-            if (w.repairTime != -1 && ((Math.abs (w.repairTime - time) < 600) || (Math.abs (Math.abs (w.repairTime - time) - 24000)) < 600))
+            long time = Bukkit.getServer ().getWorld (w.getName ()).getTime ();
+            if (w.isRepairTimed () && ((Math.abs (w.getRepairTime () - time) < 600) || (Math.abs (Math.abs (w.getRepairTime () - time) - 24000)) < 600))
             {
                 ExplodedBlockManager.forceReplace (w);
                 BurntBlockManager.forceReplaceBurnt (w);
@@ -193,14 +199,18 @@ public abstract class BlockManager {
      * Schedule the timed repair task.
      */
     public static void scheduleTimeRepairs () {
-        Bukkit.getScheduler ().runTaskTimerAsynchronously (CreeperHeal.getInstance (), new Runnable () {
-            @Override
-            public void run () {
-                checkReplaceTime ();
-            }
-        }, 200, 1200);
+        if (!timeRepairsScheduled)
+        {
+            timeRepairsScheduled = true;
+            Bukkit.getScheduler ().runTaskTimerAsynchronously (CreeperHeal.getInstance (), new Runnable () {
+                @Override
+                public void run () {
+                    checkReplaceTime ();
+                }
+            }, 200, 1200);
 
-        CreeperLog.warning ("[CreeperHeal] Impossible to schedule the time-repair task. Time repairs will not work");
+            CreeperLog.warning ("[CreeperHeal] Impossible to schedule the time-repair task. Time repairs will not work");
+        }
 
     }
 
@@ -230,13 +240,13 @@ public abstract class BlockManager {
     /**
      * Get whether the location is next to a block whose update is prevented.
      * 
-     * @param loc
-     *            The location to check.
+     * @param block
+     *            The block to check.
      * @return Whether the location is next to a block whose update is
      *         prevented.
      */
-    public static boolean isUpdatePrevented (CreeperBlock b) {
-        return updateIndex.containsKey (b);
+    public static boolean isUpdatePrevented (CreeperBlock block) {
+        return updateIndex.containsKey (block);
     }
 
     /**
@@ -244,8 +254,8 @@ public abstract class BlockManager {
      * block's updates are prevented until after 200 times the block per block
      * replacement interval.
      * 
-     * @param location
-     *            The block's location.
+     * @param block
+     *            The block.
      */
     public static void putUpdatePrevention (CreeperBlock block) {
         updateIndex.put (block, new Date ());
@@ -258,7 +268,7 @@ public abstract class BlockManager {
     private static void cleanUp () {
         fallIndex.clean ();
 
-        Date delay = new Date (new Date ().getTime () - 200 * CreeperConfig.blockPerBlockInterval);
+        Date delay = new Date (new Date ().getTime () - 200 * CreeperConfig.getInt (CfgVal.BLOCK_PER_BLOCK_INTERVAL));
         Iterator<Date> iter;
         synchronized (updateIndex)
         {
