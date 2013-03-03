@@ -10,7 +10,7 @@ import org.bukkit.block.BlockState;
  * @author nitnelave
  * 
  */
-public class CreeperPiston extends CreeperBlock {
+class CreeperPiston extends CreeperBlock {
 
     private final BlockFace orientation;
     private final boolean extended;

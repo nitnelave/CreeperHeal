@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
  * @author nitnelave
  * 
  */
-public class CreeperItemFrame extends CreeperHanging {
+class CreeperItemFrame extends CreeperHanging {
 
     /**
      * Constructor.
@@ -20,7 +20,7 @@ public class CreeperItemFrame extends CreeperHanging {
      * @param frame
      *            The item frame represented.
      */
-    public CreeperItemFrame (ItemFrame frame) {
+    protected CreeperItemFrame (ItemFrame frame) {
         super (frame);
     }
 

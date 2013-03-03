@@ -52,13 +52,4 @@ public abstract class FactionHandler {
         return true;
     }
 
-    /**
-     * Get whether the Factions plugin is enabled.
-     * 
-     * @return true if Factions is enabled, false otherwise.
-     */
-    public static boolean isFactionsEnabled () {
-        return isFactionsEnabled;
-    }
-
 }

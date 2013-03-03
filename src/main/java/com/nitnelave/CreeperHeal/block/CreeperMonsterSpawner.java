@@ -8,13 +8,13 @@ import org.bukkit.block.CreatureSpawner;
  * @author nitnelave
  * 
  */
-public class CreeperMonsterSpawner extends CreeperBlock{
+class CreeperMonsterSpawner extends CreeperBlock {
 
     /*
      * Constructor.
      */
     protected CreeperMonsterSpawner (CreatureSpawner blockState) {
-        super(blockState);
+        super (blockState);
     }
 
     /*

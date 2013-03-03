@@ -19,7 +19,7 @@ import com.nitnelave.CreeperHeal.utils.CreeperUtils;
  * @author nitnelave
  * 
  */
-public class CreeperChest extends CreeperBlock {
+class CreeperChest extends CreeperBlock {
 
     private final Block chest;
 

@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender;
  * 
  */
 public class CreeperCommand extends Command {
-    protected final CommandExecutor owner;
+    private final CommandExecutor owner;
 
     /**
      * Constructor. Sets the CommandExecutor associated with CreeperHeal.

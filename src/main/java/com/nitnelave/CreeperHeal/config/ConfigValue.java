@@ -4,7 +4,7 @@ import java.util.logging.Logger;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public abstract class ConfigValue<T> {
+abstract class ConfigValue<T> {
 
     private final String key;
     protected T value;

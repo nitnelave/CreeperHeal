@@ -19,8 +19,7 @@ public abstract class NeighborFinder<T> {
     /**
      * The size of each zone.
      */
-    public static final int BLOCK_SIZE = 64;
-    protected static int count = 0;
+    private static final int BLOCK_SIZE = 64;
     protected HashMap<Point, LinkedList<T>> map = new HashMap<Point, LinkedList<T>> ();
 
     /**

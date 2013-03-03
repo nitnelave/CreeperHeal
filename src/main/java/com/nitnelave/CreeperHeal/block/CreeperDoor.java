@@ -17,7 +17,7 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
  * @author nitnelave
  * 
  */
-public class CreeperDoor extends CreeperBlock {
+class CreeperDoor extends CreeperBlock {
 
     private final boolean hingeRight;
 

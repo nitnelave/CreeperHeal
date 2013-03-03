@@ -104,7 +104,7 @@ public abstract class BurntBlockManager {
     /**
      * Replace the burnt blocks that have disappeared for long enough.
      */
-    public static void replaceBurnt () {
+    private static void replaceBurnt () {
 
         Date now = new Date ();
         synchronized (burntList)

@@ -53,7 +53,7 @@ public class CreeperBlock implements Replaceable {
      */
     protected final static Set<Integer> EMPTY_BLOCKS = CreeperUtils.createFinalHashSet (0, 8, 9, 10, 11, 51, 78);
 
-    public final static BlockFace[] CARDINALS = {BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH, BlockFace.UP, BlockFace.DOWN};
+    protected final static BlockFace[] CARDINALS = {BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH, BlockFace.UP, BlockFace.DOWN};
 
     /*
      * The block represented.
@@ -104,6 +104,9 @@ public class CreeperBlock implements Replaceable {
                 return new CreeperPlate (blockState);
             case GRASS:
                 return new CreeperGrass (blockState);
+            case SMOOTH_BRICK:
+            case SMOOTH_STAIRS:
+                return new CreeperBrick (blockState);
             case TNT:
             case FIRE:
             case AIR:
@@ -235,7 +238,7 @@ public class CreeperBlock implements Replaceable {
     /*
      * Delay the replacement of the block.
      */
-    public void delayReplacement () {
+    protected void delayReplacement () {
         long delay = (long) Math.ceil ((double) CreeperConfig.getInt (CfgVal.BLOCK_PER_BLOCK_INTERVAL) / 20);
         Bukkit.getServer ().getScheduler ().scheduleSyncDelayedTask (CreeperHeal.getInstance (), new DelayReplacement (this, 0), delay);
     }
@@ -258,7 +261,7 @@ public class CreeperBlock implements Replaceable {
      *            The type of the block.
      * @return Whether the block is dependent.
      */
-    public static boolean isDependentDown (int typeId) {
+    private static boolean isDependentDown (int typeId) {
         return DEPENDENT_DOWN_BLOCKS.contains (typeId);
     }
 
@@ -319,7 +322,7 @@ public class CreeperBlock implements Replaceable {
     public BlockFace getAttachingFace () {
         if (blockState.getData () instanceof Attachable)
             return ((Attachable) blockState.getData ()).getAttachedFace ();
-        if (DEPENDENT_DOWN_BLOCKS.contains (blockState.getTypeId ()))
+        if (isDependentDown (blockState.getTypeId ()))
             return BlockFace.DOWN;
         return BlockFace.SELF;
     }

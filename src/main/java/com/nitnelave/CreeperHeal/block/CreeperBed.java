@@ -14,7 +14,7 @@ import org.bukkit.block.BlockState;
  * @author nitnelave
  * 
  */
-public class CreeperBed extends CreeperBlock {
+class CreeperBed extends CreeperBlock {
 
     /*
      * The direction the bed is facing.

@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
  * @author nitnelave
  * 
  */
-public class CreeperPainting extends CreeperHanging {
+class CreeperPainting extends CreeperHanging {
 
     /**
      * Constructor.
@@ -20,7 +20,7 @@ public class CreeperPainting extends CreeperHanging {
      * @param painting
      *            The painting represented.
      */
-    public CreeperPainting (Painting painting) {
+    protected CreeperPainting (Painting painting) {
         super (painting);
     }
 

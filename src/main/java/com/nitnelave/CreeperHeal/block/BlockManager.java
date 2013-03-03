@@ -71,7 +71,7 @@ public abstract class BlockManager {
      * @param block
      *            The block to add.
      */
-    public static void addToReplace (CreeperBlock block) {
+    protected static void addToReplace (CreeperBlock block) {
         toReplace.put (block.getLocation (), block);
     }
 
@@ -106,7 +106,7 @@ public abstract class BlockManager {
      * @param radius
      *            The radius of the explosion.
      */
-    public static void checkPlayerExplosion (Location loc, double radius) {
+    protected static void checkPlayerExplosion (Location loc, double radius) {
         List<? extends Entity> entityList;
         if (CreeperConfig.isLightWeight ())
             entityList = loc.getWorld ().getPlayers ();

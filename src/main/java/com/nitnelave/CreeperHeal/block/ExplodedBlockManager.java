@@ -175,7 +175,7 @@ public class ExplodedBlockManager {
     /**
      * Check to see if any block has to be replaced in the explosions.
      */
-    public static void checkReplace () { //check to see if any block has to be replaced
+    private static void checkReplace () { //check to see if any block has to be replaced
         ListIterator<CreeperExplosion> iter = explosionList.listIterator ();
         while (iter.hasNext ())
         {

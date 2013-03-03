@@ -129,7 +129,7 @@ public abstract class CreeperMessenger {
      *            Whether the message is meant for a player or for the admin.
      * @return A formatted message.
      */
-    public static String getMessage (WarningCause cause, String offender, String world, boolean blocked, String data, boolean player) {
+    private static String getMessage (WarningCause cause, String offender, String world, boolean blocked, String data, boolean player) {
         String prefix = blocked ? "block-" : "warn-";
         String suffix = blocked ? (player ? "-player" : "-admin") : "";
         String message = null;

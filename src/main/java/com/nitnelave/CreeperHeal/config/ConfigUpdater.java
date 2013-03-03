@@ -44,7 +44,7 @@ class ConfigUpdater {
         CreeperConfig.setAlias (cmdAlias);
     }
 
-    protected static void from4 () throws FileNotFoundException, IOException, InvalidConfigurationException {
+    private static void from4 () throws FileNotFoundException, IOException, InvalidConfigurationException {
         CreeperLog.logInfo ("Importing config from version 4", 1);
         YamlConfiguration config = new YamlConfiguration ();
         File configFile = new File (CreeperHeal.getCHFolder () + "config.yml");
@@ -102,7 +102,7 @@ class ConfigUpdater {
 
     }
 
-    protected static void from5 () throws FileNotFoundException, IOException, InvalidConfigurationException {
+    private static void from5 () throws FileNotFoundException, IOException, InvalidConfigurationException {
         CreeperLog.logInfo ("Importing config from version 5", 1);
 
         YamlConfiguration config = new YamlConfiguration ();
@@ -140,7 +140,7 @@ class ConfigUpdater {
 
     }
 
-    protected static void from6 () throws FileNotFoundException, IOException, InvalidConfigurationException {
+    private static void from6 () throws FileNotFoundException, IOException, InvalidConfigurationException {
         CreeperLog.logInfo ("Importing config from version 6", 1);
         YamlConfiguration config = new YamlConfiguration ();
         File configFile = new File (CreeperHeal.getCHFolder () + "config.yml");

@@ -2,7 +2,7 @@ package com.nitnelave.CreeperHeal.block;
 
 import org.bukkit.block.BlockState;
 
-public class CreeperPlate extends CreeperBlock {
+class CreeperPlate extends CreeperBlock {
 
     protected CreeperPlate (BlockState blockState) {
         super (blockState);

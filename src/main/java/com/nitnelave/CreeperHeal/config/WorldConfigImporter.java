@@ -9,7 +9,7 @@ import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.block.BlockId;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
 
-public abstract class WorldConfigImporter {
+abstract class WorldConfigImporter {
 
     private final static String[] STRING_BOOLEAN_OPTIONS = {"true", "false", "time"};
     private static boolean enderman, replaceAbove, blockLava, blockTNT, blockIgnite, griefBlockList, grassToDirt, blockSpawnEggs, blockPvP, warnLava, warnTNT,

@@ -8,13 +8,13 @@ import org.bukkit.block.NoteBlock;
  * @author nitnelave
  * 
  */
-public class CreeperNoteBlock extends CreeperBlock{
+class CreeperNoteBlock extends CreeperBlock {
 
     /*
      * Constructor.
      */
     protected CreeperNoteBlock (NoteBlock blockState) {
-        super(blockState);
+        super (blockState);
     }
 
     /*

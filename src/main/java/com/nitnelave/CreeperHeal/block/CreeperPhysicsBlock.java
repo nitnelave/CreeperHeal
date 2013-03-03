@@ -11,7 +11,7 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
  * @author nitnelave
  * 
  */
-public class CreeperPhysicsBlock extends CreeperBlock {
+class CreeperPhysicsBlock extends CreeperBlock {
 
     /*
      * Constructor.
