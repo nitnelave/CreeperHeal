@@ -129,7 +129,7 @@ public class WorldConfig {
     /**
      * Load the config from the file.
      */
-    public void load () {
+    protected void load () {
         worldFolder.mkdirs ();
         if (!configFile.exists ())
             FileUtils.copyJarConfig (configFile, "world.yml");
@@ -170,7 +170,7 @@ public class WorldConfig {
     /**
      * Write the world's settings to the corresponding file.
      */
-    public void save () {
+    protected void save () {
         for (ConfigValue<Boolean> v : booleans.values ())
             v.write ();
         repairTime.write ();
@@ -223,7 +223,7 @@ public class WorldConfig {
      * @return Whether the location is above the limit, or true if height
      *         replacement is not enabled.
      */
-    public boolean isAbove (Location loc) {
+    private boolean isAbove (Location loc) {
         return !getBool (WCfgVal.REPLACE_ABOVE) || loc.getBlockY () >= replaceLimit.getValue ();
     }
 
@@ -283,6 +283,7 @@ public class WorldConfig {
         v.setValue (value);
     }
 
+    //TODO: document the exceptions
     /**
      * Set the boolean value associated with the key.
      * 
@@ -301,7 +302,7 @@ public class WorldConfig {
                 replaceLimit.setValue (value);
                 break;
             default:
-                CreeperLog.warning ("Wrong key type : " + val.toString ());
+                throw new NullPointerException ("Unknown config key path : " + val.getKey ());
         }
     }
 

@@ -1,6 +1,6 @@
 package com.nitnelave.CreeperHeal.config;
 
-public interface CfgValEnumMember {
+interface CfgValEnumMember {
 
     public Object getDefaultValue ();
 

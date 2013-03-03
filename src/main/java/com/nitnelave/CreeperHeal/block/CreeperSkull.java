@@ -12,7 +12,7 @@ import com.nitnelave.CreeperHeal.utils.CreeperLog;
  * @author nitnelave
  */
 
-public class CreeperSkull extends CreeperBlock {
+class CreeperSkull extends CreeperBlock {
 
     /*
      * The PlayerHead skull.

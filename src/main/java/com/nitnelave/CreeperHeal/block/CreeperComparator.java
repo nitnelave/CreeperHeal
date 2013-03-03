@@ -14,7 +14,7 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
  * @author nitnelave
  * 
  */
-public class CreeperComparator implements Comparator<Replaceable> {
+class CreeperComparator implements Comparator<Replaceable> {
 
     private final Location loc;
 
@@ -33,7 +33,7 @@ public class CreeperComparator implements Comparator<Replaceable> {
      * @param loc
      *            The center of the explosion.
      */
-    public CreeperComparator (Location loc) {
+    CreeperComparator (Location loc) {
         this.loc = loc;
     }
 

@@ -13,7 +13,7 @@ import com.nitnelave.CreeperHeal.CreeperHeal;
  * @author nitnelave
  * 
  */
-public class CreeperRail extends CreeperBlock {
+class CreeperRail extends CreeperBlock {
 
     /*
      * Constructor.

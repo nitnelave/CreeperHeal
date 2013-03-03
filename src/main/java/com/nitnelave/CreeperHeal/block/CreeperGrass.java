@@ -6,7 +6,7 @@ import org.bukkit.block.BlockState;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WCfgVal;
 
-public class CreeperGrass extends CreeperBlock {
+class CreeperGrass extends CreeperBlock {
 
     protected CreeperGrass (BlockState blockState) {
         super (blockState);

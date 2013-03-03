@@ -129,7 +129,7 @@ public class CreeperExplosion {
      * 
      * @return False if the list is now empty.
      */
-    protected boolean replace_one_block () {
+    private boolean replace_one_block () {
         Replaceable block;
         try
         {
