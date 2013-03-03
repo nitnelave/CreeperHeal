@@ -15,7 +15,7 @@ class ConfigUpdater {
     private static int waitBeforeHeal, logLevel = -42, blockPerBlockInterval, waitBeforeHealBurnt, dropChance, distanceNear, obsidianChance, obsidianRadius,
             waitBeforeBurnAgain;
     private static boolean dropReplacedBlocks, blockPerBlock, teleportOnSuffocate, dropDestroyedBlocks, crackDestroyedBricks, replaceProtectedChests,
-            overwriteBlocks, preventBlockFall, lightweightMode, opEnforce, logWarnings, preventChainReaction, explodeObsidian, debug;
+            overwriteBlocks, preventBlockFall, lightweightMode, logWarnings, preventChainReaction, explodeObsidian, debug;
     private static String cmdAlias;
 
     private static void recordValues () {
@@ -28,7 +28,6 @@ class ConfigUpdater {
         CreeperConfig.setBool (CfgVal.OVERWRITE_BLOCKS, overwriteBlocks);
         CreeperConfig.setBool (CfgVal.PREVENT_BLOCK_FALL, preventBlockFall);
         CreeperConfig.setBool (CfgVal.LIGHTWEIHGTMODE, lightweightMode);
-        CreeperConfig.setBool (CfgVal.OP_ENFORCE, opEnforce);
         CreeperConfig.setBool (CfgVal.LOG_WARNINGS, logWarnings);
         CreeperConfig.setBool (CfgVal.PREVENT_CHAIN_REACTION, preventChainReaction);
         CreeperConfig.setBool (CfgVal.EXPLODE_OBSIDIAN, explodeObsidian);
@@ -70,7 +69,6 @@ class ConfigUpdater {
         waitBeforeHealBurnt = getInt (config, "wait-before-heal-fire", 45);
         dropDestroyedBlocks = getBoolean (config, "drop-destroyed-blocks", true);
         dropChance = getInt (config, "drop-destroyed-blocks-chance", 100);
-        opEnforce = getBoolean (config, "op-have-all-permissions", true);
         crackDestroyedBricks = getBoolean (config, "crack-destroyed-bricks", false);
         overwriteBlocks = getBoolean (config, "overwrite-blocks", true);
         preventBlockFall = getBoolean (config, "prevent-block-fall", true);
@@ -124,7 +122,6 @@ class ConfigUpdater {
         teleportOnSuffocate = getBoolean (config, "advanced.teleport-when-buried", true);
         dropDestroyedBlocks = getBoolean (config, "advanced.drop-destroyed-blocks.enabled", true);
         dropChance = getInt (config, "advanced.drop-destroyed-blocks.chance", 100);
-        opEnforce = getBoolean (config, "advanced.op-have-all-permissions", true);
         overwriteBlocks = getBoolean (config, "advanced.replacement-conflict.overwrite", true);
         preventBlockFall = getBoolean (config, "advanced.prevent-block-fall", true);
         distanceNear = getInt (config, "advanced.distance-near", 20);
@@ -165,7 +162,6 @@ class ConfigUpdater {
         teleportOnSuffocate = getBoolean (advanced, "teleport-when-buried", true);
         dropDestroyedBlocks = getBoolean (advanced, "drop-destroyed-blocks.enabled", true);
         dropChance = getInt (advanced, "drop-destroyed-blocks.chance", 100);
-        opEnforce = getBoolean (advanced, "op-have-all-permissions", true);
         overwriteBlocks = getBoolean (advanced, "replacement-conflict.overwrite", true);
         preventBlockFall = getBoolean (advanced, "prevent-block-fall", true);
         distanceNear = getInt (advanced, "distance-near", 20);
