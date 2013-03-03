@@ -19,10 +19,6 @@ public class CreeperItemFrame extends CreeperHanging {
      * 
      * @param frame
      *            The item frame represented.
-     * @param time
-     *            The time of the explosion.
-     * @param fire
-     *            Whether the frame was destroyed by fire.
      */
     public CreeperItemFrame (ItemFrame frame) {
         super (frame);

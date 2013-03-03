@@ -1,10 +1,15 @@
 package com.nitnelave.CreeperHeal;
 
+import java.io.File;
+
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
+import com.nitnelave.CreeperHeal.command.CreeperCommandManager;
+import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.listeners.CreatureSpawnListener;
@@ -25,6 +30,11 @@ public class CreeperHeal extends JavaPlugin {
     private static CreeperHeal instance;
 
     /*
+     * Store whether the grief-related events have already been registered.
+     */
+    private static boolean griefRegistered = false;
+
+    /*
      * (non-Javadoc)
      * @see org.bukkit.plugin.java.JavaPlugin#onEnable()
      */
@@ -32,7 +42,7 @@ public class CreeperHeal extends JavaPlugin {
     public void onEnable () {
 
         instance = this;
-
+        CreeperCommandManager.registerCommands ();
         registerEvents ();
     }
 
@@ -44,14 +54,11 @@ public class CreeperHeal extends JavaPlugin {
 
         pm.registerEvents (new CreeperListener (), this);
         pm.registerEvents (new CreeperBlockListener (), this);
-        if (CreeperConfig.debug)
+        if (CreeperConfig.getBool (CfgVal.DEBUG))
             pm.registerEvents (new CreatureSpawnListener (), this);
 
-        if (!(CreeperConfig.lightweightMode))
+        if (!CreeperConfig.isLightWeight ())
             pm.registerEvents (new FancyListener (), this);
-
-        if (CreeperConfig.grief)
-            pm.registerEvents (new GriefListener (), this);
     }
 
     /*
@@ -60,7 +67,7 @@ public class CreeperHeal extends JavaPlugin {
      */
     @Override
     public void onDisable () {
-        for (WorldConfig w : CreeperConfig.world_config.values ())
+        for (WorldConfig w : CreeperConfig.getWorlds ())
         {
             ExplodedBlockManager.forceReplace (w); //replace blocks still in memory, so they are not lost
             BurntBlockManager.forceReplaceBurnt (w); //same for burnt_blocks
@@ -74,6 +81,18 @@ public class CreeperHeal extends JavaPlugin {
      */
     public static CreeperHeal getInstance () {
         return instance;
+    }
+
+    public static void registerGriefEvents () {
+        if (!griefRegistered)
+        {
+            Bukkit.getServer ().getPluginManager ().registerEvents (new GriefListener (), getInstance ());
+            griefRegistered = true;
+        }
+    }
+
+    public static File getCHFolder () {
+        return getInstance ().getDataFolder ();
     }
 
 }

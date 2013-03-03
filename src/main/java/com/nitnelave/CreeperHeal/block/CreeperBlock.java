@@ -21,6 +21,7 @@ import org.bukkit.material.Attachable;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.PluginHandler;
+import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperUtils;
 import com.nitnelave.CreeperHeal.utils.DelayReplacement;
@@ -197,13 +198,13 @@ public class CreeperBlock implements Replaceable {
         Block block = getBlock ();
         int blockId = block.getTypeId ();
 
-        if (!CreeperConfig.overwriteBlocks && !isEmpty (blockId))
+        if (!CreeperConfig.getBool (CfgVal.OVERWRITE_BLOCKS) && !isEmpty (blockId))
         {
-            if (CreeperConfig.dropDestroyedBlocks)
+            if (CreeperConfig.getBool (CfgVal.DROP_DESTROYED_BLOCKS))
                 drop ();
             return true;
         }
-        else if (CreeperConfig.overwriteBlocks && !isEmpty (blockId) && CreeperConfig.dropDestroyedBlocks)
+        else if (CreeperConfig.getBool (CfgVal.OVERWRITE_BLOCKS) && !isEmpty (blockId) && CreeperConfig.getBool (CfgVal.DROP_DESTROYED_BLOCKS))
         {
             CreeperBlock b = CreeperBlock.newBlock (block.getState ());
             if (b != null)
@@ -235,7 +236,7 @@ public class CreeperBlock implements Replaceable {
      * Delay the replacement of the block.
      */
     public void delayReplacement () {
-        long delay = (long) Math.ceil ((double) CreeperConfig.blockPerBlockInterval / 20);
+        long delay = (long) Math.ceil ((double) CreeperConfig.getInt (CfgVal.BLOCK_PER_BLOCK_INTERVAL) / 20);
         Bukkit.getServer ().getScheduler ().scheduleSyncDelayedTask (CreeperHeal.getInstance (), new DelayReplacement (this, 0), delay);
     }
 
@@ -275,12 +276,12 @@ public class CreeperBlock implements Replaceable {
     /**
      * Get whether blocks of a type are solid.
      * 
-     * @param typeId
+     * @param block
      *            The type of the block.
      * @return Whether the block is solid.
      */
-    public static boolean isSolid (Block b) {
-        return b.getType ().isSolid ();
+    public static boolean isSolid (Block block) {
+        return block.getType ().isSolid ();
     }
 
     /**

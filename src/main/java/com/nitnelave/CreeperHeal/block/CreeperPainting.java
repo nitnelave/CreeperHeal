@@ -19,10 +19,6 @@ public class CreeperPainting extends CreeperHanging {
      * 
      * @param painting
      *            The painting represented.
-     * @param time
-     *            The time of the explosion.
-     * @param fire
-     *            Whether the painting was burnt.
      */
     public CreeperPainting (Painting painting) {
         super (painting);

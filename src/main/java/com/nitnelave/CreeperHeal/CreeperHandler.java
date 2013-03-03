@@ -52,7 +52,7 @@ public abstract class CreeperHandler
      */
     public static void recordBlocks(EntityExplodeEvent event)
     {
-        ExplodedBlockManager.processExplosion(event, CreeperConfig.loadWorld(event.getLocation().getWorld()));
+        ExplodedBlockManager.processExplosion(event, CreeperConfig.getWorld(event.getLocation().getWorld()));
     }
 
     /**
@@ -65,7 +65,7 @@ public abstract class CreeperHandler
      */
     public static boolean shouldRemoveLWCProtection(Entity entity)
     {
-        return !CreeperConfig.loadWorld(entity.getWorld()).shouldReplace(entity);
+        return !CreeperConfig.getWorld(entity.getWorld()).shouldReplace(entity);
     }
 
 }

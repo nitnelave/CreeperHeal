@@ -7,6 +7,7 @@ import org.bukkit.event.block.BlockBurnEvent;
 
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
+import com.nitnelave.CreeperHeal.config.WCfgVal;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 
 /**
@@ -26,11 +27,11 @@ public class CreeperBlockListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockBurn (BlockBurnEvent event) {
-        WorldConfig world = CreeperConfig.loadWorld (event.getBlock ().getLocation ().getWorld ());
+        WorldConfig world = CreeperConfig.getWorld (event.getBlock ().getLocation ().getWorld ());
 
-        if (world.fire)
+        if (world.getBool (WCfgVal.FIRE))
         {
-            if (!CreeperConfig.lightweightMode)
+            if (!CreeperConfig.isLightWeight ())
                 if (BurntBlockManager.wasRecentlyBurnt (event.getBlock ()))
                 {
                     event.setCancelled (true);
@@ -40,6 +41,5 @@ public class CreeperBlockListener implements Listener {
         }
 
     }
-
 
 }

@@ -92,7 +92,7 @@ public class CreeperPlayer {
     /**
      * Get whether the player receives any kind of warning.
      * 
-     * @return
+     * @return True if the player has permission to receive a warning.
      */
     public boolean hasWarnings () {
         return lava || tnt || fire || blacklist || spawnEggs || pvp;

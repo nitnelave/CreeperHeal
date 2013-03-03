@@ -19,6 +19,7 @@ import com.nitnelave.CreeperHeal.block.CreeperBurntBlock;
 import com.nitnelave.CreeperHeal.block.CreeperHanging;
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
+import com.nitnelave.CreeperHeal.config.WCfgVal;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.FactionHandler;
@@ -39,14 +40,14 @@ public class CreeperListener implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityExplode (EntityExplodeEvent event) {
-        WorldConfig world = CreeperConfig.loadWorld (event.getLocation ().getWorld ());
+        WorldConfig world = CreeperConfig.getWorld (event.getLocation ().getWorld ());
 
-        if (FactionHandler.shouldIgnore (event.blockList (), world))
-            return;
-
-        Entity entity = event.getEntity ();
-        if (world.shouldReplace (entity))
-            ExplodedBlockManager.processExplosion (event, world);
+        if (!FactionHandler.shouldIgnore (event.blockList (), world))
+        {
+            Entity entity = event.getEntity ();
+            if (world.shouldReplace (entity))
+                ExplodedBlockManager.processExplosion (event, world);
+        }
     }
 
     /**
@@ -59,18 +60,15 @@ public class CreeperListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onHangingBreak (HangingBreakEvent event) {
         Hanging h = event.getEntity ();
-        WorldConfig world = CreeperConfig.loadWorld (h.getWorld ());
+        WorldConfig world = CreeperConfig.getWorld (h.getWorld ());
         switch (event.getCause ())
         {
             case EXPLOSION:
                 ExplodedBlockManager.recordHanging (h);
                 break;
             case PHYSICS:
-                if (!CreeperConfig.lightweightMode && BurntBlockManager.isNextToFire (h.getLocation ()) && world.fire)
-                    BurntBlockManager.recordBurntBlock (new CreeperBurntBlock (new Date (), CreeperHanging.newHanging (h)));
-                break;
             case OBSTRUCTION:
-                if (!CreeperConfig.lightweightMode && BurntBlockManager.isNextToFire (h.getLocation ()) && world.fire)
+                if (!CreeperConfig.isLightWeight () && BurntBlockManager.isNextToFire (h.getLocation ()) && world.getBool (WCfgVal.FIRE))
                     BurntBlockManager.recordBurntBlock (new CreeperBurntBlock (new Date (), CreeperHanging.newHanging (h)));
                 break;
             default:
@@ -85,13 +83,13 @@ public class CreeperListener implements Listener {
      * @param event
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onEndermanPickup (EntityChangeBlockEvent event) {
+    public void onEntityChangeBlock (EntityChangeBlockEvent event) {
         if (event.getBlock ().getType () == Material.MONSTER_EGG || event.getEntityType () == EntityType.SILVERFISH)
             CreeperLog.debug ("silverfish entity change block");
         if (event.getEntity () instanceof Enderman)
         {
-            WorldConfig world = CreeperConfig.loadWorld (event.getBlock ().getWorld ());
-            if (world.enderman)
+            WorldConfig world = CreeperConfig.getWorld (event.getBlock ().getWorld ());
+            if (world.getBool (WCfgVal.ENDERMAN))
                 event.setCancelled (true);
         }
     }

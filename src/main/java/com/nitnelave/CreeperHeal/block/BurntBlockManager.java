@@ -16,6 +16,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
+import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
@@ -46,7 +47,7 @@ public abstract class BurntBlockManager {
 
     static
     {
-        if (!CreeperConfig.lightweightMode)
+        if (!CreeperConfig.isLightWeight ())
         {
             fireIndex = new NeighborFire ();
             recentlyBurnt = Collections.synchronizedMap (new HashMap<Location, Date> ());
@@ -88,9 +89,10 @@ public abstract class BurntBlockManager {
                 if (cBlock.getWorld () == world)
                 {
                     cBlock.replace (true);
-                    if (!CreeperConfig.lightweightMode)
+                    if (!CreeperConfig.isLightWeight ())
                     {
-                        recentlyBurnt.put (cBlock.getLocation (), new Date (System.currentTimeMillis () + 1000 * CreeperConfig.waitBeforeBurnAgain));
+                        recentlyBurnt.put (cBlock.getLocation (),
+                                new Date (System.currentTimeMillis () + 1000 * CreeperConfig.getInt (CfgVal.WAIT_BEFORE_BURN_AGAIN)));
                         fireIndex.removeElement (cBlock);
                     }
                     iter.remove ();
@@ -116,10 +118,10 @@ public abstract class BurntBlockManager {
                     if (cBlock.wasReplaced ())
                     {
                         iter.remove ();
-                        if (!CreeperConfig.lightweightMode)
+                        if (!CreeperConfig.isLightWeight ())
                         {
                             fireIndex.removeElement (cBlock);
-                            recentlyBurnt.put (cBlock.getLocation (), new Date (now.getTime () + 1000 * CreeperConfig.waitBeforeBurnAgain));
+                            recentlyBurnt.put (cBlock.getLocation (), new Date (now.getTime () + 1000 * CreeperConfig.getInt (CfgVal.WAIT_BEFORE_BURN_AGAIN)));
                         }
                     }
                 }
@@ -167,7 +169,7 @@ public abstract class BurntBlockManager {
         if (block.getBlock () != null)
         {
             burntList.add (block);
-            if (!(CreeperConfig.lightweightMode))
+            if (!(CreeperConfig.isLightWeight ()))
                 fireIndex.addElement (block);
             block.remove ();
         }

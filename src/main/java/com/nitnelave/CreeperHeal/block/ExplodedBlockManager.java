@@ -16,6 +16,7 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.PluginHandler;
+import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
@@ -42,7 +43,7 @@ public class ExplodedBlockManager {
 
     static
     {
-        if (!CreeperConfig.lightweightMode)
+        if (!CreeperConfig.isLightWeight ())
         {
             explosionIndex = new NeighborExplosion ();
             Bukkit.getScheduler ().runTaskTimerAsynchronously (CreeperHeal.getInstance (), new Runnable () {
@@ -60,9 +61,8 @@ public class ExplodedBlockManager {
             public void run () {
                 checkReplace (); //check to replace explosions/blocks
             }
-        }, 200, CreeperConfig.blockPerBlock ? CreeperConfig.blockPerBlockInterval : 100) == -1)
+        }, 200, CreeperConfig.getBool (CfgVal.BLOCK_PER_BLOCK) ? CreeperConfig.getInt (CfgVal.BLOCK_PER_BLOCK_INTERVAL) : 100) == -1)
             CreeperLog.warning ("[CreeperHeal] Impossible to schedule the re-filling task. Auto-refill will not work");
-
     }
 
     /**
@@ -73,7 +73,7 @@ public class ExplodedBlockManager {
      *            The player around whom the explosions are replaced.
      */
     public static void replaceNear (Player target) {
-        removeExplosionsAround (target.getLocation (), CreeperConfig.distanceNear);
+        removeExplosionsAround (target.getLocation (), CreeperConfig.getInt (CfgVal.DISTANCE_NEAR));
     }
 
     /*
@@ -100,7 +100,7 @@ public class ExplodedBlockManager {
         for (CreeperExplosion ex : pass)
         {
             ex.replace_blocks (true);
-            if (!CreeperConfig.lightweightMode)
+            if (!CreeperConfig.isLightWeight ())
                 explosionIndex.removeElement (ex);
         }
 
@@ -157,16 +157,8 @@ public class ExplodedBlockManager {
         hangingList.clear ();
 
         explosionList.add (cEx);
-        if (!CreeperConfig.lightweightMode)
+        if (!CreeperConfig.isLightWeight ())
             explosionIndex.addElement (cEx, location.getX (), location.getZ ());
-
-        // CreeperTrap code
-        //        if (entity instanceof TNTPrimed)
-        //        {
-        //            Block block = location.getBlock ();
-        //            if (CreeperTrapHandler.isTrap (block))
-        //                Bukkit.getServer ().getScheduler ().scheduleSyncDelayedTask (CreeperHeal.getInstance (), new AddTrapRunnable (cEx, block, Material.TNT));
-        //        }
 
         /*
          * Immediately replace the blocks marked for immediate replacement.
@@ -193,7 +185,7 @@ public class ExplodedBlockManager {
                 if (ex.isEmpty ())
                 {
                     iter.remove ();
-                    if (!CreeperConfig.lightweightMode)
+                    if (!CreeperConfig.isLightWeight ())
                         explosionIndex.removeElement (ex);
                 }
             }

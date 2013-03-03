@@ -14,6 +14,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
+import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 /**
@@ -41,19 +42,21 @@ public abstract class CreeperLog {
      */
     private static boolean debug = false;
 
+    //TODO: FileUtils
     static
     {
-        File warningLogFile = new File (CreeperHeal.getInstance ().getDataFolder () + "/log.txt");
+        File warningLogFile = new File (CreeperHeal.getCHFolder () + "/log.txt");
         if (!warningLogFile.exists ())
-            try
-            {
-                warningLogFile.createNewFile ();
-            } catch (IOException e)
-            {
-                Logger.getLogger ("Minecraft").warning (e.getMessage ());
-            }
+            warningLogFile.getParentFile ().mkdirs ();
+        try
+        {
+            warningLogFile.createNewFile ();
+        } catch (IOException e)
+        {
+            Logger.getLogger ("Minecraft").warning (e.getMessage ());
+        }
         logFile = warningLogFile;
-        debug = CreeperConfig.debug;
+        debug = CreeperConfig.getBool (CfgVal.DEBUG);
     }
 
     /**
@@ -98,8 +101,7 @@ public abstract class CreeperLog {
      */
     public static void logInfo (String msg, int level) {
         if (logLevel == -42)
-            if (CreeperConfig.logLevel != -42)
-                logLevel = CreeperConfig.logLevel;
+            logLevel = CreeperConfig.getInt (CfgVal.LOG_LEVEL);
         if (level <= logLevel)
         {
             log.info ("[CreeperHeal] " + msg);
