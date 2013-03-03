@@ -13,7 +13,6 @@ public enum CfgVal implements CfgValEnumMember {
     TELEPORT_ON_SUFFOCATE("teleport-when-buried", true, true),
     DROP_DESTROYED_BLOCKS("drop-destroyed-blocks.enabled", true, true),
     DROP_CHANCE("drop-destroyed-blocks.chance", 100, true),
-    OP_ENFORCE("op-have-all-permissions", true, true), //TODO: check if necessary given the permissions defined in the plugin.yml file
     OVERWRITE_BLOCKS("replacement-conflict.overwrite", true, true),
     PREVENT_BLOCK_FALL("prevent-block-fall", true, true),
     DISTANCE_NEAR("distance-near", 20, true),
