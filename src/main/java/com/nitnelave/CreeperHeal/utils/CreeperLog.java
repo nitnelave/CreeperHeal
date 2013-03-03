@@ -3,7 +3,6 @@ package com.nitnelave.CreeperHeal.utils;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,19 +41,12 @@ public abstract class CreeperLog {
      */
     private static boolean debug = false;
 
-    //TODO: FileUtils
     static
     {
         File warningLogFile = new File (CreeperHeal.getCHFolder () + "/log.txt");
         if (!warningLogFile.exists ())
-            warningLogFile.getParentFile ().mkdirs ();
-        try
-        {
-            warningLogFile.createNewFile ();
-        } catch (IOException e)
-        {
-            Logger.getLogger ("Minecraft").warning (e.getMessage ());
-        }
+            FileUtils.createNewFile (warningLogFile);
+
         logFile = warningLogFile;
         debug = CreeperConfig.getBool (CfgVal.DEBUG);
     }
