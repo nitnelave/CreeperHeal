@@ -33,7 +33,6 @@ import com.nitnelave.CreeperHeal.utils.FileUtils;
  * 
  */
 public class WorldConfig {
-    //TODO: Apply the same system as the CreeperConfig.
 
     private final HashMap<String, ConfigValue<Boolean>> booleans = new HashMap<String, ConfigValue<Boolean>> ();
     private final String name;

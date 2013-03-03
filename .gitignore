@@ -20,3 +20,4 @@
 bin/*
 .checkstyle
 target/*
+/target

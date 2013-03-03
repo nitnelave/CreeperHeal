@@ -76,14 +76,6 @@
 			<systemPath>${project.basedir}/lib/CreeperTrap.jar</systemPath>
 		</dependency>
 		<dependency>
-			<groupId>net.milkbowl.vault</groupId>
-			<artifactId>Vault</artifactId>
-			<version>1.2.22-b277</version>
-			<type>jar</type>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/Vault.jar</systemPath>
-		</dependency>
-		<dependency>
 			<groupId>com.garbagemule.MobArena</groupId>
 			<artifactId>MobArena</artifactId>
 			<version>0.94.4.81</version>
@@ -111,7 +103,6 @@
 			<groupId>com.massivecraft.factions</groupId>
 			<artifactId>P</artifactId>
 			<version>1.6.9.1</version>
-			<type>jar</type>
 			<scope>system</scope>
 			<systemPath>${project.basedir}/lib/Factions.jar</systemPath>
 		</dependency>
