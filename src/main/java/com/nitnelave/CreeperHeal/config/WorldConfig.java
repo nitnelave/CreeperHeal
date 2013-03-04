@@ -191,8 +191,17 @@ public class WorldConfig {
         }
     }
 
-    public boolean getBool (WCfgVal v) {
-        return booleans.get (v.getKey ()).getValue ();
+    /**
+     * Get the value of the boolean represented by the key.
+     * 
+     * @param key
+     *            The key
+     * @return The value of the boolean.
+     * @throws NullPointerException
+     *             If the key does not represent a boolean.
+     */
+    public boolean getBool (WCfgVal key) throws NullPointerException {
+        return booleans.get (key.getKey ()).getValue ();
     }
 
     /**
@@ -264,6 +273,11 @@ public class WorldConfig {
         return griefPlaceList.getValue ().contains (new BlockId (block));
     }
 
+    /**
+     * Get the World corresponding to the WorldConfig.
+     * 
+     * @return The world.
+     */
     public World getWorld () {
         return Bukkit.getWorld (name);
     }
@@ -271,29 +285,32 @@ public class WorldConfig {
     /**
      * Set the boolean value associated with the key.
      * 
-     * @param val
-     *            The key
+     * @param key
+     *            The key.
      * @param value
      *            The value.
+     * @throws NullPointerException
+     *             If the key is not a valid boolean configuration value.
      */
-    public void setBool (WCfgVal val, boolean value) {
-        ConfigValue<Boolean> v = booleans.get (val.getKey ());
+    public void setBool (WCfgVal key, boolean value) throws NullPointerException {
+        ConfigValue<Boolean> v = booleans.get (key.getKey ());
         if (v == null)
-            throw new NullPointerException ("Unknown config key path : " + val.getKey ());
+            throw new NullPointerException ("Unknown config key path : " + key.getKey ());
         v.setValue (value);
     }
 
-    //TODO: document the exceptions
     /**
      * Set the boolean value associated with the key.
      * 
-     * @param val
-     *            The key
+     * @param key
+     *            The key.
      * @param value
      *            The value.
+     * @throws NullPointerException
+     *             If the key is not a valid Integer configuration value.
      */
-    public void setInt (WCfgVal val, int value) {
-        switch (val)
+    public void setInt (WCfgVal key, int value) throws NullPointerException {
+        switch (key)
         {
             case REPAIR_TIME:
                 repairTime.setValue (value);
@@ -302,7 +319,7 @@ public class WorldConfig {
                 replaceLimit.setValue (value);
                 break;
             default:
-                throw new NullPointerException ("Unknown config key path : " + val.getKey ());
+                throw new NullPointerException ("Unknown config key path : " + key.getKey ());
         }
     }
 
@@ -326,10 +343,23 @@ public class WorldConfig {
         }
     }
 
+    /**
+     * Get the time at which all repairs are automatically enforced.
+     * 
+     * @return The time at which repairs are enforced, -1 if deactivated.
+     */
     public int getRepairTime () {
         return repairTime.getValue ();
     }
 
+    /**
+     * Get whether a block is blacklisted for replacement (i.e. should not be
+     * replaced).
+     * 
+     * @param id
+     *            The blockId of the block.
+     * @return True if the block should not be blacklisted.
+     */
     public boolean isBlackListed (BlockId id) {
         if (getBool (WCfgVal.USE_REPLACE_WHITE_LIST))
             return !replaceWhiteList.getValue ().contains (id);
