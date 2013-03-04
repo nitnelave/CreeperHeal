@@ -1,10 +1,15 @@
 package com.nitnelave.CreeperHeal.block;
 
+import java.util.Random;
+
 import org.bukkit.Art;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Painting;
 import org.bukkit.inventory.ItemStack;
+
+import com.nitnelave.CreeperHeal.config.CfgVal;
+import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 /**
  * Painting implementation of the CreeperHanging. Represents a painting.
@@ -94,8 +99,13 @@ class CreeperPainting extends CreeperHanging {
      * @see com.nitnelave.CreeperHeal.block.Replaceable#drop()
      */
     @Override
-    public void drop () {
-        getWorld ().dropItemNaturally (getLocation (), new ItemStack (321, 1));
+    public boolean drop (boolean forced) {
+        if (forced || new Random ().nextInt (100) < CreeperConfig.getInt (CfgVal.DROP_CHANCE))
+        {
+            getWorld ().dropItemNaturally (getLocation (), new ItemStack (321, 1));
+            return true;
+        }
+        return false;
     }
 
     /*

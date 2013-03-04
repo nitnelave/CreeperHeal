@@ -19,8 +19,8 @@ public interface Replaceable {
      * postponed or if the item should be dropped.
      * 
      * @param shouldDrop
-     *            If true, the item will drop, otherwise it's replacement will
-     *            be postponed.
+     *            If true, the item will drop, otherwise its replacement will be
+     *            postponed.
      * @return False if the replacement was postponed.
      */
     public boolean replace (boolean shouldDrop);
@@ -71,8 +71,13 @@ public interface Replaceable {
 
     /**
      * Drop the item on the ground.
+     * 
+     * @param forced
+     *            If false, the block is dropped only according to the drop
+     *            chance in the config.
+     * @return True if the block was dropped.
      */
-    public void drop ();
+    public boolean drop (boolean forced);
 
     /**
      * Remove the block from the world.

@@ -1,10 +1,15 @@
 package com.nitnelave.CreeperHeal.block;
 
+import java.util.Random;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.inventory.ItemStack;
+
+import com.nitnelave.CreeperHeal.config.CfgVal;
+import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 /**
  * ItemFrame implementation of the CreeperHanging. Represents an ItemFrame.
@@ -56,12 +61,17 @@ class CreeperItemFrame extends CreeperHanging {
      * @see com.nitnelave.CreeperHeal.block.Replaceable#drop()
      */
     @Override
-    public void drop () {
-        ItemFrame f = (ItemFrame) hanging;
-        ItemStack s = f.getItem ();
-        if (s.getType () != Material.AIR)
-            getWorld ().dropItemNaturally (getLocation (), s);
-        getWorld ().dropItemNaturally (getLocation (), new ItemStack (389, 1));
+    public boolean drop (boolean forced) {
+        if (forced || new Random ().nextInt (100) < CreeperConfig.getInt (CfgVal.DROP_CHANCE))
+        {
+            ItemFrame f = (ItemFrame) hanging;
+            ItemStack s = f.getItem ();
+            if (s.getType () != Material.AIR)
+                getWorld ().dropItemNaturally (getLocation (), s);
+            getWorld ().dropItemNaturally (getLocation (), new ItemStack (389, 1));
+            return true;
+        }
+        return false;
     }
 
     /*

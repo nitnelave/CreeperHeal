@@ -130,7 +130,7 @@ public class CreeperBurntBlock {
     public boolean postPone (int delay) {
         if (!timer.postPone (delay))
         {
-            block.drop ();
+            block.drop (true);
             return false;
         }
         return true;

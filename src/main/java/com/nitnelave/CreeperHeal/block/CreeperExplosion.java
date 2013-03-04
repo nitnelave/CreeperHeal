@@ -142,7 +142,7 @@ public class CreeperExplosion {
             if (block instanceof CreeperBlock)
                 ((CreeperBlock) block).delayReplacement ();
             else
-                block.drop ();
+                block.drop (true);
         if (CreeperConfig.getBool (CfgVal.TELEPORT_ON_SUFFOCATE))
             BlockManager.checkPlayerOneBlock (block.getBlock ().getLocation ());
         return !blockList.isEmpty ();
@@ -256,10 +256,7 @@ public class CreeperExplosion {
         }
         else if (CreeperConfig.getBool (CfgVal.DROP_DESTROYED_BLOCKS))
         {
-            // The block should not be replaced, check if it drops
-            Random generator = new Random ();
-            if (generator.nextInt (100) < CreeperConfig.getInt (CfgVal.DROP_CHANCE)) //percentage
-                cBlock.drop ();
+            cBlock.drop (false);
             cBlock.remove ();
 
         }

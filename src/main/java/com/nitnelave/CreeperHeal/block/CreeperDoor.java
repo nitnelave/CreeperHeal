@@ -43,13 +43,13 @@ class CreeperDoor extends CreeperBlock {
         if (!CreeperConfig.getBool (CfgVal.OVERWRITE_BLOCKS) && !EMPTY_BLOCKS.contains (blockUp.getTypeId ()))
         {
             if (CreeperConfig.getBool (CfgVal.DROP_DESTROYED_BLOCKS))
-                drop ();
+                drop (true);
             return;
         }
         else if (CreeperConfig.getBool (CfgVal.OVERWRITE_BLOCKS) && !EMPTY_BLOCKS.contains (blockUp.getTypeId ())
                 && CreeperConfig.getBool (CfgVal.DROP_DESTROYED_BLOCKS))
         {
-            CreeperBlock.newBlock (blockUp.getState ()).drop ();
+            CreeperBlock.newBlock (blockUp.getState ()).drop (true);
             blockUp.setTypeIdAndData (0, (byte) 0, false);
         }
         blockState.update (true);
