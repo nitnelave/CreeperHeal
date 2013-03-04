@@ -25,21 +25,7 @@ class CreeperBed extends CreeperBlock {
      * Constructor.
      */
     protected CreeperBed (BlockState blockState) {
-        byte faceData = (byte) (blockState.getRawData () & 3);
-        switch (faceData)
-        {
-            case 0:
-                orientation = BlockFace.NORTH;
-                break;
-            case 1:
-                orientation = BlockFace.EAST;
-                break;
-            case 2:
-                orientation = BlockFace.SOUTH;
-                break;
-            default:
-                orientation = BlockFace.WEST;
-        }
+        orientation = getFacing (blockState.getRawData ());
         Block block = blockState.getBlock ();
         if ((blockState.getRawData () & 8) == 0)
             block = block.getRelative (orientation.getOppositeFace ());
@@ -53,15 +39,7 @@ class CreeperBed extends CreeperBlock {
     @Override
     public void update () {
         byte data = (byte) (getRawData () & 3);
-        BlockFace face;
-        if (data == 0)
-            face = BlockFace.NORTH;
-        else if (data == 1)
-            face = BlockFace.EAST;
-        else if (data == 2)
-            face = BlockFace.SOUTH;
-        else
-            face = BlockFace.WEST;
+        BlockFace face = getFacing (data);
         blockState.update (true);
         getBlock ().getRelative (face).setTypeIdAndData (getTypeId (), data, false);
     }
@@ -83,6 +61,21 @@ class CreeperBed extends CreeperBlock {
     @Override
     public List<NeighborBlock> getDependentNeighbors () {
         return new ArrayList<NeighborBlock> ();
+    }
+
+    private BlockFace getFacing (byte data) {
+        switch (data & 3)
+        {
+            case 0:
+                return BlockFace.NORTH;
+            case 1:
+                return BlockFace.EAST;
+            case 2:
+                return BlockFace.SOUTH;
+            default:
+                return BlockFace.WEST;
+        }
+
     }
 
 }

@@ -203,7 +203,20 @@ public class CreeperBlock implements Replaceable {
      */
     @Override
     public final boolean replace (boolean shouldDrop) {
-        Block block = getBlock ();
+        if (checkForDrop (getBlock ()))
+            return true;
+
+        if (!shouldDrop && isDependent (getTypeId ()) && isEmpty (getBlock ().getRelative (getAttachingFace ()).getTypeId ()))
+            return false;
+        else
+            update ();
+
+        checkForAscendingRails ();
+
+        return true;
+    }
+
+    protected boolean checkForDrop (Block block) {
         int blockId = block.getTypeId ();
 
         if (!CreeperConfig.getBool (CfgVal.OVERWRITE_BLOCKS) && !isEmpty (blockId))
@@ -221,15 +234,8 @@ public class CreeperBlock implements Replaceable {
                 b.remove ();
             }
         }
+        return false;
 
-        if (!shouldDrop && isDependent (getTypeId ()) && isEmpty (getBlock ().getRelative (getAttachingFace ()).getTypeId ()))
-            return false;
-        else
-            update ();
-
-        checkForAscendingRails ();
-
-        return true;
     }
 
     /*
