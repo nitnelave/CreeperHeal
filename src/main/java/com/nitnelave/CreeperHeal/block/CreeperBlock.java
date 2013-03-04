@@ -3,6 +3,7 @@ package com.nitnelave.CreeperHeal.block;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -182,14 +183,18 @@ public class CreeperBlock implements Replaceable {
      * Drop the corresponding items on the ground.
      */
     @Override
-    public void drop () {
-        Location loc = blockState.getBlock ().getLocation ();
-        World w = loc.getWorld ();
+    public boolean drop (boolean forced) {
+        if (forced || new Random ().nextInt (100) < CreeperConfig.getInt (CfgVal.DROP_CHANCE))
+        {
+            Location loc = blockState.getBlock ().getLocation ();
+            World w = loc.getWorld ();
 
-        Collection<ItemStack> drop = blockState.getBlock ().getDrops ();
-        for (ItemStack s : drop)
-            w.dropItemNaturally (loc, s);
-
+            Collection<ItemStack> drop = blockState.getBlock ().getDrops ();
+            for (ItemStack s : drop)
+                w.dropItemNaturally (loc, s);
+            return true;
+        }
+        return false;
     }
 
     /*
@@ -204,7 +209,7 @@ public class CreeperBlock implements Replaceable {
         if (!CreeperConfig.getBool (CfgVal.OVERWRITE_BLOCKS) && !isEmpty (blockId))
         {
             if (CreeperConfig.getBool (CfgVal.DROP_DESTROYED_BLOCKS))
-                drop ();
+                drop (true);
             return true;
         }
         else if (CreeperConfig.getBool (CfgVal.OVERWRITE_BLOCKS) && !isEmpty (blockId) && CreeperConfig.getBool (CfgVal.DROP_DESTROYED_BLOCKS))
@@ -212,7 +217,7 @@ public class CreeperBlock implements Replaceable {
             CreeperBlock b = CreeperBlock.newBlock (block.getState ());
             if (b != null)
             {
-                b.drop ();
+                b.drop (true);
                 b.remove ();
             }
         }

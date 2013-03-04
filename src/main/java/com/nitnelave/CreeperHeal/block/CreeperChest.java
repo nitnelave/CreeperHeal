@@ -66,14 +66,13 @@ class CreeperChest extends CreeperBlock {
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#dropBlock()
      */
     @Override
-    public void drop () {
-        super.drop ();
+    public boolean drop (boolean forced) {
         ItemStack[] stacks = getTotalInventory ();
         if (stacks != null)
             for (ItemStack stack : stacks)
                 if (stack != null)
                     getWorld ().dropItemNaturally (getLocation (), stack);
-
+        return super.drop (forced);
     }
 
     /*
