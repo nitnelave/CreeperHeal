@@ -215,7 +215,10 @@ public abstract class CreeperConfig {
     private static WorldConfig loadWorld (String name) {
         WorldConfig w;
         if (configVersion < CONFIG_VERSION)
+        {
             w = WorldConfigImporter.importFrom (name, configVersion);
+            w.save ();
+        }
         else
         {
             w = new WorldConfig (name);
