@@ -7,6 +7,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
+import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
@@ -16,8 +17,7 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
  * @author nitnelave
  * 
  */
-public abstract class CreeperHandler
-{
+public abstract class CreeperHandler {
 
     /**
      * Record all the blocks in the list as for an explosion.
@@ -25,9 +25,8 @@ public abstract class CreeperHandler
      * @param list
      *            The list of blocks.
      */
-    public static void recordBlocks(List<Block> list)
-    {
-        recordBlocks(list, list.get(0).getLocation());
+    public static void recordBlocks (List<Block> list) {
+        recordBlocks (list, list.get (0).getLocation ());
     }
 
     /**
@@ -39,9 +38,8 @@ public abstract class CreeperHandler
      * @param location
      *            The location of the explosion.
      */
-    public static void recordBlocks(List<Block> list, Location location)
-    {
-        ExplodedBlockManager.processExplosion(list, location);
+    public static void recordBlocks (List<Block> list, Location location) {
+        ExplodedBlockManager.processExplosion (list, location);
     }
 
     /**
@@ -50,9 +48,19 @@ public abstract class CreeperHandler
      * @param event
      *            The event corresponding to an explosion.
      */
-    public static void recordBlocks(EntityExplodeEvent event)
-    {
-        ExplodedBlockManager.processExplosion(event, CreeperConfig.getWorld(event.getLocation().getWorld()));
+    public static void recordBlocks (EntityExplodeEvent event) {
+        ExplodedBlockManager.processExplosion (event, CreeperConfig.getWorld (event.getLocation ().getWorld ()));
+    }
+
+    /**
+     * Record a block to be replaced later, and remove it from the world. The
+     * surrounding blocks, if dependent on it, are taken care of.
+     * 
+     * @param block
+     *            The block to record.
+     */
+    public static void recordBlock (Block block) {
+        BurntBlockManager.recordBurntBlock (block);
     }
 
     /**
@@ -63,9 +71,8 @@ public abstract class CreeperHandler
      *            The source of the explosion.
      * @return Whether the protection should be removed.
      */
-    public static boolean shouldRemoveLWCProtection(Entity entity)
-    {
-        return !CreeperConfig.getWorld(entity.getWorld()).shouldReplace(entity);
+    public static boolean shouldRemoveLWCProtection (Entity entity) {
+        return !CreeperConfig.getWorld (entity.getWorld ()).shouldReplace (entity);
     }
 
 }
