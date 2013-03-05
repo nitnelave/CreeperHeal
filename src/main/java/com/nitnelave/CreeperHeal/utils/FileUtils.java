@@ -11,6 +11,7 @@ import com.nitnelave.CreeperHeal.CreeperHeal;
 public class FileUtils {
 
     public static boolean createNewFile (File f) {
+        f.delete ();
         f.getParentFile ().mkdirs ();
         try
         {
@@ -28,29 +29,30 @@ public class FileUtils {
     }
 
     public static void copyJarConfig (File file, String source) {
-        OutputStream outStream = null;
+        if (!createNewFile (file))
+            return;
+        InputStream in = CreeperHeal.getInstance ().getResource (source);
+        if (in == null)
+            throw new IllegalArgumentException ("The embedded resource '" + source + "' cannot be found.");
         try
         {
-            if (createNewFile (file))
-                return;
-            InputStream templateIn = CreeperHeal.getInstance ().getResource (source);
-            outStream = new FileOutputStream (file);
+            OutputStream out = new FileOutputStream (file);
 
-            int read = 0;
-            byte[] bytes = new byte[1024];
+            int read;
+            byte[] buf = new byte[1024];
 
-            while ((read = templateIn.read (bytes)) != -1)
-                outStream.write (bytes, 0, read);
+            while ((read = in.read (buf)) != -1)
+                out.write (buf, 0, read);
 
-            templateIn.close ();
-            outStream.flush ();
-            outStream.close ();
+            in.close ();
+            out.flush ();
+            out.close ();
             CreeperLog.logInfo ("[CreeperHeal] Default config created for file " + file.getName (), 1);
-
-        } catch (Exception e)
+        } catch (IOException ex)
         {
-            CreeperLog.severe ("[CreeperHeal] Failed to create file: " + file.getName ());
-            e.printStackTrace ();
+            CreeperLog.warning ("Error copying file from jar : " + source);
+            ex.printStackTrace ();
         }
+
     }
 }
