@@ -13,7 +13,6 @@ import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -101,14 +100,14 @@ public class GriefListener implements Listener {
     }
 
     /**
-     * Listener for the EntityDamageEvent. Control PVP and check for destroyed
-     * paintings.
+     * Listener for the EntityDamageByEntityEvent. Control PVP and check for
+     * destroyed paintings.
      * 
      * @param event
-     *            The EntityDamageEvent.
+     *            The EntityDamageByEntityEvent.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onEntityDamage (EntityDamageEvent event) {
+    public void onEntityDamageByEntity (EntityDamageByEntityEvent event) {
         if (event.getEntity () instanceof Player)
         {
             Player attacked = (Player) event.getEntity ();
@@ -118,17 +117,16 @@ public class GriefListener implements Listener {
             switch (event.getCause ())
             {
                 case ENTITY_ATTACK:
-                    attacker = ((EntityDamageByEntityEvent) event).getDamager ();
+                    attacker = event.getDamager ();
                     if (attacker instanceof Player)
                         offender = (Player) attacker;
                     break;
                 case PROJECTILE:
                 case MAGIC:
-                    Entity damager = ((EntityDamageByEntityEvent) event).getDamager ();
+                    Entity damager = event.getDamager ();
                     if (damager instanceof Projectile)
                     {
-                        Projectile projectile = (Projectile) damager;
-                        attacker = projectile.getShooter ();
+                        attacker = ((Projectile) damager).getShooter ();
                         if (attacker instanceof Player)
                             offender = (Player) attacker;
                     }
