@@ -1,0 +1,36 @@
+# Advanced world-specific settings
+#
+# restrict: Prevent replacement of some blocks. If use-whitelist is true, then
+# only the blocks listed in the whitelist are replaced, otherwise every block
+# except those listed in the blacklist are replaced.  The format to enter a
+# block is ID:DATA, with the data being optional. The
+# values are separated by comas. If no data is specified, then all data values
+# are included. For example, to block dirt, all types of wool, normal logs and
+# birch logs : 3, 35, 17:0, 17:2
+#
+# replace-grass-with-dirt: If true, then grass blocks that are blown up will be
+# replaced by plain dirt blocks.
+#
+# repair-time-of-day: Minecraft time at which every explosion and burnt block
+# should be replaced. (-1 to deactivate)
+# Sunrise is around 23000, noon 6000, sunset 13000, and midnight 18000. Day
+# (zombies burning) starts at 0.
+#
+# protected-list: List of block types to protect (in the same format as the
+# restrict lists).
+#
+# factions: To use with the Factions plugin. If the settings are set to true,
+# the explosions in wilderness or territory are ignored by CreeperHeal (blocks
+# are destroyed normally).
+#
+
+restrict:
+  use-whitelist: false
+  blacklist: '0'
+  whitelist: '0'
+replace-grass-with-dirt: false
+repair-time-of-day: -1
+protected-list: '0'
+factions:
+  ignore-wilderness: false
+  ignore-territory: false

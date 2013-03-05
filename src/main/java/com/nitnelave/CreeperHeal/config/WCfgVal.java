@@ -5,11 +5,11 @@ import java.util.HashSet;
 import com.nitnelave.CreeperHeal.block.BlockId;
 
 public enum WCfgVal implements CfgValEnumMember {
-    CREEPERS("Creepers", true, CONFIG_FILES.CONFIG),
+    CREEPERS("creepers", true, CONFIG_FILES.CONFIG),
     TNT("TNT", true, CONFIG_FILES.CONFIG),
-    GHAST("Ghast", true, CONFIG_FILES.CONFIG),
-    DRAGONS("Dragons", false, CONFIG_FILES.CONFIG),
-    MAGICAL("Magical", false, CONFIG_FILES.CONFIG),
+    GHAST("ghast", true, CONFIG_FILES.CONFIG),
+    DRAGONS("dragons", false, CONFIG_FILES.CONFIG),
+    CUSTOM("custom", false, CONFIG_FILES.CONFIG),
     FIRE("fire", true, CONFIG_FILES.CONFIG),
     ENDERMAN("enderman", false, CONFIG_FILES.CONFIG),
     WITHER("wither", true, CONFIG_FILES.CONFIG),

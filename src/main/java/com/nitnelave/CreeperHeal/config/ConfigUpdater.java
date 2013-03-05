@@ -14,13 +14,12 @@ class ConfigUpdater {
 
     private static int waitBeforeHeal, logLevel = -42, blockPerBlockInterval, waitBeforeHealBurnt, dropChance, distanceNear, obsidianChance, obsidianRadius,
             waitBeforeBurnAgain;
-    private static boolean dropReplacedBlocks, blockPerBlock, teleportOnSuffocate, dropDestroyedBlocks, crackDestroyedBricks, replaceProtectedChests,
-            overwriteBlocks, preventBlockFall, lightweightMode, logWarnings, preventChainReaction, explodeObsidian, debug;
+    private static boolean blockPerBlock, teleportOnSuffocate, dropDestroyedBlocks, crackDestroyedBricks, replaceProtectedChests, overwriteBlocks,
+            preventBlockFall, lightweightMode, logWarnings, preventChainReaction, explodeObsidian, debug;
     private static String cmdAlias;
 
     private static void recordValues () {
         CreeperConfig.setBool (CfgVal.BLOCK_PER_BLOCK, blockPerBlock);
-        CreeperConfig.setBool (CfgVal.DROP_REPLACED_BLOCKS, dropReplacedBlocks);
         CreeperConfig.setBool (CfgVal.TELEPORT_ON_SUFFOCATE, teleportOnSuffocate);
         CreeperConfig.setBool (CfgVal.DROP_DESTROYED_BLOCKS, dropDestroyedBlocks);
         CreeperConfig.setBool (CfgVal.CRACK_DESTROYED_BRICKS, crackDestroyedBricks);
@@ -47,7 +46,7 @@ class ConfigUpdater {
     private static void from4 () throws FileNotFoundException, IOException, InvalidConfigurationException {
         CreeperLog.logInfo ("Importing config from version 4", 1);
         YamlConfiguration config = new YamlConfiguration ();
-        File configFile = new File (CreeperHeal.getCHFolder () + "config.yml");
+        File configFile = new File (CreeperHeal.getCHFolder () + "/config.yml");
         config.load (configFile);
         String tmp_str;
         try
@@ -63,7 +62,6 @@ class ConfigUpdater {
             CreeperLog.warning ("[CreeperHeal] Wrong value for replacement method field. Defaulting to block-per-block.");
         waitBeforeHeal = getInt (config, "wait-before-heal-explosions", 60);
         logLevel = getInt (config, "verbose-level", 1);
-        dropReplacedBlocks = getBoolean (config, "drop-overwritten-blocks", true);
         blockPerBlock = (tmp_str.equalsIgnoreCase ("all-at-once")) ? false : true;
         teleportOnSuffocate = getBoolean (config, "teleport-when-buried", true);
         waitBeforeHealBurnt = getInt (config, "wait-before-heal-fire", 45);
@@ -106,9 +104,9 @@ class ConfigUpdater {
         CreeperLog.logInfo ("Importing config from version 5", 1);
 
         YamlConfiguration config = new YamlConfiguration ();
-        File configFile = new File (CreeperHeal.getCHFolder () + "config.yml");
+        File configFile = new File (CreeperHeal.getCHFolder () + "/config.yml");
         config.load (configFile);
-        File advancedFile = new File (CreeperHeal.getCHFolder () + "advanced.yml");
+        File advancedFile = new File (CreeperHeal.getCHFolder () + "/advanced.yml");
 
         blockPerBlockInterval = getInt (config, "replacement.block-per-block.interval", 20);
         waitBeforeHeal = getInt (config, "replacement.wait-before-heal.explosions", 60);
@@ -118,7 +116,6 @@ class ConfigUpdater {
         boolean replaceAllChests = getBoolean (config, "replacement.ignore-chests.all", false);
         replaceProtectedChests = replaceAllChests || getBoolean (config, "replacement.ignore-chests.protected", false);
         logLevel = getInt (config, "advanced.verbose-level", 1);
-        dropReplacedBlocks = getBoolean (config, "advanced.replacement-conflict.drop-overwritten-blocks", true);
         teleportOnSuffocate = getBoolean (config, "advanced.teleport-when-buried", true);
         dropDestroyedBlocks = getBoolean (config, "advanced.drop-destroyed-blocks.enabled", true);
         dropChance = getInt (config, "advanced.drop-destroyed-blocks.chance", 100);
@@ -143,10 +140,10 @@ class ConfigUpdater {
     private static void from6 () throws FileNotFoundException, IOException, InvalidConfigurationException {
         CreeperLog.logInfo ("Importing config from version 6", 1);
         YamlConfiguration config = new YamlConfiguration ();
-        File configFile = new File (CreeperHeal.getCHFolder () + "config.yml");
+        File configFile = new File (CreeperHeal.getCHFolder () + "/config.yml");
         config.load (configFile);
         YamlConfiguration advanced = new YamlConfiguration ();
-        File advancedFile = new File (CreeperHeal.getCHFolder () + "advanced.yml");
+        File advancedFile = new File (CreeperHeal.getCHFolder () + "/advanced.yml");
         advanced.load (advancedFile);
 
         blockPerBlockInterval = getInt (config, "block-per-block.interval", 20);
@@ -158,7 +155,6 @@ class ConfigUpdater {
         replaceProtectedChests = replaceAllChests || getBoolean (config, "ignore-chests.protected", false);
 
         logLevel = getInt (advanced, "verbose-level", 1);
-        dropReplacedBlocks = getBoolean (advanced, "replacement-conflict.drop-overwritten-blocks", true);
         teleportOnSuffocate = getBoolean (advanced, "teleport-when-buried", true);
         dropDestroyedBlocks = getBoolean (advanced, "drop-destroyed-blocks.enabled", true);
         dropChance = getInt (advanced, "drop-destroyed-blocks.chance", 100);

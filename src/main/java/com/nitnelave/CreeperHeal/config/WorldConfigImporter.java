@@ -13,7 +13,7 @@ abstract class WorldConfigImporter {
 
     private final static String[] STRING_BOOLEAN_OPTIONS = {"true", "false", "time"};
     private static boolean enderman, replaceAbove, blockLava, blockTNT, blockIgnite, griefBlockList, grassToDirt, blockSpawnEggs, blockPvP, warnLava, warnTNT,
-            warnIgnite, warnBlackList, warnSpawnEggs, warnPvP, preventFireSpread, preventFireLava, creepers, tnt, fire, ghast, magical, dragons, wither,
+            warnIgnite, warnBlackList, warnSpawnEggs, warnPvP, preventFireSpread, preventFireLava, creepers, tnt, fire, ghast, custom, dragons, wither,
             ignoreFactionsWilderness, ignoreFactionsTerritory;
     private static int replaceLimit, repairTime;
     private static HashSet<BlockId> blockBlackList, blockWhiteList, protectList, placeList;
@@ -40,7 +40,7 @@ abstract class WorldConfigImporter {
         w.setBool (WCfgVal.TNT, tnt);
         w.setBool (WCfgVal.FIRE, fire);
         w.setBool (WCfgVal.GHAST, ghast);
-        w.setBool (WCfgVal.MAGICAL, magical);
+        w.setBool (WCfgVal.CUSTOM, custom);
         w.setBool (WCfgVal.WITHER, wither);
         w.setBool (WCfgVal.DRAGONS, dragons);
         w.setBool (WCfgVal.FACTIONS_IGNORE_WILDERNESS, ignoreFactionsWilderness);
@@ -70,7 +70,7 @@ abstract class WorldConfigImporter {
         tnt = getStringBoolean (name + ".TNT", "true", config);
         fire = getStringBoolean (name + ".Fire", "true", config);
         ghast = getStringBoolean (name + ".Ghast", "true", config);
-        magical = getStringBoolean (name + ".Magical", "false", config);
+        custom = getStringBoolean (name + ".Magical", "false", config);
         replaceAbove = ConfigUpdater.getBoolean (config, name + ".replace-above-limit-only", false);
         replaceLimit = ConfigUpdater.getInt (config, name + ".replace-limit", 64);
         enderman = ConfigUpdater.getBoolean (config, name + ".block-enderman-pickup", false);
@@ -110,7 +110,7 @@ abstract class WorldConfigImporter {
         tnt = ConfigUpdater.getBoolean (config, "replace.TNT", true);
         ghast = ConfigUpdater.getBoolean (config, "replace.Ghast", true);
         dragons = ConfigUpdater.getBoolean (config, "replace.Dragons", false);
-        magical = ConfigUpdater.getBoolean (config, "replace.Magical", false);
+        custom = ConfigUpdater.getBoolean (config, "replace.Magical", false);
         fire = ConfigUpdater.getBoolean (config, "replace.Fire", true);
         enderman = ConfigUpdater.getBoolean (config, "replace.Enderman", true);
         replaceAbove = ConfigUpdater.getBoolean (config, "replace.replace-above-limit-only", false);

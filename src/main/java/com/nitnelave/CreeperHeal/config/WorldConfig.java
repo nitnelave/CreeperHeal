@@ -220,7 +220,7 @@ public class WorldConfig {
                 return getBool (WCfgVal.DRAGONS);
             else if (entity instanceof Wither)
                 return getBool (WCfgVal.WITHER);
-        return getBool (WCfgVal.MAGICAL);
+        return getBool (WCfgVal.CUSTOM);
     }
 
     /**
