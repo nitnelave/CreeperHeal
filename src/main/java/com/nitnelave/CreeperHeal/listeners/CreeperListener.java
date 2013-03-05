@@ -37,6 +37,7 @@ public class CreeperListener implements Listener {
      * explosion for later replacement.
      * 
      * @param event
+     *            The EntityExplode event.
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityExplode (EntityExplodeEvent event) {
@@ -81,6 +82,7 @@ public class CreeperListener implements Listener {
      * blocks.
      * 
      * @param event
+     *            The EntityChangeBlock event.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEntityChangeBlock (EntityChangeBlockEvent event) {

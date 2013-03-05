@@ -4,8 +4,16 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 class BooleanConfigValue extends ConfigValue<Boolean> {
 
-    public BooleanConfigValue (CfgValEnumMember v, YamlConfiguration file) {
-        super ((Boolean) v.getDefaultValue (), file, v.getKey ());
+    /**
+     * Instantiates a new boolean config value.
+     * 
+     * @param val
+     *            The value represented.
+     * @param file
+     *            The configuration file in which the value is stored.
+     */
+    public BooleanConfigValue (CfgValEnumMember val, YamlConfiguration file) {
+        super ((Boolean) val.getDefaultValue (), file, val.getKey ());
     }
 
     @Override

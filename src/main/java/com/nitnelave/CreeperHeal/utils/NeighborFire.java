@@ -65,14 +65,26 @@ public class NeighborFire extends NeighborFinder<CreeperBurntBlock> {
         }
     }
 
-    public void removeElement (CreeperBurntBlock cBlock) {
-        Location l = cBlock.getLocation ();
-        removeElement (cBlock, l.getBlockX (), l.getBlockZ ());
+    /**
+     * Removes a block from the index.
+     * 
+     * @param block
+     *            The block to be removed.
+     */
+    public void removeElement (CreeperBurntBlock block) {
+        Location l = block.getLocation ();
+        removeElement (block, l.getBlockX (), l.getBlockZ ());
     }
 
-    public void addElement (CreeperBurntBlock b) {
-        Location l = b.getLocation ();
-        addElement (b, l.getBlockX (), l.getBlockZ ());
+    /**
+     * Adds a block to the index.
+     * 
+     * @param block
+     *            The block to add.
+     */
+    public void addElement (CreeperBurntBlock block) {
+        Location l = block.getLocation ();
+        addElement (block, l.getBlockX (), l.getBlockZ ());
     }
 
 }

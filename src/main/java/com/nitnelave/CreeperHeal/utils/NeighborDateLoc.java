@@ -11,10 +11,9 @@ import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 /**
- * Implementation of the NeighborFinder for DateLoc
+ * Implementation of the NeighborFinder for DateLoc.
  * 
  * @author nitnelave
- * 
  */
 public class NeighborDateLoc extends NeighborFinder<DateLoc> {
 

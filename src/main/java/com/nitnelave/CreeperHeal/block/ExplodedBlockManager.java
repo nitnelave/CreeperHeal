@@ -225,12 +225,18 @@ public class ExplodedBlockManager {
         return explosionList.isEmpty ();
     }
 
-    public static void recordHanging (Hanging h) {
-        CreeperHanging hanging = CreeperHanging.newHanging (h);
-        if (hanging != null)
+    /**
+     * Record a hanging as part of the explosion.
+     * 
+     * @param hanging
+     *            The hanging to record.
+     */
+    public static void recordHanging (Hanging hanging) {
+        CreeperHanging h = CreeperHanging.newHanging (hanging);
+        if (h != null)
         {
-            hangingList.add (hanging);
-            hanging.remove ();
+            hangingList.add (h);
+            h.remove ();
         }
     }
 

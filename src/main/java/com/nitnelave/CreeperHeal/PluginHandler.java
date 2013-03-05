@@ -10,16 +10,22 @@ import org.yi.acru.bukkit.Lockette.Lockette;
 import com.garbagemule.MobArena.MobArenaHandler;
 import com.griefcraft.lwc.LWC;
 import com.griefcraft.lwc.LWCPlugin;
-import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.FactionHandler;
 import com.nitnelave.CreeperTrap.CreeperTrapCommands;
 
+/**
+ * This class handles all the interaction with external plugins.
+ * 
+ * @author nitnelave
+ * 
+ */
 public class PluginHandler {
 
     private static MobArenaHandler maHandler = null;
     private static LWC lwc = null;
     private static boolean playerHeads = false, creeperTrap = false;
+    private static boolean lockette = false;
 
     static
     {
@@ -27,7 +33,7 @@ public class PluginHandler {
         if (lwcp != null)
             lwc = ((LWCPlugin) lwcp).getLWC ();
 
-        CreeperConfig.lockette = detectPlugin ("Lockette") != null;
+        lockette = detectPlugin ("Lockette") != null;
 
         if (detectPlugin ("MobArena") != null)
             maHandler = new MobArenaHandler ();
@@ -58,7 +64,7 @@ public class PluginHandler {
     public static boolean isProtected (Block block) {
         if (lwc != null)
             return lwc.findProtection (block) != null;
-        else if (CreeperConfig.lockette)
+        else if (lockette)
             return Lockette.isProtected (block);
         else
             return false;

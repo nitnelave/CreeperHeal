@@ -9,10 +9,9 @@ import org.bukkit.Location;
  * 2-D map, allowing for fast neighbor search. The map is divided in zones, and
  * in each zone there is a list of Location.
  * 
- * @author nitnelave
- * 
  * @param <T>
  *            The type of the data stored for each point.
+ * @author nitnelave
  */
 public abstract class NeighborFinder<T> {
 

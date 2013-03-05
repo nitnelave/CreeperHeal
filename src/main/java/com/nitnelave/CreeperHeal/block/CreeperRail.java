@@ -36,6 +36,10 @@ class CreeperRail extends CreeperBlock {
         });
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.nitnelave.CreeperHeal.block.CreeperBlock#getAttachingFace()
+     */
     @Override
     public BlockFace getAttachingFace () {
         switch (getRawData ())
@@ -87,6 +91,11 @@ class CreeperRail extends CreeperBlock {
             }
     }
 
+    /**
+     * Checks if the rail is ascending.
+     * 
+     * @return True, if it is ascending
+     */
     public boolean isAscending () {
         return getRawData () > 1;
     }

@@ -39,7 +39,6 @@ public abstract class CreeperConfig {
     private static final Map<String, ConfigValue<Integer>> integers = new HashMap<String, ConfigValue<Integer>> ();
     private static final YamlConfiguration config = new YamlConfiguration (), advanced = new YamlConfiguration ();
     private static ConfigValue<String> alias;
-    public static boolean lockette;
 
     static
     {
@@ -261,7 +260,7 @@ public abstract class CreeperConfig {
 
     /**
      * Load a world configuration file into memory the first time, and return
-     * the configuration
+     * the configuration.
      * 
      * @param world
      *            The world to load.
@@ -271,6 +270,14 @@ public abstract class CreeperConfig {
         return getWorld (world.getName ());
     }
 
+    /**
+     * Load a world configuration file into memory the first time, and return
+     * the configuration.
+     * 
+     * @param name
+     *            The name of the world to be loaded.
+     * @return The world configuration file.
+     */
     public static WorldConfig getWorld (String name) {
         WorldConfig returnValue = world_config.get (name);
         if (returnValue == null)
@@ -290,14 +297,29 @@ public abstract class CreeperConfig {
         alias.setValue (cmdAlias);
     }
 
+    /**
+     * Gets the command alias.
+     * 
+     * @return The command alias.
+     */
     public static String getAlias () {
         return alias.getValue ();
     }
 
+    /**
+     * Gets the list of worlds recorded.
+     * 
+     * @return The list of worlds.
+     */
     public static Collection<WorldConfig> getWorlds () {
         return world_config.values ();
     }
 
+    /**
+     * Checks if lightweight mode is enabled.
+     * 
+     * @return True if lightweight mode is enabled.
+     */
     public static boolean isLightWeight () {
         return getBool (CfgVal.LIGHTWEIHGTMODE);
     }

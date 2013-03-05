@@ -31,7 +31,7 @@ import com.nitnelave.CreeperHeal.utils.CreeperPermissionManager;
 public class CreeperCommandManager implements CommandExecutor {
     private final static String green = ChatColor.GREEN.toString (), purple = ChatColor.DARK_PURPLE.toString ();
 
-    /*
+    /**
      * Register commands.
      */
     public static void registerCommands () {
