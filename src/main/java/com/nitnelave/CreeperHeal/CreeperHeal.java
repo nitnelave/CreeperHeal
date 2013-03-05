@@ -16,6 +16,7 @@ import com.nitnelave.CreeperHeal.listeners.CreatureSpawnListener;
 import com.nitnelave.CreeperHeal.listeners.CreeperBlockListener;
 import com.nitnelave.CreeperHeal.listeners.CreeperListener;
 import com.nitnelave.CreeperHeal.listeners.FancyListener;
+import com.nitnelave.CreeperHeal.listeners.GriefListener;
 
 /**
  * The main class of the CreeperHeal plugin. The main aim of this plugin is to

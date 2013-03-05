@@ -100,8 +100,8 @@ public class CreeperCommandManager implements CommandExecutor {
             else if (cmd.equalsIgnoreCase ("ghast"))
                 booleanCmd (currentWorld, WCfgVal.GHAST, args, "Ghast fireballs explosions", sender);
 
-            else if (cmd.equalsIgnoreCase ("magical"))
-                booleanCmd (currentWorld, WCfgVal.MAGICAL, args, "Magical explosions", sender);
+            else if (cmd.equalsIgnoreCase ("custom"))
+                booleanCmd (currentWorld, WCfgVal.CUSTOM, args, "Magical explosions", sender);
 
             else if (cmd.equalsIgnoreCase ("interval"))
                 integerCmd (CfgVal.WAIT_BEFORE_HEAL, args, "block destroyed in an explosion", sender);
