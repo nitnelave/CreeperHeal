@@ -181,6 +181,12 @@ public class CreeperBlock implements Replaceable {
 
     /**
      * Drop the corresponding items on the ground.
+     * 
+     * @param forced
+     *            If false, the block will have a chance to drop, according to
+     *            the configuration value of the drop chance. If true, the block
+     *            drops every time.
+     * @return True if the block dropped.
      */
     @Override
     public boolean drop (boolean forced) {
@@ -339,7 +345,8 @@ public class CreeperBlock implements Replaceable {
     }
 
     /*
-     * Remove the block recorded from the world.
+     * (non-Javadoc)
+     * @see com.nitnelave.CreeperHeal.block.Replaceable#remove()
      */
     @Override
     public void remove () {

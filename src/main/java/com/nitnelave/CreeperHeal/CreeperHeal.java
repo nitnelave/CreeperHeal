@@ -84,6 +84,9 @@ public class CreeperHeal extends JavaPlugin {
         return instance;
     }
 
+    /**
+     * Register grief-related events.
+     */
     public static void registerGriefEvents () {
         if (!griefRegistered)
         {
@@ -92,6 +95,11 @@ public class CreeperHeal extends JavaPlugin {
         }
     }
 
+    /**
+     * Gets the plugin data folder.
+     * 
+     * @return The plugin data folder
+     */
     public static File getCHFolder () {
         return getInstance ().getDataFolder ();
     }

@@ -4,6 +4,9 @@ import java.util.HashSet;
 
 import com.nitnelave.CreeperHeal.block.BlockId;
 
+/**
+ * An enum with all of the config values related to a single world.
+ */
 public enum WCfgVal implements CfgValEnumMember {
     CREEPERS("creepers", true, CONFIG_FILES.CONFIG),
     TNT("TNT", true, CONFIG_FILES.CONFIG),
@@ -39,7 +42,7 @@ public enum WCfgVal implements CfgValEnumMember {
     PREVENT_FIRE_LAVA("prevent-fire-spread.lava", false, CONFIG_FILES.GRIEF),
     GRIEF_PLACE_LIST("blacklist", new HashSet<BlockId> (), CONFIG_FILES.GRIEF);
 
-    public static enum CONFIG_FILES {
+    protected static enum CONFIG_FILES {
         CONFIG, ADVANCED, GRIEF;
     }
 
@@ -53,17 +56,25 @@ public enum WCfgVal implements CfgValEnumMember {
         this.file = file;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.nitnelave.CreeperHeal.config.CfgValEnumMember#getKey()
+     */
     @Override
     public String getKey () {
         return key;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.nitnelave.CreeperHeal.config.CfgValEnumMember#getDefaultValue()
+     */
     @Override
     public Object getDefaultValue () {
         return defaultValue;
     }
 
-    public CONFIG_FILES getFile () {
+    protected CONFIG_FILES getFile () {
         return file;
     }
 }

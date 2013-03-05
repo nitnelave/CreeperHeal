@@ -214,9 +214,12 @@ public class CreeperExplosion {
                 }
     }
 
-    /*
+    /**
      * Record one block and remove it. If it is protected, add to the
      * replace-immediately list. Check for dependent blocks around.
+     * 
+     * @param block
+     *            The block to record.
      */
     public void record (Block block) {
         CreeperBlock cBlock = CreeperBlock.newBlock (block.getState ());

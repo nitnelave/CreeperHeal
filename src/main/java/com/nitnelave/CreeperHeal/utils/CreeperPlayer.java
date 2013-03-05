@@ -13,6 +13,9 @@ public class CreeperPlayer {
     private final Player player;
     private boolean lava, tnt, fire, blacklist, spawnEggs, pvp;
 
+    /**
+     * The different infractions that are recorded for a player.
+     */
     public enum WarningCause {
         LAVA, TNT, FIRE, BLACKLIST, SPAWN_EGG, PVP
     }

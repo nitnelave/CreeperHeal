@@ -34,6 +34,13 @@ public abstract class CreeperHanging implements Replaceable {
         location = computeLocation ();
     }
 
+    /**
+     * Create a CreeperHanging of the right subclass. Factory method.
+     * 
+     * @param hanging
+     *            The hanging to be represented by the Object.
+     * @return An instance of the right subclass of CreeperHanging.
+     */
     public static CreeperHanging newHanging (Hanging hanging) {
         if (hanging instanceof Painting)
             return new CreeperPainting ((Painting) hanging);
@@ -95,6 +102,10 @@ public abstract class CreeperHanging implements Replaceable {
         return true;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.nitnelave.CreeperHeal.block.Replaceable#remove()
+     */
     @Override
     public void remove () {
         hanging.remove ();

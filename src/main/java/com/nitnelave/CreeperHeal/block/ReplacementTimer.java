@@ -32,6 +32,7 @@ public class ReplacementTimer {
      * 
      * @param delay
      *            The amount of time to postpone by, in milliseconds.
+     * @return True if the block was postponed.
      */
     public boolean postPone (int delay) {
         if (postponed)

@@ -33,6 +33,7 @@ public class FancyListener implements Listener {
      * disappearance and block fall when appropriate (close to an explosion).
      * 
      * @param event
+     *            The BlockPhysics event.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockPhysics (BlockPhysicsEvent event) {
@@ -55,6 +56,7 @@ public class FancyListener implements Listener {
      * are close to an explosion or a fire.
      * 
      * @param event
+     *            The LeavesDecay event.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onLeavesDecay (LeavesDecayEvent event) {
@@ -68,6 +70,7 @@ public class FancyListener implements Listener {
      * when replaced.
      * 
      * @param event
+     *            The EntityChangeBlock event.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEntityChangeBlock (EntityChangeBlockEvent event) {

@@ -16,7 +16,9 @@ public class Point {
      * Simple constructor.
      * 
      * @param x
+     *            The x coordinate.
      * @param y
+     *            The y coordinate.
      */
     public Point (int x, int y) {
         this.x = x;

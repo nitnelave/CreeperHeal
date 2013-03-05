@@ -47,14 +47,6 @@ public class WorldConfig {
      * 
      * @param name
      *            The world's name.
-     * @param folder
-     *            The plugin folder.
-     * @throws FileNotFoundException
-     *             Carry the exception from load.
-     * @throws IOException
-     *             Carry the exception from load.
-     * @throws InvalidConfigurationException
-     *             Carry the exception from load.
      */
     public WorldConfig (String name) {
         this.name = name;
@@ -267,6 +259,7 @@ public class WorldConfig {
      * if the whitelist is used).
      * 
      * @param block
+     *            The block to test.
      * @return Whether the block is blacklisted.
      */
     public boolean isGriefBlackListed (Block block) {

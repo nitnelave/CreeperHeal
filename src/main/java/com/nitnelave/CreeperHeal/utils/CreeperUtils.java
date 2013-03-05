@@ -16,6 +16,8 @@ public abstract class CreeperUtils {
     /**
      * Concatenate two arrays.
      * 
+     * @param <T>
+     *            The type of the array elements.
      * @param first
      *            The first array.
      * @param second
@@ -32,6 +34,8 @@ public abstract class CreeperUtils {
     /**
      * Create a final HashSet from a collection of elements.
      * 
+     * @param <T>
+     *            The type of the set elements.
      * @param elements
      *            The elements to be added in the HashSet.
      * @return An unmodifiable HashSet containing the elements.

@@ -37,6 +37,10 @@ class CreeperComparator implements Comparator<Replaceable> {
         this.loc = loc;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+     */
     @Override
     public int compare (Replaceable b1, Replaceable b2) {
         boolean d1 = b1.isDependent (), d2 = b2.isDependent ();

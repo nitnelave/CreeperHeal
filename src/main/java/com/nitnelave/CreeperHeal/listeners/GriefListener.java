@@ -27,6 +27,9 @@ import com.nitnelave.CreeperHeal.utils.CreeperMessenger;
 import com.nitnelave.CreeperHeal.utils.CreeperPermissionManager;
 import com.nitnelave.CreeperHeal.utils.CreeperPlayer;
 
+/**
+ * Listener for grief-related events.
+ */
 public class GriefListener implements Listener {
 
     /**
@@ -148,6 +151,7 @@ public class GriefListener implements Listener {
      * Listener for the PlayerBucketEmptyEvent. Check for lava placement.
      * 
      * @param event
+     *            The PlayerBucketEmpty event.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerBucketEmpty (PlayerBucketEmptyEvent event) {
@@ -169,6 +173,7 @@ public class GriefListener implements Listener {
      * block ignition.
      * 
      * @param event
+     *            The PlayerInteract event.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerInteract (PlayerInteractEvent event) {
@@ -204,6 +209,7 @@ public class GriefListener implements Listener {
      * list.
      * 
      * @param event
+     *            The PlayerJoin event.
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin (PlayerJoinEvent event) {
@@ -215,6 +221,7 @@ public class GriefListener implements Listener {
      * warning list.
      * 
      * @param event
+     *            The PlayerQuit event.
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit (PlayerQuitEvent event) {

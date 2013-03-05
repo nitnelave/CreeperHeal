@@ -1,5 +1,9 @@
 package com.nitnelave.CreeperHeal.config;
 
+// TODO: Auto-generated Javadoc
+/**
+ * An enum with all of the configuration value.
+ */
 public enum CfgVal implements CfgValEnumMember {
 
     BLOCK_PER_BLOCK_INTERVAL("block-per-block.interval", 20, false),
@@ -35,17 +39,29 @@ public enum CfgVal implements CfgValEnumMember {
         advanced = adv;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.nitnelave.CreeperHeal.config.CfgValEnumMember#getKey()
+     */
     @Override
     public String getKey () {
         return key;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.nitnelave.CreeperHeal.config.CfgValEnumMember#getDefaultValue()
+     */
     @Override
     public Object getDefaultValue () {
         return defaultValue;
     }
 
-    public boolean isAdvanced () {
+    /*
+     * Get whether this value is in the advanced file or the config file. Return
+     * true if it is in the advanced file.
+     */
+    protected boolean isAdvanced () {
         return advanced;
     }
 }

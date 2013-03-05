@@ -8,26 +8,50 @@ import java.io.OutputStream;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
 
+/**
+ * A class to handle common file operations.
+ */
 public class FileUtils {
 
-    public static boolean createNewFile (File f) {
-        f.delete ();
-        f.getParentFile ().mkdirs ();
+    /**
+     * Creates a file, making parent directories if necessary.
+     * 
+     * @param file
+     *            The file to be created.
+     * @return True, if successful
+     */
+    public static boolean createNewFile (File file) {
+        file.delete ();
+        file.getParentFile ().mkdirs ();
         try
         {
-            f.createNewFile ();
+            file.createNewFile ();
         } catch (IOException ex)
         {
-            CreeperLog.warning ("[CreeperHeal] Cannot create file " + f.getPath ());
+            CreeperLog.warning ("[CreeperHeal] Cannot create file " + file.getPath ());
             return false;
         }
         return true;
     }
 
+    /**
+     * Copy a resource from the jar to the CreeperHeal folder.
+     * 
+     * @param file
+     *            The file to be copied.
+     */
     public static void copyJarConfig (File file) {
         copyJarConfig (file, file.getName ());
     }
 
+    /**
+     * Copy a resource form the jar to the destinatino file.
+     * 
+     * @param file
+     *            The destination file.
+     * @param source
+     *            The source file's name.
+     */
     public static void copyJarConfig (File file, String source) {
         if (!createNewFile (file))
             return;
