@@ -1,4 +1,4 @@
-package com.nitnelave.CreeperHeal;
+package com.nitnelave.CreeperHeal.listeners;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
