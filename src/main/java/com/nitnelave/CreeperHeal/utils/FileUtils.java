@@ -47,7 +47,7 @@ public class FileUtils {
             in.close ();
             out.flush ();
             out.close ();
-            CreeperLog.logInfo ("[CreeperHeal] Default config created for file " + file.getName (), 1);
+            CreeperLog.logInfo ("[CreeperHeal] Defaults loaded for file " + file.getPath (), 1);
         } catch (IOException ex)
         {
             CreeperLog.warning ("Error copying file from jar : " + source);
