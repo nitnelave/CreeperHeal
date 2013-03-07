@@ -86,11 +86,14 @@ public abstract class BlockManager {
         toReplace.clear ();
     }
 
-    /*
-     * Check the living entities in the chunk for suffocating ones, and save
-     * them.
+    /**
+     * Check the living entities around the location. If any is suffocating,
+     * teleport it to a safe location.
+     * 
+     * @param loc
+     *            The location around which to check.
      */
-    protected static void checkPlayerOneBlock (Location loc) {
+    public static void checkPlayerOneBlock (Location loc) {
         Entity[] play_list = loc.getBlock ().getChunk ().getEntities ();
         for (Entity en : play_list)
             if (en instanceof LivingEntity && loc.distance (en.getLocation ()) < 2)
