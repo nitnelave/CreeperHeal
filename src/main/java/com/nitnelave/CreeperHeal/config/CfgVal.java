@@ -1,6 +1,5 @@
 package com.nitnelave.CreeperHeal.config;
 
-// TODO: Auto-generated Javadoc
 /**
  * An enum with all of the configuration value.
  */
