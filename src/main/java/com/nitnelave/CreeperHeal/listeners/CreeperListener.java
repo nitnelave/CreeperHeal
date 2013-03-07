@@ -2,7 +2,9 @@ package com.nitnelave.CreeperHeal.listeners;
 
 import java.util.Date;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -14,14 +16,16 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 
+import com.nitnelave.CreeperHeal.CreeperHeal;
+import com.nitnelave.CreeperHeal.block.BlockManager;
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.block.CreeperBurntBlock;
 import com.nitnelave.CreeperHeal.block.CreeperHanging;
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
+import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WCfgVal;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
-import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.FactionHandler;
 
 /**
@@ -86,13 +90,40 @@ public class CreeperListener implements Listener {
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEntityChangeBlock (EntityChangeBlockEvent event) {
-        if (event.getBlock ().getType () == Material.MONSTER_EGG || event.getEntityType () == EntityType.SILVERFISH)
-            CreeperLog.debug ("silverfish entity change block");
-        if (event.getEntity () instanceof Enderman)
+        if (event.getEntityType () == EntityType.SILVERFISH && event.getBlock ().getType () == Material.MONSTER_EGGS
+                && CreeperConfig.getBool (CfgVal.REPLACE_SILVERFISH_BLOCKS))
+            Bukkit.getScheduler ().runTask (CreeperHeal.getInstance (), new ReplaceMonsterEgg (event.getBlock ()));
+        else if (event.getEntity () instanceof Enderman)
         {
             WorldConfig world = CreeperConfig.getWorld (event.getBlock ().getWorld ());
             if (world.getBool (WCfgVal.ENDERMAN))
                 event.setCancelled (true);
+        }
+    }
+
+    class ReplaceMonsterEgg implements Runnable {
+        private final Block block;
+        private final Material type;
+
+        public ReplaceMonsterEgg (Block block) {
+            switch (block.getData ())
+            {
+                case 0:
+                    type = Material.STONE;
+                    break;
+                case 1:
+                    type = Material.COBBLESTONE;
+                    break;
+                default:
+                    type = Material.SMOOTH_BRICK;
+            }
+            this.block = block;
+        }
+
+        @Override
+        public void run () {
+            block.setType (type);
+            BlockManager.checkPlayerOneBlock (block.getLocation ());
         }
     }
 
