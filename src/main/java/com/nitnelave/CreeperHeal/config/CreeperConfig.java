@@ -162,26 +162,27 @@ public abstract class CreeperConfig {
         if (!CONFIG_FILE.exists ())
         {
             FileUtils.copyJarConfig (CONFIG_FILE);
-            FileUtils.copyJarConfig (ADVANCED_FILE);
+            if (!ADVANCED_FILE.exists ())
+                FileUtils.copyJarConfig (ADVANCED_FILE);
         }
         else
         {
             loadFile (config, CONFIG_FILE);
-            configVersion = config.getInt ("config-version", 4);
+            if (!ADVANCED_FILE.exists ())
+                FileUtils.copyJarConfig (ADVANCED_FILE);
+            loadFile (advanced, ADVANCED_FILE);
+            configVersion = advanced.getInt ("config-version", 4);
             if (configVersion < CONFIG_VERSION)
                 ConfigUpdater.importFrom (configVersion);
             else
             {
-                if (!ADVANCED_FILE.exists ())
-                    FileUtils.copyJarConfig (ADVANCED_FILE);
-                loadFile (advanced, ADVANCED_FILE);
                 for (ConfigValue<Boolean> v : booleans.values ())
                     v.load ();
                 for (ConfigValue<Integer> v : integers.values ())
                     v.load ();
                 alias.load ();
             }
-            config.set ("config-version", CONFIG_VERSION);
+            advanced.set ("config-version", CONFIG_VERSION);
             configVersion = CONFIG_VERSION;
             write ();
         }
@@ -244,7 +245,7 @@ public abstract class CreeperConfig {
             v.write ();
 
         alias.write ();
-        config.set ("config-version", CONFIG_VERSION);
+        advanced.set ("config-version", CONFIG_VERSION);
 
         try
         {

@@ -20,12 +20,12 @@
 # replace-grass-with-dirt: If enabled, exploded grass will come back as dirt blocks.
 #
 
-config-version: 8
 wait-before-heal:
   explosions: 60
   fire: 45
 block-per-block:
   enabled: true
   interval: 20
+replace-protected-chests-immediately: false
 crack-destroyed-bricks: false
 replace-grass-with-dirt: false

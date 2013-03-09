@@ -57,3 +57,4 @@ obsidian:
 log-warnings: true
 verbose-level: 1
 debug-messages: false
+config-version: 8
