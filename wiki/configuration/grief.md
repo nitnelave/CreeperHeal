@@ -15,3 +15,5 @@ Grief prevention is a side feature of CreeperHeal. It can be completely deactiva
 * **blacklist**: List of forbidden blocks. Only effective if *warn->blacklist* or *block->blacklist* is set to true.
 
     The format to enter a block is ID:DATA, with the data being optional. The values are separated by comas. If no data is specified, then all data values are included. For example, to block dirt, all types of wool, normal logs and birch logs : 3, 35, 17:0, 17:2
+
+[Back to the Configuration guide](/wiki/configuration/guide)
