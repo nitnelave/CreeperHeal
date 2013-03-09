@@ -20,6 +20,8 @@ These settings are in the advanced.yml at the root of your CreeperHeal directory
 * **verbose-level**: Verbosity level of the messages. 1 for standard messages, 0 for critical messages only. default 1
 * **debug-messages**: Display debug messages. Not recommended.
 
+***
+
 ### World-specific settings
 
 These settings are in the advanced.yml in your worlds' folder.
