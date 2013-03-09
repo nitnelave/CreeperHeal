@@ -51,9 +51,7 @@ All commands can be accessed via the /CreeperHeal command, with a default alias 
 See the [Command List](commands).
    * /CreeperHeal (or/ch) help : help menu.
    * /ch heal (world): Heals all explosions and burnt blocks. Defaults to the caller's world.
-   * /ch heal (seconds) (world): Heal all explosions from the last x seconds.
    * /ch healBurnt (world): Heal all burnt blocks.
-   * /ch healBurnt (seconds) (world): Heal all blocks burnt in the last x seconds.
    * /ch [creeper|tnt|fire|ghast|magical] \(on|off) (world) : toggles the creeper (or tnt, fire...) explosion replacement (can be used with on/off)
    * /ch interval [seconds] : Sets the interval before an explosion is replaced to x seconds
    * /ch burnInterval [seconds] : Sets the interval before a block burnt is replaced
