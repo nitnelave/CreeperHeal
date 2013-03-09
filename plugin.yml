@@ -17,6 +17,7 @@ permissions:
         children:
             CreeperHeal.admin: true
             CreeperHeal.heal: true
+        default: op
     CreeperHeal.admin:
         description: Config and heal commands
         default: op
@@ -29,3 +30,54 @@ permissions:
     CreeperHeal.healNear.other:
         description: Heal explosions nearby a given player (/ch healNear player)
         default: op
+    Creeperheal.bypass.*:
+        description: Bypass all grief prevention
+        children:
+            CreeperHeal.bypass.place-lava: true
+            CreeperHeal.bypass.place-tnt: true
+            CreeperHeal.bypass.place-blacklist: true
+            CreeperHeal.bypass.pvp: true
+            CreeperHeal.bypass.spawnEggs: true
+            CreeperHeal.bypass.fire:true
+        default: op
+    CreeperHeal.bypass.place-lava:
+        description: Gives permission to place lava in worlds where it is blocked
+        default: op
+    CreeperHeal.bypass.place-tnt:
+        description: Gives permission to place TNT in worlds where it is blocked
+        default: op
+    CreeperHeal.bypass.place-blacklist:
+        description: Gives permission to place blacklisted blocks
+        default: op
+    CreeperHeal.bypass.pvp:
+        description: Allows you to hit other players in worlds wher it is forbidden (by CreeperHeal - you may have other pvp control plugins)
+        default: op
+    CreeperHeal.bypass.spawnEggs:
+        description: Allows you to spawn mobs with monster eggs (from creative)
+        default: op
+    CreeperHeal.bypass.fire:
+        descrition: Allows you to start fires with flint and steel
+        default: op
+    CreeperHeal.warn.*:
+        description: Receive every message about grief infractions.
+        default: false
+        children:
+            CreeperHeal.warn.place-lava: true
+            CreeperHeal.warn.place-tnt: true
+            CreeperHeal.warn.place-blacklist: true
+            CreeperHeal.warn.pvp: true
+            CreeperHeal.warn.spawnEggs: true
+            CreeperHeal.warn.fire: true
+    CreeperHeal.warn.place-lava:
+        description: If you have the warn lava setting enabled, then you will receive messages about players placing lava only if you have this permission.
+        default: false
+    CreeperHeal.warn.place-tnt:
+        default: false
+    CreeperHeal.warn.place-blacklist:
+        default: false
+    CreeperHeal.warn.pvp:
+        default: false
+    CreeperHeal.warn.spawnEggs:
+        default: false
+    CreeperHeal.warn.fire:
+        default: false
