@@ -1,7 +1,7 @@
 CreeperHeal
 =======
 
-[Project page](project)
+[Project page][project]
 
 Protects your server against Creepers, TNT, and griefers! 
 
@@ -11,11 +11,11 @@ CreeperHeal is more than a griefing protection plugin : it repairs the damage do
 * **Easy installation and configuration**
 * **Anti-Griefing features**
 
-Here's a sample [fan-made video](video).
+Here's a sample [fan-made video][video].
 
 NOTE : This is not an official video, but one made by a fan. An official one will be posted in a while.
 
-**Before reporting a bug, please check the [FAQ](FAQ). To report a bug, or make a suggestion, use the [Tickets](tickets) page on BukkitDev.**
+**Before reporting a bug, please check the [FAQ](FAQ). To report a bug, or make a suggestion, use the [Tickets][tickets] page on BukkitDev.**
 
 
 If you like what I do, please [![Donate button](https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5DSJCTVN7JBW4)
