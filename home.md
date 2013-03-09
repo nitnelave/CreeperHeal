@@ -18,12 +18,12 @@ NOTE : This is not an official video, but one made by a fan. An official one wil
 **Before reporting a bug, please check the [FAQ](/wiki/FAQ). To report a bug, or make a suggestion, use the [Tickets][tickets] page on BukkitDev.**
 
 
-If you like what I do, please [![Donate button](https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5DSJCTVN7JBW4)
+If you like what I do, please [![Donate button][paypalimage]][paypal]
 
 Configuration
 -------
-* [Configuration Guide](configuration-guide).
-* [Default Config files](https://github.com/nitnelave/CreeperHeal/blob/master/src/config.yml). 
+* [Configuration Guide](/wiki/configuration/guide).
+* [Default Config files][defaultconfig]. 
 
 Installation
 -------
@@ -37,18 +37,18 @@ Features
 *    Compatible with several plugins, such as WorldGuard, Factions, LWC or Lockette
 *    Complete Anti-griefing set of features : block lava, tnt, any block, pvp, monster eggs, fire, fire spread, etc...
 
-[Full list of features](features).
+[Full list of features](/wiki/features).
 
 Permissions
 ------
 Supports native Bukkit perms and bPermissions.
 
-[List of Permissions](permissions).
+[List of Permissions](/wiki/permissions).
 
 Commands
 ----
 All commands can be accessed via the /CreeperHeal command, with a default alias of /ch (this can be changed in the advanced config).
-See the [Command List](commands).
+See the [Command List](/wiki/commands).
    * /CreeperHeal (or/ch) help : help menu.
    * /ch heal (world): Heals all explosions and burnt blocks. Defaults to the caller's world.
    * /ch healBurnt (world): Heal all burnt blocks.
@@ -59,3 +59,6 @@ See the [Command List](commands).
 [project]: http://dev.bukkit.org/server-mods/creeperheal-nitnelave
 [tickets]: http://dev.bukkit.org/server-mods/creeperheal-nitnelave/tickets
 [video]: http://www.youtube.com/watch?v=H3GReOROOZA
+[defaultconfig]: https://github.com/nitnelave/CreeperHeal/blob/master/src/main/resources
+[paypal]: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5DSJCTVN7JBW4
+[paypalimage]: https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif
