@@ -18,6 +18,8 @@ Here are covered the basic settings, in the config.yml file at the root of you C
 
 ### World-specific configuration
 
+These settings are in the config.yml in your worlds' folder.
+
 * **Creepers**, **TNT**, **Ghast**, **Wither**, **custom** : Whether you want the damage from Creeper/TNT/Ghast/Wither or "custom" (from other plugins) explosions to be healed.
 * **Dragons** : replace blocks destroyed by EnderDragons.
 * **Fire** : replace burnt blocks.
