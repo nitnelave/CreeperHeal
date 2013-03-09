@@ -50,9 +50,14 @@ Commands
 All commands can be accessed via the /CreeperHeal command, with a default alias of /ch (this can be changed in the advanced config).
 See the [Command List](/wiki/commands).
 
+API for developers
+---
+See the [Javadoc][javadoc].
+
 [project]: http://dev.bukkit.org/server-mods/creeperheal-nitnelave
 [tickets]: http://dev.bukkit.org/server-mods/creeperheal-nitnelave/tickets
 [video]: http://www.youtube.com/watch?v=H3GReOROOZA
 [defaultconfig]: https://github.com/nitnelave/CreeperHeal/blob/master/src/main/resources
 [paypal]: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5DSJCTVN7JBW4
 [paypalimage]: https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif
+[javadoc]: 
