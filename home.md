@@ -37,18 +37,18 @@ Features
 *    Compatible with several plugins, such as WorldGuard, Factions, LWC or Lockette
 *    Complete Anti-griefing set of features : block lava, tnt, any block, pvp, monster eggs, fire, fire spread, etc...
 
-[Full list of features](/wiki/features.md).
+[Full list of features](/wiki/features).
 
 Permissions
 ------
 Supports native Bukkit perms and bPermissions.
 
-[List of Permissions](/wiki/permissions.md).
+[List of Permissions](/wiki/permissions).
 
 Commands
 ----
 All commands can be accessed via the /CreeperHeal command, with a default alias of /ch (this can be changed in the advanced config).
-See the [Command List](/wiki/commands.md).
+See the [Command List](/wiki/commands).
 
 API for developers
 ---
