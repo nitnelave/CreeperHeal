@@ -38,7 +38,7 @@ permissions:
             CreeperHeal.bypass.place-blacklist: true
             CreeperHeal.bypass.pvp: true
             CreeperHeal.bypass.spawnEggs: true
-            CreeperHeal.bypass.fire:true
+            CreeperHeal.bypass.fire: true
         default: op
     CreeperHeal.bypass.place-lava:
         description: Gives permission to place lava in worlds where it is blocked
