@@ -118,10 +118,6 @@ public class CreeperCommandManager implements CommandExecutor {
             else if (cmd.equalsIgnoreCase ("healNear"))
                 healNear (sender, args);
 
-            else if (cmd.equalsIgnoreCase ("trap"))
-            {
-            }
-
             else if (cmd.equalsIgnoreCase ("reload"))
                 CreeperConfig.load ();
 
@@ -153,19 +149,18 @@ public class CreeperCommandManager implements CommandExecutor {
         sender.sendMessage ("CreeperHeal -- Repair explosions damage and make traps");
         sender.sendMessage ("--------------------------------------------");
 
-        boolean admin = true, heal = true, trap = true, healNear = true;
+        boolean admin = true, heal = true, healNear = true;
 
         if (sender instanceof Player)
         {
             Player player = (Player) sender;
             admin = checkPermissions (player, "admin");
             heal = admin || checkPermissions (player, "heal");
-            trap = admin || checkPermissions (player, "trap.create", "trap.*");
             healNear = heal || checkPermissions (player, "heal.near.all", "heal.near.self");
 
         }
 
-        if (!(admin || healNear || trap))
+        if (!(admin || healNear))
             sender.sendMessage (getMessage ("plugin-help-no-commands", null, sender.getName (), null, null, null, null));
         else
         {
@@ -190,9 +185,6 @@ public class CreeperCommandManager implements CommandExecutor {
             if (healNear)
                 sender.sendMessage (green + "/ch healNear" + (healNear ? " (player)" : "") + " :" + purple + " Heals all explosions around"
                         + (healNear ? " the given player" : ""));
-
-            if (trap && !PluginHandler.isCreeperTrapEnabled ())
-                sender.sendMessage (getMessage ("plugin-help-traps", null, sender.getName (), null, null, null, null));
         }
     }
 
