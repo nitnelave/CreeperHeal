@@ -35,7 +35,7 @@
 	</distributionManagement>
 	<properties>
 		<!--maven variable which points to your local repository -->
-		<internal.repo.path>file://C:\Users\nitnelave\minecraft\code\CreeperHeal\CreeperHeal\mvn-repo</internal.repo.path>
+		<internal.repo.path>/home/nitnelave/minecraft/code/CreeperHeal/CreeperHeal/mvn-repo</internal.repo.path>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<repositories>
@@ -45,11 +45,11 @@
 		</repository>
 	</repositories>
 	<dependencies>
+	<!-- 
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>craftbukkit</artifactId>
-			<version>1.4.7-R1.0</version>
-			<type>jar</type>
+			<version>1.5.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -58,7 +58,7 @@
 			<version>1.4.7-R1.0</version>
 			<type>jar</type>
 			<scope>provided</scope>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>de.bananaco.bpermissions.imp</groupId>
 			<artifactId>bPermissions</artifactId>
