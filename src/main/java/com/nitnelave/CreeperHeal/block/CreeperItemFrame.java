@@ -47,11 +47,17 @@ class CreeperItemFrame extends CreeperHanging {
     //TODO : frame position is not updated.
     @Override
     public boolean replace (boolean shouldDrop) {
-        ItemFrame f = getWorld ().spawn (location.getBlock ().getRelative (hanging.getAttachedFace ()).getLocation (), ItemFrame.class);
-        f.teleport (location);
-        f.setItem (((ItemFrame) hanging).getItem ());
-        f.setRotation (((ItemFrame) hanging).getRotation ());
-        f.setFacingDirection (hanging.getFacing (), true);
+        try
+        {
+            ItemFrame f = getWorld ().spawn (location.getBlock ().getRelative (hanging.getAttachedFace ()).getLocation (), ItemFrame.class);
+            f.teleport (location);
+            f.setItem (((ItemFrame) hanging).getItem ());
+            f.setRotation (((ItemFrame) hanging).getRotation ());
+            f.setFacingDirection (hanging.getFacing (), true);
+        } catch (IllegalArgumentException e)
+        {
+            return false;
+        }
 
         return true;
     }
