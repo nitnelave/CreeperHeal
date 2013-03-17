@@ -27,7 +27,8 @@ public enum CfgVal implements CfgValEnumMember {
     OBSIDIAN_CHANCE("obsidian.chance", 20, true),
     DEBUG("debug-messages", false, true),
     REPLACE_SILVERFISH_BLOCKS("replace-silverfish-blocks", false, true),
-    WAIT_BEFORE_BURN_AGAIN("wait-before-burn-again", 240, true);
+    WAIT_BEFORE_BURN_AGAIN("wait-before-burn-again", 240, true),
+    RAIL_REPLACEMENT("performance.replace-rails-correctly", true, true);
 
     private final String key;
     private final Object defaultValue;
