@@ -18,6 +18,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.entity.Wither;
+import org.bukkit.entity.minecart.ExplosiveMinecart;
 import org.bukkit.inventory.InventoryHolder;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
@@ -212,6 +213,8 @@ public class WorldConfig {
                 return getBool (WCfgVal.DRAGONS);
             else if (entity instanceof Wither)
                 return getBool (WCfgVal.WITHER);
+            else if (entity instanceof ExplosiveMinecart)
+                return getBool (WCfgVal.MINECART_TNT);
         return getBool (WCfgVal.CUSTOM);
     }
 

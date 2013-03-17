@@ -16,5 +16,6 @@ enderman: false
 wither: true
 dragons: false
 custom: false
+minecart-tnt: true
 replace-above-limit-only: false
 replace-limit: 64
