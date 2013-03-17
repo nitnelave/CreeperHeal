@@ -10,12 +10,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
-import org.bukkit.material.Rails;
 
 import com.nitnelave.CreeperHeal.block.BlockManager;
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.block.CreeperBlock;
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
+import com.nitnelave.CreeperHeal.block.RailsIndex;
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
@@ -38,7 +38,7 @@ public class FancyListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockPhysics (BlockPhysicsEvent event) {
         Block b = event.getBlock ();
-        if (b.getState () instanceof Rails && BlockManager.isUpdatePrevented (CreeperBlock.newBlock (b.getState ())))
+        if (RailsIndex.isUpdatePrevented (CreeperBlock.newBlock (b.getState ())))
             event.setCancelled (true);
         else if (b.getType () == Material.VINE
                 && (ExplodedBlockManager.isNextToExplosion (b.getLocation ()) || BurntBlockManager.isNextToFire (b.getLocation ())))

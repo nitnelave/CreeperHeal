@@ -330,7 +330,7 @@ public class CreeperBlock implements Replaceable {
             {
                 CreeperRail r = (CreeperRail) cb;
                 if (r.isAscending ())
-                    BlockManager.putUpdatePrevention (r);
+                    RailsIndex.putUpdatePrevention (r);
             }
         }
     }

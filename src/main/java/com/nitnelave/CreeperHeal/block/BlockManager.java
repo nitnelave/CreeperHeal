@@ -13,7 +13,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
-import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
@@ -39,11 +38,6 @@ public abstract class BlockManager {
     private static NeighborDateLoc fallIndex;
 
     /*
-     * Block whose update should be prevented.
-     */
-    private static Map<CreeperRail, Date> railsIndex;
-
-    /*
      * Remember if time repairs have already been scheduled.
      */
     private static boolean timeRepairsScheduled = false;
@@ -53,7 +47,6 @@ public abstract class BlockManager {
         if (!CreeperConfig.isLightWeight ())
         {
             fallIndex = new NeighborDateLoc ();
-            railsIndex = new HashMap<CreeperRail, Date> ();
 
             Bukkit.getScheduler ().scheduleSyncRepeatingTask (CreeperHeal.getInstance (), new Runnable () {
                 @Override
@@ -239,50 +232,12 @@ public abstract class BlockManager {
         fallIndex.addElement (new DateLoc (new Date (), location), location.getX (), location.getZ ());
     }
 
-    /**
-     * Get whether the location is next to a block whose update is prevented.
-     * 
-     * @param block
-     *            The block to check.
-     * @return Whether the location is next to a block whose update is
-     *         prevented.
-     */
-    public static boolean isUpdatePrevented (CreeperBlock block) {
-        if (!(block instanceof CreeperRail))
-            return false;
-        return railsIndex.containsKey (block);
-    }
-
-    /**
-     * Add the location to the list of blocks that shouldn't be updated. The
-     * block's updates are prevented until after 200 times the block per block
-     * replacement interval.
-     * 
-     * @param block
-     *            The block.
-     */
-    public static void putUpdatePrevention (CreeperRail block) {
-        railsIndex.put (block, new Date ());
-    }
-
     /*
      * Clean up by removing the unnecessary blocks from the fall and update
      * indexes.
      */
     private static void cleanUp () {
         fallIndex.clean ();
-
-        Date delay = new Date (new Date ().getTime () - 200 * CreeperConfig.getInt (CfgVal.BLOCK_PER_BLOCK_INTERVAL));
-        Iterator<Date> iter;
-        iter = railsIndex.values ().iterator ();
-        while (iter.hasNext ())
-        {
-            Date date = iter.next ();
-            if (date.before (delay))
-                iter.remove ();
-            else
-                break;
-        }
     }
 
 }
