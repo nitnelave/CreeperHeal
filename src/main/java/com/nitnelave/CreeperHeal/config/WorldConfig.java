@@ -13,6 +13,7 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Creeper;
+import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Fireball;
@@ -215,6 +216,8 @@ public class WorldConfig {
                 return getBool (WCfgVal.WITHER);
             else if (entity instanceof ExplosiveMinecart)
                 return getBool (WCfgVal.MINECART_TNT);
+            else if (entity instanceof EnderCrystal)
+                return getBool (WCfgVal.ENDER_CRYSTAL);
         return getBool (WCfgVal.CUSTOM);
     }
 
