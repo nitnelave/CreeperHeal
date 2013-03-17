@@ -326,8 +326,12 @@ public class CreeperBlock implements Replaceable {
             if (face == BlockFace.DOWN)
                 continue;
             CreeperBlock cb = CreeperBlock.newBlock (block.getRelative (face).getState ());
-            if (cb instanceof CreeperRail && ((CreeperRail) cb).isAscending ())
-                BlockManager.putUpdatePrevention (cb);
+            if (cb instanceof CreeperRail)
+            {
+                CreeperRail r = (CreeperRail) cb;
+                if (r.isAscending ())
+                    BlockManager.putUpdatePrevention (r);
+            }
         }
     }
 
