@@ -14,7 +14,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
-import com.nitnelave.CreeperHeal.PluginHandler;
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
@@ -229,8 +228,7 @@ public class CreeperExplosion {
 
         checked.add (new ShortLocation (block));
 
-        if ((CreeperConfig.getBool (CfgVal.PREVENT_CHAIN_REACTION) && block.getType ().equals (Material.TNT))
-                || (CreeperConfig.getBool (CfgVal.REPLACE_PROTECTED_CHESTS) && PluginHandler.isProtected (block) || world.isProtected (block)))
+        if ((CreeperConfig.getBool (CfgVal.PREVENT_CHAIN_REACTION) && block.getType ().equals (Material.TNT)) || world.isProtected (block))
         {
             CreeperBlock b = CreeperBlock.newBlock (block.getState ());
             if (b != null)
