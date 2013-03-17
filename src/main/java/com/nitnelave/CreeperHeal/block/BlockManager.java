@@ -1,6 +1,5 @@
 package com.nitnelave.CreeperHeal.block;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -16,8 +15,6 @@ import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
-import com.nitnelave.CreeperHeal.utils.DateLoc;
-import com.nitnelave.CreeperHeal.utils.NeighborDateLoc;
 
 /**
  * Manager to gather block-related methods.
@@ -33,29 +30,9 @@ public abstract class BlockManager {
     private static Map<Location, Replaceable> toReplace = new HashMap<Location, Replaceable> ();
 
     /*
-     * Blocks whose fall should be prevented.
-     */
-    private static NeighborDateLoc fallIndex;
-
-    /*
      * Remember if time repairs have already been scheduled.
      */
     private static boolean timeRepairsScheduled = false;
-
-    static
-    {
-        if (!CreeperConfig.isLightWeight ())
-        {
-            fallIndex = new NeighborDateLoc ();
-
-            Bukkit.getScheduler ().scheduleSyncRepeatingTask (CreeperHeal.getInstance (), new Runnable () {
-                @Override
-                public void run () {
-                    cleanUp ();
-                }
-            }, 400, 7200);
-        }
-    }
 
     /**
      * Add a block to the list of blocks to be replaced immediately.
@@ -207,37 +184,6 @@ public abstract class BlockManager {
             CreeperLog.warning ("[CreeperHeal] Impossible to schedule the time-repair task. Time repairs will not work");
         }
 
-    }
-
-    /**
-     * Get whether the location is next to a block whose fall is prevented.
-     * 
-     * @param loc
-     *            The location to check.
-     * @return Whether the location is next to a block whose fall is prevented.
-     */
-    public static boolean isNextToFallPrevention (Location loc) {
-        return fallIndex.hasNeighbor (loc);
-    }
-
-    /**
-     * Add the location to the list of blocks that shouldn't fall. The block's
-     * fall is prevented until after 200 times the block per block replacement
-     * interval.
-     * 
-     * @param location
-     *            The block's location.
-     */
-    public static void putFallPrevention (Location location) {
-        fallIndex.addElement (new DateLoc (new Date (), location), location.getX (), location.getZ ());
-    }
-
-    /*
-     * Clean up by removing the unnecessary blocks from the fall and update
-     * indexes.
-     */
-    private static void cleanUp () {
-        fallIndex.clean ();
     }
 
 }
