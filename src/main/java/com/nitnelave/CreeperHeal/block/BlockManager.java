@@ -41,7 +41,7 @@ public abstract class BlockManager {
     /*
      * Block whose update should be prevented.
      */
-    private static Map<CreeperBlock, Date> updateIndex;
+    private static Map<CreeperRail, Date> railsIndex;
 
     /*
      * Remember if time repairs have already been scheduled.
@@ -53,7 +53,7 @@ public abstract class BlockManager {
         if (!CreeperConfig.isLightWeight ())
         {
             fallIndex = new NeighborDateLoc ();
-            updateIndex = new HashMap<CreeperBlock, Date> ();
+            railsIndex = new HashMap<CreeperRail, Date> ();
 
             Bukkit.getScheduler ().scheduleSyncRepeatingTask (CreeperHeal.getInstance (), new Runnable () {
                 @Override
@@ -248,7 +248,9 @@ public abstract class BlockManager {
      *         prevented.
      */
     public static boolean isUpdatePrevented (CreeperBlock block) {
-        return updateIndex.containsKey (block);
+        if (!(block instanceof CreeperRail))
+            return false;
+        return railsIndex.containsKey (block);
     }
 
     /**
@@ -259,8 +261,8 @@ public abstract class BlockManager {
      * @param block
      *            The block.
      */
-    public static void putUpdatePrevention (CreeperBlock block) {
-        updateIndex.put (block, new Date ());
+    public static void putUpdatePrevention (CreeperRail block) {
+        railsIndex.put (block, new Date ());
     }
 
     /*
@@ -272,7 +274,7 @@ public abstract class BlockManager {
 
         Date delay = new Date (new Date ().getTime () - 200 * CreeperConfig.getInt (CfgVal.BLOCK_PER_BLOCK_INTERVAL));
         Iterator<Date> iter;
-        iter = updateIndex.values ().iterator ();
+        iter = railsIndex.values ().iterator ();
         while (iter.hasNext ())
         {
             Date date = iter.next ();
