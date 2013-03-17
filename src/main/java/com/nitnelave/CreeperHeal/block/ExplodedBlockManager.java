@@ -1,6 +1,5 @@
 package com.nitnelave.CreeperHeal.block;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -33,7 +32,7 @@ public class ExplodedBlockManager {
     /*
      * List of explosions, to replace the blocks.
      */
-    private static List<CreeperExplosion> explosionList = Collections.synchronizedList (new LinkedList<CreeperExplosion> ());
+    private static List<CreeperExplosion> explosionList = new LinkedList<CreeperExplosion> ();
     /*
      * Map of the explosions, if the plugin is not in lightweight mode.
      */
@@ -46,12 +45,12 @@ public class ExplodedBlockManager {
         if (!CreeperConfig.isLightWeight ())
         {
             explosionIndex = new NeighborExplosion ();
-            Bukkit.getScheduler ().runTaskTimerAsynchronously (CreeperHeal.getInstance (), new Runnable () {
+            Bukkit.getScheduler ().scheduleSyncRepeatingTask (CreeperHeal.getInstance (), new Runnable () {
                 @Override
                 public void run () {
                     cleanIndex ();
                 }
-            }, 200, 2400);
+            }, 200, 7200);
         }
         /*
          * Schedule the replacement of the blocks.
@@ -82,19 +81,16 @@ public class ExplodedBlockManager {
     private static void removeExplosionsAround (Location loc, float distanceNear) {
         World w = loc.getWorld ();
         LinkedList<CreeperExplosion> pass = new LinkedList<CreeperExplosion> ();
-        synchronized (explosionList)
+        ListIterator<CreeperExplosion> iter = explosionList.listIterator ();
+        while (iter.hasNext ())
         {
-            ListIterator<CreeperExplosion> iter = explosionList.listIterator ();
-            while (iter.hasNext ())
+            CreeperExplosion ex = iter.next ();
+            Location l = ex.getLocation ();
+            if (l.getWorld () == w && distanceNear > l.distance (loc))
             {
-                CreeperExplosion ex = iter.next ();
-                Location l = ex.getLocation ();
-                if (l.getWorld () == w && distanceNear > l.distance (loc))
-                {
-                    ex.replace_blocks (false);
-                    pass.add (ex);
-                    iter.remove ();
-                }
+                ex.replace_blocks (false);
+                pass.add (ex);
+                iter.remove ();
             }
         }
         for (CreeperExplosion ex : pass)
