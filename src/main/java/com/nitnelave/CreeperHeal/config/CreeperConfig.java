@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -34,7 +33,7 @@ public abstract class CreeperConfig {
             + "/advanced.yml");
 
     private static final Logger LOG = Logger.getLogger ("Minecraft");
-    private static final Map<String, WorldConfig> world_config = Collections.synchronizedMap (new HashMap<String, WorldConfig> ());
+    private static final Map<String, WorldConfig> world_config = new HashMap<String, WorldConfig> ();
     private static final Map<String, ConfigValue<Boolean>> booleans = new HashMap<String, ConfigValue<Boolean>> ();
     private static final Map<String, ConfigValue<Integer>> integers = new HashMap<String, ConfigValue<Integer>> ();
     private static final YamlConfiguration config = new YamlConfiguration (), advanced = new YamlConfiguration ();

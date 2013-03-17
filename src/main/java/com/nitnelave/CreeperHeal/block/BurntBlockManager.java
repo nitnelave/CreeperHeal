@@ -1,6 +1,5 @@
 package com.nitnelave.CreeperHeal.block;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,7 +32,7 @@ public abstract class BurntBlockManager {
     /*
      * The list of burnt blocks waiting to be replaced.
      */
-    private static List<CreeperBurntBlock> burntList = Collections.synchronizedList (new LinkedList<CreeperBurntBlock> ());
+    private static List<CreeperBurntBlock> burntList = new LinkedList<CreeperBurntBlock> ();
     /*
      * If the plugin is not in lightweight mode, the list of recently burnt
      * blocks to prevent them from burning again soon.
@@ -50,17 +49,17 @@ public abstract class BurntBlockManager {
         if (!CreeperConfig.isLightWeight ())
         {
             fireIndex = new NeighborFire ();
-            recentlyBurnt = Collections.synchronizedMap (new HashMap<Location, Date> ());
+            recentlyBurnt = new HashMap<Location, Date> ();
 
-            Bukkit.getScheduler ().runTaskTimerAsynchronously (CreeperHeal.getInstance (), new Runnable () {
+            Bukkit.getScheduler ().scheduleSyncRepeatingTask (CreeperHeal.getInstance (), new Runnable () {
                 @Override
                 public void run () {
                     cleanUp ();
                 }
-            }, 200, 2400);
+            }, 300, 7200);
         }
 
-        if (Bukkit.getServer ().getScheduler ().scheduleSyncRepeatingTask (CreeperHeal.getInstance (), new Runnable () {
+        if (Bukkit.getScheduler ().scheduleSyncRepeatingTask (CreeperHeal.getInstance (), new Runnable () {
             @Override
             public void run () {
                 replaceBurnt ();
@@ -80,23 +79,20 @@ public abstract class BurntBlockManager {
     public static void forceReplaceBurnt (WorldConfig worldConfig) {
         World world = Bukkit.getServer ().getWorld (worldConfig.getName ());
 
-        synchronized (burntList)
+        Iterator<CreeperBurntBlock> iter = burntList.iterator ();
+        while (iter.hasNext ())
         {
-            Iterator<CreeperBurntBlock> iter = burntList.iterator ();
-            while (iter.hasNext ())
+            CreeperBurntBlock cBlock = iter.next ();
+            if (cBlock.getWorld () == world)
             {
-                CreeperBurntBlock cBlock = iter.next ();
-                if (cBlock.getWorld () == world)
+                cBlock.replace (true);
+                if (!CreeperConfig.isLightWeight ())
                 {
-                    cBlock.replace (true);
-                    if (!CreeperConfig.isLightWeight ())
-                    {
-                        recentlyBurnt.put (cBlock.getLocation (),
-                                new Date (System.currentTimeMillis () + 1000 * CreeperConfig.getInt (CfgVal.WAIT_BEFORE_BURN_AGAIN)));
-                        fireIndex.removeElement (cBlock);
-                    }
-                    iter.remove ();
+                    recentlyBurnt.put (cBlock.getLocation (),
+                            new Date (System.currentTimeMillis () + 1000 * CreeperConfig.getInt (CfgVal.WAIT_BEFORE_BURN_AGAIN)));
+                    fireIndex.removeElement (cBlock);
                 }
+                iter.remove ();
             }
         }
     }
@@ -107,27 +103,24 @@ public abstract class BurntBlockManager {
     private static void replaceBurnt () {
 
         Date now = new Date ();
-        synchronized (burntList)
+        Iterator<CreeperBurntBlock> iter = burntList.iterator ();
+        while (iter.hasNext ())
         {
-            Iterator<CreeperBurntBlock> iter = burntList.iterator ();
-            while (iter.hasNext ())
+            CreeperBurntBlock cBlock = iter.next ();
+            if (cBlock.checkReplace ())
             {
-                CreeperBurntBlock cBlock = iter.next ();
-                if (cBlock.checkReplace ())
+                if (cBlock.wasReplaced ())
                 {
-                    if (cBlock.wasReplaced ())
+                    iter.remove ();
+                    if (!CreeperConfig.isLightWeight ())
                     {
-                        iter.remove ();
-                        if (!CreeperConfig.isLightWeight ())
-                        {
-                            fireIndex.removeElement (cBlock);
-                            recentlyBurnt.put (cBlock.getLocation (), new Date (now.getTime () + 1000 * CreeperConfig.getInt (CfgVal.WAIT_BEFORE_BURN_AGAIN)));
-                        }
+                        fireIndex.removeElement (cBlock);
+                        recentlyBurnt.put (cBlock.getLocation (), new Date (now.getTime () + 1000 * CreeperConfig.getInt (CfgVal.WAIT_BEFORE_BURN_AGAIN)));
                     }
                 }
-                else
-                    break;
             }
+            else
+                break;
         }
     }
 
@@ -213,17 +206,14 @@ public abstract class BurntBlockManager {
      */
     private static void cleanUp () {
         fireIndex.clean ();
-        synchronized (recentlyBurnt)
+        Iterator<Location> iter = recentlyBurnt.keySet ().iterator ();
+        Date now = new Date ();
+        while (iter.hasNext ())
         {
-            Iterator<Location> iter = recentlyBurnt.keySet ().iterator ();
-            Date now = new Date ();
-            while (iter.hasNext ())
-            {
-                Location l = iter.next ();
-                Date d = recentlyBurnt.get (l);
-                if (d.before (now))
-                    iter.remove ();
-            }
+            Location l = iter.next ();
+            Date d = recentlyBurnt.get (l);
+            if (d.before (now))
+                iter.remove ();
         }
 
     }

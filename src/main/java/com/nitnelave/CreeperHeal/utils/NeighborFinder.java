@@ -33,10 +33,13 @@ public abstract class NeighborFinder<T> {
      *            The y coordinate.
      */
     public void addElement (T el, double x, double y) {
+        if (el == null)
+            return;
         Point p = new Point ((int) (x / BLOCK_SIZE), (int) (y / BLOCK_SIZE));
-        if (map.get (p) == null)
-            map.put (p, new LinkedList<T> ());
-        map.get (p).add (el);
+        LinkedList<T> list = map.get (p);
+        if (list == null)
+            list = map.put (p, new LinkedList<T> ());
+        list.add (el);
     }
 
     /**

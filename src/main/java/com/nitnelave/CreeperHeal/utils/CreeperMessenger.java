@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,7 +35,7 @@ public abstract class CreeperMessenger {
      */
     private final static String[] variables = {"WORLD", "PLAYER", "TARGET", "MOB", "BLOCK"};
 
-    private static List<CreeperPlayer> warnList = Collections.synchronizedList (new LinkedList<CreeperPlayer> ());
+    private static List<CreeperPlayer> warnList = new LinkedList<CreeperPlayer> ();
 
     static
     {

@@ -1,6 +1,5 @@
 package com.nitnelave.CreeperHeal.block;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -32,7 +31,7 @@ public abstract class BlockManager {
     /*
      * Block to be replaced immediately after an explosion.
      */
-    private static Map<Location, Replaceable> toReplace = Collections.synchronizedMap (new HashMap<Location, Replaceable> ());
+    private static Map<Location, Replaceable> toReplace = new HashMap<Location, Replaceable> ();
 
     /*
      * Blocks whose fall should be prevented.
@@ -54,14 +53,14 @@ public abstract class BlockManager {
         if (!CreeperConfig.isLightWeight ())
         {
             fallIndex = new NeighborDateLoc ();
-            updateIndex = Collections.synchronizedMap (new HashMap<CreeperBlock, Date> ());
+            updateIndex = new HashMap<CreeperBlock, Date> ();
 
-            Bukkit.getScheduler ().runTaskTimerAsynchronously (CreeperHeal.getInstance (), new Runnable () {
+            Bukkit.getScheduler ().scheduleSyncRepeatingTask (CreeperHeal.getInstance (), new Runnable () {
                 @Override
                 public void run () {
                     cleanUp ();
                 }
-            }, 200, 2400);
+            }, 400, 7200);
         }
     }
 
@@ -205,7 +204,7 @@ public abstract class BlockManager {
         if (!timeRepairsScheduled)
         {
             timeRepairsScheduled = true;
-            Bukkit.getScheduler ().runTaskTimerAsynchronously (CreeperHeal.getInstance (), new Runnable () {
+            Bukkit.getScheduler ().scheduleSyncRepeatingTask (CreeperHeal.getInstance (), new Runnable () {
                 @Override
                 public void run () {
                     checkReplaceTime ();
@@ -273,17 +272,14 @@ public abstract class BlockManager {
 
         Date delay = new Date (new Date ().getTime () - 200 * CreeperConfig.getInt (CfgVal.BLOCK_PER_BLOCK_INTERVAL));
         Iterator<Date> iter;
-        synchronized (updateIndex)
+        iter = updateIndex.values ().iterator ();
+        while (iter.hasNext ())
         {
-            iter = updateIndex.values ().iterator ();
-            while (iter.hasNext ())
-            {
-                Date date = iter.next ();
-                if (date.before (delay))
-                    iter.remove ();
-                else
-                    break;
-            }
+            Date date = iter.next ();
+            if (date.before (delay))
+                iter.remove ();
+            else
+                break;
         }
     }
 
