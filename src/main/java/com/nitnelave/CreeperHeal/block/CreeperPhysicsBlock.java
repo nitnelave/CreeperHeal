@@ -27,7 +27,7 @@ class CreeperPhysicsBlock extends CreeperBlock {
     @Override
     public void update () {
         if (CreeperConfig.getBool (CfgVal.PREVENT_BLOCK_FALL))
-            BlockManager.putFallPrevention (getBlock ().getLocation ());
+            FallIndex.putFallPrevention (getBlock ().getLocation ());
         blockState.update (true);
     }
 

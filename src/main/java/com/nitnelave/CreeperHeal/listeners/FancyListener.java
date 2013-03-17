@@ -11,10 +11,10 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 
-import com.nitnelave.CreeperHeal.block.BlockManager;
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.block.CreeperBlock;
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
+import com.nitnelave.CreeperHeal.block.FallIndex;
 import com.nitnelave.CreeperHeal.block.RailsIndex;
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
@@ -46,7 +46,7 @@ public class FancyListener implements Listener {
         else if (CreeperConfig.getBool (CfgVal.PREVENT_BLOCK_FALL) && CreeperBlock.hasPhysics (b.getTypeId ()))
         {
             Location bLoc = b.getLocation ();
-            if (BlockManager.isNextToFallPrevention (bLoc) || ExplodedBlockManager.isNextToExplosion (bLoc) || BurntBlockManager.isNextToFire (bLoc))
+            if (FallIndex.isNextToFallPrevention (bLoc) || ExplodedBlockManager.isNextToExplosion (bLoc) || BurntBlockManager.isNextToFire (bLoc))
                 event.setCancelled (true);
         }
     }
@@ -77,7 +77,7 @@ public class FancyListener implements Listener {
         if (event.getEntityType () != EntityType.ENDERMAN && CreeperBlock.hasPhysics (event.getBlock ().getTypeId ()))
         {
             Location l = event.getBlock ().getLocation ();
-            if (BlockManager.isNextToFallPrevention (l) || ExplodedBlockManager.isNextToExplosion (l) || BurntBlockManager.isNextToFire (l))
+            if (FallIndex.isNextToFallPrevention (l) || ExplodedBlockManager.isNextToExplosion (l) || BurntBlockManager.isNextToFire (l))
                 event.setCancelled (true);
         }
     }

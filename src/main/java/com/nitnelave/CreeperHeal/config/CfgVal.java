@@ -28,7 +28,8 @@ public enum CfgVal implements CfgValEnumMember {
     DEBUG("debug-messages", false, true),
     REPLACE_SILVERFISH_BLOCKS("replace-silverfish-blocks", false, true),
     WAIT_BEFORE_BURN_AGAIN("wait-before-burn-again", 240, true),
-    RAIL_REPLACEMENT("performance.replace-rails-correctly", true, true);
+    RAIL_REPLACEMENT("performance.replace-rails-correctly", true, true),
+    PREVENT_FALL("performance.prevent-block-fall", true, true);
 
     private final String key;
     private final Object defaultValue;
