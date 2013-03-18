@@ -14,7 +14,6 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
-import com.nitnelave.CreeperHeal.block.BlockManager;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.FileUtils;
 
@@ -222,8 +221,6 @@ public abstract class CreeperConfig {
             w = new WorldConfig (name);
             w.load ();
         }
-        if (w.isRepairTimed ())
-            BlockManager.scheduleTimeRepairs ();
         if (w.hasGriefProtection ())
             CreeperHeal.registerGriefEvents ();
         return w;
