@@ -17,7 +17,6 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
-import com.nitnelave.CreeperHeal.block.BlockManager;
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.block.CreeperBurntBlock;
 import com.nitnelave.CreeperHeal.block.CreeperHanging;
@@ -27,6 +26,7 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WCfgVal;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.utils.FactionHandler;
+import com.nitnelave.CreeperHeal.utils.Suffocating;
 
 /**
  * Listener for the entity events.
@@ -123,7 +123,7 @@ public class CreeperListener implements Listener {
         @Override
         public void run () {
             block.setType (type);
-            BlockManager.checkPlayerOneBlock (block.getLocation ());
+            Suffocating.checkPlayerOneBlock (block.getLocation ());
         }
     }
 
