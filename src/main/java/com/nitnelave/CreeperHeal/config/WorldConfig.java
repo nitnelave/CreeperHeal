@@ -25,6 +25,8 @@ import org.bukkit.inventory.InventoryHolder;
 import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.PluginHandler;
 import com.nitnelave.CreeperHeal.block.BlockId;
+import com.nitnelave.CreeperHeal.block.BurntBlockManager;
+import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.FileUtils;
 
@@ -159,6 +161,25 @@ public class WorldConfig {
         protectList.load ();
         griefPlaceList.load ();
 
+        if (isRepairTimed ())
+            Bukkit.getScheduler ().scheduleSyncRepeatingTask (CreeperHeal.getInstance (), new Runnable () {
+                @Override
+                public void run () {
+                    checkReplaceTime ();
+                }
+            }, 200, 1200);
+    }
+
+    /*
+     * Task to check if the explosions should be replaced.
+     */
+    protected void checkReplaceTime () {
+        long time = Bukkit.getServer ().getWorld (getName ()).getTime ();
+        if (((Math.abs (getRepairTime () - time) < 600) || (Math.abs (Math.abs (getRepairTime () - time) - 24000)) < 600))
+        {
+            ExplodedBlockManager.forceReplace (this);
+            BurntBlockManager.forceReplaceBurnt (this);
+        }
     }
 
     /**
