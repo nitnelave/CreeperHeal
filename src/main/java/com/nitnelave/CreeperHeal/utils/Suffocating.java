@@ -8,6 +8,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
 import com.nitnelave.CreeperHeal.block.CreeperBlock;
+import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 /**
@@ -44,10 +45,10 @@ public abstract class Suffocating {
      */
     public static void checkPlayerExplosion (Location loc, double radius) {
         List<? extends Entity> entityList;
-        if (CreeperConfig.isLightWeight ())
-            entityList = loc.getWorld ().getPlayers ();
-        else
+        if (CreeperConfig.getBool (CfgVal.SUFFOCATING_ANIMALS))
             entityList = loc.getWorld ().getEntities ();
+        else
+            entityList = loc.getWorld ().getPlayers ();
         for (Entity en : entityList)
             if (en instanceof LivingEntity && loc.distance (en.getLocation ()) < radius + 3)
                 en.teleport (check_player_suffocate ((LivingEntity) en));

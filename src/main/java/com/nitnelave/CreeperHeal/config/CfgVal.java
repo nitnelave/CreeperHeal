@@ -29,7 +29,8 @@ public enum CfgVal implements CfgValEnumMember {
     REPLACE_SILVERFISH_BLOCKS("replace-silverfish-blocks", false, true),
     WAIT_BEFORE_BURN_AGAIN("wait-before-burn-again", 240, true),
     RAIL_REPLACEMENT("performance.replace-rails-correctly", true, true),
-    PREVENT_FALL("performance.prevent-block-fall", true, true);
+    PREVENT_FALL("performance.prevent-block-fall", true, true),
+    SUFFOCATING_ANIMALS("performance.save-suffocating-mobs", true, true);
 
     private final String key;
     private final Object defaultValue;
