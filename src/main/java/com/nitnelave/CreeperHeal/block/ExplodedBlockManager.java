@@ -159,13 +159,7 @@ public class ExplodedBlockManager {
         /*
          * Immediately replace the blocks marked for immediate replacement.
          */
-        Bukkit.getServer ().getScheduler ().scheduleSyncDelayedTask (CreeperHeal.getInstance (), new Runnable () {
-            @Override
-            public void run () {
-                BlockManager.replaceProtected ();
-            }
-        });
-
+        ToReplaceList.replaceProtected ();
     }
 
     /**
