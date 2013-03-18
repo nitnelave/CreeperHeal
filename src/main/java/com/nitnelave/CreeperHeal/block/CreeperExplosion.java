@@ -234,7 +234,7 @@ public class CreeperExplosion {
             CreeperBlock b = CreeperBlock.newBlock (block.getState ());
             if (b != null)
             {
-                BlockManager.addToReplace (b);
+                ToReplaceList.addToReplace (b);
                 b.remove ();
             }
             return;

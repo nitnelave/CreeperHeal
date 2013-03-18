@@ -1,11 +1,6 @@
 package com.nitnelave.CreeperHeal.block;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
@@ -21,35 +16,9 @@ import com.nitnelave.CreeperHeal.utils.CreeperLog;
 public abstract class BlockManager {
 
     /*
-     * Block to be replaced immediately after an explosion.
-     */
-    private static Map<Location, Replaceable> toReplace = new HashMap<Location, Replaceable> ();
-
-    /*
      * Remember if time repairs have already been scheduled.
      */
     private static boolean timeRepairsScheduled = false;
-
-    /**
-     * Add a block to the list of blocks to be replaced immediately.
-     * 
-     * @param block
-     *            The block to add.
-     */
-    protected static void addToReplace (CreeperBlock block) {
-        toReplace.put (block.getLocation (), block);
-    }
-
-    /*
-     * Replace the blocks that should be immediately replaced after an
-     * explosion.
-     */
-    protected static void replaceProtected () {
-        Iterator<Replaceable> iter = toReplace.values ().iterator ();
-        while (iter.hasNext ())
-            iter.next ().replace (true);
-        toReplace.clear ();
-    }
 
     /*
      * For each world, check if it is the time for timed repairs, and repair.
