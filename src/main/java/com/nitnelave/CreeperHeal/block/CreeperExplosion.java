@@ -18,6 +18,7 @@ import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.utils.ShortLocation;
+import com.nitnelave.CreeperHeal.utils.Suffocating;
 
 /**
  * Represents an explosion, with the list of blocks destroyed, the time of the
@@ -119,7 +120,7 @@ public class CreeperExplosion {
             blockList.clear ();
 
             if (CreeperConfig.getBool (CfgVal.TELEPORT_ON_SUFFOCATE))
-                BlockManager.checkPlayerExplosion (loc, radius);
+                Suffocating.checkPlayerExplosion (loc, radius);
         }
     }
 
@@ -143,7 +144,7 @@ public class CreeperExplosion {
             else
                 block.drop (true);
         if (CreeperConfig.getBool (CfgVal.TELEPORT_ON_SUFFOCATE))
-            BlockManager.checkPlayerOneBlock (block.getBlock ().getLocation ());
+            Suffocating.checkPlayerOneBlock (block.getBlock ().getLocation ());
         return !blockList.isEmpty ();
     }
 
