@@ -27,17 +27,16 @@ import com.nitnelave.CreeperHeal.utils.FileUtils;
 public abstract class CreeperConfig {
 
     private static final int CONFIG_VERSION = 8;
-
-    private static int configVersion = CONFIG_VERSION;
     private static final File CONFIG_FILE = new File (CreeperHeal.getCHFolder () + "/config.yml"), ADVANCED_FILE = new File (CreeperHeal.getCHFolder ()
             + "/advanced.yml");
-
     private static final Logger LOG = Logger.getLogger ("Minecraft");
     private static final Map<String, WorldConfig> world_config = new HashMap<String, WorldConfig> ();
     private static final Map<String, ConfigValue<Boolean>> booleans = new HashMap<String, ConfigValue<Boolean>> ();
     private static final Map<String, ConfigValue<Integer>> integers = new HashMap<String, ConfigValue<Integer>> ();
     private static final YamlConfiguration config = new YamlConfiguration (), advanced = new YamlConfiguration ();
+
     private static ConfigValue<String> alias;
+    private static int configVersion = CONFIG_VERSION;
 
     static
     {
