@@ -244,7 +244,7 @@ public class CreeperCommandManager implements CommandExecutor {
             try
             {
                 interval = Integer.parseInt (args[1]);
-            } catch (Exception e)
+            } catch (NumberFormatException e)
             {
                 sender.sendMessage ("/ch " + args[0] + " [seconds]");
                 sender.sendMessage ("Sets the interval before replacing a " + setting);

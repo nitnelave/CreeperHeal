@@ -18,15 +18,7 @@ class IntegerConfigValue extends ConfigValue<Integer> {
 
     @Override
     protected void load () {
-        try
-        {
-            setValue (config.getInt (getKey (), getDefaultValue ()));
-        } catch (Exception e)
-        {
-            log.warning ("[CreeperHeal] Wrong value for " + getKey () + " field in file " + config.getName () + ". Defaulting to "
-                    + Integer.toString (getDefaultValue ()));
-            setValue (getDefaultValue ());
-        }
+        setValue (config.getInt (getKey (), getDefaultValue ()));
     }
 
 }

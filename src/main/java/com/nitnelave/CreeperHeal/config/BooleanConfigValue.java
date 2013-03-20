@@ -18,16 +18,7 @@ class BooleanConfigValue extends ConfigValue<Boolean> {
 
     @Override
     protected void load () {
-        try
-        {
-            setValue (config.getBoolean (getKey (), getDefaultValue ()));
-        } catch (Exception e)
-        {
-            log.warning ("[CreeperHeal] Wrong value for " + getKey () + " field in file " + config.getName () + ". Defaulting to "
-                    + Boolean.toString (getDefaultValue ()));
-            setValue (getDefaultValue ());
-        }
-
+        setValue (config.getBoolean (getKey (), getDefaultValue ()));
     }
 
 }
