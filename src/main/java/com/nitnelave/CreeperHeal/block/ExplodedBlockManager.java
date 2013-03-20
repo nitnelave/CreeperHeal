@@ -38,11 +38,15 @@ public class ExplodedBlockManager {
      */
     private static NeighborExplosion explosionIndex;
 
+    /*
+     * List to temporarily store the paintings before adding them to the
+     * explosion right after.
+     */
     private static List<CreeperHanging> hangingList = new LinkedList<CreeperHanging> ();
 
     static
     {
-        if (!CreeperConfig.isLightWeight ())
+        if (CreeperConfig.getBool (CfgVal.LEAVES_VINES))
         {
             explosionIndex = new NeighborExplosion ();
             Bukkit.getScheduler ().scheduleSyncRepeatingTask (CreeperHeal.getInstance (), new Runnable () {
@@ -96,7 +100,7 @@ public class ExplodedBlockManager {
         for (CreeperExplosion ex : pass)
         {
             ex.replace_blocks (true);
-            if (!CreeperConfig.isLightWeight ())
+            if (CreeperConfig.getBool (CfgVal.LEAVES_VINES))
                 explosionIndex.removeElement (ex);
         }
 
@@ -153,7 +157,7 @@ public class ExplodedBlockManager {
         hangingList.clear ();
 
         explosionList.add (cEx);
-        if (!CreeperConfig.isLightWeight ())
+        if (CreeperConfig.getBool (CfgVal.LEAVES_VINES))
             explosionIndex.addElement (cEx, location.getX (), location.getZ ());
 
         /*
@@ -175,7 +179,7 @@ public class ExplodedBlockManager {
                 if (ex.isEmpty ())
                 {
                     iter.remove ();
-                    if (!CreeperConfig.isLightWeight ())
+                    if (CreeperConfig.getBool (CfgVal.LEAVES_VINES))
                         explosionIndex.removeElement (ex);
                 }
             }
