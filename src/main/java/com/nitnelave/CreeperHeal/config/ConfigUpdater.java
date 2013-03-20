@@ -26,7 +26,11 @@ class ConfigUpdater {
         CreeperConfig.setBool (CfgVal.REPLACE_PROTECTED_CHESTS, replaceProtectedChests);
         CreeperConfig.setBool (CfgVal.OVERWRITE_BLOCKS, overwriteBlocks);
         CreeperConfig.setBool (CfgVal.PREVENT_BLOCK_FALL, preventBlockFall);
-        CreeperConfig.setBool (CfgVal.LIGHTWEIHGTMODE, lightweightMode);
+        CreeperConfig.setBool (CfgVal.RAIL_REPLACEMENT, lightweightMode);
+        CreeperConfig.setBool (CfgVal.PREVENT_FALL, lightweightMode);
+        CreeperConfig.setBool (CfgVal.SUFFOCATING_ANIMALS, lightweightMode);
+        CreeperConfig.setBool (CfgVal.LEAVES_VINES, lightweightMode);
+        CreeperConfig.setBool (CfgVal.SORT_BY_RADIUS, lightweightMode);
         CreeperConfig.setBool (CfgVal.LOG_WARNINGS, logWarnings);
         CreeperConfig.setBool (CfgVal.PREVENT_CHAIN_REACTION, preventChainReaction);
         CreeperConfig.setBool (CfgVal.EXPLODE_OBSIDIAN, explodeObsidian);
@@ -213,8 +217,11 @@ class ConfigUpdater {
                     from5 ();
                     break;
                 case 6:
+                case 7:
                     from6 ();
                     break;
+                default:
+                    CreeperLog.warning ("Trying to import from an unknown config version.");
 
             }
         } catch (Exception e)

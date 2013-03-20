@@ -174,6 +174,8 @@ abstract class WorldConfigImporter {
             case 7:
                 from6 (name);
                 break;
+            default:
+                CreeperLog.warning ("Trying to import a world from an uknown version.");
         }
         storeSettings (w);
         return w;
