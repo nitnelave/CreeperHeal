@@ -16,11 +16,16 @@ import com.nitnelave.CreeperHeal.block.FallIndex;
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
+/**
+ * Listener for all events related to blocks falling.
+ * 
+ * @author nitnelave
+ */
 public class BlockFallListener implements Listener {
 
     /**
-     * Listener for the BLockPhysicsEvent. Prevent rails redirection, vine
-     * disappearance and block fall when appropriate (close to an explosion).
+     * Listener for the BLockPhysicsEvent. Prevent block fall when appropriate
+     * (close to an explosion).
      * 
      * @param event
      *            The BlockPhysics event.

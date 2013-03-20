@@ -9,8 +9,19 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import com.nitnelave.CreeperHeal.block.CreeperBlock;
 import com.nitnelave.CreeperHeal.block.RailsIndex;
 
+/**
+ * Listener for the rails' update event.
+ * 
+ * @author nitnelave
+ */
 public class RailsUpdateListener implements Listener {
 
+    /**
+     * Listener for the blockPhysicsEvent, to prevent rails from updating.
+     * 
+     * @param event
+     *            The BlockPhysicsEvent
+     */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockPhysics (BlockPhysicsEvent event) {
         Block b = event.getBlock ();

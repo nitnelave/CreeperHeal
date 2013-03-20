@@ -125,6 +125,11 @@ public class PluginHandler {
         return CreeperTrapCommands.onCommand (sender, args);
     }
 
+    /**
+     * Checks if is Factions enabled.
+     * 
+     * @return true, if Factions is enabled
+     */
     public static boolean isFactionsEnabled () {
         return detectPlugin ("Factions") != null;
     }

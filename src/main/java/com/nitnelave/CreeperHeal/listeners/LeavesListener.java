@@ -11,11 +11,16 @@ import org.bukkit.event.block.LeavesDecayEvent;
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
 
+/**
+ * Listener for Leaves and Vines related events.
+ * 
+ * @author nitnelave
+ */
 public class LeavesListener implements Listener {
 
     /**
-     * Listener for the BLockPhysicsEvent. Prevent rails redirection, vine
-     * disappearance and block fall when appropriate (close to an explosion).
+     * Listener for the BLockPhysicsEvent. Prevent vine disappearance when
+     * appropriate (close to an explosion).
      * 
      * @param event
      *            The BlockPhysics event.
