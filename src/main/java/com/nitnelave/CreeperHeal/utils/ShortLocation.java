@@ -51,6 +51,8 @@ public class ShortLocation {
      */
     @Override
     public boolean equals (Object obj) {
+        if (this == obj)
+            return true;
         if (obj instanceof ShortLocation)
         {
             ShortLocation other = (ShortLocation) obj;
