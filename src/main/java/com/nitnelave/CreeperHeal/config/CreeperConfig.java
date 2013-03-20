@@ -193,7 +193,6 @@ public abstract class CreeperConfig {
         if (!advanced.getBoolean ("lightweight-mode", false))
         {
             CreeperConfig.setBool (CfgVal.RAIL_REPLACEMENT, false);
-            CreeperConfig.setBool (CfgVal.PREVENT_FALL, false);
             CreeperConfig.setBool (CfgVal.SUFFOCATING_ANIMALS, false);
             CreeperConfig.setBool (CfgVal.LEAVES_VINES, false);
             CreeperConfig.setBool (CfgVal.SORT_BY_RADIUS, false);

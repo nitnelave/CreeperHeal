@@ -40,7 +40,11 @@
 #
 
 command-alias: ch
-lightweight-mode: false
+performance:
+  replace-rails-correctly: true
+  save-suffocating-mobs: true
+  keep-leaves-vines: true
+  sort-exploded-blocks-by-distance: true
 wait-before-burn-again: 240
 prevent-block-fall: true
 overwrite-blocks: true
@@ -57,4 +61,4 @@ obsidian:
 log-warnings: true
 verbose-level: 1
 debug-messages: false
-config-version: 8
+config-version: 9

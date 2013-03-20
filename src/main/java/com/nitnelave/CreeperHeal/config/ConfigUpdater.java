@@ -27,7 +27,6 @@ class ConfigUpdater {
         CreeperConfig.setBool (CfgVal.OVERWRITE_BLOCKS, overwriteBlocks);
         CreeperConfig.setBool (CfgVal.PREVENT_BLOCK_FALL, preventBlockFall);
         CreeperConfig.setBool (CfgVal.RAIL_REPLACEMENT, lightweightMode);
-        CreeperConfig.setBool (CfgVal.PREVENT_FALL, lightweightMode);
         CreeperConfig.setBool (CfgVal.SUFFOCATING_ANIMALS, lightweightMode);
         CreeperConfig.setBool (CfgVal.LEAVES_VINES, lightweightMode);
         CreeperConfig.setBool (CfgVal.SORT_BY_RADIUS, lightweightMode);
