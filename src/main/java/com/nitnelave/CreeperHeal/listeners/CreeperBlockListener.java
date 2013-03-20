@@ -31,12 +31,11 @@ public class CreeperBlockListener implements Listener {
 
         if (world.getBool (WCfgVal.FIRE))
         {
-            if (!CreeperConfig.isLightWeight ())
-                if (BurntBlockManager.wasRecentlyBurnt (event.getBlock ()))
-                {
-                    event.setCancelled (true);
-                    return;
-                }
+            if (BurntBlockManager.wasRecentlyBurnt (event.getBlock ()))
+            {
+                event.setCancelled (true);
+                return;
+            }
             BurntBlockManager.recordBurntBlock (event.getBlock ());
         }
 
