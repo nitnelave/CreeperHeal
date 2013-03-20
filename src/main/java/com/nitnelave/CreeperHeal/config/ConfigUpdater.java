@@ -63,18 +63,18 @@ class ConfigUpdater {
         }
         if (!tmp_str.equalsIgnoreCase ("all-at-once") && !tmp_str.equalsIgnoreCase ("block-per-block"))
             CreeperLog.warning ("[CreeperHeal] Wrong value for replacement method field. Defaulting to block-per-block.");
-        waitBeforeHeal = getInt (config, "wait-before-heal-explosions", 60);
-        logLevel = getInt (config, "verbose-level", 1);
+        waitBeforeHeal = config.getInt ("wait-before-heal-explosions", 60);
+        logLevel = config.getInt ("verbose-level", 1);
         blockPerBlock = (tmp_str.equalsIgnoreCase ("all-at-once")) ? false : true;
-        teleportOnSuffocate = getBoolean (config, "teleport-when-buried", true);
-        waitBeforeHealBurnt = getInt (config, "wait-before-heal-fire", 45);
-        dropDestroyedBlocks = getBoolean (config, "drop-destroyed-blocks", true);
-        dropChance = getInt (config, "drop-destroyed-blocks-chance", 100);
-        crackDestroyedBricks = getBoolean (config, "crack-destroyed-bricks", false);
-        overwriteBlocks = getBoolean (config, "overwrite-blocks", true);
-        preventBlockFall = getBoolean (config, "prevent-block-fall", true);
-        distanceNear = getInt (config, "distance-near", 20);
-        lightweightMode = getBoolean (config, "lightweight-mode", false);
+        teleportOnSuffocate = config.getBoolean ("teleport-when-buried", true);
+        waitBeforeHealBurnt = config.getInt ("wait-before-heal-fire", 45);
+        dropDestroyedBlocks = config.getBoolean ("drop-destroyed-blocks", true);
+        dropChance = config.getInt ("drop-destroyed-blocks-chance", 100);
+        crackDestroyedBricks = config.getBoolean ("crack-destroyed-bricks", false);
+        overwriteBlocks = config.getBoolean ("overwrite-blocks", true);
+        preventBlockFall = config.getBoolean ("prevent-block-fall", true);
+        distanceNear = config.getInt ("distance-near", 20);
+        lightweightMode = config.getBoolean ("lightweight-mode", false);
         cmdAlias = config.getString ("command-alias", "ch");
         logWarnings = true;
         debug = preventChainReaction = false;
@@ -111,28 +111,28 @@ class ConfigUpdater {
         config.load (configFile);
         File advancedFile = new File (CreeperHeal.getCHFolder () + "/advanced.yml");
 
-        blockPerBlockInterval = getInt (config, "replacement.block-per-block.interval", 20);
-        waitBeforeHeal = getInt (config, "replacement.wait-before-heal.explosions", 60);
-        blockPerBlock = getBoolean (config, "replacement.block-per-block", true);
-        waitBeforeHealBurnt = getInt (config, "replacement.wait-before-heal.fire", 45);
-        crackDestroyedBricks = getBoolean (config, "replacement.crack-destroyed-bricks", false);
-        boolean replaceAllChests = getBoolean (config, "replacement.ignore-chests.all", false);
-        replaceProtectedChests = replaceAllChests || getBoolean (config, "replacement.ignore-chests.protected", false);
-        logLevel = getInt (config, "advanced.verbose-level", 1);
-        teleportOnSuffocate = getBoolean (config, "advanced.teleport-when-buried", true);
-        dropDestroyedBlocks = getBoolean (config, "advanced.drop-destroyed-blocks.enabled", true);
-        dropChance = getInt (config, "advanced.drop-destroyed-blocks.chance", 100);
-        overwriteBlocks = getBoolean (config, "advanced.replacement-conflict.overwrite", true);
-        preventBlockFall = getBoolean (config, "advanced.prevent-block-fall", true);
-        distanceNear = getInt (config, "advanced.distance-near", 20);
-        lightweightMode = getBoolean (config, "advanced.lightweight-mode", false);
+        blockPerBlockInterval = config.getInt ("replacement.block-per-block.interval", 20);
+        waitBeforeHeal = config.getInt ("replacement.wait-before-heal.explosions", 60);
+        blockPerBlock = config.getBoolean ("replacement.block-per-block", true);
+        waitBeforeHealBurnt = config.getInt ("replacement.wait-before-heal.fire", 45);
+        crackDestroyedBricks = config.getBoolean ("replacement.crack-destroyed-bricks", false);
+        boolean replaceAllChests = config.getBoolean ("replacement.ignore-chests.all", false);
+        replaceProtectedChests = replaceAllChests || config.getBoolean ("replacement.ignore-chests.protected", false);
+        logLevel = config.getInt ("advanced.verbose-level", 1);
+        teleportOnSuffocate = config.getBoolean ("advanced.teleport-when-buried", true);
+        dropDestroyedBlocks = config.getBoolean ("advanced.drop-destroyed-blocks.enabled", true);
+        dropChance = config.getInt ("advanced.drop-destroyed-blocks.chance", 100);
+        overwriteBlocks = config.getBoolean ("advanced.replacement-conflict.overwrite", true);
+        preventBlockFall = config.getBoolean ("advanced.prevent-block-fall", true);
+        distanceNear = config.getInt ("advanced.distance-near", 20);
+        lightweightMode = config.getBoolean ("advanced.lightweight-mode", false);
         cmdAlias = config.getString ("advanced.command-alias", "ch");
-        logWarnings = getBoolean (config, "advanced.log-warnings", true);
-        preventChainReaction = getBoolean (config, "advanced.prevent-chain-reaction", false);
-        explodeObsidian = getBoolean (config, "advanced.obsidian.explode", false);
-        obsidianRadius = getInt (config, "advanced.obsidian.radius", 5);
-        obsidianChance = getInt (config, "advanced.obsidian.chance", 20);
-        debug = getBoolean (config, "advanced.debug-messages", false);
+        logWarnings = config.getBoolean ("advanced.log-warnings", true);
+        preventChainReaction = config.getBoolean ("advanced.prevent-chain-reaction", false);
+        explodeObsidian = config.getBoolean ("advanced.obsidian.explode", false);
+        obsidianRadius = config.getInt ("advanced.obsidian.radius", 5);
+        obsidianChance = config.getInt ("advanced.obsidian.chance", 20);
+        debug = config.getBoolean ("advanced.debug-messages", false);
         waitBeforeBurnAgain = 240;
 
         configFile.delete ();
@@ -149,59 +149,33 @@ class ConfigUpdater {
         File advancedFile = new File (CreeperHeal.getCHFolder () + "/advanced.yml");
         advanced.load (advancedFile);
 
-        blockPerBlockInterval = getInt (config, "block-per-block.interval", 20);
-        waitBeforeHeal = getInt (config, "wait-before-heal.explosions", 60);
-        blockPerBlock = getBoolean (config, "block-per-block.enabled", true);
-        waitBeforeHealBurnt = getInt (config, "wait-before-heal.fire", 45);
-        crackDestroyedBricks = getBoolean (config, "crack-destroyed-bricks", false);
-        boolean replaceAllChests = getBoolean (config, "ignore-chests.all", false);
-        replaceProtectedChests = replaceAllChests || getBoolean (config, "ignore-chests.protected", false);
+        blockPerBlockInterval = config.getInt ("block-per-block.interval", 20);
+        waitBeforeHeal = config.getInt ("wait-before-heal.explosions", 60);
+        blockPerBlock = config.getBoolean ("block-per-block.enabled", true);
+        waitBeforeHealBurnt = config.getInt ("wait-before-heal.fire", 45);
+        crackDestroyedBricks = config.getBoolean ("crack-destroyed-bricks", false);
+        boolean replaceAllChests = config.getBoolean ("ignore-chests.all", false);
+        replaceProtectedChests = replaceAllChests || config.getBoolean ("ignore-chests.protected", false);
 
-        logLevel = getInt (advanced, "verbose-level", 1);
-        teleportOnSuffocate = getBoolean (advanced, "teleport-when-buried", true);
-        dropDestroyedBlocks = getBoolean (advanced, "drop-destroyed-blocks.enabled", true);
-        dropChance = getInt (advanced, "drop-destroyed-blocks.chance", 100);
-        overwriteBlocks = getBoolean (advanced, "replacement-conflict.overwrite", true);
-        preventBlockFall = getBoolean (advanced, "prevent-block-fall", true);
-        distanceNear = getInt (advanced, "distance-near", 20);
-        lightweightMode = getBoolean (advanced, "lightweight-mode", false);
+        logLevel = advanced.getInt ("verbose-level", 1);
+        teleportOnSuffocate = advanced.getBoolean ("teleport-when-buried", true);
+        dropDestroyedBlocks = advanced.getBoolean ("drop-destroyed-blocks.enabled", true);
+        dropChance = advanced.getInt ("drop-destroyed-blocks.chance", 100);
+        overwriteBlocks = advanced.getBoolean ("replacement-conflict.overwrite", true);
+        preventBlockFall = advanced.getBoolean ("prevent-block-fall", true);
+        distanceNear = advanced.getInt ("distance-near", 20);
+        lightweightMode = advanced.getBoolean ("lightweight-mode", false);
         cmdAlias = advanced.getString ("command-alias", "ch");
-        logWarnings = getBoolean (advanced, "log-warnings", true);
-        preventChainReaction = getBoolean (advanced, "prevent-chain-reaction", false);
-        explodeObsidian = getBoolean (advanced, "obsidian.explode", false);
-        obsidianRadius = getInt (advanced, "obsidian.radius", 5);
-        obsidianChance = getInt (advanced, "obsidian.chance", 20);
-        debug = getBoolean (advanced, "debug-messages", false);
-        waitBeforeBurnAgain = getInt (advanced, "wait-before-burn-again", 240);
+        logWarnings = advanced.getBoolean ("log-warnings", true);
+        preventChainReaction = advanced.getBoolean ("prevent-chain-reaction", false);
+        explodeObsidian = advanced.getBoolean ("obsidian.explode", false);
+        obsidianRadius = advanced.getInt ("obsidian.radius", 5);
+        obsidianChance = advanced.getInt ("obsidian.chance", 20);
+        debug = advanced.getBoolean ("debug-messages", false);
+        waitBeforeBurnAgain = advanced.getInt ("wait-before-burn-again", 240);
 
         configFile.delete ();
         advancedFile.delete ();
-    }
-
-    protected static boolean getBoolean (YamlConfiguration config, String key, boolean def) {
-        boolean tmp;
-        try
-        {
-            tmp = config.getBoolean (key, def);
-        } catch (Exception e)
-        {
-            CreeperLog.warning ("[CreeperHeal] Wrong value for " + key + " field in file " + config.getName () + ". Defaulting to " + Boolean.toString (def));
-            tmp = def;
-        }
-        return tmp;
-    }
-
-    protected static int getInt (YamlConfiguration config, String key, int def) {
-        int tmp;
-        try
-        {
-            tmp = config.getInt (key, def);
-        } catch (Exception e)
-        {
-            CreeperLog.warning ("[CreeperHeal] Wrong value for " + key + " field in file " + config.getName () + ". Defaulting to " + Integer.toString (def));
-            tmp = def;
-        }
-        return tmp;
     }
 
     protected static void importFrom (int version) {
