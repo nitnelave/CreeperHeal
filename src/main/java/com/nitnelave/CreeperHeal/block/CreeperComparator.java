@@ -4,12 +4,14 @@ import java.util.Comparator;
 
 import org.bukkit.Location;
 
+import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 /**
  * Comparator to sort Replaceable in an explosion. Dependent blocks are put at
  * the end of the list, so they are replaced after the block they are dependent
- * upon. Otherwise, altitude is the only criterion.
+ * upon. Otherwise, altitude is the only criterion. Note: this comparator
+ * imposes ordering that is inconsistent with equals.
  * 
  * @author nitnelave
  * 
@@ -60,11 +62,17 @@ class CreeperComparator implements Comparator<Replaceable> {
             return 1;
         else if (pos1 < pos2)
             return -1;
-        if (loc == null || CreeperConfig.isLightWeight ())
+        if (loc == null || !CreeperConfig.getBool (CfgVal.SORT_BY_RADIUS))
             return 0;
-        if (b1.getLocation ().distance (loc) < b2.getLocation ().distance (loc))
+        return sgn (b2.getLocation ().distance (loc) - b1.getLocation ().distance (loc));
+    }
+
+    private int sgn (double d) {
+        if (d < 0)
+            return -1;
+        else if (d > 0)
             return 1;
-        return -1;
+        return 0;
     }
 
 }
