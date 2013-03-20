@@ -12,10 +12,12 @@ import com.nitnelave.CreeperHeal.command.CreeperCommandManager;
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
+import com.nitnelave.CreeperHeal.listeners.BlockFallListener;
 import com.nitnelave.CreeperHeal.listeners.CreeperBlockListener;
 import com.nitnelave.CreeperHeal.listeners.CreeperListener;
-import com.nitnelave.CreeperHeal.listeners.FancyListener;
 import com.nitnelave.CreeperHeal.listeners.GriefListener;
+import com.nitnelave.CreeperHeal.listeners.LeavesListener;
+import com.nitnelave.CreeperHeal.listeners.RailsUpdateListener;
 
 /**
  * The main class of the CreeperHeal plugin. The main aim of this plugin is to
@@ -56,7 +58,13 @@ public class CreeperHeal extends JavaPlugin {
         pm.registerEvents (new CreeperBlockListener (), this);
 
         if (CreeperConfig.getBool (CfgVal.LEAVES_VINES))
-            pm.registerEvents (new FancyListener (), this);
+            pm.registerEvents (new LeavesListener (), this);
+
+        if (CreeperConfig.getBool (CfgVal.PREVENT_FALL))
+            pm.registerEvents (new BlockFallListener (), this);
+
+        if (CreeperConfig.getBool (CfgVal.RAIL_REPLACEMENT))
+            pm.registerEvents (new RailsUpdateListener (), this);
     }
 
     /*

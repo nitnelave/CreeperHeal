@@ -39,7 +39,7 @@ public abstract class BurntBlockManager {
      */
     private static Map<Location, Date> recentlyBurnt;
     /*
-     * If the plugin is not in lightweight mode, the list of recently burnt
+     * If the leaves replacement setting is on, the list of recently burnt
      * blocks for neighbor finding.
      */
     private static NeighborFire fireIndex;
@@ -173,6 +173,8 @@ public abstract class BurntBlockManager {
      * @return Whether the location is close to a recently burnt block.
      */
     public static boolean isNextToFire (Location location) {
+        if (!CreeperConfig.getBool (CfgVal.LEAVES_VINES))
+            return false;
         return fireIndex.hasNeighbor (location);
     }
 
@@ -182,6 +184,8 @@ public abstract class BurntBlockManager {
      * @return Whether there is no recorded blocks to be replaced.
      */
     public static boolean isIndexEmpty () {
+        if (!CreeperConfig.getBool (CfgVal.LEAVES_VINES))
+            return false;
         return fireIndex.isEmpty ();
     }
 
@@ -193,6 +197,8 @@ public abstract class BurntBlockManager {
      * @return Whether the block was recently burnt.
      */
     public static boolean wasRecentlyBurnt (Block block) {
+        if (CreeperConfig.isLightWeight ())
+            return false;
         Date d = recentlyBurnt.get (block.getLocation ());
         return d != null && d.after (new Date ());
     }

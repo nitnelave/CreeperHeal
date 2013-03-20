@@ -199,6 +199,8 @@ public class ExplodedBlockManager {
      * @return Whether the location is in the radius of an explosion.
      */
     public static boolean isNextToExplosion (Location location) {
+        if (!CreeperConfig.getBool (CfgVal.LEAVES_VINES))
+            return false;
         return explosionIndex.hasNeighbor (location);
     }
 
@@ -207,6 +209,8 @@ public class ExplodedBlockManager {
      * light weight mode.
      */
     private static void cleanIndex () {
+        if (!CreeperConfig.getBool (CfgVal.LEAVES_VINES))
+            return;
         explosionIndex.clean ();
     }
 
