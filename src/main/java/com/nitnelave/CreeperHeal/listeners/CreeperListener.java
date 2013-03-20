@@ -73,7 +73,7 @@ public class CreeperListener implements Listener {
                 break;
             case PHYSICS:
             case OBSTRUCTION:
-                if (!CreeperConfig.isLightWeight () && BurntBlockManager.isNextToFire (h.getLocation ()) && world.getBool (WCfgVal.FIRE))
+                if (BurntBlockManager.isNextToFire (h.getLocation ()) && world.getBool (WCfgVal.FIRE))
                     BurntBlockManager.recordBurntBlock (new CreeperBurntBlock (new Date (), CreeperHanging.newHanging (h)));
                 break;
             default:

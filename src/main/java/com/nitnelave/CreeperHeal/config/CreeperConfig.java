@@ -311,13 +311,4 @@ public abstract class CreeperConfig {
         return world_config.values ();
     }
 
-    /**
-     * Checks if lightweight mode is enabled.
-     * 
-     * @return True if lightweight mode is enabled.
-     */
-    public static boolean isLightWeight () {
-        return getBool (CfgVal.LIGHTWEIHGTMODE);
-    }
-
 }
