@@ -42,7 +42,7 @@ public class FallIndex {
      * @return Whether the location is next to a block whose fall is prevented.
      */
     public static boolean isNextToFallPrevention (Location loc) {
-        return CreeperConfig.getBool (CfgVal.PREVENT_FALL) && index.hasNeighbor (loc);
+        return CreeperConfig.getBool (CfgVal.PREVENT_BLOCK_FALL) && index.hasNeighbor (loc);
     }
 
     /**
@@ -54,7 +54,7 @@ public class FallIndex {
      *            The block's location.
      */
     public static void putFallPrevention (Location location) {
-        if (CreeperConfig.getBool (CfgVal.PREVENT_FALL))
+        if (CreeperConfig.getBool (CfgVal.PREVENT_BLOCK_FALL))
             index.addElement (new DateLoc (new Date (), location), location.getX (), location.getZ ());
     }
 

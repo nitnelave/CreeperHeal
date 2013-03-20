@@ -60,7 +60,7 @@ public class CreeperHeal extends JavaPlugin {
         if (CreeperConfig.getBool (CfgVal.LEAVES_VINES))
             pm.registerEvents (new LeavesListener (), this);
 
-        if (CreeperConfig.getBool (CfgVal.PREVENT_FALL))
+        if (CreeperConfig.getBool (CfgVal.PREVENT_BLOCK_FALL))
             pm.registerEvents (new BlockFallListener (), this);
 
         if (CreeperConfig.getBool (CfgVal.RAIL_REPLACEMENT))
