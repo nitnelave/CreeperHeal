@@ -18,7 +18,6 @@ public enum CfgVal implements CfgValEnumMember {
     OVERWRITE_BLOCKS("overwrite-blocks", true, true),
     PREVENT_BLOCK_FALL("prevent-block-fall", true, true),
     DISTANCE_NEAR("distance-near", 20, true),
-    LIGHTWEIHGTMODE("lightweight-mode", false, true),
     ALIAS("command-alias", "ch", true),
     LOG_WARNINGS("log-warnings", true, true),
     PREVENT_CHAIN_REACTION("prevent-chain-reaction", false, true),

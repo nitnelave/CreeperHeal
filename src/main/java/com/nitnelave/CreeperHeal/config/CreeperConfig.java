@@ -25,7 +25,7 @@ import com.nitnelave.CreeperHeal.utils.FileUtils;
  */
 public abstract class CreeperConfig {
 
-    private static final int CONFIG_VERSION = 8;
+    private static final int CONFIG_VERSION = 9;
     private static final File CONFIG_FILE = new File (CreeperHeal.getCHFolder () + "/config.yml"), ADVANCED_FILE = new File (CreeperHeal.getCHFolder ()
             + "/advanced.yml");
     private static final Logger LOG = Logger.getLogger ("Minecraft");
@@ -169,7 +169,7 @@ public abstract class CreeperConfig {
                 FileUtils.copyJarConfig (ADVANCED_FILE);
             loadFile (advanced, ADVANCED_FILE);
             configVersion = advanced.getInt ("config-version", 4);
-            if (configVersion < CONFIG_VERSION)
+            if (configVersion < 8)
                 ConfigUpdater.importFrom (configVersion);
             else
             {
@@ -178,6 +178,8 @@ public abstract class CreeperConfig {
                 for (ConfigValue<Integer> v : integers.values ())
                     v.load ();
                 alias.load ();
+                if (configVersion == 8)
+                    loadLightWeight ();
             }
             advanced.set ("config-version", CONFIG_VERSION);
             configVersion = CONFIG_VERSION;
@@ -185,6 +187,18 @@ public abstract class CreeperConfig {
         }
 
         loadWorlds ();
+    }
+
+    private static void loadLightWeight () {
+        if (!advanced.getBoolean ("lightweight-mode", false))
+        {
+            CreeperConfig.setBool (CfgVal.RAIL_REPLACEMENT, false);
+            CreeperConfig.setBool (CfgVal.PREVENT_FALL, false);
+            CreeperConfig.setBool (CfgVal.SUFFOCATING_ANIMALS, false);
+            CreeperConfig.setBool (CfgVal.LEAVES_VINES, false);
+            CreeperConfig.setBool (CfgVal.SORT_BY_RADIUS, false);
+        }
+
     }
 
     /*
@@ -211,7 +225,7 @@ public abstract class CreeperConfig {
      */
     private static WorldConfig loadWorld (String name) {
         WorldConfig w;
-        if (configVersion < CONFIG_VERSION)
+        if (configVersion < 8)
         {
             w = WorldConfigImporter.importFrom (name, configVersion);
             w.save ();
