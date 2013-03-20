@@ -129,14 +129,14 @@ public class CreeperExplosion {
      * 
      * @return False if the list is now empty.
      */
-    private boolean replace_one_block () {
+    private void replace_one_block () {
         Replaceable block;
         try
         {
             block = blockList.remove ();
         } catch (NoSuchElementException ex)
         {
-            return true;
+            return;
         }
         if (!block.replace (false))
             if (block instanceof CreeperBlock)
@@ -145,7 +145,6 @@ public class CreeperExplosion {
                 block.drop (true);
         if (CreeperConfig.getBool (CfgVal.TELEPORT_ON_SUFFOCATE))
             Suffocating.checkPlayerOneBlock (block.getBlock ().getLocation ());
-        return !blockList.isEmpty ();
     }
 
     /*
@@ -154,10 +153,14 @@ public class CreeperExplosion {
      */
     @Override
     public boolean equals (Object o) {
-        if (!(o instanceof CreeperExplosion))
-            return false;
-        CreeperExplosion e = (CreeperExplosion) o;
-        return e.timer == timer && e.loc == loc && e.radius == radius;
+        if (this == o)
+            return true;
+        if (o instanceof CreeperExplosion)
+        {
+            CreeperExplosion e = (CreeperExplosion) o;
+            return e.timer == timer && e.loc == loc && e.radius == radius;
+        }
+        return false;
     }
 
     /*
