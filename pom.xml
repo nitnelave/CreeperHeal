@@ -30,7 +30,7 @@
 		<repository>
 			<id>internal.repo</id>
 			<name>Internal Repository</name>
-			<url>${internal.repo.path}</url>
+			<url>file://${internal.repo.path}</url>
 		</repository>
 	</distributionManagement>
 	<properties>
@@ -45,13 +45,13 @@
 		</repository>
 	</repositories>
 	<dependencies>
-	<!-- 
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>craftbukkit</artifactId>
-			<version>1.5.0</version>
+			<version>1.5-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
+		<!--
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
