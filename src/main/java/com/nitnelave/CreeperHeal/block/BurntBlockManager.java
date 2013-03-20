@@ -47,17 +47,16 @@ public abstract class BurntBlockManager {
     static
     {
         if (!CreeperConfig.isLightWeight ())
-        {
-            fireIndex = new NeighborFire ();
             recentlyBurnt = new HashMap<Location, Date> ();
+        if (CreeperConfig.getBool (CfgVal.LEAVES_VINES))
+            fireIndex = new NeighborFire ();
 
-            Bukkit.getScheduler ().scheduleSyncRepeatingTask (CreeperHeal.getInstance (), new Runnable () {
-                @Override
-                public void run () {
-                    cleanUp ();
-                }
-            }, 300, 7200);
-        }
+        Bukkit.getScheduler ().scheduleSyncRepeatingTask (CreeperHeal.getInstance (), new Runnable () {
+            @Override
+            public void run () {
+                cleanUp ();
+            }
+        }, 300, 7200);
 
         if (Bukkit.getScheduler ().scheduleSyncRepeatingTask (CreeperHeal.getInstance (), new Runnable () {
             @Override
@@ -87,11 +86,10 @@ public abstract class BurntBlockManager {
             {
                 cBlock.replace (true);
                 if (!CreeperConfig.isLightWeight ())
-                {
                     recentlyBurnt.put (cBlock.getLocation (),
                             new Date (System.currentTimeMillis () + 1000 * CreeperConfig.getInt (CfgVal.WAIT_BEFORE_BURN_AGAIN)));
+                if (CreeperConfig.getBool (CfgVal.LEAVES_VINES))
                     fireIndex.removeElement (cBlock);
-                }
                 iter.remove ();
             }
         }
@@ -113,10 +111,9 @@ public abstract class BurntBlockManager {
                 {
                     iter.remove ();
                     if (!CreeperConfig.isLightWeight ())
-                    {
-                        fireIndex.removeElement (cBlock);
                         recentlyBurnt.put (cBlock.getLocation (), new Date (now.getTime () + 1000 * CreeperConfig.getInt (CfgVal.WAIT_BEFORE_BURN_AGAIN)));
-                    }
+                    if (CreeperConfig.getBool (CfgVal.LEAVES_VINES))
+                        fireIndex.removeElement (cBlock);
                 }
             }
             else
@@ -162,7 +159,7 @@ public abstract class BurntBlockManager {
         if (block.getBlock () != null)
         {
             burntList.add (block);
-            if (!(CreeperConfig.isLightWeight ()))
+            if (CreeperConfig.getBool (CfgVal.LEAVES_VINES))
                 fireIndex.addElement (block);
             block.remove ();
         }
@@ -205,15 +202,19 @@ public abstract class BurntBlockManager {
      * light weight mode.
      */
     private static void cleanUp () {
-        fireIndex.clean ();
-        Iterator<Location> iter = recentlyBurnt.keySet ().iterator ();
-        Date now = new Date ();
-        while (iter.hasNext ())
+        if (CreeperConfig.getBool (CfgVal.LEAVES_VINES))
+            fireIndex.clean ();
+        if (!CreeperConfig.isLightWeight ())
         {
-            Location l = iter.next ();
-            Date d = recentlyBurnt.get (l);
-            if (d.before (now))
-                iter.remove ();
+            Iterator<Location> iter = recentlyBurnt.keySet ().iterator ();
+            Date now = new Date ();
+            while (iter.hasNext ())
+            {
+                Location l = iter.next ();
+                Date d = recentlyBurnt.get (l);
+                if (d.before (now))
+                    iter.remove ();
+            }
         }
 
     }

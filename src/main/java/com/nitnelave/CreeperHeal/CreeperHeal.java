@@ -9,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
 import com.nitnelave.CreeperHeal.command.CreeperCommandManager;
+import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.listeners.CreeperBlockListener;
@@ -54,7 +55,7 @@ public class CreeperHeal extends JavaPlugin {
         pm.registerEvents (new CreeperListener (), this);
         pm.registerEvents (new CreeperBlockListener (), this);
 
-        if (!CreeperConfig.isLightWeight ())
+        if (CreeperConfig.getBool (CfgVal.LEAVES_VINES))
             pm.registerEvents (new FancyListener (), this);
     }
 
