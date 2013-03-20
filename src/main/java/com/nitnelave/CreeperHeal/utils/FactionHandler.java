@@ -6,6 +6,7 @@ import org.bukkit.block.Block;
 
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.FLocation;
+import com.nitnelave.CreeperHeal.PluginHandler;
 import com.nitnelave.CreeperHeal.config.WCfgVal;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 
@@ -18,6 +19,11 @@ import com.nitnelave.CreeperHeal.config.WorldConfig;
 public abstract class FactionHandler {
 
     private static boolean isFactionsEnabled = false;
+
+    static
+    {
+        setFactionsEnabled (PluginHandler.isFactionsEnabled ());
+    }
 
     /**
      * Set whether the Factions plugin is enabled.
@@ -47,7 +53,7 @@ public abstract class FactionHandler {
             return wild;
 
         for (Block block : list)
-            if (wild == Board.getFactionAt (new FLocation (block.getLocation ())).isNone ())
+            if (wild != Board.getFactionAt (new FLocation (block.getLocation ())).isNone ())
                 return false;
         return true;
     }

@@ -11,7 +11,6 @@ import com.garbagemule.MobArena.MobArenaHandler;
 import com.griefcraft.lwc.LWC;
 import com.griefcraft.lwc.LWCPlugin;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
-import com.nitnelave.CreeperHeal.utils.FactionHandler;
 import com.nitnelave.CreeperTrap.CreeperTrapCommands;
 
 /**
@@ -37,8 +36,6 @@ public class PluginHandler {
 
         if (detectPlugin ("MobArena") != null)
             maHandler = new MobArenaHandler ();
-
-        FactionHandler.setFactionsEnabled (detectPlugin ("Factions") != null);
 
         playerHeads = detectPlugin ("PlayerHeads") != null;
     }
@@ -126,6 +123,10 @@ public class PluginHandler {
             return true;
         }
         return CreeperTrapCommands.onCommand (sender, args);
+    }
+
+    public static boolean isFactionsEnabled () {
+        return detectPlugin ("Factions") != null;
     }
 
 }
