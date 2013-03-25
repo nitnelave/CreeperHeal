@@ -51,19 +51,20 @@ class CreeperComparator implements Comparator<Replaceable> {
         else if (d2 && !d1)
             return -1;
 
-        boolean p1 = b1.isDependent (), p2 = b2.isDependent ();
-        if (p1 && !p2)
-            return 1;
-        else if (p2 && !p1)
-            return -1;
-
         int pos1 = b1.getLocation ().getBlockY (), pos2 = b2.getLocation ().getBlockY ();
         if (pos1 > pos2)
             return 1;
         else if (pos1 < pos2)
             return -1;
         if (loc == null || !CreeperConfig.getBool (CfgVal.SORT_BY_RADIUS))
-            return 0;
+        {
+            int dx = b2.getLocation ().getBlockX () - b1.getLocation ().getBlockX ();
+            if (dx > 0)
+                return 1;
+            else if (dx < 0)
+                return -1;
+            return b2.getLocation ().getBlockZ () - b1.getLocation ().getBlockZ ();
+        }
         return sgn (b2.getLocation ().distance (loc) - b1.getLocation ().distance (loc));
     }
 
