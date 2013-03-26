@@ -38,7 +38,10 @@ public abstract class NeighborFinder<T> {
         Point p = new Point ((int) (x / BLOCK_SIZE), (int) (y / BLOCK_SIZE));
         LinkedList<T> list = map.get (p);
         if (list == null)
-            list = map.put (p, new LinkedList<T> ());
+        {
+            list = new LinkedList<T> ();
+            map.put (p, new LinkedList<T> ());
+        }
         list.add (el);
     }
 
