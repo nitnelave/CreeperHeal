@@ -3,11 +3,12 @@
   <groupId>com.nitnelave.CreeperHeal</groupId>
   <artifactId>CreeperHeal</artifactId>
   <versioning>
-    <release>5.8.3</release>
+    <release>6.1.1</release>
     <versions>
       <version>5.8.3</version>
       <version>6.1</version>
+      <version>6.1.1</version>
     </versions>
-    <lastUpdated>20130320204943</lastUpdated>
+    <lastUpdated>20130326231547</lastUpdated>
   </versioning>
 </metadata>
