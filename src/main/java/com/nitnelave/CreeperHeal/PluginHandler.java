@@ -23,7 +23,7 @@ public class PluginHandler {
 
     private static MobArenaHandler maHandler = null;
     private static LWC lwc = null;
-    private static boolean playerHeads = false, creeperTrap = false;
+    private static boolean creeperTrap = false;
     private static boolean lockette = false;
 
     static
@@ -36,8 +36,6 @@ public class PluginHandler {
 
         if (detectPlugin ("MobArena") != null)
             maHandler = new MobArenaHandler ();
-
-        playerHeads = detectPlugin ("PlayerHeads") != null;
     }
 
     /*
@@ -79,15 +77,6 @@ public class PluginHandler {
             if (maHandler.inRegion (location))
                 return true; //Explosion inside a mob arena
         return false;
-    }
-
-    /**
-     * Get whether the plugin PlayerHeads is active on the server.
-     * 
-     * @return True if PlayerHeads is activated.
-     */
-    public static boolean isPlayerHeadsActivated () {
-        return playerHeads;
     }
 
     /**
