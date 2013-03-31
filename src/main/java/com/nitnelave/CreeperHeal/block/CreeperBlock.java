@@ -21,7 +21,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Attachable;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
-import com.nitnelave.CreeperHeal.PluginHandler;
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperUtils;
@@ -83,8 +82,6 @@ public class CreeperBlock implements Replaceable {
             case DETECTOR_RAIL:
                 return new CreeperRail (blockState);
             case SKULL:
-                if (PluginHandler.isPlayerHeadsActivated ())
-                    return new CreeperSkull (blockState);
                 return new CreeperHead (blockState);
             case PISTON_BASE:
             case PISTON_STICKY_BASE:
