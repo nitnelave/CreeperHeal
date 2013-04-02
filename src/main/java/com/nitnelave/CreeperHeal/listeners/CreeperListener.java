@@ -43,7 +43,7 @@ public class CreeperListener implements Listener {
      * @param event
      *            The EntityExplode event.
      */
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onEntityExplode (EntityExplodeEvent event) {
         WorldConfig world = CreeperConfig.getWorld (event.getLocation ().getWorld ());
 
