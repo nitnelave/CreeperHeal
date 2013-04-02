@@ -44,8 +44,7 @@ public abstract class BurntBlockManager {
      */
     private static NeighborFire fireIndex;
 
-    static
-    {
+    public static void init () {
         if (CreeperConfig.getInt (CfgVal.WAIT_BEFORE_BURN_AGAIN) > 0)
             recentlyBurnt = new HashMap<Location, Date> ();
         if (CreeperConfig.getBool (CfgVal.LEAVES_VINES))
