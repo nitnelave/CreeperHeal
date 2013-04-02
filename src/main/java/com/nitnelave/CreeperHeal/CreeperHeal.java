@@ -65,6 +65,9 @@ public class CreeperHeal extends JavaPlugin {
 
         if (CreeperConfig.getBool (CfgVal.RAIL_REPLACEMENT))
             pm.registerEvents (new RailsUpdateListener (), this);
+
+        ExplodedBlockManager.init ();
+        BurntBlockManager.init ();
     }
 
     /*

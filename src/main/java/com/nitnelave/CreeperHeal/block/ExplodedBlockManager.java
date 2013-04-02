@@ -44,8 +44,7 @@ public class ExplodedBlockManager {
      */
     private static List<CreeperHanging> hangingList = new LinkedList<CreeperHanging> ();
 
-    static
-    {
+    public static void init () {
         if (CreeperConfig.getBool (CfgVal.LEAVES_VINES))
         {
             explosionIndex = new NeighborExplosion ();
