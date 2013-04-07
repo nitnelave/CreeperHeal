@@ -58,7 +58,7 @@ public class ReplacementTimer {
      * @return False if it is not time to replace it yet.
      */
     public boolean checkReplace () {
-        return !timed && time.before (new Date ());
+        return timed || time.before (new Date ());
     }
 
     /**
