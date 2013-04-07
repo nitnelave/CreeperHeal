@@ -64,7 +64,7 @@ public class ExplodedBlockManager {
                 checkReplace (); //check to replace explosions/blocks
             }
         }, 200, CreeperConfig.getBool (CfgVal.BLOCK_PER_BLOCK) ? CreeperConfig.getInt (CfgVal.BLOCK_PER_BLOCK_INTERVAL) : 100) == -1)
-            CreeperLog.warning ("[CreeperHeal] Impossible to schedule the re-filling task. Auto-refill will not work");
+            CreeperLog.warning ("Impossible to schedule the re-filling task. Auto-refill will not work");
     }
 
     /**
@@ -114,6 +114,28 @@ public class ExplodedBlockManager {
     public static void forceReplace (WorldConfig world) {
         removeExplosionsAround (world.getWorld ().getSpawnLocation (), Float.POSITIVE_INFINITY);
         BurntBlockManager.forceReplaceBurnt (world);
+    }
+
+    /**
+     * Force the replacement of all explosions.
+     */
+    public static void forceReplace () {
+        ListIterator<CreeperExplosion> iter = explosionList.listIterator ();
+        LinkedList<CreeperExplosion> pass = new LinkedList<CreeperExplosion> ();
+        while (iter.hasNext ())
+        {
+            CreeperExplosion ex = iter.next ();
+            ex.replace_blocks (false);
+            pass.add (ex);
+            iter.remove ();
+        }
+        for (CreeperExplosion ex : pass)
+        {
+            ex.replace_blocks (true);
+            if (CreeperConfig.getBool (CfgVal.LEAVES_VINES))
+                explosionIndex.removeElement (ex);
+        }
+        BurntBlockManager.forceReplaceBurnt ();
     }
 
     /**

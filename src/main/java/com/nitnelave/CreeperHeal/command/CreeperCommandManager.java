@@ -275,27 +275,26 @@ public class CreeperCommandManager implements CommandExecutor {
      *            to all worlds.
      */
     private void forceCmd (String[] args, String msg, CommandSender sender, WorldConfig currentWorld) {
-        if (currentWorld == null)
-            for (WorldConfig wc : CreeperConfig.getWorlds ())
-                forceCmd (args, msg, sender, wc);
-        else
+        String cmd = args[0];
+
+        if (sender instanceof Player && !checkPermissions ((Player) sender, "heal", "admin"))
         {
-            String cmd = args[0];
-
-            if (sender instanceof Player && !checkPermissions ((Player) sender, "heal", "admin"))
-            {
-                sender.sendMessage (getMessage ("no-permission-command", null, sender.getName (), null, null, null, null));
-                return;
-            }
-
-            boolean burnt = cmd.equalsIgnoreCase ("healBurnt");
-            if (burnt)
-                BurntBlockManager.forceReplaceBurnt (currentWorld);
-            else
-                ExplodedBlockManager.forceReplace (currentWorld);
-
-            sender.sendMessage (ChatColor.GREEN + "Explosions healed");
+            sender.sendMessage (getMessage ("no-permission-command", null, sender.getName (), null, null, null, null));
+            return;
         }
+
+        boolean burnt = cmd.equalsIgnoreCase ("healBurnt");
+        if (currentWorld == null)
+            if (burnt)
+                BurntBlockManager.forceReplaceBurnt ();
+            else
+                ExplodedBlockManager.forceReplace ();
+        else if (burnt)
+            BurntBlockManager.forceReplaceBurnt (currentWorld);
+        else
+            ExplodedBlockManager.forceReplace (currentWorld);
+
+        sender.sendMessage (ChatColor.GREEN + "Explosions healed");
     }
 
     /**
