@@ -11,7 +11,6 @@ import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
 import com.nitnelave.CreeperHeal.command.CreeperCommandManager;
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
-import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.listeners.BlockFallListener;
 import com.nitnelave.CreeperHeal.listeners.CreeperBlockListener;
 import com.nitnelave.CreeperHeal.listeners.CreeperListener;
@@ -76,11 +75,8 @@ public class CreeperHeal extends JavaPlugin {
      */
     @Override
     public void onDisable () {
-        for (WorldConfig w : CreeperConfig.getWorlds ())
-        {
-            ExplodedBlockManager.forceReplace (w); //replace blocks still in memory, so they are not lost
-            BurntBlockManager.forceReplaceBurnt (w); //same for burnt_blocks
-        }
+        ExplodedBlockManager.forceReplace (); //replace blocks still in memory, so they are not lost
+        BurntBlockManager.forceReplaceBurnt (); //same for burnt_blocks
     }
 
     /**

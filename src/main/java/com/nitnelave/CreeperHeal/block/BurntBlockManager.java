@@ -63,13 +63,12 @@ public abstract class BurntBlockManager {
                 replaceBurnt ();
             }
         }, 200, 20) == -1)
-            CreeperLog.warning ("[CreeperHeal] Impossible to schedule the replace-burnt task. Burnt blocks replacement will not work");
+            CreeperLog.warning ("Impossible to schedule the replace-burnt task. Burnt blocks replacement will not work");
 
     }
 
     /**
-     * Force immediate replacement of all blocks burnt in the past few seconds,
-     * or all of them.
+     * Force immediate replacement of all blocks burnt in the specified world
      * 
      * @param worldConfig
      *            The world in which to replace the blocks.
@@ -93,6 +92,26 @@ public abstract class BurntBlockManager {
                 iter.remove ();
             }
         }
+    }
+
+    /**
+     * Force immediate replacement of all blocks burnt.
+     */
+    public static void forceReplaceBurnt () {
+        Iterator<CreeperBurntBlock> iter = burntList.iterator ();
+        int d = CreeperConfig.getInt (CfgVal.WAIT_BEFORE_BURN_AGAIN);
+        Date time = new Date (new Date ().getTime () + 1000 * d);
+        while (iter.hasNext ())
+            iter.next ().replace (true);
+        if (d > 0)
+        {
+            iter = burntList.iterator ();
+            while (iter.hasNext ())
+                recentlyBurnt.put (iter.next ().getLocation (), time);
+        }
+        if (CreeperConfig.getBool (CfgVal.LEAVES_VINES))
+            fireIndex.clear ();
+        burntList.clear ();
     }
 
     /**
