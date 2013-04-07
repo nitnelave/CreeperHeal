@@ -12,13 +12,13 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Hanging;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.scheduler.BukkitTask;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.PluginHandler;
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
-import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.NeighborExplosion;
 
 /**
@@ -44,6 +44,11 @@ public class ExplodedBlockManager {
      */
     private static List<CreeperHanging> hangingList = new LinkedList<CreeperHanging> ();
 
+    /*
+     * Block replacement task.
+     */
+    private static BukkitTask task;
+
     public static void init () {
         if (CreeperConfig.getBool (CfgVal.LEAVES_VINES))
         {
@@ -55,16 +60,7 @@ public class ExplodedBlockManager {
                 }
             }, 200, 7200);
         }
-        /*
-         * Schedule the replacement of the blocks.
-         */
-        if (Bukkit.getServer ().getScheduler ().scheduleSyncRepeatingTask (CreeperHeal.getInstance (), new Runnable () {
-            @Override
-            public void run () {
-                checkReplace (); //check to replace explosions/blocks
-            }
-        }, 200, CreeperConfig.getBool (CfgVal.BLOCK_PER_BLOCK) ? CreeperConfig.getInt (CfgVal.BLOCK_PER_BLOCK_INTERVAL) : 100) == -1)
-            CreeperLog.warning ("Impossible to schedule the re-filling task. Auto-refill will not work");
+        scheduleTask ();
     }
 
     /**
@@ -259,4 +255,21 @@ public class ExplodedBlockManager {
         }
     }
 
+    private static void scheduleTask () {
+        task = Bukkit.getServer ().getScheduler ().runTaskTimer (CreeperHeal.getInstance (), new Runnable () {
+            @Override
+            public void run () {
+                checkReplace (); //check to replace explosions/blocks
+            }
+        }, 0, CreeperConfig.getBool (CfgVal.BLOCK_PER_BLOCK) ? CreeperConfig.getInt (CfgVal.BLOCK_PER_BLOCK_INTERVAL) : 100);
+    }
+
+    /**
+     * Cancel and re-schedule the block replacement task, to update the block
+     * interval.
+     */
+    public static void rescheduleTask () {
+        task.cancel ();
+        scheduleTask ();
+    }
 }
