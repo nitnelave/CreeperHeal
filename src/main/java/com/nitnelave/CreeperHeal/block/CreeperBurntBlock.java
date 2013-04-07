@@ -151,8 +151,6 @@ public class CreeperBurntBlock {
      * @return False if it is not time to replace it yet.
      */
     public boolean checkReplace () {
-        if (timer.isTimed ())
-            return true;
         if (timer.checkReplace ())
         {
             if (replace (false))
