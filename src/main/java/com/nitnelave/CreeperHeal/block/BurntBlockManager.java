@@ -18,7 +18,6 @@ import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
-import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.NeighborFire;
 
 /**
@@ -57,13 +56,12 @@ public abstract class BurntBlockManager {
             }
         }, 300, 7200);
 
-        if (Bukkit.getScheduler ().scheduleSyncRepeatingTask (CreeperHeal.getInstance (), new Runnable () {
+        Bukkit.getScheduler ().runTaskTimer (CreeperHeal.getInstance (), new Runnable () {
             @Override
             public void run () {
                 replaceBurnt ();
             }
-        }, 200, 20) == -1)
-            CreeperLog.warning ("Impossible to schedule the replace-burnt task. Burnt blocks replacement will not work");
+        }, 0, 20);
 
     }
 
