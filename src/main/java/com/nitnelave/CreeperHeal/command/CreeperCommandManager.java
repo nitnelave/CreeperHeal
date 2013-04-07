@@ -103,11 +103,17 @@ public class CreeperCommandManager implements CommandExecutor {
             else if (cmd.equalsIgnoreCase ("custom"))
                 booleanCmd (currentWorld, WCfgVal.CUSTOM, args, "Magical explosions", sender);
 
-            else if (cmd.equalsIgnoreCase ("interval"))
-                integerCmd (CfgVal.WAIT_BEFORE_HEAL, args, "block destroyed in an explosion", sender);
+            else if (cmd.equalsIgnoreCase ("waitBeforeHeal") || cmd.equalsIgnoreCase ("wbh"))
+                integerCmd (CfgVal.WAIT_BEFORE_HEAL, args, "Sets the interval before replacing a block destroyed in an explosion", "seconds", sender);
 
-            else if (cmd.equalsIgnoreCase ("burnInterval"))
-                integerCmd (CfgVal.WAIT_BEFORE_HEAL_BURNT, args, "burnt block", sender);
+            else if (cmd.equalsIgnoreCase ("waitBeforeHealBurnt") || cmd.equalsIgnoreCase ("wbhb"))
+                integerCmd (CfgVal.WAIT_BEFORE_HEAL_BURNT, args, "Sets the interval before replacing a burnt block", "seconds", sender);
+
+            else if (cmd.equalsIgnoreCase ("blockPerBlockInterval") || cmd.equalsIgnoreCase ("bpbi"))
+            {
+                integerCmd (CfgVal.BLOCK_PER_BLOCK_INTERVAL, args, "Sets the interval between block replacement", "ticks", sender);
+                ExplodedBlockManager.rescheduleTask ();
+            }
 
             else if (cmd.equalsIgnoreCase ("forceHeal") || cmd.equalsIgnoreCase ("heal"))
                 forceCmd (args, "explosions", sender, allWorlds ? null : currentWorld);
@@ -172,8 +178,9 @@ public class CreeperCommandManager implements CommandExecutor {
                 sender.sendMessage (green + "/ch Ghast (on/off) (world) :" + purple + " same for Ghast fireballs");
                 sender.sendMessage (green + "/ch magical (on/off) :" + purple + " same for \"magical\" explosions.");
                 sender.sendMessage (green + "/ch fire (on/off) (world) :" + purple + " same for fire");
-                sender.sendMessage (green + "/ch interval [seconds] :" + purple + " Sets the interval before an explosion is replaced to x seconds");
-                sender.sendMessage (green + "/ch burnInterval [seconds] :" + purple + " Same for a block burnt");
+                sender.sendMessage (green + "/ch waitBeforeHeal [seconds] :" + purple + " Sets the interval before an explosion is replaced to x seconds");
+                sender.sendMessage (green + "/ch waitBeforeHealBurnt [seconds] :" + purple + " Same for a burnt block");
+                sender.sendMessage (green + "/ch blockPerBlockInterval [ticks] :" + purple + " Sets the block replacement rate");
             }
 
             if (heal)
@@ -234,7 +241,7 @@ public class CreeperCommandManager implements CommandExecutor {
      *            The command's sender.
      * @return The new value of the setting.
      */
-    private void integerCmd (CfgVal key, String[] args, String setting, CommandSender sender) {
+    private void integerCmd (CfgVal key, String[] args, String help, String unit, CommandSender sender) {
         if (sender instanceof Player && !checkPermissions ((Player) sender, "admin"))
             sender.sendMessage (getMessage ("no-permission-command", null, sender.getName (), null, null, null, null));
 
@@ -246,18 +253,18 @@ public class CreeperCommandManager implements CommandExecutor {
                 interval = Integer.parseInt (args[1]);
             } catch (NumberFormatException e)
             {
-                sender.sendMessage ("/ch " + args[0] + " [seconds]");
-                sender.sendMessage ("Sets the interval before replacing a " + setting);
+                sender.sendMessage ("/ch " + args[0] + " [" + unit + "]");
+                sender.sendMessage (help);
                 return;
             }
-            sender.sendMessage (ChatColor.GREEN + "New interval set to : " + interval + "seconds");
+            sender.sendMessage (ChatColor.GREEN + "New interval set to : " + interval + " " + unit);
 
             CreeperConfig.setInt (key, interval);
         }
         else
         {
-            sender.sendMessage ("/ch " + args[0] + " [seconds]");
-            sender.sendMessage ("Sets the interval before replacing a " + setting);
+            sender.sendMessage ("/ch " + args[0] + " [" + unit + "]");
+            sender.sendMessage (help);
         }
     }
 
