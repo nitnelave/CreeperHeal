@@ -11,7 +11,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -76,26 +75,6 @@ public class GriefListener implements Listener {
         if (event.getCause () == IgniteCause.SPREAD && world.getBool (WCfgVal.PREVENT_FIRE_SPREAD))
             event.setCancelled (true);
         else if (event.getCause () == IgniteCause.LAVA && world.getBool (WCfgVal.PREVENT_FIRE_LAVA))
-            event.setCancelled (true);
-    }
-
-    /**
-     * Listener for the BlockSpreadEvent. If the event concerns fire and fire
-     * spreading is disabled, cancel the event.
-     * 
-     * @param event
-     *            The BlockSpreadEvent.
-     */
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onBlockSpread (BlockSpreadEvent event) {
-        if (!event.getBlock ().getType ().equals (Material.FIRE))
-            return;
-        WorldConfig world = CreeperConfig.getWorld (event.getBlock ().getWorld ());
-
-        event.getBlock ().setTypeId (0);
-        event.getSource ().setTypeId (0);
-
-        if (world.getBool (WCfgVal.PREVENT_FIRE_SPREAD))
             event.setCancelled (true);
     }
 
