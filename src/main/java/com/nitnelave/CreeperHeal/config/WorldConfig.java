@@ -277,7 +277,8 @@ public class WorldConfig {
     public boolean hasGriefProtection () {
         return getBool (WCfgVal.BLOCK_LAVA) || getBool (WCfgVal.BLOCK_IGNITE) || getBool (WCfgVal.BLOCK_PVP) || getBool (WCfgVal.BLOCK_SPAWN_EGGS)
                 || getBool (WCfgVal.BLOCK_TNT) || getBool (WCfgVal.WARN_IGNITE) || getBool (WCfgVal.WARN_LAVA) || getBool (WCfgVal.WARN_PVP)
-                || getBool (WCfgVal.WARN_SPAWN_EGGS) || getBool (WCfgVal.WARN_TNT)
+                || getBool (WCfgVal.WARN_SPAWN_EGGS) || getBool (WCfgVal.WARN_TNT) || getBool (WCfgVal.PREVENT_FIRE_LAVA)
+                || getBool (WCfgVal.PREVENT_FIRE_SPREAD)
                 || (!griefPlaceList.getValue ().isEmpty () && (getBool (WCfgVal.GRIEF_BLOCK_BLACKLIST) || getBool (WCfgVal.WARN_BLACKLIST)));
     }
 
