@@ -36,10 +36,6 @@ import com.nitnelave.CreeperHeal.utils.DelayReplacement;
 public class CreeperBlock implements Replaceable {
 
     /*
-     * The blocks that will fall if not supported.
-     */
-    private final static Set<Integer> PHYSICS_BLOCKS = CreeperUtils.createFinalHashSet (12, 13, 81, 83, 145);
-    /*
      * These blocks (may) need a block under them not to drop.
      */
     private final static Set<Integer> DEPENDENT_DOWN_BLOCKS = CreeperUtils.createFinalHashSet (6, 26, 27, 28, 31, 32, 37, 38, 39, 40, 55, 59, 63, 64, 66, 70,
@@ -71,7 +67,7 @@ public class CreeperBlock implements Replaceable {
     public static CreeperBlock newBlock (BlockState blockState) {
         if (blockState instanceof InventoryHolder)
             return new CreeperChest (blockState);
-        if (hasPhysics (blockState.getTypeId ()))
+        if (blockState.getType ().hasGravity ())
             return new CreeperPhysicsBlock (blockState);
         switch (blockState.getType ())
         {
@@ -255,17 +251,6 @@ public class CreeperBlock implements Replaceable {
     protected void delayReplacement () {
         long delay = (long) Math.ceil ((double) CreeperConfig.getInt (CfgVal.BLOCK_PER_BLOCK_INTERVAL) / 20);
         Bukkit.getServer ().getScheduler ().scheduleSyncDelayedTask (CreeperHeal.getInstance (), new DelayReplacement (this, 0), delay);
-    }
-
-    /**
-     * Get whether blocks of a type are affected by gravity.
-     * 
-     * @param typeId
-     *            The block type.
-     * @return Whether the blocks are affected by gravity.
-     */
-    public static boolean hasPhysics (int typeId) {
-        return PHYSICS_BLOCKS.contains (typeId);
     }
 
     /**
