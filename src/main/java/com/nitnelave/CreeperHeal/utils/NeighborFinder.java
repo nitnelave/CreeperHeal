@@ -40,7 +40,7 @@ public abstract class NeighborFinder<T> {
         if (list == null)
         {
             list = new LinkedList<T> ();
-            map.put (p, new LinkedList<T> ());
+            map.put (p, list);
         }
         list.add (el);
     }
@@ -88,7 +88,7 @@ public abstract class NeighborFinder<T> {
      * @return A neighboring element, null if no such element exists.
      */
     public T getNeighbor (Location loc) {
-        int x = ((int) loc.getX ()) / BLOCK_SIZE, y = ((int) loc.getZ ()) / BLOCK_SIZE;
+        int x = (int) (loc.getX () / BLOCK_SIZE), y = (int) (loc.getZ () / BLOCK_SIZE);
         LinkedList<T> list = map.get (new Point (x, y));
         T neighbor = getNeighbor (loc, list);
         if (neighbor != null)
