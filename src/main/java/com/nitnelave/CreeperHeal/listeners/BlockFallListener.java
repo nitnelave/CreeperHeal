@@ -10,7 +10,6 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
-import com.nitnelave.CreeperHeal.block.CreeperBlock;
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
 import com.nitnelave.CreeperHeal.block.FallIndex;
 import com.nitnelave.CreeperHeal.config.CfgVal;
@@ -33,7 +32,7 @@ public class BlockFallListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockPhysics (BlockPhysicsEvent event) {
         Block b = event.getBlock ();
-        if (CreeperConfig.getBool (CfgVal.PREVENT_BLOCK_FALL) && CreeperBlock.hasPhysics (b.getTypeId ()))
+        if (CreeperConfig.getBool (CfgVal.PREVENT_BLOCK_FALL) && b.getType ().hasGravity ())
         {
             Location bLoc = b.getLocation ();
             if (FallIndex.isNextToFallPrevention (bLoc) || ExplodedBlockManager.isNextToExplosion (bLoc) || BurntBlockManager.isNextToFire (bLoc))
@@ -50,7 +49,7 @@ public class BlockFallListener implements Listener {
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEntityChangeBlock (EntityChangeBlockEvent event) {
-        if (event.getEntityType () != EntityType.ENDERMAN && CreeperBlock.hasPhysics (event.getBlock ().getTypeId ()))
+        if (event.getEntityType () != EntityType.ENDERMAN && event.getBlock ().getType ().hasGravity ())
         {
             Location l = event.getBlock ().getLocation ();
             if (FallIndex.isNextToFallPrevention (l) || ExplodedBlockManager.isNextToExplosion (l) || BurntBlockManager.isNextToFire (l))
