@@ -21,6 +21,8 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
  */
 public class NeighborFire extends NeighborFinder<CreeperBurntBlock> {
 
+    private static final int DISTANCE_NEAR = 10;
+
     /*
      * (non-Javadoc)
      * @see
@@ -33,7 +35,7 @@ public class NeighborFire extends NeighborFinder<CreeperBurntBlock> {
         {
             World w = loc.getWorld ();
             for (CreeperBurntBlock cB : list)
-                if (cB.getWorld () == w && loc.distance (cB.getLocation ()) < 10)
+                if (cB.getWorld () == w && loc.distance (cB.getLocation ()) < DISTANCE_NEAR)
                     return cB;
         }
         return null;
