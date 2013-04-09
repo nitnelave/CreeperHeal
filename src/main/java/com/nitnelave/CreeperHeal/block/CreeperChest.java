@@ -140,30 +140,30 @@ class CreeperChest extends CreeperBlock {
      * Get the other chest of the double chest. null if it is a simple chest.
      */
     private static NeighborChest scanForNeighborChest (BlockState block) {
-        return scanForNeighborChest (block.getWorld (), block.getX (), block.getY (), block.getZ (), block.getRawData ());
+        return scanForNeighborChest (block.getWorld (), block.getX (), block.getY (), block.getZ (), block.getRawData (), block.getType ());
     }
 
     /*
      * Get the other chest of the double chest. null if it is a simple chest.
      */
-    private static NeighborChest scanForNeighborChest (World world, int x, int y, int z, short d) {
+    private static NeighborChest scanForNeighborChest (World world, int x, int y, int z, short d, Material material) {
         Block neighbor;
         if (d <= 3)
         {
             neighbor = world.getBlockAt (x - 1, y, z);
-            if (neighbor.getType ().equals (Material.CHEST))
+            if (neighbor.getType ().equals (material))
                 return new NeighborChest (neighbor, d == 3);
             neighbor = world.getBlockAt (x + 1, y, z);
-            if (neighbor.getType ().equals (Material.CHEST))
+            if (neighbor.getType ().equals (material))
                 return new NeighborChest (neighbor, d == 2);
         }
         else
         {
             neighbor = world.getBlockAt (x, y, z - 1);
-            if (neighbor.getType ().equals (Material.CHEST))
+            if (neighbor.getType ().equals (material))
                 return new NeighborChest (neighbor, d == 4);
             neighbor = world.getBlockAt (x, y, z + 1);
-            if (neighbor.getType ().equals (Material.CHEST))
+            if (neighbor.getType ().equals (material))
                 return new NeighborChest (neighbor, d == 5);
         }
         return null;
