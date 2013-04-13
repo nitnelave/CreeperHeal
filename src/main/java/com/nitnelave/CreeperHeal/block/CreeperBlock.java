@@ -88,8 +88,8 @@ public class CreeperBlock implements Replaceable {
                 return new CreeperDoor (blockState);
             case NOTE_BLOCK:
                 return new CreeperNoteBlock ((NoteBlock) blockState);
-            case SIGN:
             case SIGN_POST:
+            case WALL_SIGN:
                 return new CreeperSign ((Sign) blockState);
             case MOB_SPAWNER:
                 return new CreeperMonsterSpawner ((CreatureSpawner) blockState);
