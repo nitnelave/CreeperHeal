@@ -23,8 +23,7 @@ public class PluginHandler {
 
     private static MobArenaHandler maHandler = null;
     private static LWC lwc = null;
-    private static boolean creeperTrap = false;
-    private static boolean lockette = false;
+    private static boolean creeperTrap = false, lockette = false, spout = false;
 
     static
     {
@@ -36,6 +35,8 @@ public class PluginHandler {
 
         if (detectPlugin ("MobArena") != null)
             maHandler = new MobArenaHandler ();
+
+        spout = detectPlugin ("Spout") != null;
     }
 
     /*
@@ -121,6 +122,10 @@ public class PluginHandler {
      */
     public static boolean isFactionsEnabled () {
         return detectPlugin ("Factions") != null;
+    }
+
+    public static boolean isSpoutEnabled () {
+        return spout;
     }
 
 }
