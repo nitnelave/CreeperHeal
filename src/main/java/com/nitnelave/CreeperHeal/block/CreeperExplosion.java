@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Random;
 
 import org.bukkit.Location;
@@ -131,13 +130,9 @@ public class CreeperExplosion {
      */
     private void replace_one_block () {
         Replaceable block;
-        try
-        {
-            block = blockList.remove ();
-        } catch (NoSuchElementException ex)
-        {
+        if (blockList.isEmpty ())
             return;
-        }
+        block = blockList.remove ();
         if (!block.replace (false))
             block.delayReplacement ();
         if (CreeperConfig.getBool (CfgVal.TELEPORT_ON_SUFFOCATE))
