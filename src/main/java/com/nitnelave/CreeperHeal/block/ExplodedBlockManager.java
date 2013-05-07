@@ -180,7 +180,7 @@ public class ExplodedBlockManager {
                 explosionIndex.addElement (cEx, location.getX (), location.getZ ());
         }
 
-        cEx.addBlocks (blocks);
+        cEx.addBlocks (blocks, location);
 
         for (CreeperHanging h : hangingList)
             cEx.record (h);
