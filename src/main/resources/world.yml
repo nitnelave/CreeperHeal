@@ -18,5 +18,6 @@ dragons: false
 custom: false
 minecart-tnt: true
 ender-crystal: false
+door-broken-by-zombie: false
 replace-above-limit-only: false
 replace-limit: 64
