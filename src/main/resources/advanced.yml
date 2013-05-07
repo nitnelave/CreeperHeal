@@ -33,6 +33,10 @@
 # replace-silverfish-blocks: If enabled, blocks destroyed by spawning silverfish 
 # will be repaired a while later.
 #
+# join-nearby-explosions: If enabled, nearby explosions will be joined in one big
+# explosion, allowing for nicer repairs (although slower, because the repairs are
+# sequential and not parallel). Requires performance.keep-leaves-vines.
+#
 # log-warnings: When a warning is issued for griefing, log that message to the
 # log file. default true.
 #
@@ -62,7 +66,8 @@ obsidian:
   radius: 5
   chance: 20
 replace-silverfish-blocks: false
+join-nearby-explosions: true
 log-warnings: true
 verbose-level: 1
 debug-messages: false
-config-version: 9
+config-version: 10

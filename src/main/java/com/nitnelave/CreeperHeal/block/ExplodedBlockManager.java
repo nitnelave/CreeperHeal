@@ -167,15 +167,24 @@ public class ExplodedBlockManager {
         if (PluginHandler.isInArena (location))
             return;
 
-        CreeperExplosion cEx = new CreeperExplosion (blocks, location);
+        CreeperExplosion cEx = null;
+
+        if (CreeperConfig.getBool (CfgVal.LEAVES_VINES) && CreeperConfig.getBool (CfgVal.JOIN_EXPLOSIONS))
+            cEx = explosionIndex.getNeighbor (location);
+
+        if (cEx == null)
+        {
+            cEx = new CreeperExplosion (location);
+            explosionList.add (cEx);
+            if (CreeperConfig.getBool (CfgVal.LEAVES_VINES))
+                explosionIndex.addElement (cEx, location.getX (), location.getZ ());
+        }
+
+        cEx.addBlocks (blocks);
 
         for (CreeperHanging h : hangingList)
             cEx.record (h);
         hangingList.clear ();
-
-        explosionList.add (cEx);
-        if (CreeperConfig.getBool (CfgVal.LEAVES_VINES))
-            explosionIndex.addElement (cEx, location.getX (), location.getZ ());
 
         /*
          * Immediately replace the blocks marked for immediate replacement.
