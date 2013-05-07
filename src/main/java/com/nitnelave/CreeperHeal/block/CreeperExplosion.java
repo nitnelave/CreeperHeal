@@ -32,34 +32,40 @@ public class CreeperExplosion {
      */
     private final LinkedList<Replaceable> blockList;
     private final Location loc;
-    private final double radius;
+    private double radius = 0;
     private final WorldConfig world;
     private final HashSet<ShortLocation> checked = new HashSet<ShortLocation> ();
-    private final ReplacementTimer timer;
+    private ReplacementTimer timer;
 
     /**
-     * Constructor. Record every block in the list and remove them from the
-     * world.
+     * Constructor.
      * 
-     * @param blocks
-     *            The list of destroyed blocks.
      * @param loc
      *            The location of the explosion.
      */
-    public CreeperExplosion (List<Block> blocks, Location loc) {
+    public CreeperExplosion (Location loc) {
         world = CreeperConfig.getWorld (loc.getWorld ());
         timer = new ReplacementTimer (new Date (new Date ().getTime () + 1000 * CreeperConfig.getInt (CfgVal.WAIT_BEFORE_HEAL)), world.isRepairTimed ());
         blockList = new LinkedList<Replaceable> ();
         this.loc = loc;
+    }
 
+    /**
+     * Add blocks to an explosion, and reset the timer to the time of the last
+     * explosion.
+     * 
+     * @param blocks
+     *            The list of blocks to add.
+     */
+    public void addBlocks (List<Block> blocks) {
+        timer = new ReplacementTimer (new Date (new Date ().getTime () + 1000 * CreeperConfig.getInt (CfgVal.WAIT_BEFORE_HEAL)), world.isRepairTimed ());
         recordBlocks (blocks);
-
         if (CreeperConfig.getBool (CfgVal.EXPLODE_OBSIDIAN))
             checkForObsidian ();
 
         Collections.sort (blockList, new CreeperComparator (loc));
-
-        radius = computeRadius ();
+        if (radius == 0)
+            radius = computeRadius ();
     }
 
     /**
@@ -294,6 +300,18 @@ public class CreeperExplosion {
 
         }
         return false;
+    }
+
+    /**
+     * Get whether the explosion has started replacing (only in block per block
+     * mode).
+     * 
+     * @return True if the explosion has started replacing blocks
+     */
+    public boolean hasStartedReplacing () {
+        if (timer.isTimed ())
+            return false;
+        return timer.checkReplace ();
     }
 
     /**
