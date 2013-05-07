@@ -26,7 +26,7 @@ class CreeperDoor extends CreeperBlock {
         if ((blockState.getRawData () & 8) != 0)
             block = block.getRelative (BlockFace.DOWN);
         this.blockState = block.getState ();
-        hingeRight = (getBlock ().getRelative (BlockFace.UP).getState ().getRawData () & 1) == 0;
+        hingeRight = (block.getRelative (BlockFace.UP).getState ().getRawData () & 1) == 0;
     }
 
     /*
