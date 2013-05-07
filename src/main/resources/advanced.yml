@@ -30,6 +30,9 @@
 # to true, for every explosion, every obsidian block in the radius will have
 # the defined chance of exploding. default false, 5, 20
 #
+# replace-silverfish-blocks: If enabled, blocks destroyed by spawning silverfish 
+# will be repaired a while later.
+#
 # log-warnings: When a warning is issued for griefing, log that message to the
 # log file. default true.
 #
@@ -58,6 +61,7 @@ obsidian:
   explode: false
   radius: 5
   chance: 20
+replace-silverfish-blocks: false
 log-warnings: true
 verbose-level: 1
 debug-messages: false
