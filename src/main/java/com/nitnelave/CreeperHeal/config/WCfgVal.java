@@ -18,6 +18,7 @@ public enum WCfgVal implements CfgValEnumMember {
     WITHER("wither", true, CONFIG_FILES.CONFIG),
     MINECART_TNT("minecart-tnt", true, CONFIG_FILES.CONFIG),
     ENDER_CRYSTAL("ender-crystal", false, CONFIG_FILES.CONFIG),
+    ZOMBIE_DOOR("door-broken-by-zombie", false, CONFIG_FILES.CONFIG),
     REPLACE_ABOVE("replace-above-limit-only", false, CONFIG_FILES.CONFIG),
     REPLACE_LIMIT("replace-limit", 64, CONFIG_FILES.CONFIG),
     REPLACE_BLACK_LIST("restrict.blacklist", new HashSet<BlockId> (), CONFIG_FILES.ADVANCED),

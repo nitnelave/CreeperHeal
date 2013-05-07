@@ -12,6 +12,7 @@ import org.bukkit.entity.Hanging;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityBreakDoorEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
@@ -25,6 +26,7 @@ import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WCfgVal;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
+import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.FactionHandler;
 import com.nitnelave.CreeperHeal.utils.Suffocating;
 
@@ -98,6 +100,22 @@ public class CreeperListener implements Listener {
             WorldConfig world = CreeperConfig.getWorld (event.getBlock ().getWorld ());
             if (world.getBool (WCfgVal.ENDERMAN))
                 event.setCancelled (true);
+        }
+    }
+
+    /**
+     * Listener for the EntityBreakDoorEvent. Record doors broken by zombies.
+     * 
+     * @param event
+     *            The EntityBreakDoor event.
+     */
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onEntityBreakDoor (EntityBreakDoorEvent event) {
+        WorldConfig world = CreeperConfig.getWorld (event.getBlock ().getWorld ());
+        if (event.getEntityType () == EntityType.ZOMBIE && world.getBool (WCfgVal.ZOMBIE_DOOR))
+        {
+            CreeperLog.displayBlockLocation (event.getBlock (), false);
+            BurntBlockManager.recordBurntBlock (event.getBlock ());
         }
     }
 
