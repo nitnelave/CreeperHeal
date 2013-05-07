@@ -44,6 +44,8 @@ class ConfigUpdater {
         CreeperConfig.setInt (CfgVal.OBSIDIAN_RADIUS, obsidianRadius);
         CreeperConfig.setInt (CfgVal.WAIT_BEFORE_BURN_AGAIN, waitBeforeBurnAgain);
         CreeperConfig.setAlias (cmdAlias);
+        for (OutDatedCfgVal v : OutDatedCfgVal.values ())
+            CreeperConfig.remove (v.getKey (), v.isAdvanced ());
     }
 
     private static void from4 () throws FileNotFoundException, IOException, InvalidConfigurationException {

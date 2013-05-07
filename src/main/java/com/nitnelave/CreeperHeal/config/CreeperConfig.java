@@ -324,4 +324,11 @@ public abstract class CreeperConfig {
         return world_config.values ();
     }
 
+    protected static void remove (String key, boolean isAdvanced) {
+        if (isAdvanced)
+            advanced.set (key, null);
+        else
+            config.set (key, null);
+    }
+
 }

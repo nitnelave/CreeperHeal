@@ -1,8 +1,11 @@
 package com.nitnelave.CreeperHeal.config;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashSet;
 
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
@@ -178,6 +181,48 @@ abstract class WorldConfigImporter {
                 CreeperLog.warning ("Trying to import a world from an uknown version.");
         }
         storeSettings (w);
+        File f = new File (CreeperHeal.getCHFolder () + "/" + name + ".yml");
+        f.delete ();
+        YamlConfiguration config = new YamlConfiguration (), advanced = new YamlConfiguration (), grief = new YamlConfiguration ();
+        File worldFolder = new File (CreeperHeal.getCHFolder ().getPath () + "/" + name);
+
+        File configFile = new File (worldFolder + "/config.yml");
+        File advancedFile = new File (worldFolder + "/advanced.yml");
+        File griefFile = new File (worldFolder + "/grief.yml");
+        try
+        {
+            config.load (configFile);
+            advanced.load (advancedFile);
+            grief.load (griefFile);
+        } catch (FileNotFoundException e)
+        {
+        } catch (IOException e)
+        {
+        } catch (InvalidConfigurationException e)
+        {
+        }
+        for (OutDatedWCfgVal v : OutDatedWCfgVal.values ())
+            switch (v.getFile ())
+            {
+                case CONFIG:
+                    config.set (v.getKey (), null);
+                    break;
+                case ADVANCED:
+                    advanced.set (v.getKey (), null);
+                    break;
+                case GRIEF:
+                    grief.set (v.getKey (), null);
+                    break;
+            }
+        try
+        {
+            config.save (configFile);
+            advanced.save (advancedFile);
+            grief.save (griefFile);
+        } catch (IOException e)
+        {
+        }
+
         return w;
     }
 
