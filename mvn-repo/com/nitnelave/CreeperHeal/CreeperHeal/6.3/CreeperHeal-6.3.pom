@@ -80,7 +80,9 @@
 	    <dependency>
 	      <groupId>org.getspout</groupId>
 	      <artifactId>spoutplugin</artifactId>
-	      <version>1.5.2-R0.1-SNAPSHOT</version>
+	      <version>1.5.1-R0.3-SNAPSHOT</version>
+	      <type>jar</type>
+	      <scope>compile</scope>
 	    </dependency>
 		<dependency>
 			<groupId>com.nitnelave.CreeperTrap</groupId>
