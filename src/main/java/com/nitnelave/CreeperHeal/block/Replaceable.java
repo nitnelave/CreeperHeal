@@ -83,4 +83,10 @@ public interface Replaceable {
      * Remove the block from the world.
      */
     public void remove ();
+
+    /**
+     * Delay the block's replacement until it is possible for it to spawn, or
+     * drop it after a reasonable amount of tries.
+     */
+    public void delayReplacement ();
 }
