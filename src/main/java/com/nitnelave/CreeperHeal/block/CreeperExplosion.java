@@ -31,7 +31,8 @@ public class CreeperExplosion {
      * The time after which the block replacements begin.
      */
     private final LinkedList<Replaceable> blockList;
-    private final Location loc;
+    private Location loc;
+    private int locWeight = 0;
     private double radius = 0;
     private final WorldConfig world;
     private final HashSet<ShortLocation> checked = new HashSet<ShortLocation> ();
@@ -57,15 +58,17 @@ public class CreeperExplosion {
      * @param blocks
      *            The list of blocks to add.
      */
-    public void addBlocks (List<Block> blocks) {
+    public void addBlocks (List<Block> blocks, Location newLoc) {
         timer = new ReplacementTimer (new Date (new Date ().getTime () + 1000 * CreeperConfig.getInt (CfgVal.WAIT_BEFORE_HEAL)), world.isRepairTimed ());
+        loc = new Location (loc.getWorld (), (locWeight * loc.getX () + newLoc.getX ()) / (locWeight + 1), (locWeight * loc.getY () + newLoc.getY ())
+                / (locWeight + 1), (locWeight * loc.getZ () + newLoc.getZ ()) / (locWeight + 1));
+        locWeight++;
         recordBlocks (blocks);
         if (CreeperConfig.getBool (CfgVal.EXPLODE_OBSIDIAN))
             checkForObsidian ();
 
         Collections.sort (blockList, new CreeperComparator (loc));
-        if (radius == 0)
-            radius = computeRadius ();
+        radius = computeRadius ();
     }
 
     /**
