@@ -25,7 +25,6 @@ import com.nitnelave.CreeperHeal.PluginHandler;
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperUtils;
-import com.nitnelave.CreeperHeal.utils.DelayReplacement;
 
 /**
  * Represents a block that can be replaced. Every special type of block derives
@@ -252,8 +251,10 @@ public class CreeperBlock implements Replaceable {
      * Delay the replacement of the block.
      */
     protected void delayReplacement () {
-        long delay = (long) Math.ceil ((double) CreeperConfig.getInt (CfgVal.BLOCK_PER_BLOCK_INTERVAL) / 20);
-        Bukkit.getServer ().getScheduler ().scheduleSyncDelayedTask (CreeperHeal.getInstance (), new DelayReplacement (this, 0), delay);
+        long delay = CreeperConfig.getInt (CfgVal.BLOCK_PER_BLOCK_INTERVAL);
+        DelayReplacement dr = new DelayReplacement (this, 0);
+        int id = Bukkit.getServer ().getScheduler ().scheduleSyncRepeatingTask (CreeperHeal.getInstance (), dr, delay, delay);
+        dr.setId (id);
     }
 
     /**
