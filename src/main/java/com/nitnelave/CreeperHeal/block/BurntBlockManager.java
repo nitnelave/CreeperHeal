@@ -9,10 +9,8 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.config.CfgVal;
@@ -139,17 +137,6 @@ public abstract class BurntBlockManager {
         }
     }
 
-    /*
-     * If the block relative to the face is dependent on the main block, record
-     * it.
-     */
-    private static void recordAttachedBurntBlock (CreeperBlock block, BlockFace face) {
-        Block block_up = block.getBlock ().getRelative (face);
-        NeighborBlock neighbor = new NeighborBlock (block_up, face);
-        if (neighbor.isNeighbor ())
-            recordBurntBlock (new CreeperBurntBlock (new Date (new Date ().getTime () + 100), block_up.getState ()));
-    }
-
     /**
      * Record a burnt block.
      * 
@@ -157,13 +144,14 @@ public abstract class BurntBlockManager {
      *            The block to be recorded.
      */
     public static void recordBurntBlock (Block block) {
-        if (block.getType () != Material.TNT)
-        {
-            CreeperBlock b = CreeperBlock.newBlock (block.getState ());
-            for (BlockFace face : CreeperBlock.CARDINALS)
-                recordAttachedBurntBlock (b, face);
-            recordBurntBlock (new CreeperBurntBlock (new Date (), b));
-        }
+        CreeperBlock b = CreeperBlock.newBlock (block.getState ());
+        if (b == null)
+            return;
+
+        for (NeighborBlock neighbor : b.getDependentNeighbors ())
+            if (neighbor.isNeighbor ())
+                recordBurntBlock (new CreeperBurntBlock (new Date (new Date ().getTime () + 100), neighbor.getBlock ().getState ()));
+        recordBurntBlock (new CreeperBurntBlock (new Date (), b));
     }
 
     /**
