@@ -248,9 +248,11 @@ public class CreeperBlock implements Replaceable {
     }
 
     /*
-     * Delay the replacement of the block.
+     * (non-Javadoc)
+     * @see com.nitnelave.CreeperHeal.block.Replaceable#delayReplacement()
      */
-    protected void delayReplacement () {
+    @Override
+    public void delayReplacement () {
         long delay = CreeperConfig.getInt (CfgVal.BLOCK_PER_BLOCK_INTERVAL);
         DelayReplacement dr = new DelayReplacement (this, 0);
         int id = Bukkit.getServer ().getScheduler ().scheduleSyncRepeatingTask (CreeperHeal.getInstance (), dr, delay, delay);

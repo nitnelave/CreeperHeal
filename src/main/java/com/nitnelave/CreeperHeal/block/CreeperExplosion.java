@@ -139,10 +139,7 @@ public class CreeperExplosion {
             return;
         }
         if (!block.replace (false))
-            if (block instanceof CreeperBlock)
-                ((CreeperBlock) block).delayReplacement ();
-            else
-                block.drop (true);
+            block.delayReplacement ();
         if (CreeperConfig.getBool (CfgVal.TELEPORT_ON_SUFFOCATE))
             Suffocating.checkPlayerOneBlock (block.getBlock ().getLocation ());
     }
