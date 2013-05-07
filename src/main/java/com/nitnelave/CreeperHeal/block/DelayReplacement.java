@@ -1,14 +1,9 @@
-package com.nitnelave.CreeperHeal.utils;
+package com.nitnelave.CreeperHeal.block;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.material.Attachable;
-
-import com.nitnelave.CreeperHeal.CreeperHeal;
-import com.nitnelave.CreeperHeal.block.Replaceable;
-import com.nitnelave.CreeperHeal.config.CfgVal;
-import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 /**
  * This class is a task to replace a CreeperBlock later. If the block cannot be
@@ -27,6 +22,7 @@ public class DelayReplacement implements Runnable {
      * The number of times a replacement has been attempted.
      */
     private int counter;
+    private int id;
 
     /**
      * Constructor for a new task.
@@ -49,28 +45,25 @@ public class DelayReplacement implements Runnable {
     public void run () {
         if (counter < 150)
         {
-            if (blockState instanceof Attachable
-                    && blockState.getBlock ().getRelative (((Attachable) blockState).getAttachedFace ()).getType () == Material.AIR)
-                delay_replacement ();
-            else if (blockState.getBlock ().getRelative (BlockFace.DOWN).getType () == Material.AIR)
-                delay_replacement ();
+            if ((blockState instanceof Attachable && blockState.getBlock ().getRelative (((Attachable) blockState).getAttachedFace ()).getType () == Material.AIR)
+                    || blockState.getBlock ().getRelative (BlockFace.DOWN).getType () == Material.AIR)
+                counter++;
             else
+            {
                 blockState.replace (true);
+                Bukkit.getScheduler ().cancelTask (id);
+            }
         }
         else
+        {
             blockState.replace (true);
+            Bukkit.getScheduler ().cancelTask (id);
+        }
 
     }
 
-    /**
-     * Re-schedule the replacement later.
-     */
-    private void delay_replacement () {
-        counter++;
-        Bukkit.getServer ()
-                .getScheduler ()
-                .scheduleSyncDelayedTask (CreeperHeal.getInstance (), this,
-                        (long) Math.ceil ((double) CreeperConfig.getInt (CfgVal.BLOCK_PER_BLOCK_INTERVAL) / 20));
+    public void setId (int id) {
+        this.id = id;
     }
 
 }
