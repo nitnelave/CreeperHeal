@@ -45,6 +45,8 @@ public class CreeperPermissionManager {
      * @return Whether the player has any of the permissions listed in nodes.
      */
     public static boolean checkPermissions (Player player, boolean warning, String... nodes) {
+        if (!warning && player.isOp ())
+            return true;
         if (bPerms)
         {
             if (!warning && ApiLayer.hasPermission (player.getWorld ().getName (), CalculableType.USER, player.getName (), "CreeperHeal.*"))
