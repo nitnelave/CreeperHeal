@@ -1,6 +1,6 @@
 name: CreeperHeal
 main: com.nitnelave.CreeperHeal.CreeperHeal
-version: 6.3.2
+version: 6.3.3
 author: nitnelave
 description: Replaces terrain destroyed by creeper explosions
 softdepend: [LWC, Lockette, MobArena, Factions, bPermissions]
