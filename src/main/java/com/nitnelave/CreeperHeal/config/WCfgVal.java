@@ -43,10 +43,13 @@ public enum WCfgVal implements CfgValEnumMember {
     WARN_PVP("warn.PvP", false, CONFIG_FILES.GRIEF),
     PREVENT_FIRE_SPREAD("prevent-fire-spread.fire", false, CONFIG_FILES.GRIEF),
     PREVENT_FIRE_LAVA("prevent-fire-spread.lava", false, CONFIG_FILES.GRIEF),
-    GRIEF_PLACE_LIST("blacklist", new HashSet<BlockId> (), CONFIG_FILES.GRIEF);
+    GRIEF_PLACE_LIST("blacklist", new HashSet<BlockId> (), CONFIG_FILES.GRIEF),
+    WORLD_ON("enabled", true, CONFIG_FILES.CONFIG);
 
     protected static enum CONFIG_FILES {
-        CONFIG, ADVANCED, GRIEF;
+        CONFIG,
+        ADVANCED,
+        GRIEF;
     }
 
     private final String key;

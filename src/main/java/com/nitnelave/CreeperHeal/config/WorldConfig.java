@@ -227,19 +227,23 @@ public class WorldConfig {
      * @return Whether the damage should be replaced.
      */
     public boolean shouldReplace (Entity entity) {
-        if (entity != null)
-            if (entity instanceof Creeper && getBool (WCfgVal.CREEPERS) || entity instanceof TNTPrimed && getBool (WCfgVal.TNT) || entity instanceof Fireball
-                    && getBool (WCfgVal.GHAST))
-                return isAbove (entity.getLocation ());
-            else if (entity instanceof EnderDragon)
-                return getBool (WCfgVal.DRAGONS);
-            else if (entity instanceof Wither)
-                return getBool (WCfgVal.WITHER);
-            else if (entity instanceof ExplosiveMinecart)
-                return getBool (WCfgVal.MINECART_TNT);
-            else if (entity instanceof EnderCrystal)
-                return getBool (WCfgVal.ENDER_CRYSTAL);
-        return getBool (WCfgVal.CUSTOM);
+        if (getBool (WCfgVal.WORLD_ON))
+        {
+            if (entity != null)
+                if (entity instanceof Creeper && getBool (WCfgVal.CREEPERS) || entity instanceof TNTPrimed && getBool (WCfgVal.TNT)
+                        || entity instanceof Fireball && getBool (WCfgVal.GHAST))
+                    return isAbove (entity.getLocation ());
+                else if (entity instanceof EnderDragon)
+                    return getBool (WCfgVal.DRAGONS);
+                else if (entity instanceof Wither)
+                    return getBool (WCfgVal.WITHER);
+                else if (entity instanceof ExplosiveMinecart)
+                    return getBool (WCfgVal.MINECART_TNT);
+                else if (entity instanceof EnderCrystal)
+                    return getBool (WCfgVal.ENDER_CRYSTAL);
+            return getBool (WCfgVal.CUSTOM);
+        }
+        return false;
     }
 
     /**
