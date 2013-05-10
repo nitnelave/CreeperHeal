@@ -29,7 +29,7 @@ import com.nitnelave.CreeperHeal.utils.CreeperPermissionManager;
  * 
  */
 public class CreeperCommandManager implements CommandExecutor {
-    private final static String green = ChatColor.GREEN.toString (), purple = ChatColor.DARK_PURPLE.toString ();
+    private final static String GREEN = ChatColor.GREEN.toString (), PURPLE = ChatColor.DARK_PURPLE.toString ();
 
     /**
      * Register commands.
@@ -71,7 +71,6 @@ public class CreeperCommandManager implements CommandExecutor {
             if (cmd.equalsIgnoreCase ("trap"))
                 return PluginHandler.trapCommand (sender, args);
 
-            boolean allWorlds = false;
             //the last argument can be a world
             WorldConfig currentWorld = null;
             World w = Bukkit.getWorld (args[args.length - 1]);
@@ -81,12 +80,6 @@ public class CreeperCommandManager implements CommandExecutor {
             if (currentWorld == null)
                 if (sender instanceof Player)
                     currentWorld = CreeperConfig.getWorld (((Player) sender).getWorld ());
-                else
-                {
-                    currentWorld = CreeperConfig.getWorld (Bukkit.getServer ().getWorlds ().get (0));
-                    sender.sendMessage ("No world specified, defaulting to " + currentWorld.getName ());
-                    allWorlds = true;
-                }
 
             if (cmd.equalsIgnoreCase ("creeper"))
                 booleanCmd (currentWorld, WCfgVal.CREEPERS, args, "Creepers explosions", sender);
@@ -116,10 +109,10 @@ public class CreeperCommandManager implements CommandExecutor {
             }
 
             else if (cmd.equalsIgnoreCase ("forceHeal") || cmd.equalsIgnoreCase ("heal"))
-                forceCmd (args, "explosions", sender, allWorlds ? null : currentWorld);
+                forceCmd (args, "explosions", sender, currentWorld);
 
             else if (cmd.equalsIgnoreCase ("healBurnt"))
-                forceCmd (args, "burnt blocks", sender, allWorlds ? null : currentWorld);
+                forceCmd (args, "burnt blocks", sender, currentWorld);
 
             else if (cmd.equalsIgnoreCase ("healNear"))
                 healNear (sender, args);
@@ -159,14 +152,15 @@ public class CreeperCommandManager implements CommandExecutor {
         sender.sendMessage ("CreeperHeal -- Repair explosions damage and make traps");
         sender.sendMessage ("--------------------------------------------");
 
-        boolean admin = true, heal = true, healNear = true;
+        boolean admin = true, heal = true, healNear = true, healNearOther = true;
 
         if (sender instanceof Player)
         {
             Player player = (Player) sender;
             admin = checkPermissions (player, "admin");
             heal = admin || checkPermissions (player, "heal");
-            healNear = heal || checkPermissions (player, "heal.near.all", "heal.near.self");
+            healNearOther = heal || checkPermissions (player, "heal.near.all");
+            healNear = healNearOther || checkPermissions (player, "heal.near.self");
 
         }
 
@@ -176,26 +170,23 @@ public class CreeperCommandManager implements CommandExecutor {
         {
             if (admin)
             {
-                sender.sendMessage (green + "/ch reload :" + purple + " reloads the config from the file.");
-                sender.sendMessage (green + "/ch creeper (on/off) (world) :" + purple + " toggles creeper explosion replacement");
-                sender.sendMessage (green + "/ch TNT (on/off) (world) :" + purple + " same for TNT");
-                sender.sendMessage (green + "/ch Ghast (on/off) (world) :" + purple + " same for Ghast fireballs");
-                sender.sendMessage (green + "/ch magical (on/off) :" + purple + " same for \"magical\" explosions.");
-                sender.sendMessage (green + "/ch fire (on/off) (world) :" + purple + " same for fire");
-                sender.sendMessage (green + "/ch waitBeforeHeal [seconds] :" + purple + " Sets the interval before an explosion is replaced to x seconds");
-                sender.sendMessage (green + "/ch waitBeforeHealBurnt [seconds] :" + purple + " Same for a burnt block");
-                sender.sendMessage (green + "/ch blockPerBlockInterval [ticks] :" + purple + " Sets the block replacement rate");
+                sender.sendMessage (GREEN + "/ch reload :" + PURPLE + " reloads the config from the file.");
+                sender.sendMessage (GREEN + "/ch (creeper|TNT|ghast|custom|fire) (on/off) (world) :" + PURPLE + " toggle replacement");
+                sender.sendMessage (GREEN + "/ch [on|off] (world) :" + PURPLE + " toggle CH for this world.");
+                sender.sendMessage (GREEN + "/ch (waitBeforeHeal|wbh) [seconds] :" + PURPLE + " Sets the interval before an explosion is replaced to x seconds");
+                sender.sendMessage (GREEN + "/ch (waitBeforeHealBurnt|wbhb) [seconds] :" + PURPLE + " Same for a burnt block");
+                sender.sendMessage (GREEN + "/ch (blockPerBlockInterval|bpbi) [ticks] :" + PURPLE + " Sets the block replacement rate");
             }
 
             if (heal)
             {
-                sender.sendMessage (green + "/ch heal (world) :" + purple + " Heals all explosions in the world, or in every world.");
-                sender.sendMessage (green + "/ch healBurnt (world) :" + purple + " Heal all burnt blocks in the world, or in every world.");
+                sender.sendMessage (GREEN + "/ch heal (world) :" + PURPLE + " Heals all explosions.");
+                sender.sendMessage (GREEN + "/ch healBurnt (world) :" + PURPLE + " Heal all burnt blocks.");
             }
 
             if (healNear)
-                sender.sendMessage (green + "/ch healNear" + (healNear ? " (player)" : "") + " :" + purple + " Heals all explosions around"
-                        + (healNear ? " the given player" : ""));
+                sender.sendMessage (GREEN + "/ch healNear" + (healNearOther ? " (player)" : "") + " :" + PURPLE + " Heals all explosions around"
+                        + (healNearOther ? " the given player" : ""));
         }
     }
 
@@ -349,6 +340,21 @@ public class CreeperCommandManager implements CommandExecutor {
                 target = player;
             }
             ExplodedBlockManager.replaceNear (target);
+        }
+        else if (args.length > 1)
+        {
+            Player target = Bukkit.getServer ().getPlayer (args[1]);
+            if (target == null)
+            {
+                sender.sendMessage (ChatColor.RED + "This player is not online. /ch healNear <someone>");
+                return;
+            }
+            ExplodedBlockManager.replaceNear (target);
+
+        }
+        else
+            sender.sendMessage (ChatColor.RED + "Please give the target's name.");
+    }
 
     /*
      * Enable of disable CreeperHeal in a world.
