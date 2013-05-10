@@ -129,6 +129,10 @@ public class CreeperCommandManager implements CommandExecutor {
 
             else if (cmd.equalsIgnoreCase ("help"))
                 sendHelp (sender);
+            else if (cmd.equalsIgnoreCase ("on"))
+                enable (true, currentWorld, sender);
+            else if (cmd.equalsIgnoreCase ("off"))
+                enable (false, currentWorld, sender);
 
             else
             {
@@ -346,6 +350,26 @@ public class CreeperCommandManager implements CommandExecutor {
             }
             ExplodedBlockManager.replaceNear (target);
 
+    /*
+     * Enable of disable CreeperHeal in a world.
+     */
+    private void enable (boolean enable, WorldConfig currentWorld, CommandSender sender) {
+        boolean hasPerm = true;
+        if (sender instanceof Player)
+        {
+            Player player = (Player) sender;
+            hasPerm = checkPermissions (player, "admin");
+        }
+        if (hasPerm)
+        {
+            if (currentWorld == null)
+            {
+                for (World w : Bukkit.getWorlds ())
+                    enable (enable, CreeperConfig.getWorld (w), sender);
+                return;
+            }
+            currentWorld.setBool (WCfgVal.WORLD_ON, enable);
+            sender.sendMessage (GREEN + (enable ? "En" : "Dis") + "abled CH in world : " + currentWorld.getName ());
         }
     }
 
