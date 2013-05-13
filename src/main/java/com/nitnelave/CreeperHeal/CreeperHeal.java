@@ -12,6 +12,7 @@ import com.nitnelave.CreeperHeal.command.CreeperCommandManager;
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.listeners.BlockFallListener;
+import com.nitnelave.CreeperHeal.listeners.BlockIgniteListener;
 import com.nitnelave.CreeperHeal.listeners.CreeperBlockListener;
 import com.nitnelave.CreeperHeal.listeners.CreeperListener;
 import com.nitnelave.CreeperHeal.listeners.GriefListener;
@@ -64,6 +65,9 @@ public class CreeperHeal extends JavaPlugin {
 
         if (CreeperConfig.getBool (CfgVal.RAIL_REPLACEMENT))
             pm.registerEvents (new RailsUpdateListener (), this);
+
+        if (CreeperConfig.getInt (CfgVal.WAIT_BEFORE_BURN_AGAIN) > 0)
+            pm.registerEvents (new BlockIgniteListener (), this);
 
         ExplodedBlockManager.init ();
         BurntBlockManager.init ();
