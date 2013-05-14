@@ -103,6 +103,9 @@ public class CreeperBlock implements Replaceable {
             case SMOOTH_BRICK:
             case SMOOTH_STAIRS:
                 return new CreeperBrick (blockState);
+            case WOOD_BUTTON:
+            case STONE_BUTTON:
+                return new CreeperButton (blockState);
             case TNT:
             case FIRE:
             case AIR:
