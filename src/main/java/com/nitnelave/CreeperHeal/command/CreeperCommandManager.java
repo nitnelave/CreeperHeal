@@ -311,11 +311,10 @@ public class CreeperCommandManager implements CommandExecutor {
         if (sender instanceof Player)
         {
             Player player = (Player) sender;
-            boolean hasPermission = checkPermissions (player, "heal", "admin");
+            boolean hasPermission = checkPermissions (player, "heal", "admin", "heal.near.all");
             Player target;
             if (args.length > 1)
             {
-                hasPermission = hasPermission || checkPermissions (player, "heal.near.all");
                 if (!hasPermission)
                 {
                     player.sendMessage (getMessage ("no-permission-command", player.getWorld ().getName (), sender.getName (), null, null, null, null));
