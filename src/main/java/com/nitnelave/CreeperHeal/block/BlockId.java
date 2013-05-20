@@ -151,7 +151,7 @@ public class BlockId {
         if (!(block.hasData && hasData))
             return true;
         //both have data
-        return block.hasData == hasData;
+        return block.data == data;
     }
 
     /*
