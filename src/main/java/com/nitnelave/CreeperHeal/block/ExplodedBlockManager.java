@@ -172,7 +172,7 @@ public class ExplodedBlockManager {
         if (CreeperConfig.getBool (CfgVal.LEAVES_VINES) && CreeperConfig.getBool (CfgVal.JOIN_EXPLOSIONS))
             cEx = explosionIndex.getNeighbor (location);
 
-        if (cEx == null)
+        if (cEx == null || cEx.hasStartedReplacing ())
         {
             cEx = new CreeperExplosion (location);
             explosionList.add (cEx);
