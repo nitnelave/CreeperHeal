@@ -43,10 +43,10 @@
 			<id>bukkit-repo</id>
 			<url>http://repo.bukkit.org/content/groups/public</url>
 		</repository>
-        <repository>
-            <id>spout-repo</id>
-            <url>http://repo.spout.org</url>
-        </repository>
+		<repository>
+			<id>spout-repo</id>
+			<url>http://repo.spout.org</url>
+		</repository>
 	</repositories>
 	<dependencies>
 		<dependency>
@@ -55,16 +55,15 @@
 			<version>1.5.2-R0.2-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.5.2-R0.2-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-		<!--
 		<dependency>
 			<groupId>org.bukkit</groupId>
-			<artifactId>bukkit</artifactId>
+			<artifactId>craftbukkit</artifactId>
+			<version>1.5.2-R0.2-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- <dependency>
+		    <groupId>org.bukkit</groupId>
+		    <artifactId>bukkit</artifactId>
 			<version>1.4.7-R1.0</version>
 			<type>jar</type>
 			<scope>provided</scope>
@@ -77,11 +76,11 @@
 			<scope>system</scope>
 			<systemPath>${project.basedir}/lib/bpermissions.jar</systemPath>
 		</dependency>
-	    <dependency>
-	      <groupId>org.getspout</groupId>
-	      <artifactId>spoutplugin</artifactId>
-	      <version>1.5.2-R0.2-SNAPSHOT</version>
-	    </dependency>
+		<dependency>
+			<groupId>org.getspout</groupId>
+			<artifactId>spoutplugin</artifactId>
+			<version>1.5.2-R0.2-SNAPSHOT</version>
+		</dependency>
 		<dependency>
 			<groupId>com.nitnelave.CreeperTrap</groupId>
 			<artifactId>CreeperTrap</artifactId>
