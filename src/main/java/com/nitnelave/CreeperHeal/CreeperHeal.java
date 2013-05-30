@@ -1,10 +1,12 @@
 package com.nitnelave.CreeperHeal;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.bukkit.MetricsLite;
 
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
@@ -18,6 +20,7 @@ import com.nitnelave.CreeperHeal.listeners.CreeperListener;
 import com.nitnelave.CreeperHeal.listeners.GriefListener;
 import com.nitnelave.CreeperHeal.listeners.LeavesListener;
 import com.nitnelave.CreeperHeal.listeners.RailsUpdateListener;
+import com.nitnelave.CreeperHeal.utils.CreeperLog;
 
 /**
  * The main class of the CreeperHeal plugin. The main aim of this plugin is to
@@ -46,6 +49,14 @@ public class CreeperHeal extends JavaPlugin {
         instance = this;
         CreeperCommandManager.registerCommands ();
         registerEvents ();
+        try
+        {
+            MetricsLite metrics = new MetricsLite (this);
+            metrics.start ();
+        } catch (IOException e)
+        {
+            CreeperLog.warning ("Could not submit data to MC-Stats");
+        }
     }
 
     /*
