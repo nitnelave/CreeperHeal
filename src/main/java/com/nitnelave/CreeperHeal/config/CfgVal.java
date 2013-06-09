@@ -31,7 +31,8 @@ public enum CfgVal implements CfgValEnumMember {
     SUFFOCATING_ANIMALS("performance.save-suffocating-mobs", true, true),
     LEAVES_VINES("performance.keep-leaves-vines", true, true),
     SORT_BY_RADIUS("performance.sort-exploded-blocks-by-distance", true, true),
-    JOIN_EXPLOSIONS("join-nearby-explosions", true, true);
+    JOIN_EXPLOSIONS("join-nearby-explosions", true, true),
+    STONE_TO_COBBLE("change-stone-to-cobble", false, true);
 
     private final String key;
     private final Object defaultValue;

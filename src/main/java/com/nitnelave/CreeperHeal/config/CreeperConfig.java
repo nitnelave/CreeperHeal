@@ -25,7 +25,7 @@ import com.nitnelave.CreeperHeal.utils.FileUtils;
  */
 public abstract class CreeperConfig {
 
-    private static final int CONFIG_VERSION = 10;
+    private static final int CONFIG_VERSION = 11;
     private static final File CONFIG_FILE = new File (CreeperHeal.getCHFolder () + "/config.yml"), ADVANCED_FILE = new File (CreeperHeal.getCHFolder ()
             + "/advanced.yml");
     private static final Logger LOG = Logger.getLogger ("Minecraft");
