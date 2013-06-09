@@ -110,6 +110,8 @@ public class CreeperBlock implements Replaceable {
             case FIRE:
             case AIR:
                 return null;
+            case STONE:
+                return new CreeperStone (blockState);
             default:
                 return new CreeperBlock (blockState);
         }
