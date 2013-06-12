@@ -208,6 +208,13 @@ public class CreeperCommandManager implements CommandExecutor {
         if (sender instanceof Player && !checkPermissions ((Player) sender, "admin"))
             sender.sendMessage (getMessage ("no-permission-command", null, sender.getName (), null, null, null, null));
 
+        if (world == null)
+        {
+            for (World w : Bukkit.getServer ().getWorlds ())
+                booleanCmd (CreeperConfig.getWorld (w), key, args, setting, sender);
+            return;
+        }
+
         if (args.length == 1)
             world.setBool (key, !world.getBool (key));
         else if (args[1].equalsIgnoreCase ("on") || args[1].equalsIgnoreCase ("true"))
