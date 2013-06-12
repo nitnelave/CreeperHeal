@@ -1,5 +1,6 @@
 package com.nitnelave.CreeperHeal.block;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -10,6 +11,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
+import com.nitnelave.CreeperHeal.config.CreeperConfig;
+import com.nitnelave.CreeperHeal.config.WCfgVal;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.CreeperUtils;
 
@@ -25,7 +28,7 @@ class CreeperChest extends CreeperBlock {
 
     private NeighborChest neighbor = null;
 
-    private ItemStack[] storedInventory, neighborInventory;
+    private ItemStack[] storedInventory = null, neighborInventory = null;
 
     /*
      * Constructor.
@@ -55,6 +58,14 @@ class CreeperChest extends CreeperBlock {
      */
     @Override
     public void remove () {
+        if (CreeperConfig.getWorld (getWorld ()).getBool (WCfgVal.DROP_CHEST_CONTENTS))
+        {
+            World w = getWorld ();
+            Location loc = getLocation ();
+            for (ItemStack st : ((InventoryHolder) blockState).getInventory ().getContents ())
+                if (st != null)
+                    w.dropItemNaturally (loc, st);
+        }
         ((InventoryHolder) blockState).getInventory ().clear ();
         getBlock ().setType (Material.AIR);
         if (neighbor != null)
@@ -107,32 +118,35 @@ class CreeperChest extends CreeperBlock {
     @Override
     public void update () {
         blockState.update (true);
-        try
-        {
-            if (hasNeighbor ())
+        if (!CreeperConfig.getWorld (getWorld ()).getBool (WCfgVal.DROP_CHEST_CONTENTS))
+            try
             {
-                neighbor.getChest ().update (true);
-                Inventory i = ((InventoryHolder) chest.getState ()).getInventory ();
-                ItemStack[] both;
-                ItemStack[] otherInv = neighborInventory;
-                ItemStack[] newInv = storedInventory;
-                if (neighbor.isRight ())
-                    both = CreeperUtils.concat (otherInv, newInv);
-                else
-                    both = CreeperUtils.concat (newInv, otherInv);
-                i.setContents (both);
+                if (hasNeighbor ())
+                {
+                    neighbor.getChest ().update (true);
+                    Inventory i = ((InventoryHolder) chest.getState ()).getInventory ();
+                    ItemStack[] both;
+                    ItemStack[] otherInv = neighborInventory;
+                    ItemStack[] newInv = storedInventory;
+                    if (neighbor.isRight ())
+                        both = CreeperUtils.concat (otherInv, newInv);
+                    else
+                        both = CreeperUtils.concat (newInv, otherInv);
+                    i.setContents (both);
 
+                }
+                else
+                    ((InventoryHolder) chest.getState ()).getInventory ().setContents (storedInventory);
+            } catch (java.lang.ClassCastException e)
+            {
+                CreeperLog.warning ("Error detected, please report the whole message");
+                CreeperLog.warning ("ClassCastException when replacing a chest : ");
+                CreeperLog.warning (chest.getClass ().getCanonicalName ());
+                CreeperLog.displayBlockLocation (chest, true);
+                e.printStackTrace ();
             }
-            else
-                ((InventoryHolder) chest.getState ()).getInventory ().setContents (storedInventory);
-        } catch (java.lang.ClassCastException e)
-        {
-            CreeperLog.warning ("Error detected, please report the whole message");
-            CreeperLog.warning ("ClassCastException when replacing a chest : ");
-            CreeperLog.warning (chest.getClass ().getCanonicalName ());
-            CreeperLog.displayBlockLocation (chest, true);
-            e.printStackTrace ();
-        }
+        else if (hasNeighbor ())
+            neighbor.getChest ().update (true);
 
     }
 
