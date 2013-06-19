@@ -38,7 +38,7 @@ public class CreeperCommandManager implements CommandExecutor {
         CommandMap commandMap = null;
         try
         {
-            Field field = SimplePluginManager.class.getDeclaredField ("commandMap");
+            Field field = Bukkit.getServer ().getPluginManager ().getClass ().getDeclaredField ("commandMap");
             field.setAccessible (true);
             commandMap = (CommandMap) (field.get (Bukkit.getServer ().getPluginManager ()));
         } catch (NoSuchFieldException e)
