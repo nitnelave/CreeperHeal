@@ -10,7 +10,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.SimplePluginManager;
 
 import com.nitnelave.CreeperHeal.PluginHandler;
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
@@ -38,7 +37,7 @@ public class CreeperCommandManager implements CommandExecutor {
         CommandMap commandMap = null;
         try
         {
-            Field field = SimplePluginManager.class.getDeclaredField ("commandMap");
+            Field field = Bukkit.getServer ().getPluginManager ().getClass ().getDeclaredField ("commandMap");
             field.setAccessible (true);
             commandMap = (CommandMap) (field.get (Bukkit.getServer ().getPluginManager ()));
         } catch (NoSuchFieldException e)
