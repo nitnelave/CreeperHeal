@@ -175,6 +175,7 @@ public abstract class CreeperConfig {
             {
                 for (ConfigValue<Boolean> v : booleans.values ())
                     v.load ();
+                CreeperLog.setDebug (getBool (CfgVal.DEBUG));
                 for (ConfigValue<Integer> v : integers.values ())
                     v.load ();
                 alias.load ();

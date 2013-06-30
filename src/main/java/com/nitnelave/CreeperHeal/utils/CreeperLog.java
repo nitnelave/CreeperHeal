@@ -152,4 +152,9 @@ public abstract class CreeperLog {
             debug (s);
     }
 
+    public static void setDebug (boolean bool) {
+        debug = bool;
+        log.info ("debug: " + debug);
+    }
+
 }
