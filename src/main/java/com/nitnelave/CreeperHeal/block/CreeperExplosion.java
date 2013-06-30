@@ -204,6 +204,7 @@ public class CreeperExplosion {
         World w = loc.getWorld ();
 
         Random r = new Random (System.currentTimeMillis ());
+        boolean table = CreeperConfig.getBool (CfgVal.OBSIDIAN_TABLE);
 
         for (int i = loc.getBlockX () - radius; i < loc.getBlockX () + radius; i++)
             for (int j = Math.max (0, loc.getBlockY () - radius); j < Math.min (w.getMaxHeight (), loc.getBlockY () + radius); j++)
@@ -213,9 +214,13 @@ public class CreeperExplosion {
                     if (l.distance (loc) > radius)
                         continue;
                     Block b = l.getBlock ();
-                    if (b.getType () == Material.OBSIDIAN && r.nextDouble () < chance)
+                    if (isObsidianLike (b.getType (), table) && r.nextDouble () < chance)
                         record (b);
                 }
+    }
+
+    private boolean isObsidianLike (Material m, boolean table) {
+        return m == Material.OBSIDIAN || (table && (m == Material.ENCHANTMENT_TABLE || m == Material.ENDER_CHEST));
     }
 
     /**
