@@ -51,6 +51,8 @@ public class CreeperBlock implements Replaceable {
 
     public final static BlockFace[] CARDINALS = {BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH, BlockFace.UP, BlockFace.DOWN};
 
+    private final static Random random = new Random ();
+
     /*
      * The block represented.
      */
@@ -132,6 +134,7 @@ public class CreeperBlock implements Replaceable {
      */
     public void update () {
         blockState.update (true);
+        getWorld ().playSound (getLocation (), CreeperConfig.getSound (), CreeperConfig.getInt (CfgVal.SOUND_VOLUME) / 10F, random.nextFloat () * 2);
     }
 
     /*

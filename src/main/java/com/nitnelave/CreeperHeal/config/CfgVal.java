@@ -33,7 +33,9 @@ public enum CfgVal implements CfgValEnumMember {
     SORT_BY_RADIUS("performance.sort-exploded-blocks-by-distance", true, true),
     JOIN_EXPLOSIONS("join-nearby-explosions", true, true),
     STONE_TO_COBBLE("change-stone-to-cobble", false, true),
-    OBSIDIAN_TABLE("obsidian.enchant-tables-and-chests", false, true);
+    OBSIDIAN_TABLE("obsidian.enchant-tables-and-chests", false, true),
+    SOUND_NAME("sound.type", "ITEM_PICKUP", false),
+    SOUND_VOLUME("sound.volume", 1, false);
 
     private final String key;
     private final Object defaultValue;
