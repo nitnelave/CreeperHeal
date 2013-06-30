@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -34,7 +35,8 @@ public abstract class CreeperConfig {
     private static final Map<String, ConfigValue<Integer>> integers = new HashMap<String, ConfigValue<Integer>> ();
     private static final YamlConfiguration config = new YamlConfiguration (), advanced = new YamlConfiguration ();
 
-    private static ConfigValue<String> alias;
+    private static ConfigValue<String> alias, soundName;
+    private static Sound sound = null;
     private static int configVersion = CONFIG_VERSION;
 
     static
@@ -56,9 +58,27 @@ public abstract class CreeperConfig {
                 integers.put (v.getKey (), new IntegerConfigValue (v, getFile (v)));
             else if (v == CfgVal.ALIAS)
                 alias = new StringConfigValue (v, getFile (v));
+            else if (v == CfgVal.SOUND_NAME)
+            {
+                soundName = new StringConfigValue (v, getFile (v));
+                loadSound ();
+            }
             else
                 CreeperLog.warning ("Unknown config value : " + v.toString ());
 
+    }
+
+    private static void loadSound () {
+        CreeperLog.debug ("Loading sound");
+        try
+        {
+            sound = Sound.valueOf (soundName.getValue ());
+            CreeperLog.debug ("sound loaded");
+        } catch (IllegalArgumentException e)
+        {
+            sound = null;
+            CreeperLog.debug ("null sound");
+        }
     }
 
     private static YamlConfiguration getFile (CfgVal v) {
@@ -179,6 +199,8 @@ public abstract class CreeperConfig {
                 for (ConfigValue<Integer> v : integers.values ())
                     v.load ();
                 alias.load ();
+                soundName.load ();
+                loadSound ();
                 if (configVersion == 8)
                     loadLightWeight ();
             }
@@ -254,6 +276,8 @@ public abstract class CreeperConfig {
             v.write ();
 
         alias.write ();
+        soundName.write ();
+        loadSound ();
         advanced.set ("config-version", CONFIG_VERSION);
 
         try
@@ -330,6 +354,10 @@ public abstract class CreeperConfig {
             advanced.set (key, null);
         else
             config.set (key, null);
+    }
+
+    public static Sound getSound () {
+        return sound;
     }
 
 }
