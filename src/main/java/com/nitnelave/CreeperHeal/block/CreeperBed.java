@@ -38,9 +38,9 @@ class CreeperBed extends CreeperBlock {
      */
     @Override
     public void update () {
+        super.update ();
         byte data = (byte) (getRawData () & 3);
         BlockFace face = getFacing (data);
-        blockState.update (true);
         getBlock ().getRelative (face).setTypeIdAndData (getTypeId (), data, false);
     }
 

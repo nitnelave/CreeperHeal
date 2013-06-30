@@ -23,7 +23,7 @@ class CreeperMonsterSpawner extends CreeperBlock {
      */
     @Override
     public void update () {
-        blockState.update (true);
+        super.update ();
         ((CreatureSpawner) getBlock ().getState ()).setCreatureTypeByName (((CreatureSpawner) blockState).getCreatureTypeName ());
     }
 }

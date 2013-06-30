@@ -38,7 +38,7 @@ class CreeperRail extends CreeperBlock {
                 tmpBlock = tmpBlock.getRelative (UP_DOWN[i]);
                 railData[i][j] = tmpBlock.getData ();
             }
-        blockState.update (true);
+        super.update ();
         block.setData (data);
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 4; j++)

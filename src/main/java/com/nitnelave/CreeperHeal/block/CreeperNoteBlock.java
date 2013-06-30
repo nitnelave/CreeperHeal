@@ -23,7 +23,7 @@ class CreeperNoteBlock extends CreeperBlock {
      */
     @Override
     public void update () {
-        blockState.update (true);
+        super.update ();
         ((NoteBlock) getBlock ().getState ()).setRawNote (((NoteBlock) blockState).getRawNote ());
     }
 

@@ -39,7 +39,7 @@ class CreeperDoor extends CreeperBlock {
         if (checkForDrop (blockUp))
             return;
 
-        blockState.update (true);
+        super.update ();
         byte b = (byte) (8 + (hingeRight ? 0 : 1));
         blockUp.setTypeIdAndData (getTypeId (), b, false);
     }
