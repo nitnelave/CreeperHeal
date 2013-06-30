@@ -25,7 +25,7 @@ class CreeperHead extends CreeperBlock {
      */
     @Override
     public void update () {
-        blockState.update (true);
+        super.update ();
         Skull skull = (Skull) blockState;
         Skull newSkull = ((Skull) blockState.getBlock ().getState ());
         newSkull.setRotation (skull.getRotation ());

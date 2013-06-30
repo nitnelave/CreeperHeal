@@ -23,7 +23,7 @@ class CreeperSign extends CreeperBlock {
      */
     @Override
     public void update () {
-        blockState.update (true);
+        super.update ();
         Sign state = (Sign) getBlock ().getState ();
         Sign sign = (Sign) blockState;
         for (int k = 0; k < 4; k++)

@@ -28,7 +28,7 @@ class CreeperPhysicsBlock extends CreeperBlock {
     public void update () {
         if (CreeperConfig.getBool (CfgVal.PREVENT_BLOCK_FALL))
             FallIndex.putFallPrevention (getBlock ().getLocation ());
-        blockState.update (true);
+        super.update ();
     }
 
 }
