@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.bukkit.block.Block;
 
-import com.massivecraft.factions.Board;
-import com.massivecraft.factions.FLocation;
+import com.massivecraft.factions.entity.BoardColls;
+import com.massivecraft.mcore.ps.PS;
 import com.nitnelave.CreeperHeal.PluginHandler;
 import com.nitnelave.CreeperHeal.config.WCfgVal;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
@@ -53,7 +53,7 @@ public abstract class FactionHandler {
             return wild;
 
         for (Block block : list)
-            if (wild != Board.getFactionAt (new FLocation (block.getLocation ())).isNone ())
+            if (wild != BoardColls.get ().getFactionAt (PS.valueOf (block.getLocation ())).isNone ())
                 return false;
         return true;
     }
