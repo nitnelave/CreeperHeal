@@ -6,7 +6,6 @@ import java.io.IOException;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.mcstats.bukkit.MetricsLite;
 
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
@@ -21,6 +20,7 @@ import com.nitnelave.CreeperHeal.listeners.GriefListener;
 import com.nitnelave.CreeperHeal.listeners.LeavesListener;
 import com.nitnelave.CreeperHeal.listeners.RailsUpdateListener;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
+import com.nitnelave.CreeperHeal.utils.MetricsLite;
 
 /**
  * The main class of the CreeperHeal plugin. The main aim of this plugin is to
