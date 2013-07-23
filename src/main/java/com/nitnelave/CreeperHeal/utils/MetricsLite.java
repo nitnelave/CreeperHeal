@@ -21,7 +21,7 @@
  * either expressed or implied, of anybody else.
  */
 
-package org.mcstats.bukkit;
+package com.nitnelave.CreeperHeal.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
