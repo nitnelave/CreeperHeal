@@ -133,6 +133,7 @@ public class CreeperBlock implements Replaceable {
      * Replace the block in the world.
      */
     public void update () {
+        getLocation ().getChunk ().load ();
         blockState.update (true);
         getWorld ().playSound (getLocation (), CreeperConfig.getSound (), CreeperConfig.getInt (CfgVal.SOUND_VOLUME) / 10F, random.nextFloat () * 2);
     }
