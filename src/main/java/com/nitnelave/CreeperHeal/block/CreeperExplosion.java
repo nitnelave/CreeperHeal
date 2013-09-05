@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -16,6 +17,8 @@ import org.bukkit.block.Block;
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
+import com.nitnelave.CreeperHeal.events.CHBlockHealEvent;
+import com.nitnelave.CreeperHeal.events.CHBlockHealEvent.CHBlockHealReason;
 import com.nitnelave.CreeperHeal.utils.ShortLocation;
 import com.nitnelave.CreeperHeal.utils.Suffocating;
 
@@ -142,7 +145,9 @@ public class CreeperExplosion {
         if (blockList.isEmpty ())
             return;
         block = blockList.remove ();
-        if (!block.replace (false))
+        CHBlockHealEvent event = new CHBlockHealEvent (block, false, CHBlockHealReason.BLOCK_BY_BLOCK);
+        Bukkit.getPluginManager ().callEvent (event);
+        if (!event.isCancelled () && !block.replace (event.shouldDrop ()))
             block.delayReplacement ();
         if (CreeperConfig.getBool (CfgVal.TELEPORT_ON_SUFFOCATE))
             Suffocating.checkPlayerOneBlock (block.getBlock ().getLocation ());
