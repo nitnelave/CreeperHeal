@@ -55,7 +55,6 @@ public class CHBlockHealEvent extends Event implements Cancellable {
         EXPLOSION,
         FORCED,
         PROTECTED,
-        DELAYED,
         OTHER,
         CUSTOM
     }
