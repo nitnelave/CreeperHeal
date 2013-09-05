@@ -18,6 +18,7 @@ import com.nitnelave.CreeperHeal.PluginHandler;
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
+import com.nitnelave.CreeperHeal.events.CHBlockHealEvent.CHBlockHealReason;
 import com.nitnelave.CreeperHeal.events.CHExplosionRecordEvent;
 import com.nitnelave.CreeperHeal.utils.NeighborExplosion;
 
@@ -87,14 +88,14 @@ public class ExplodedBlockManager {
             Location l = ex.getLocation ();
             if (l.getWorld () == w && distanceNear > l.distance (loc))
             {
-                ex.replace_blocks (false);
+                ex.replace_blocks (false, CHBlockHealReason.FORCED);
                 pass.add (ex);
                 iter.remove ();
             }
         }
         for (CreeperExplosion ex : pass)
         {
-            ex.replace_blocks (true);
+            ex.replace_blocks (true, CHBlockHealReason.FORCED);
             if (CreeperConfig.getBool (CfgVal.LEAVES_VINES))
                 explosionIndex.removeElement (ex);
         }
@@ -121,13 +122,13 @@ public class ExplodedBlockManager {
         while (iter.hasNext ())
         {
             CreeperExplosion ex = iter.next ();
-            ex.replace_blocks (false);
+            ex.replace_blocks (false, CHBlockHealReason.FORCED);
             pass.add (ex);
             iter.remove ();
         }
         for (CreeperExplosion ex : pass)
         {
-            ex.replace_blocks (true);
+            ex.replace_blocks (true, CHBlockHealReason.FORCED);
             if (CreeperConfig.getBool (CfgVal.LEAVES_VINES))
                 explosionIndex.removeElement (ex);
         }
