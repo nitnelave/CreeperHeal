@@ -18,6 +18,7 @@ import com.nitnelave.CreeperHeal.PluginHandler;
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
+import com.nitnelave.CreeperHeal.events.CHExplosionRecordEvent;
 import com.nitnelave.CreeperHeal.utils.NeighborExplosion;
 
 /**
@@ -157,6 +158,12 @@ public class ExplodedBlockManager {
     public static void processExplosion (List<Block> blocks, Location location) {
         if (PluginHandler.isInArena (location))
             return;
+
+        CHExplosionRecordEvent event = new CHExplosionRecordEvent (blocks, location);
+        Bukkit.getPluginManager ().callEvent (event);
+        if (event.isCancelled ())
+            return;
+        blocks = event.getBlocks ();
 
         CreeperExplosion cEx = null;
 
