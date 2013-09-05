@@ -2,6 +2,7 @@ package com.nitnelave.CreeperHeal.block;
 
 import java.util.Date;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
@@ -9,6 +10,8 @@ import org.bukkit.block.BlockState;
 
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
+import com.nitnelave.CreeperHeal.events.CHBlockHealEvent;
+import com.nitnelave.CreeperHeal.events.CHBlockHealEvent.CHBlockHealReason;
 
 /**
  * This class represents a burnt block.
@@ -56,7 +59,11 @@ public class CreeperBurntBlock {
      * @return False if the replacement was postponed.
      */
     public boolean replace (boolean shouldDrop) {
-        return block.replace (shouldDrop);
+        CHBlockHealEvent event = new CHBlockHealEvent (block, shouldDrop, CHBlockHealReason.BURNT);
+        Bukkit.getPluginManager ().callEvent (event);
+        if (event.isCancelled ())
+            return event.shouldDrop ();
+        return block.replace (event.shouldDrop ());
     }
 
     /**
