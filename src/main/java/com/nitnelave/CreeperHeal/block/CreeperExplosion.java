@@ -118,12 +118,14 @@ public class CreeperExplosion {
     /*
      * Replace all the blocks in the list.
      */
-    protected void replace_blocks (boolean shouldDrop) {
+    protected void replace_blocks (boolean shouldDrop, CHBlockHealReason reason) {
         Iterator<Replaceable> iter = blockList.iterator ();
         while (iter.hasNext ())
         {
             Replaceable block = iter.next ();
-            if (block.replace (shouldDrop))
+            CHBlockHealEvent event = new CHBlockHealEvent (block, shouldDrop, reason);
+            Bukkit.getPluginManager ().callEvent (event);
+            if (!event.isCancelled () && block.replace (event.shouldDrop ()))
                 iter.remove ();
         }
         if (shouldDrop)
@@ -308,7 +310,7 @@ public class CreeperExplosion {
             if (CreeperConfig.getBool (CfgVal.BLOCK_PER_BLOCK))
                 replace_one_block ();
             else
-                replace_blocks (true);
+                replace_blocks (true, CHBlockHealReason.EXPLOSION);
             return true;
 
         }
