@@ -8,7 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Hanging;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -155,15 +154,7 @@ public class ExplodedBlockManager {
      * @param location
      *            The location of the explosion.
      */
-    public static void processExplosion (List<Block> list, Location location) {
-        processExplosion (list, location, null);
-    }
-
-    /*
-     * Record the blocks in the list and remove them from the world so they
-     * don't drop.
-     */
-    protected static void processExplosion (List<Block> blocks, Location location, Entity entitytimed) {
+    public static void processExplosion (List<Block> blocks, Location location) {
         if (PluginHandler.isInArena (location))
             return;
 
