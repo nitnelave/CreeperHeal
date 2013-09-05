@@ -5,6 +5,9 @@ import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.material.Attachable;
 
+import com.nitnelave.CreeperHeal.events.CHBlockHealEvent;
+import com.nitnelave.CreeperHeal.events.CHBlockHealEvent.CHBlockHealReason;
+
 /**
  * This class is a task to replace a CreeperBlock later. If the block cannot be
  * safely replaced, then the replacement is postponed. After a numberof tries,
@@ -51,13 +54,19 @@ public class DelayReplacement implements Runnable {
                 counter++;
             else
             {
-                blockState.replace (true);
+                CHBlockHealEvent event = new CHBlockHealEvent (blockState, true, CHBlockHealReason.BURNT);
+                Bukkit.getPluginManager ().callEvent (event);
+                if (!event.isCancelled ())
+                    blockState.replace (event.shouldDrop ());
                 Bukkit.getScheduler ().cancelTask (id);
             }
         }
         else
         {
-            blockState.replace (true);
+            CHBlockHealEvent event = new CHBlockHealEvent (blockState, true, CHBlockHealReason.BURNT);
+            Bukkit.getPluginManager ().callEvent (event);
+            if (!event.isCancelled ())
+                blockState.replace (event.shouldDrop ());
             Bukkit.getScheduler ().cancelTask (id);
         }
 
