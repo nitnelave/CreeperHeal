@@ -5,6 +5,8 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
+import com.nitnelave.CreeperHeal.events.CHBlockHealEvent.CHBlockHealReason;
+
 /**
  * Interface for replaceable items (blocks, paintings).
  * 
@@ -87,6 +89,9 @@ public interface Replaceable {
     /**
      * Delay the block's replacement until it is possible for it to spawn, or
      * drop it after a reasonable amount of tries.
+     * 
+     * @param reason
+     *            How was this block replaced
      */
-    public void delayReplacement ();
+    public void delayReplacement (CHBlockHealReason reason);
 }

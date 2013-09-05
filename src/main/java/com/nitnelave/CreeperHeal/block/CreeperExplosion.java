@@ -150,7 +150,7 @@ public class CreeperExplosion {
         CHBlockHealEvent event = new CHBlockHealEvent (block, false, CHBlockHealReason.BLOCK_BY_BLOCK);
         Bukkit.getPluginManager ().callEvent (event);
         if (!event.isCancelled () && !block.replace (event.shouldDrop ()))
-            block.delayReplacement ();
+            block.delayReplacement (CHBlockHealReason.BLOCK_BY_BLOCK);
         if (CreeperConfig.getBool (CfgVal.TELEPORT_ON_SUFFOCATE))
             Suffocating.checkPlayerOneBlock (block.getBlock ().getLocation ());
     }

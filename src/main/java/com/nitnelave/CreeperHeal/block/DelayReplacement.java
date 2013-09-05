@@ -22,6 +22,7 @@ public class DelayReplacement implements Runnable {
      */
     private final Replaceable blockState;
     private final int REPLACEMENT_THRESHOLD = 150;
+    private final CHBlockHealReason reason;
     /*
      * The number of times a replacement has been attempted.
      */
@@ -35,10 +36,12 @@ public class DelayReplacement implements Runnable {
      *            The block to be replaced.
      * @param replaced
      *            The number of times a replacement has already been attempted.
+     * @param reason
      */
-    public DelayReplacement (Replaceable replaceable, int replaced) {
+    public DelayReplacement (Replaceable replaceable, int replaced, CHBlockHealReason reason) {
         blockState = replaceable;
         counter = replaced + 1;
+        this.reason = reason;
     }
 
     /*
@@ -54,7 +57,7 @@ public class DelayReplacement implements Runnable {
                 counter++;
             else
             {
-                CHBlockHealEvent event = new CHBlockHealEvent (blockState, true, CHBlockHealReason.BURNT);
+                CHBlockHealEvent event = new CHBlockHealEvent (blockState, true, reason);
                 Bukkit.getPluginManager ().callEvent (event);
                 if (!event.isCancelled ())
                     blockState.replace (event.shouldDrop ());
@@ -63,7 +66,7 @@ public class DelayReplacement implements Runnable {
         }
         else
         {
-            CHBlockHealEvent event = new CHBlockHealEvent (blockState, true, CHBlockHealReason.BURNT);
+            CHBlockHealEvent event = new CHBlockHealEvent (blockState, true, reason);
             Bukkit.getPluginManager ().callEvent (event);
             if (!event.isCancelled ())
                 blockState.replace (event.shouldDrop ());
