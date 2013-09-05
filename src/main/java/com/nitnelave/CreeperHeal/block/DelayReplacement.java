@@ -18,6 +18,7 @@ public class DelayReplacement implements Runnable {
      * The block to be replaced.
      */
     private final Replaceable blockState;
+    private final int REPLACEMENT_THRESHOLD = 150;
     /*
      * The number of times a replacement has been attempted.
      */
@@ -43,7 +44,7 @@ public class DelayReplacement implements Runnable {
      */
     @Override
     public void run () {
-        if (counter < 150)
+        if (counter < REPLACEMENT_THRESHOLD)
         {
             if ((blockState instanceof Attachable && blockState.getBlock ().getRelative (((Attachable) blockState).getAttachedFace ()).getType () == Material.AIR)
                     || blockState.getBlock ().getRelative (BlockFace.DOWN).getType () == Material.AIR)
