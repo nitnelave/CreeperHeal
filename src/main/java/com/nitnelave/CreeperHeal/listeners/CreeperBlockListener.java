@@ -29,7 +29,7 @@ public class CreeperBlockListener implements Listener {
     public void onBlockBurn (BlockBurnEvent event) {
         WorldConfig world = CreeperConfig.getWorld (event.getBlock ().getLocation ().getWorld ());
 
-        if (world.getBool (WCfgVal.FIRE))
+        if (world.getBool (WCfgVal.FIRE) && !world.isProtected (event.getBlock ()))
         {
             if (BurntBlockManager.wasRecentlyBurnt (event.getBlock ()))
             {
