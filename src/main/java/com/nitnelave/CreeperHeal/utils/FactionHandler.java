@@ -1,5 +1,6 @@
 package com.nitnelave.CreeperHeal.utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.block.Block;
@@ -56,6 +57,21 @@ public abstract class FactionHandler {
             if (wild != BoardColls.get ().getFactionAt (PS.valueOf (block.getLocation ())).isNone ())
                 return false;
         return true;
+    }
+
+    /**
+     * Check if a block should be ignored (not replaced).
+     * 
+     * @param block
+     *            The block to be checked.
+     * @param world
+     *            The CH configuration for the world.
+     * @return Whether the replacement should be ignored.
+     */
+    public static boolean shouldIgnore (Block block, WorldConfig world) {
+        ArrayList<Block> l = new ArrayList<Block> ();
+        l.add (block);
+        return shouldIgnore (l, world);
     }
 
 }
