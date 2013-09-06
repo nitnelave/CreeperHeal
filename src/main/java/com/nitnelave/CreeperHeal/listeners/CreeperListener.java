@@ -52,6 +52,8 @@ public class CreeperListener implements Listener {
         if (!FactionHandler.shouldIgnore (event.blockList (), world))
         {
             Entity entity = event.getEntity ();
+            if (entity == null && !world.isAbove (event.getLocation ()))
+                return;
             if (world.shouldReplace (entity))
                 ExplodedBlockManager.processExplosion (event, world);
         }
