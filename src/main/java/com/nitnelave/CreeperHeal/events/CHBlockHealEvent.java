@@ -33,6 +33,10 @@ public class CHBlockHealEvent extends Event implements Cancellable {
         return handlers;
     }
 
+    public static HandlerList getHandlerList () {
+        return handlers;
+    }
+
     public boolean shouldDrop () {
         return shouldDrop;
     }
