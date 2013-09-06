@@ -255,7 +255,7 @@ public class WorldConfig {
      * @return Whether the location is above the limit, or true if height
      *         replacement is not enabled.
      */
-    private boolean isAbove (Location loc) {
+    public boolean isAbove (Location loc) {
         return !getBool (WCfgVal.REPLACE_ABOVE) || loc.getBlockY () >= replaceLimit.getValue ();
     }
 
