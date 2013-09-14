@@ -151,7 +151,7 @@ public class ExplodedBlockManager {
      * Record all the blocks in the list, with the location as the source of the
      * explosion.
      * 
-     * @param list
+     * @param blocks
      *            The list of destroyed blocks.
      * @param location
      *            The location of the explosion.
