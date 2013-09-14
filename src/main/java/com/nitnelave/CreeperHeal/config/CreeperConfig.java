@@ -73,11 +73,9 @@ public abstract class CreeperConfig {
         try
         {
             sound = Sound.valueOf (soundName.getValue ());
-            CreeperLog.debug ("sound loaded");
         } catch (IllegalArgumentException e)
         {
             sound = null;
-            CreeperLog.debug ("null sound");
         }
     }
 
