@@ -21,7 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Attachable;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
-import com.nitnelave.CreeperHeal.PluginHandler;
+//import com.nitnelave.CreeperHeal.PluginHandler;
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.events.CHBlockHealEvent.CHBlockHealReason;
@@ -68,8 +68,8 @@ public class CreeperBlock implements Replaceable {
      * @return A new CreeperBlock of the right subclass.
      */
     public static CreeperBlock newBlock (BlockState blockState) {
-        if (PluginHandler.isSpoutEnabled () && SpoutBlock.isCustomBlock (blockState))
-            return new SpoutBlock (blockState);
+//        if (PluginHandler.isSpoutEnabled () && SpoutBlock.isCustomBlock (blockState))
+//            return new SpoutBlock (blockState);
         if (blockState instanceof InventoryHolder)
             return new CreeperChest (blockState);
         if (blockState.getType ().hasGravity ())
