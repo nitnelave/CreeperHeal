@@ -118,6 +118,8 @@ class CreeperChest extends CreeperBlock {
     @Override
     public void update () {
         super.update ();
+        getBlock().setType(blockState.getType());
+        getBlock().setData(blockState.getRawData());
         if (!CreeperConfig.getWorld (getWorld ()).getBool (WCfgVal.DROP_CHEST_CONTENTS))
             try
             {
