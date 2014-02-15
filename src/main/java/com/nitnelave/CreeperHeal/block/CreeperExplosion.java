@@ -66,6 +66,7 @@ public class CreeperExplosion {
         loc = new Location (loc.getWorld (), (locWeight * loc.getX () + newLoc.getX ()) / (locWeight + 1), (locWeight * loc.getY () + newLoc.getY ())
                 / (locWeight + 1), (locWeight * loc.getZ () + newLoc.getZ ()) / (locWeight + 1));
         locWeight++;
+        checked.clear();
         recordBlocks (blocks);
         if (CreeperConfig.getBool (CfgVal.EXPLODE_OBSIDIAN))
             checkForObsidian ();
