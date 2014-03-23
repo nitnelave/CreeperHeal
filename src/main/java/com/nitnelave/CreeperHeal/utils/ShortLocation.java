@@ -10,7 +10,8 @@ import org.bukkit.block.Block;
  * @author nitnelave
  * 
  */
-public class ShortLocation {
+public class ShortLocation
+{
     private final int x, y, z, hashCode;
 
     /**
@@ -19,7 +20,8 @@ public class ShortLocation {
      * @param l
      *            The location represented.
      */
-    public ShortLocation(Location l) {
+    public ShortLocation(Location l)
+    {
         x = l.getBlockX();
         y = l.getBlockY();
         z = l.getBlockZ();
@@ -32,7 +34,8 @@ public class ShortLocation {
      * @param block
      *            The block whose location is represented.
      */
-    public ShortLocation(Block block) {
+    public ShortLocation(Block block)
+    {
         this(block.getLocation());
     }
 
@@ -42,7 +45,8 @@ public class ShortLocation {
      * @see java.lang.Object#hashCode()
      */
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return hashCode;
     }
 
@@ -52,7 +56,8 @@ public class ShortLocation {
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         if (this == obj)
             return true;
         if (obj instanceof ShortLocation)

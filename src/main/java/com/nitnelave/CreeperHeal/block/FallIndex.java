@@ -17,7 +17,8 @@ import com.nitnelave.CreeperHeal.utils.NeighborDateLoc;
  * @author nitnelave
  * 
  */
-public class FallIndex {
+public class FallIndex
+{
 
     /*
      * Blocks whose fall should be prevented.
@@ -26,9 +27,11 @@ public class FallIndex {
 
     static
     {
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(CreeperHeal.getInstance(), new Runnable() {
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(CreeperHeal.getInstance(), new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 cleanUp();
             }
         }, 400, 7200);
@@ -41,7 +44,8 @@ public class FallIndex {
      *            The location to check.
      * @return Whether the location is next to a block whose fall is prevented.
      */
-    public static boolean isNextToFallPrevention(Location loc) {
+    public static boolean isNextToFallPrevention(Location loc)
+    {
         return CreeperConfig.getBool(CfgVal.PREVENT_BLOCK_FALL) && index.hasNeighbor(loc);
     }
 
@@ -53,7 +57,8 @@ public class FallIndex {
      * @param location
      *            The block's location.
      */
-    public static void putFallPrevention(Location location) {
+    public static void putFallPrevention(Location location)
+    {
         if (CreeperConfig.getBool(CfgVal.PREVENT_BLOCK_FALL))
             index.addElement(new DateLoc(new Date(), location), location.getX(), location.getZ());
     }
@@ -62,7 +67,8 @@ public class FallIndex {
      * Clean up by removing the unnecessary blocks from the fall and update
      * indexes.
      */
-    private static void cleanUp() {
+    private static void cleanUp()
+    {
         index.clean();
     }
 }

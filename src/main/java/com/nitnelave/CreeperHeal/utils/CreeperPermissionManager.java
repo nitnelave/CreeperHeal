@@ -14,7 +14,8 @@ import de.bananaco.bpermissions.api.util.CalculableType;
  * @author nitnelave
  * 
  */
-public class CreeperPermissionManager {
+public class CreeperPermissionManager
+{
     private static boolean bPerms = false;
 
     /**
@@ -44,7 +45,8 @@ public class CreeperPermissionManager {
      *            The permissions to check.
      * @return Whether the player has any of the permissions listed in nodes.
      */
-    public static boolean checkPermissions(Player player, boolean warning, String... nodes) {
+    public static boolean checkPermissions(Player player, boolean warning, String... nodes)
+    {
         if (!warning && player.isOp())
             return true;
         if (bPerms)

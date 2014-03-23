@@ -9,10 +9,12 @@ import org.bukkit.event.block.BlockIgniteEvent;
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.block.CreeperBlock;
 
-public class BlockIgniteListener implements Listener {
+public class BlockIgniteListener implements Listener
+{
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    void onBlockIgnite(BlockIgniteEvent e) {
+    void onBlockIgnite(BlockIgniteEvent e)
+    {
         for (BlockFace b : CreeperBlock.CARDINALS)
             if (BurntBlockManager.wasRecentlyBurnt(e.getBlock().getRelative(b)))
             {

@@ -19,7 +19,8 @@ import com.nitnelave.CreeperHeal.events.CHBlockHealEvent.CHBlockHealReason;
  * @author nitnelave
  * 
  */
-public class CreeperBurntBlock {
+public class CreeperBurntBlock
+{
     private final Replaceable block;
     private final ReplacementTimer timer;
     private boolean replaced = false;
@@ -32,7 +33,8 @@ public class CreeperBurntBlock {
      * @param block
      *            The burnt block.
      */
-    public CreeperBurntBlock(Date now, Replaceable block) {
+    public CreeperBurntBlock(Date now, Replaceable block)
+    {
         this.block = block;
         boolean timed = block == null ? false : CreeperConfig.getWorld(getWorld()).isRepairTimed();
         timer = new ReplacementTimer(new Date(now.getTime() + 1000
@@ -47,7 +49,8 @@ public class CreeperBurntBlock {
      * @param state
      *            The blockState to be represented.
      */
-    public CreeperBurntBlock(Date now, BlockState state) {
+    public CreeperBurntBlock(Date now, BlockState state)
+    {
         this(now, CreeperBlock.newBlock(state));
     }
 
@@ -59,7 +62,8 @@ public class CreeperBurntBlock {
      *            but the block is dropped.
      * @return False if the replacement was postponed.
      */
-    public boolean replace(boolean shouldDrop) {
+    public boolean replace(boolean shouldDrop)
+    {
         CHBlockHealEvent event = new CHBlockHealEvent(block, shouldDrop, CHBlockHealReason.BURNT);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled())
@@ -72,7 +76,8 @@ public class CreeperBurntBlock {
      * 
      * @return The Replaceable represented.
      */
-    public Replaceable getBlock() {
+    public Replaceable getBlock()
+    {
         return block;
     }
 
@@ -83,7 +88,8 @@ public class CreeperBurntBlock {
      * @throws NullPointerException
      *             If the block is invalid.
      */
-    public World getWorld() throws NullPointerException {
+    public World getWorld() throws NullPointerException
+    {
         return block.getWorld();
     }
 
@@ -94,7 +100,8 @@ public class CreeperBurntBlock {
      * @throws NullPointerException
      *             If the block is invalid.
      */
-    public int getTypeId() throws NullPointerException {
+    public int getTypeId() throws NullPointerException
+    {
         return block.getTypeId();
     }
 
@@ -104,7 +111,8 @@ public class CreeperBurntBlock {
      * @return The block's attaching face, or BlockFace.SELF if the block is
      *         invalid.
      */
-    public BlockFace getAttachingFace() {
+    public BlockFace getAttachingFace()
+    {
         if (block != null)
             return block.getAttachingFace();
         return BlockFace.SELF;
@@ -117,14 +125,16 @@ public class CreeperBurntBlock {
      * @throws NullPointerException
      *             If the block is invalid.
      */
-    public Location getLocation() throws NullPointerException {
+    public Location getLocation() throws NullPointerException
+    {
         return block.getLocation();
     }
 
     /**
      * Remove the block from the world.
      */
-    public void remove() {
+    public void remove()
+    {
         block.remove();
     }
 
@@ -135,7 +145,8 @@ public class CreeperBurntBlock {
      *            The amount of time to postpone by, in sec.
      * @return True if the block was postponed, false otherwise.
      */
-    public boolean postPone(int delay) {
+    public boolean postPone(int delay)
+    {
         if (!timer.postPone(delay))
         {
             block.drop(true);
@@ -149,7 +160,8 @@ public class CreeperBurntBlock {
      * 
      * @return The time.
      */
-    public Date getTime() {
+    public Date getTime()
+    {
         return timer.getTime();
     }
 
@@ -158,7 +170,8 @@ public class CreeperBurntBlock {
      * 
      * @return False if it is not time to replace it yet.
      */
-    public boolean checkReplace() {
+    public boolean checkReplace()
+    {
         if (timer.checkReplace())
         {
             if (replace(false))
@@ -175,7 +188,8 @@ public class CreeperBurntBlock {
      * 
      * @return True if the block was already replaced.
      */
-    public boolean wasReplaced() {
+    public boolean wasReplaced()
+    {
         return replaced;
     }
 

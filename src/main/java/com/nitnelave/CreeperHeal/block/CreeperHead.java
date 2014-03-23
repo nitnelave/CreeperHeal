@@ -10,12 +10,14 @@ import org.bukkit.block.Skull;
  * @author nitnelave
  * 
  */
-class CreeperHead extends CreeperBlock {
+class CreeperHead extends CreeperBlock
+{
 
     /*
      * Constructor.
      */
-    protected CreeperHead(BlockState blockState) {
+    protected CreeperHead(BlockState blockState)
+    {
         super(blockState);
     }
 
@@ -25,7 +27,8 @@ class CreeperHead extends CreeperBlock {
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#update(boolean)
      */
     @Override
-    public void update() {
+    public void update()
+    {
         super.update();
         Skull skull = (Skull) blockState;
         Skull newSkull = ((Skull) blockState.getBlock().getState());

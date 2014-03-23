@@ -10,7 +10,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
 
-class ConfigUpdater {
+class ConfigUpdater
+{
 
     private static int waitBeforeHeal, logLevel = -42, blockPerBlockInterval, waitBeforeHealBurnt,
                     dropChance, distanceNear, obsidianChance, obsidianRadius,
@@ -21,7 +22,8 @@ class ConfigUpdater {
                     explodeObsidian, debug;
     private static String cmdAlias;
 
-    private static void recordValues() {
+    private static void recordValues()
+    {
         CreeperConfig.setBool(CfgVal.BLOCK_PER_BLOCK, blockPerBlock);
         CreeperConfig.setBool(CfgVal.TELEPORT_ON_SUFFOCATE, teleportOnSuffocate);
         CreeperConfig.setBool(CfgVal.DROP_DESTROYED_BLOCKS, dropDestroyedBlocks);
@@ -52,7 +54,8 @@ class ConfigUpdater {
     }
 
     private static void from4() throws FileNotFoundException, IOException,
-                               InvalidConfigurationException {
+                               InvalidConfigurationException
+    {
         CreeperLog.logInfo("Importing config from version 4", 1);
         YamlConfiguration config = new YamlConfiguration();
         File configFile = new File(CreeperHeal.getCHFolder() + "/config.yml");
@@ -112,7 +115,8 @@ class ConfigUpdater {
     }
 
     private static void from5() throws FileNotFoundException, IOException,
-                               InvalidConfigurationException {
+                               InvalidConfigurationException
+    {
         CreeperLog.logInfo("Importing config from version 5", 1);
 
         YamlConfiguration config = new YamlConfiguration();
@@ -151,7 +155,8 @@ class ConfigUpdater {
     }
 
     private static void from6() throws FileNotFoundException, IOException,
-                               InvalidConfigurationException {
+                               InvalidConfigurationException
+    {
         CreeperLog.logInfo("Importing config from version 6", 1);
         YamlConfiguration config = new YamlConfiguration();
         File configFile = new File(CreeperHeal.getCHFolder() + "/config.yml");
@@ -190,7 +195,8 @@ class ConfigUpdater {
         advancedFile.delete();
     }
 
-    protected static void importFrom(int version) {
+    protected static void importFrom(int version)
+    {
         try
         {
             switch (version)

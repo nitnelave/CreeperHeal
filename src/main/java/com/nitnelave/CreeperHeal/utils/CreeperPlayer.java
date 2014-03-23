@@ -8,7 +8,8 @@ import org.bukkit.entity.Player;
  * @author nitnelave
  * 
  */
-public class CreeperPlayer {
+public class CreeperPlayer
+{
 
     private final Player player;
     private boolean lava, tnt, fire, blacklist, spawnEggs, pvp;
@@ -16,7 +17,8 @@ public class CreeperPlayer {
     /**
      * The different infractions that are recorded for a player.
      */
-    public enum WarningCause {
+    public enum WarningCause
+    {
         LAVA, TNT, FIRE, BLACKLIST, SPAWN_EGG, PVP
     }
 
@@ -26,7 +28,8 @@ public class CreeperPlayer {
      * @param player
      *            The player represented by this class.
      */
-    public CreeperPlayer(Player player) {
+    public CreeperPlayer(Player player)
+    {
         this.player = player;
         loadPermissions();
     }
@@ -34,7 +37,8 @@ public class CreeperPlayer {
     /*
      * Load the player's permissions.
      */
-    private void loadPermissions() {
+    private void loadPermissions()
+    {
         lava = CreeperPermissionManager.checkPermissions(player, true, "grief.warn.*", "grief.warn.lava");
         tnt = CreeperPermissionManager.checkPermissions(player, true, "grief.warn.*", "grief.warn.tnt");
         fire = CreeperPermissionManager.checkPermissions(player, true, "grief.warn.*", "grief.warn.fire");
@@ -48,7 +52,8 @@ public class CreeperPlayer {
      * 
      * @return The player represented.
      */
-    public Player getPlayer() {
+    public Player getPlayer()
+    {
         return player;
     }
 
@@ -62,7 +67,8 @@ public class CreeperPlayer {
      * @param message
      *            The message send.
      */
-    public void warnPlayer(Player player, WarningCause cause, String message) {
+    public void warnPlayer(Player player, WarningCause cause, String message)
+    {
         switch (cause)
         {
         case BLACKLIST:
@@ -97,7 +103,8 @@ public class CreeperPlayer {
      * 
      * @return True if the player has permission to receive a warning.
      */
-    public boolean hasWarnings() {
+    public boolean hasWarnings()
+    {
         return lava || tnt || fire || blacklist || spawnEggs || pvp;
     }
 
@@ -107,7 +114,8 @@ public class CreeperPlayer {
      * @see java.lang.Object#hashCode()
      */
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((player == null) ? 0 : player.hashCode());
@@ -120,7 +128,8 @@ public class CreeperPlayer {
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         if (this == obj)
             return true;
         if (!(obj instanceof CreeperPlayer))

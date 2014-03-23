@@ -8,7 +8,8 @@ import java.util.Date;
  * @author nitnelave
  * 
  */
-public class ReplacementTimer {
+public class ReplacementTimer
+{
     private Date time;
     private final boolean timed;
     private boolean postponed = false;
@@ -22,7 +23,8 @@ public class ReplacementTimer {
      *            Whether the replacement is in a world where replacements are
      *            timed, i.e. happen at a certain hour of the Minecraft day.
      */
-    public ReplacementTimer(Date time, boolean timed) {
+    public ReplacementTimer(Date time, boolean timed)
+    {
         this.time = time;
         this.timed = timed;
     }
@@ -34,7 +36,8 @@ public class ReplacementTimer {
      *            The amount of time to postpone by, in milliseconds.
      * @return True if the block was postponed.
      */
-    public boolean postPone(int delay) {
+    public boolean postPone(int delay)
+    {
         if (postponed)
             return false;
         time = new Date(time.getTime() + 1000 * delay);
@@ -48,7 +51,8 @@ public class ReplacementTimer {
      * @return The recorded time. Either the time the block was burnt or later
      *         if the replacement has been delayed.
      */
-    public Date getTime() {
+    public Date getTime()
+    {
         return time;
     }
 
@@ -57,7 +61,8 @@ public class ReplacementTimer {
      * 
      * @return False if it is not time to replace it yet.
      */
-    public boolean checkReplace() {
+    public boolean checkReplace()
+    {
         return timed || time.before(new Date());
     }
 
@@ -67,7 +72,8 @@ public class ReplacementTimer {
      * 
      * @return True if the replacement is timed.
      */
-    public boolean isTimed() {
+    public boolean isTimed()
+    {
         return timed;
     }
 
@@ -77,7 +83,8 @@ public class ReplacementTimer {
      * @see java.lang.Object#hashCode()
      */
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((time == null) ? 0 : time.hashCode());
@@ -91,7 +98,8 @@ public class ReplacementTimer {
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         if (this == obj)
             return true;
         if (!(obj instanceof ReplacementTimer))

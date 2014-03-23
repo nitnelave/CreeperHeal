@@ -10,7 +10,8 @@ import org.bukkit.block.BlockState;
  * @author nitnelave
  * 
  */
-class CreeperRail extends CreeperBlock {
+class CreeperRail extends CreeperBlock
+{
     private static final BlockFace[] FACES = { BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH,
                                               BlockFace.SOUTH };
     private static final BlockFace[] UP_DOWN = { BlockFace.DOWN, BlockFace.SELF, BlockFace.UP };
@@ -18,7 +19,8 @@ class CreeperRail extends CreeperBlock {
     /*
      * Constructor.
      */
-    protected CreeperRail(BlockState blockState) {
+    protected CreeperRail(BlockState blockState)
+    {
         super(blockState);
     }
 
@@ -28,7 +30,8 @@ class CreeperRail extends CreeperBlock {
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#update()
      */
     @Override
-    public void update() {
+    public void update()
+    {
 
         byte data = getRawData();
         byte[][] railData = new byte[3][4];
@@ -57,7 +60,8 @@ class CreeperRail extends CreeperBlock {
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#getAttachingFace()
      */
     @Override
-    public BlockFace getAttachingFace() {
+    public BlockFace getAttachingFace()
+    {
         switch (getRawData())
         {
         case 5:
@@ -78,7 +82,8 @@ class CreeperRail extends CreeperBlock {
      * 
      * @return True, if it is ascending
      */
-    public boolean isAscending() {
+    public boolean isAscending()
+    {
         return getRawData() > 1;
     }
 }

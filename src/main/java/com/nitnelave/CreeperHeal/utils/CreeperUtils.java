@@ -15,7 +15,8 @@ import com.nitnelave.CreeperHeal.events.CHExplosionRecordEvent;
  * @author nitnelave
  * 
  */
-public abstract class CreeperUtils {
+public abstract class CreeperUtils
+{
 
     public static CHExplosionRecordEvent.ExplosionReason getReason(Entity e)
     {
@@ -50,7 +51,8 @@ public abstract class CreeperUtils {
      * @return An array containing the elements of both arrays in the correct
      *         order.
      */
-    public static <T> T[] concat(T[] first, T[] second) {
+    public static <T> T[] concat(T[] first, T[] second)
+    {
         T[] result = Arrays.copyOf(first, first.length + second.length);
         System.arraycopy(second, 0, result, first.length, second.length);
         return result;
@@ -65,7 +67,8 @@ public abstract class CreeperUtils {
      *            The elements to be added in the HashSet.
      * @return An unmodifiable HashSet containing the elements.
      */
-    public static <T> Set<T> createFinalHashSet(T... elements) {
+    public static <T> Set<T> createFinalHashSet(T... elements)
+    {
         Set<T> set = new HashSet<T>(elements.length);
 
         for (T element : elements)

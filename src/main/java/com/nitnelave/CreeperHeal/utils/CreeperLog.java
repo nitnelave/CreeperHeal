@@ -22,7 +22,8 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
  * @author nitnelave
  * 
  */
-public abstract class CreeperLog {
+public abstract class CreeperLog
+{
     /*
      * Log file, for outputting warnings to a file.
      */
@@ -57,7 +58,8 @@ public abstract class CreeperLog {
      * @param message
      *            The message to be recorded.
      */
-    public static void record(String message) {
+    public static void record(String message)
+    {
         try
         {
             FileWriter fstream = new FileWriter(logFile, true);
@@ -77,7 +79,8 @@ public abstract class CreeperLog {
      * @param message
      *            The message to be output.
      */
-    public static void warning(String message) {
+    public static void warning(String message)
+    {
         log.warning("[CreeperHeal] " + message);
         record("[WARNING] " + message);
     }
@@ -91,7 +94,8 @@ public abstract class CreeperLog {
      * @param level
      *            The corresponding verbosity of the message.
      */
-    public static void logInfo(String msg, int level) {
+    public static void logInfo(String msg, int level)
+    {
         if (logLevel == -42)
             logLevel = CreeperConfig.getInt(CfgVal.LOG_LEVEL);
         if (level <= logLevel)
@@ -107,7 +111,8 @@ public abstract class CreeperLog {
      * @param message
      *            The message to be output.
      */
-    public static void severe(String message) {
+    public static void severe(String message)
+    {
         log.log(Level.SEVERE, "[CreeperHeal] " + message);
         record("[SEVERE]" + message);
     }
@@ -117,7 +122,8 @@ public abstract class CreeperLog {
      * 
      * @return a time with the HH:mm:ss format
      */
-    private static String getDate() {
+    private static String getDate()
+    {
         DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss ");
         return dateFormat.format(new Date());
     }
@@ -128,7 +134,8 @@ public abstract class CreeperLog {
      * @param message
      *            The message to output.
      */
-    public static void debug(String message) {
+    public static void debug(String message)
+    {
         if (debug)
             log.info("[DEBUG] " + message);
     }
@@ -143,7 +150,8 @@ public abstract class CreeperLog {
      * @param force
      *            Whether it is a warning or a debug message.
      */
-    public static void displayBlockLocation(Block block, boolean force) {
+    public static void displayBlockLocation(Block block, boolean force)
+    {
         Location loc = block.getLocation();
         String s = block.getType() + " at " + loc.getBlockX() + "; " + loc.getBlockY() + "; "
                    + loc.getBlockZ();
@@ -153,7 +161,8 @@ public abstract class CreeperLog {
             debug(s);
     }
 
-    public static void setDebug(boolean bool) {
+    public static void setDebug(boolean bool)
+    {
         debug = bool;
         log.info("debug: " + debug);
     }

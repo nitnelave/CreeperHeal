@@ -30,7 +30,8 @@ import com.nitnelave.CreeperHeal.utils.MetricsLite;
  * @author nitnelave
  * 
  */
-public class CreeperHeal extends JavaPlugin {
+public class CreeperHeal extends JavaPlugin
+{
 
     private static CreeperHeal instance;
 
@@ -45,7 +46,8 @@ public class CreeperHeal extends JavaPlugin {
      * @see org.bukkit.plugin.java.JavaPlugin#onEnable()
      */
     @Override
-    public void onEnable() {
+    public void onEnable()
+    {
 
         instance = this;
         CreeperCommandManager.registerCommands();
@@ -63,7 +65,8 @@ public class CreeperHeal extends JavaPlugin {
     /*
      * Register the listeners.
      */
-    private void registerEvents() {
+    private void registerEvents()
+    {
         PluginManager pm = getServer().getPluginManager();
 
         pm.registerEvents(new CreeperListener(), this);
@@ -91,7 +94,8 @@ public class CreeperHeal extends JavaPlugin {
      * @see org.bukkit.plugin.java.JavaPlugin#onDisable()
      */
     @Override
-    public void onDisable() {
+    public void onDisable()
+    {
         ExplodedBlockManager.forceReplace(); //replace blocks still in memory, so they are not lost
         BurntBlockManager.forceReplaceBurnt(); //same for burnt_blocks
     }
@@ -101,14 +105,16 @@ public class CreeperHeal extends JavaPlugin {
      * 
      * @return The instance of CreeperHeal.
      */
-    public static CreeperHeal getInstance() {
+    public static CreeperHeal getInstance()
+    {
         return instance;
     }
 
     /**
      * Register grief-related events.
      */
-    public static void registerGriefEvents() {
+    public static void registerGriefEvents()
+    {
         if (!griefRegistered)
         {
             Bukkit.getServer().getPluginManager().registerEvents(new GriefListener(), getInstance());
@@ -121,7 +127,8 @@ public class CreeperHeal extends JavaPlugin {
      * 
      * @return The plugin data folder
      */
-    public static File getCHFolder() {
+    public static File getCHFolder()
+    {
         return getInstance().getDataFolder();
     }
 

@@ -6,14 +6,17 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.nitnelave.CreeperHeal.block.BlockId;
 
-class BlockIdListValue extends ConfigValue<HashSet<BlockId>> {
+class BlockIdListValue extends ConfigValue<HashSet<BlockId>>
+{
 
-    protected BlockIdListValue(CfgValEnumMember v, YamlConfiguration file) {
+    protected BlockIdListValue(CfgValEnumMember v, YamlConfiguration file)
+    {
         super((HashSet<BlockId>) v.getDefaultValue(), file, v.getKey());
     }
 
     @Override
-    protected void load() {
+    protected void load()
+    {
         HashSet<BlockId> set = new HashSet<BlockId>();
         String tmp_str1 = config.getString(getKey(), "").trim();
         String[] split = tmp_str1.split(",");
@@ -33,11 +36,13 @@ class BlockIdListValue extends ConfigValue<HashSet<BlockId>> {
     }
 
     @Override
-    protected void write() {
+    protected void write()
+    {
         config.set(getKey(), formatList());
     }
 
-    private String formatList() {
+    private String formatList()
+    {
         if (value.isEmpty())
             return "0";
         StringBuilder b = new StringBuilder();

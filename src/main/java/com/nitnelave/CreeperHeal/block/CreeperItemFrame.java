@@ -17,7 +17,8 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
  * @author nitnelave
  * 
  */
-class CreeperItemFrame extends CreeperHanging {
+class CreeperItemFrame extends CreeperHanging
+{
 
     /**
      * Constructor.
@@ -25,7 +26,8 @@ class CreeperItemFrame extends CreeperHanging {
      * @param frame
      *            The item frame represented.
      */
-    protected CreeperItemFrame(ItemFrame frame) {
+    protected CreeperItemFrame(ItemFrame frame)
+    {
         super(frame);
     }
 
@@ -35,7 +37,8 @@ class CreeperItemFrame extends CreeperHanging {
      * @see com.nitnelave.CreeperHeal.block.CreeperHanging#computeLocation()
      */
     @Override
-    protected Location computeLocation() {
+    protected Location computeLocation()
+    {
         BlockFace face = hanging.getAttachedFace();
         Location loc = hanging.getLocation().getBlock().getRelative(face).getLocation();
         return loc.getBlock().getRelative(face.getOppositeFace()).getLocation();
@@ -48,7 +51,8 @@ class CreeperItemFrame extends CreeperHanging {
      */
     //TODO : frame position is not updated.
     @Override
-    public boolean replace(boolean shouldDrop) {
+    public boolean replace(boolean shouldDrop)
+    {
         try
         {
             ItemFrame f = getWorld().spawn(location.getBlock().getRelative(hanging.getAttachedFace()).getLocation(), ItemFrame.class);
@@ -70,7 +74,8 @@ class CreeperItemFrame extends CreeperHanging {
      * @see com.nitnelave.CreeperHeal.block.Replaceable#drop()
      */
     @Override
-    public boolean drop(boolean forced) {
+    public boolean drop(boolean forced)
+    {
         if (forced || new Random().nextInt(100) < CreeperConfig.getInt(CfgVal.DROP_CHANCE))
         {
             ItemFrame f = (ItemFrame) hanging;
@@ -89,7 +94,8 @@ class CreeperItemFrame extends CreeperHanging {
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getTypeId()
      */
     @Override
-    public int getTypeId() {
+    public int getTypeId()
+    {
         return 389;
     }
 }

@@ -28,7 +28,8 @@ import com.nitnelave.CreeperHeal.utils.CreeperPlayer;
 /**
  * Listener for grief-related events.
  */
-public class GriefListener implements Listener {
+public class GriefListener implements Listener
+{
 
     /**
      * Listener for the BlockPlaceEvent. If the player does not have the rights
@@ -39,7 +40,8 @@ public class GriefListener implements Listener {
      *            The BlockPlaceEvent.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onBlockPlace(BlockPlaceEvent event) {
+    public void onBlockPlace(BlockPlaceEvent event)
+    {
         Player player = event.getPlayer();
         WorldConfig world = CreeperConfig.getWorld(player.getWorld());
         if (event.getBlockPlaced().getType() == Material.TNT
@@ -71,7 +73,8 @@ public class GriefListener implements Listener {
      *            The BlockIgniteEvent.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onBlockIgnite(BlockIgniteEvent event) {
+    public void onBlockIgnite(BlockIgniteEvent event)
+    {
         WorldConfig world = CreeperConfig.getWorld(event.getBlock().getWorld());
 
         if (event.getCause() == IgniteCause.SPREAD && world.getBool(WCfgVal.PREVENT_FIRE_SPREAD))
@@ -88,7 +91,8 @@ public class GriefListener implements Listener {
      *            The EntityDamageByEntityEvent.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event)
+    {
         if (event.getEntity() instanceof Player)
         {
             Player attacked = (Player) event.getEntity();
@@ -134,7 +138,8 @@ public class GriefListener implements Listener {
      *            The PlayerBucketEmpty event.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
+    public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event)
+    {
         WorldConfig world = CreeperConfig.getWorld(event.getPlayer().getWorld());
 
         Player player = event.getPlayer();
@@ -157,7 +162,8 @@ public class GriefListener implements Listener {
      *            The PlayerInteract event.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onPlayerInteract(PlayerInteractEvent event) {
+    public void onPlayerInteract(PlayerInteractEvent event)
+    {
         ItemStack item = event.getItem();
         if (item == null)
             return;
@@ -195,7 +201,8 @@ public class GriefListener implements Listener {
      *            The PlayerJoin event.
      */
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void onPlayerJoin(PlayerJoinEvent event)
+    {
         CreeperMessenger.registerPlayer(new CreeperPlayer(event.getPlayer()));
     }
 
@@ -207,7 +214,8 @@ public class GriefListener implements Listener {
      *            The PlayerQuit event.
      */
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerQuit(PlayerQuitEvent event) {
+    public void onPlayerQuit(PlayerQuitEvent event)
+    {
         CreeperMessenger.removeFromWarnList(new CreeperPlayer(event.getPlayer()));
     }
 

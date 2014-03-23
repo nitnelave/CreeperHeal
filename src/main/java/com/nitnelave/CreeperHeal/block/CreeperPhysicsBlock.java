@@ -11,12 +11,14 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
  * @author nitnelave
  * 
  */
-class CreeperPhysicsBlock extends CreeperBlock {
+class CreeperPhysicsBlock extends CreeperBlock
+{
 
     /*
      * Constructor.
      */
-    protected CreeperPhysicsBlock(BlockState blockState) {
+    protected CreeperPhysicsBlock(BlockState blockState)
+    {
         super(blockState);
     }
 
@@ -26,7 +28,8 @@ class CreeperPhysicsBlock extends CreeperBlock {
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#update()
      */
     @Override
-    public void update() {
+    public void update()
+    {
         if (CreeperConfig.getBool(CfgVal.PREVENT_BLOCK_FALL))
             FallIndex.putFallPrevention(getBlock().getLocation());
         super.update();
