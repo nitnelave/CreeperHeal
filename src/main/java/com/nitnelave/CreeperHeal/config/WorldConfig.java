@@ -12,14 +12,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Creeper;
-import org.bukkit.entity.EnderCrystal;
-import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Fireball;
-import org.bukkit.entity.TNTPrimed;
-import org.bukkit.entity.Wither;
-import org.bukkit.entity.minecart.ExplosiveMinecart;
 import org.bukkit.inventory.InventoryHolder;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
@@ -230,17 +223,25 @@ public class WorldConfig {
         if (getBool (WCfgVal.WORLD_ON))
         {
             if (entity != null)
-                if (entity instanceof Creeper && getBool (WCfgVal.CREEPERS) || entity instanceof TNTPrimed && getBool (WCfgVal.TNT)
-                        || entity instanceof Fireball && getBool (WCfgVal.GHAST))
-                    return isAbove (entity.getLocation ());
-                else if (entity instanceof EnderDragon)
+                switch (entity.getType ())
+                {
+                case CREEPER:
+                    return getBool (WCfgVal.CREEPERS) && isAbove (entity.getLocation ());
+                case PRIMED_TNT:
+                    return getBool (WCfgVal.TNT) && isAbove (entity.getLocation ());
+                case FIREBALL:
+                    return getBool (WCfgVal.GHAST) && isAbove (entity.getLocation ());
+                case ENDER_DRAGON:
                     return getBool (WCfgVal.DRAGONS);
-                else if (entity instanceof Wither)
+                case WITHER_SKULL:
                     return getBool (WCfgVal.WITHER);
-                else if (entity instanceof ExplosiveMinecart)
+                case MINECART_TNT:
                     return getBool (WCfgVal.MINECART_TNT);
-                else if (entity instanceof EnderCrystal)
+                case ENDER_CRYSTAL:
                     return getBool (WCfgVal.ENDER_CRYSTAL);
+                default:
+                    return getBool (WCfgVal.CUSTOM);
+                }
             return getBool (WCfgVal.CUSTOM);
         }
         return false;
