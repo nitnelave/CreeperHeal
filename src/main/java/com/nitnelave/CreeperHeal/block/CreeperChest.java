@@ -97,15 +97,11 @@ class CreeperChest extends CreeperBlock {
     private ItemStack[] getTotalInventory() {
         if (!hasNeighbor())
             return storedInventory;
-        else
-        {
-            ItemStack[] otherInv = neighborInventory;
-            ItemStack[] newInv = storedInventory;
-            if (neighbor.isRight())
-                return CreeperUtils.concat(otherInv, newInv);
-            else
-                return CreeperUtils.concat(newInv, otherInv);
-        }
+        ItemStack[] otherInv = neighborInventory;
+        ItemStack[] newInv = storedInventory;
+        if (neighbor.isRight())
+            return CreeperUtils.concat(otherInv, newInv);
+        return CreeperUtils.concat(newInv, otherInv);
     }
 
     /*

@@ -8,7 +8,6 @@ import com.nitnelave.CreeperHeal.block.BlockId;
 
 class BlockIdListValue extends ConfigValue<HashSet<BlockId>> {
 
-    @SuppressWarnings("unchecked")
     protected BlockIdListValue(CfgValEnumMember v, YamlConfiguration file) {
         super((HashSet<BlockId>) v.getDefaultValue(), file, v.getKey());
     }

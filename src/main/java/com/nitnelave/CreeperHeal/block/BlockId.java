@@ -63,15 +63,15 @@ public class BlockId {
      *             If the string does not match any pattern.
      */
     public BlockId(String str) throws NumberFormatException {
-        str = str.trim();
+        String res = str.trim();
         try
         {
-            id = Integer.parseInt(str);
+            id = Integer.parseInt(res);
             data = -1;
             hasData = false;
         } catch (NumberFormatException e)
         {
-            String[] split = str.split(":");
+            String[] split = res.split(":");
             if (split.length == 2)
             {
                 id = Integer.parseInt(split[0]);

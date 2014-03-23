@@ -69,8 +69,7 @@ public abstract class CreeperHandler {
      *            The event corresponding to an explosion.
      */
     public static void recordBlocks(EntityExplodeEvent event) {
-        ExplodedBlockManager.processExplosion(event, CreeperConfig.getWorld(event.getLocation().getWorld()),
-                                              CreeperUtils.getReason(event.getEntity()));
+        ExplodedBlockManager.processExplosion(event, CreeperUtils.getReason(event.getEntity()));
     }
 
     /**
@@ -84,8 +83,7 @@ public abstract class CreeperHandler {
     public static void
         recordBlocks(EntityExplodeEvent event,
                      CHExplosionRecordEvent.ExplosionReason reason) {
-        ExplodedBlockManager.processExplosion(event, CreeperConfig.getWorld(event.getLocation().getWorld()),
-                                              reason);
+        ExplodedBlockManager.processExplosion(event, reason);
     }
 
     /**

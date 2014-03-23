@@ -55,7 +55,7 @@ public class CreeperListener implements Listener {
             if (entity == null && !world.isAbove(event.getLocation()))
                 return;
             if (world.shouldReplace(entity))
-                ExplodedBlockManager.processExplosion(event, world, CreeperUtils.getReason(entity));
+                ExplodedBlockManager.processExplosion(event, CreeperUtils.getReason(entity));
         }
     }
 
