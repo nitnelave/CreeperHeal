@@ -27,6 +27,7 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WCfgVal;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
+import com.nitnelave.CreeperHeal.utils.CreeperUtils;
 import com.nitnelave.CreeperHeal.utils.FactionHandler;
 import com.nitnelave.CreeperHeal.utils.Suffocating;
 
@@ -55,7 +56,7 @@ public class CreeperListener implements Listener {
             if (entity == null && !world.isAbove (event.getLocation ()))
                 return;
             if (world.shouldReplace (entity))
-                ExplodedBlockManager.processExplosion (event, world);
+                ExplodedBlockManager.processExplosion (event, world, CreeperUtils.getReason (entity));
         }
     }
 

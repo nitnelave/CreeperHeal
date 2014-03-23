@@ -13,10 +13,12 @@ public class CHExplosionRecordEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList ();
     private List<Block> blocks;
     private final Location location;
+    private final ExplosionReason reason;
 
-    public CHExplosionRecordEvent (List<Block> blocks, Location location) {
+    public CHExplosionRecordEvent (List<Block> blocks, Location location, ExplosionReason reason) {
         this.blocks = blocks;
         this.location = location;
+        this.reason = reason;
     }
 
     @Override
@@ -48,6 +50,18 @@ public class CHExplosionRecordEvent extends Event implements Cancellable {
 
     public Location getLocation () {
         return location;
+    }
+
+    public ExplosionReason getReason () {
+        return reason;
+    }
+
+    public enum ExplosionReason {
+        CREEPER,
+        TNT,
+        DRAGON,
+        OTHER,
+        GHAST
     }
 
 }

@@ -143,8 +143,9 @@ public class ExplodedBlockManager {
      * @param world
      *            The config for the explosion's world.
      */
-    public static void processExplosion (EntityExplodeEvent event, WorldConfig world) {
-        processExplosion (event.blockList (), event.getLocation ());
+    public static void processExplosion (EntityExplodeEvent event, WorldConfig world,
+                                         CHExplosionRecordEvent.ExplosionReason reason) {
+        processExplosion (event.blockList (), event.getLocation (), reason);
     }
 
     /**
@@ -156,11 +157,12 @@ public class ExplodedBlockManager {
      * @param location
      *            The location of the explosion.
      */
-    public static void processExplosion (List<Block> blocks, Location location) {
+    public static void processExplosion (List<Block> blocks, Location location,
+                                         CHExplosionRecordEvent.ExplosionReason reason) {
         if (PluginHandler.isInArena (location))
             return;
 
-        CHExplosionRecordEvent event = new CHExplosionRecordEvent (blocks, location);
+        CHExplosionRecordEvent event = new CHExplosionRecordEvent (blocks, location, reason);
         Bukkit.getPluginManager ().callEvent (event);
         if (event.isCancelled ())
             return;

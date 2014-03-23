@@ -5,6 +5,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bukkit.entity.Entity;
+
+import com.nitnelave.CreeperHeal.events.CHExplosionRecordEvent;
+
 /**
  * A utility class for common tasks used in several places.
  * 
@@ -12,6 +16,27 @@ import java.util.Set;
  * 
  */
 public abstract class CreeperUtils {
+
+    public static CHExplosionRecordEvent.ExplosionReason getReason (Entity e)
+    {
+        if (e == null)
+            return CHExplosionRecordEvent.ExplosionReason.OTHER;
+        switch (e.getType ())
+        {
+        case CREEPER:
+            return CHExplosionRecordEvent.ExplosionReason.CREEPER;
+        case ENDER_DRAGON:
+            return CHExplosionRecordEvent.ExplosionReason.DRAGON;
+        case FIREBALL:
+            return CHExplosionRecordEvent.ExplosionReason.GHAST;
+        case PRIMED_TNT:
+        case MINECART_TNT:
+            return CHExplosionRecordEvent.ExplosionReason.TNT;
+        default:
+            return CHExplosionRecordEvent.ExplosionReason.OTHER;
+        }
+    }
+
 
     /**
      * Concatenate two arrays.
