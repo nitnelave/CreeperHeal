@@ -23,9 +23,9 @@ public class RailsUpdateListener implements Listener {
      *            The BlockPhysicsEvent
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onBlockPhysics (BlockPhysicsEvent event) {
-        Block b = event.getBlock ();
-        if (RailsIndex.isUpdatePrevented (CreeperBlock.newBlock (b.getState ())))
-            event.setCancelled (true);
+    public void onBlockPhysics(BlockPhysicsEvent event) {
+        Block b = event.getBlock();
+        if (RailsIndex.isUpdatePrevented(CreeperBlock.newBlock(b.getState())))
+            event.setCancelled(true);
     }
 }

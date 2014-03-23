@@ -25,17 +25,18 @@ public class NeighborFire extends NeighborFinder<CreeperBurntBlock> {
 
     /*
      * (non-Javadoc)
+     * 
      * @see
      * com.nitnelave.CreeperHeal.utils.NeighborFinder#getNeighbor(org.bukkit
      * .Location, java.util.LinkedList)
      */
     @Override
-    protected CreeperBurntBlock getNeighbor (Location loc, LinkedList<CreeperBurntBlock> list) {
+    protected CreeperBurntBlock getNeighbor(Location loc, LinkedList<CreeperBurntBlock> list) {
         if (list != null)
         {
-            World w = loc.getWorld ();
+            World w = loc.getWorld();
             for (CreeperBurntBlock cB : list)
-                if (cB.getWorld () == w && loc.distance (cB.getLocation ()) < DISTANCE_NEAR)
+                if (cB.getWorld() == w && loc.distance(cB.getLocation()) < DISTANCE_NEAR)
                     return cB;
         }
         return null;
@@ -43,27 +44,29 @@ public class NeighborFire extends NeighborFinder<CreeperBurntBlock> {
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.nitnelave.CreeperHeal.utils.NeighborFinder#clean()
      */
     @Override
-    public void clean () {
-        Iterator<LinkedList<CreeperBurntBlock>> iter = map.values ().iterator ();
-        Date delay = new Date (new Date ().getTime () - 1000 * CreeperConfig.getInt (CfgVal.WAIT_BEFORE_HEAL_BURNT) + 4000000
-                * CreeperConfig.getInt (CfgVal.BLOCK_PER_BLOCK_INTERVAL));
-        while (iter.hasNext ())
+    public void clean() {
+        Iterator<LinkedList<CreeperBurntBlock>> iter = map.values().iterator();
+        Date delay = new Date(new Date().getTime() - 1000
+                              * CreeperConfig.getInt(CfgVal.WAIT_BEFORE_HEAL_BURNT) + 4000000
+                              * CreeperConfig.getInt(CfgVal.BLOCK_PER_BLOCK_INTERVAL));
+        while (iter.hasNext())
         {
-            LinkedList<CreeperBurntBlock> list = iter.next ();
-            Iterator<CreeperBurntBlock> it = list.iterator ();
-            while (it.hasNext ())
+            LinkedList<CreeperBurntBlock> list = iter.next();
+            Iterator<CreeperBurntBlock> it = list.iterator();
+            while (it.hasNext())
             {
-                Date date = it.next ().getTime ();
-                if (date.before (delay))
-                    it.remove ();
+                Date date = it.next().getTime();
+                if (date.before(delay))
+                    it.remove();
                 else
                     break;
             }
-            if (list.isEmpty ())
-                iter.remove ();
+            if (list.isEmpty())
+                iter.remove();
         }
     }
 
@@ -73,9 +76,9 @@ public class NeighborFire extends NeighborFinder<CreeperBurntBlock> {
      * @param block
      *            The block to be removed.
      */
-    public void removeElement (CreeperBurntBlock block) {
-        Location l = block.getLocation ();
-        removeElement (block, l.getBlockX (), l.getBlockZ ());
+    public void removeElement(CreeperBurntBlock block) {
+        Location l = block.getLocation();
+        removeElement(block, l.getBlockX(), l.getBlockZ());
     }
 
     /**
@@ -84,9 +87,9 @@ public class NeighborFire extends NeighborFinder<CreeperBurntBlock> {
      * @param block
      *            The block to add.
      */
-    public void addElement (CreeperBurntBlock block) {
-        Location l = block.getLocation ();
-        addElement (block, l.getBlockX (), l.getBlockZ ());
+    public void addElement(CreeperBurntBlock block) {
+        Location l = block.getLocation();
+        addElement(block, l.getBlockX(), l.getBlockZ());
     }
 
 }

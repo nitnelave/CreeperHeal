@@ -18,49 +18,50 @@ class CreeperPiston extends CreeperBlock {
     /*
      * Constructor.
      */
-    protected CreeperPiston (BlockState blockState) {
+    protected CreeperPiston(BlockState blockState) {
         this.blockState = blockState;
         BlockFace face;
-        switch (getRawData () & 7)
+        switch (getRawData() & 7)
         {
-            case 0:
-                face = BlockFace.DOWN;
-                break;
-            case 1:
-                face = BlockFace.UP;
-                break;
-            case 2:
-                face = BlockFace.NORTH;
-                break;
-            case 3:
-                face = BlockFace.SOUTH;
-                break;
-            case 4:
-                face = BlockFace.WEST;
-                break;
-            default:
-                face = BlockFace.EAST;
+        case 0:
+            face = BlockFace.DOWN;
+            break;
+        case 1:
+            face = BlockFace.UP;
+            break;
+        case 2:
+            face = BlockFace.NORTH;
+            break;
+        case 3:
+            face = BlockFace.SOUTH;
+            break;
+        case 4:
+            face = BlockFace.WEST;
+            break;
+        default:
+            face = BlockFace.EAST;
         }
-        if (blockState.getType ().equals (Material.PISTON_EXTENSION))
+        if (blockState.getType().equals(Material.PISTON_EXTENSION))
         {
             extended = true;
-            this.blockState = getBlock ().getRelative (face.getOppositeFace ()).getState ();
+            this.blockState = getBlock().getRelative(face.getOppositeFace()).getState();
         }
         else
-            extended = (getRawData () & 8) != 0;
+            extended = (getRawData() & 8) != 0;
         orientation = face;
-        this.blockState.setRawData ((byte) (blockState.getRawData () & 7));
+        this.blockState.setRawData((byte) (blockState.getRawData() & 7));
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#remove()
      */
     @Override
-    public void remove () {
-        getBlock ().setType (Material.AIR);
+    public void remove() {
+        getBlock().setType(Material.AIR);
         if (extended)
-            getBlock ().getRelative (orientation).setType (Material.AIR);
+            getBlock().getRelative(orientation).setType(Material.AIR);
     }
 
 }

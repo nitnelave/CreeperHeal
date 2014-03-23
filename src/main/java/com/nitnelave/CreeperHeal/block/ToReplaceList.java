@@ -20,7 +20,7 @@ public abstract class ToReplaceList {
     /*
      * Block to be replaced immediately after an explosion.
      */
-    private static Map<Location, Replaceable> toReplace = new HashMap<Location, Replaceable> ();
+    private static Map<Location, Replaceable> toReplace = new HashMap<Location, Replaceable>();
 
     /**
      * Add a block to the list of blocks to be replaced immediately.
@@ -28,19 +28,19 @@ public abstract class ToReplaceList {
      * @param block
      *            The block to add.
      */
-    protected static void addToReplace (CreeperBlock block) {
-        toReplace.put (block.getLocation (), block);
+    protected static void addToReplace(CreeperBlock block) {
+        toReplace.put(block.getLocation(), block);
     }
 
     /**
      * Replace the blocks that should be immediately replaced after an
      * explosion, in a task run one tick later.
      */
-    protected static void replaceProtected () {
-        Bukkit.getScheduler ().scheduleSyncDelayedTask (CreeperHeal.getInstance (), new Runnable () {
+    protected static void replaceProtected() {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(CreeperHeal.getInstance(), new Runnable() {
             @Override
-            public void run () {
-                replaceAll ();
+            public void run() {
+                replaceAll();
             }
         });
     }
@@ -48,11 +48,11 @@ public abstract class ToReplaceList {
     /*
      * Replace all the blocks.
      */
-    private static void replaceAll () {
-        Iterator<Replaceable> iter = toReplace.values ().iterator ();
-        while (iter.hasNext ())
-            iter.next ().replace (true);
-        toReplace.clear ();
+    private static void replaceAll() {
+        Iterator<Replaceable> iter = toReplace.values().iterator();
+        while (iter.hasNext())
+            iter.next().replace(true);
+        toReplace.clear();
     }
 
 }

@@ -19,7 +19,7 @@ public abstract class NeighborFinder<T> {
      * The size of each zone.
      */
     private static final int BLOCK_SIZE = 64;
-    protected HashMap<Point, LinkedList<T>> map = new HashMap<Point, LinkedList<T>> ();
+    protected HashMap<Point, LinkedList<T>> map = new HashMap<Point, LinkedList<T>>();
 
     /**
      * Add an element to the map. It is placed in the correct zone, created if
@@ -32,17 +32,17 @@ public abstract class NeighborFinder<T> {
      * @param y
      *            The y coordinate.
      */
-    public void addElement (T el, double x, double y) {
+    public void addElement(T el, double x, double y) {
         if (el == null)
             return;
-        Point p = new Point ((int) (x / BLOCK_SIZE), (int) (y / BLOCK_SIZE));
-        LinkedList<T> list = map.get (p);
+        Point p = new Point((int) (x / BLOCK_SIZE), (int) (y / BLOCK_SIZE));
+        LinkedList<T> list = map.get(p);
         if (list == null)
         {
-            list = new LinkedList<T> ();
-            map.put (p, list);
+            list = new LinkedList<T>();
+            map.put(p, list);
         }
-        list.add (el);
+        list.add(el);
     }
 
     /**
@@ -56,14 +56,14 @@ public abstract class NeighborFinder<T> {
      * @param y
      *            The y coordinate for the zone.
      */
-    public void removeElement (T el, double x, double y) {
-        Point p = new Point ((int) (x / BLOCK_SIZE), (int) (y / BLOCK_SIZE));
-        LinkedList<T> list = map.get (p);
+    public void removeElement(T el, double x, double y) {
+        Point p = new Point((int) (x / BLOCK_SIZE), (int) (y / BLOCK_SIZE));
+        LinkedList<T> list = map.get(p);
         if (list == null)
             return;
-        list.remove (el);
-        if (list.isEmpty ())
-            map.remove (p);
+        list.remove(el);
+        if (list.isEmpty())
+            map.remove(p);
     }
 
     /**
@@ -74,8 +74,8 @@ public abstract class NeighborFinder<T> {
      *            The point to check for neighbors.
      * @return Whether the location is close to an element.
      */
-    public boolean hasNeighbor (Location loc) {
-        return getNeighbor (loc) != null;
+    public boolean hasNeighbor(Location loc) {
+        return getNeighbor(loc) != null;
     }
 
     /**
@@ -87,10 +87,10 @@ public abstract class NeighborFinder<T> {
      *            The location to check for neighbors.
      * @return A neighboring element, null if no such element exists.
      */
-    public T getNeighbor (Location loc) {
-        int x = (int) (loc.getX () / BLOCK_SIZE), y = (int) (loc.getZ () / BLOCK_SIZE);
-        LinkedList<T> list = map.get (new Point (x, y));
-        T neighbor = getNeighbor (loc, list);
+    public T getNeighbor(Location loc) {
+        int x = (int) (loc.getX() / BLOCK_SIZE), y = (int) (loc.getZ() / BLOCK_SIZE);
+        LinkedList<T> list = map.get(new Point(x, y));
+        T neighbor = getNeighbor(loc, list);
         if (neighbor != null)
             return neighbor;
         for (int i = -1; i < 2; i++)
@@ -98,34 +98,34 @@ public abstract class NeighborFinder<T> {
             {
                 if (i == 0 && j == 0)
                     continue;
-                list = map.get (new Point (x + i, y + j));
-                neighbor = getNeighbor (loc, list);
+                list = map.get(new Point(x + i, y + j));
+                neighbor = getNeighbor(loc, list);
                 if (neighbor != null)
                     return neighbor;
             }
         return null;
     }
 
-    protected abstract T getNeighbor (Location loc, LinkedList<T> list);
+    protected abstract T getNeighbor(Location loc, LinkedList<T> list);
 
     /**
      * Get whether the map is completely empty (no zones).
      * 
      * @return Whether the map is empty.
      */
-    public boolean isEmpty () {
-        return map.isEmpty ();
+    public boolean isEmpty() {
+        return map.isEmpty();
     }
 
     /**
      * Clean the map by removing useless elements in zones, and empty zones.
      */
-    public abstract void clean ();
+    public abstract void clean();
 
     /**
      * Clear the map of all elements.
      */
-    public void clear () {
-        map.clear ();
+    public void clear() {
+        map.clear();
     }
 }

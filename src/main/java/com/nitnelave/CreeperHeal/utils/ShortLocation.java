@@ -19,10 +19,10 @@ public class ShortLocation {
      * @param l
      *            The location represented.
      */
-    public ShortLocation (Location l) {
-        x = l.getBlockX ();
-        y = l.getBlockY ();
-        z = l.getBlockZ ();
+    public ShortLocation(Location l) {
+        x = l.getBlockX();
+        y = l.getBlockY();
+        z = l.getBlockZ();
         hashCode = 31 * x + 37 * y + 41 * z;
     }
 
@@ -32,25 +32,27 @@ public class ShortLocation {
      * @param block
      *            The block whose location is represented.
      */
-    public ShortLocation (Block block) {
-        this (block.getLocation ());
+    public ShortLocation(Block block) {
+        this(block.getLocation());
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
-    public int hashCode () {
+    public int hashCode() {
         return hashCode;
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals (Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj)
             return true;
         if (obj instanceof ShortLocation)

@@ -33,47 +33,47 @@ public abstract class CreeperMessenger {
     /*
      * Variables to be replaced in the message.
      */
-    private final static String[] variables = {"WORLD", "PLAYER", "TARGET", "MOB", "BLOCK"};
+    private final static String[] variables = { "WORLD", "PLAYER", "TARGET", "MOB", "BLOCK" };
 
-    private static List<CreeperPlayer> warnList = new LinkedList<CreeperPlayer> ();
+    private static List<CreeperPlayer> warnList = new LinkedList<CreeperPlayer>();
 
     static
     {
-        load ();
-        populateWarnList ();
+        load();
+        populateWarnList();
     }
 
     /*
      * Load the messages from the file.
      */
-    private static void load () {
-        prop = new Properties ();
-        File messageFile = new File (CreeperHeal.getCHFolder ().getPath () + "/messages.properties");
+    private static void load() {
+        prop = new Properties();
+        File messageFile = new File(CreeperHeal.getCHFolder().getPath() + "/messages.properties");
         try
         {
-            if (!messageFile.exists ())
-                FileUtils.copyJarConfig (messageFile);
+            if (!messageFile.exists())
+                FileUtils.copyJarConfig(messageFile);
 
-            FileInputStream input = new FileInputStream (messageFile);
-            prop.load (input);
-            input.close ();
+            FileInputStream input = new FileInputStream(messageFile);
+            prop.load(input);
+            input.close();
         } catch (FileNotFoundException e)
         {
-            CreeperLog.warning ("[CreeperHeal] Failed to read file: messages.properties");
-            e.printStackTrace ();
+            CreeperLog.warning("[CreeperHeal] Failed to read file: messages.properties");
+            e.printStackTrace();
         } catch (IOException e)
         {
-            CreeperLog.warning ("[CreeperHeal] Failed to read file: messages.properties");
-            e.printStackTrace ();
+            CreeperLog.warning("[CreeperHeal] Failed to read file: messages.properties");
+            e.printStackTrace();
         }
     }
 
     /*
      * Replace the color keywords in the messages by the chat codes equivalents.
      */
-    private static String colorToChat (String message) {
-        for (ChatColor c : ChatColor.values ())
-            message = message.replaceAll ("\\{" + c.name () + "\\}", c.toString ());
+    private static String colorToChat(String message) {
+        for (ChatColor c : ChatColor.values())
+            message = message.replaceAll("\\{" + c.name() + "\\}", c.toString());
         return message;
     }
 
@@ -89,23 +89,23 @@ public abstract class CreeperMessenger {
      *            Values to replace the formatting keywords.
      * @return A formatted string for chat.
      */
-    public static String processMessage (String type, String... values) {
-        String message = prop.getProperty (type);
+    public static String processMessage(String type, String... values) {
+        String message = prop.getProperty(type);
         try
         {
-            message = colorToChat (message);
+            message = colorToChat(message);
         } catch (NullPointerException e)
         {
-            CreeperLog.warning ("Missing message property : " + type);
+            CreeperLog.warning("Missing message property : " + type);
         }
         try
         {
             for (int i = 0; i < variables.length; i++)
                 if (values[i] != null)
-                    message = message.replaceAll ("\\{" + variables[i] + "\\}", values[i]);
+                    message = message.replaceAll("\\{" + variables[i] + "\\}", values[i]);
         } catch (NullPointerException e)
         {
-            CreeperLog.warning ("[CreeperHeal] Wrong variable used in message " + type);
+            CreeperLog.warning("[CreeperHeal] Wrong variable used in message " + type);
         }
         return message;
     }
@@ -128,30 +128,31 @@ public abstract class CreeperMessenger {
      *            Whether the message is meant for a player or for the admin.
      * @return A formatted message.
      */
-    private static String getMessage (WarningCause cause, String offender, String world, boolean blocked, String data, boolean player) {
+    private static String getMessage(WarningCause cause, String offender, String world,
+                                     boolean blocked, String data, boolean player) {
         String prefix = blocked ? "block-" : "warn-";
         String suffix = blocked ? (player ? "-player" : "-admin") : "";
         String message = null;
         switch (cause)
         {
-            case LAVA:
-                message = processMessage (prefix + "lava" + suffix, world, offender, null, null, null);
-                break;
-            case FIRE:
-                message = processMessage (prefix + "flint-and-steel" + suffix, world, offender, null, null, null);
-                break;
-            case TNT:
-                message = processMessage (prefix + "TNT" + suffix, world, offender, null, null, null);
-                break;
-            case BLACKLIST:
-                message = processMessage (prefix + "place-blacklist" + suffix, world, offender, null, null, data);
-                break;
-            case SPAWN_EGG:
-                message = processMessage (prefix + "spawn-eggs" + suffix, world, offender, null, data, null);
-                break;
-            case PVP:
-                message = processMessage (prefix + "pvp" + suffix, world, offender, data, null, null);
-                break;
+        case LAVA:
+            message = processMessage(prefix + "lava" + suffix, world, offender, null, null, null);
+            break;
+        case FIRE:
+            message = processMessage(prefix + "flint-and-steel" + suffix, world, offender, null, null, null);
+            break;
+        case TNT:
+            message = processMessage(prefix + "TNT" + suffix, world, offender, null, null, null);
+            break;
+        case BLACKLIST:
+            message = processMessage(prefix + "place-blacklist" + suffix, world, offender, null, null, data);
+            break;
+        case SPAWN_EGG:
+            message = processMessage(prefix + "spawn-eggs" + suffix, world, offender, null, data, null);
+            break;
+        case PVP:
+            message = processMessage(prefix + "pvp" + suffix, world, offender, data, null, null);
+            break;
         }
         return message;
     }
@@ -159,10 +160,10 @@ public abstract class CreeperMessenger {
     /**
      * Initialize the warn list with all concerned players.
      */
-    private static void populateWarnList () {
-        warnList.clear ();
-        for (Player p : Bukkit.getServer ().getOnlinePlayers ())
-            registerPlayer (new CreeperPlayer (p));
+    private static void populateWarnList() {
+        warnList.clear();
+        for (Player p : Bukkit.getServer().getOnlinePlayers())
+            registerPlayer(new CreeperPlayer(p));
     }
 
     /**
@@ -177,15 +178,15 @@ public abstract class CreeperMessenger {
      * @param material
      *            Some info about the message.
      */
-    public static void warn (WarningCause cause, Player offender, boolean blocked, String material) {
-        String message = CreeperMessenger.getMessage (cause, offender.getName (), offender.getWorld ().getName (), blocked, material, false);
-        SimpleDateFormat f = new SimpleDateFormat ("HH:mm:ss");
-        if (CreeperConfig.getBool (CfgVal.LOG_WARNINGS))
-            CreeperLog.record ("[" + f.format (new Date ()) + "] " + ChatColor.stripColor (message));
+    public static void warn(WarningCause cause, Player offender, boolean blocked, String material) {
+        String message = CreeperMessenger.getMessage(cause, offender.getName(), offender.getWorld().getName(), blocked, material, false);
+        SimpleDateFormat f = new SimpleDateFormat("HH:mm:ss");
+        if (CreeperConfig.getBool(CfgVal.LOG_WARNINGS))
+            CreeperLog.record("[" + f.format(new Date()) + "] " + ChatColor.stripColor(message));
         message = ChatColor.RED + message;
-        offender.sendMessage (CreeperMessenger.getMessage (cause, offender.getName (), offender.getWorld ().getName (), blocked, material, true));
+        offender.sendMessage(CreeperMessenger.getMessage(cause, offender.getName(), offender.getWorld().getName(), blocked, material, true));
         for (CreeperPlayer cp : warnList)
-            cp.warnPlayer (cp.getPlayer (), cause, message);
+            cp.warnPlayer(cp.getPlayer(), cause, message);
 
     }
 
@@ -196,8 +197,8 @@ public abstract class CreeperMessenger {
      * @param player
      *            The player to remove.
      */
-    public static void removeFromWarnList (CreeperPlayer player) {
-        warnList.remove (player);
+    public static void removeFromWarnList(CreeperPlayer player) {
+        warnList.remove(player);
     }
 
     /**
@@ -206,9 +207,9 @@ public abstract class CreeperMessenger {
      * @param player
      *            The player to add.
      */
-    public static void registerPlayer (CreeperPlayer player) {
-        if (player.hasWarnings ())
-            warnList.add (player);
+    public static void registerPlayer(CreeperPlayer player) {
+        if (player.hasWarnings())
+            warnList.add(player);
 
     }
 

@@ -20,15 +20,15 @@ public class FileUtils {
      *            The file to be created.
      * @return True, if successful
      */
-    public static boolean createNewFile (File file) {
-        file.delete ();
-        file.getParentFile ().mkdirs ();
+    public static boolean createNewFile(File file) {
+        file.delete();
+        file.getParentFile().mkdirs();
         try
         {
-            file.createNewFile ();
+            file.createNewFile();
         } catch (IOException ex)
         {
-            CreeperLog.warning ("[CreeperHeal] Cannot create file " + file.getPath ());
+            CreeperLog.warning("[CreeperHeal] Cannot create file " + file.getPath());
             return false;
         }
         return true;
@@ -40,8 +40,8 @@ public class FileUtils {
      * @param file
      *            The file to be copied.
      */
-    public static void copyJarConfig (File file) {
-        copyJarConfig (file, file.getName ());
+    public static void copyJarConfig(File file) {
+        copyJarConfig(file, file.getName());
     }
 
     /**
@@ -52,30 +52,31 @@ public class FileUtils {
      * @param source
      *            The source file's name.
      */
-    public static void copyJarConfig (File file, String source) {
-        if (!createNewFile (file))
+    public static void copyJarConfig(File file, String source) {
+        if (!createNewFile(file))
             return;
-        InputStream in = CreeperHeal.getInstance ().getResource (source);
+        InputStream in = CreeperHeal.getInstance().getResource(source);
         if (in == null)
-            throw new IllegalArgumentException ("The embedded resource '" + source + "' cannot be found.");
+            throw new IllegalArgumentException("The embedded resource '" + source
+                                               + "' cannot be found.");
         try
         {
-            OutputStream out = new FileOutputStream (file);
+            OutputStream out = new FileOutputStream(file);
 
             int read;
             byte[] buf = new byte[1024];
 
-            while ((read = in.read (buf)) != -1)
-                out.write (buf, 0, read);
+            while ((read = in.read(buf)) != -1)
+                out.write(buf, 0, read);
 
-            in.close ();
-            out.flush ();
-            out.close ();
-            CreeperLog.logInfo ("[CreeperHeal] Defaults loaded for file " + file.getPath (), 1);
+            in.close();
+            out.flush();
+            out.close();
+            CreeperLog.logInfo("[CreeperHeal] Defaults loaded for file " + file.getPath(), 1);
         } catch (IOException ex)
         {
-            CreeperLog.warning ("Error copying file from jar : " + source);
-            ex.printStackTrace ();
+            CreeperLog.warning("Error copying file from jar : " + source);
+            ex.printStackTrace();
         }
 
     }

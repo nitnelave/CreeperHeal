@@ -15,24 +15,25 @@ class CreeperHead extends CreeperBlock {
     /*
      * Constructor.
      */
-    protected CreeperHead (BlockState blockState) {
-        super (blockState);
+    protected CreeperHead(BlockState blockState) {
+        super(blockState);
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#update(boolean)
      */
     @Override
-    public void update () {
-        super.update ();
+    public void update() {
+        super.update();
         Skull skull = (Skull) blockState;
-        Skull newSkull = ((Skull) blockState.getBlock ().getState ());
-        newSkull.setRotation (skull.getRotation ());
-        newSkull.setSkullType (skull.getSkullType ());
-        if (skull.hasOwner ())
-            newSkull.setOwner (skull.getOwner ());
-        newSkull.update (true);
+        Skull newSkull = ((Skull) blockState.getBlock().getState());
+        newSkull.setRotation(skull.getRotation());
+        newSkull.setSkullType(skull.getSkullType());
+        if (skull.hasOwner())
+            newSkull.setOwner(skull.getOwner());
+        newSkull.update(true);
     }
 
 }

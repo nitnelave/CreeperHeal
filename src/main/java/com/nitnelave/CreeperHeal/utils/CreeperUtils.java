@@ -17,11 +17,11 @@ import com.nitnelave.CreeperHeal.events.CHExplosionRecordEvent;
  */
 public abstract class CreeperUtils {
 
-    public static CHExplosionRecordEvent.ExplosionReason getReason (Entity e)
+    public static CHExplosionRecordEvent.ExplosionReason getReason(Entity e)
     {
         if (e == null)
             return CHExplosionRecordEvent.ExplosionReason.OTHER;
-        switch (e.getType ())
+        switch (e.getType())
         {
         case CREEPER:
             return CHExplosionRecordEvent.ExplosionReason.CREEPER;
@@ -50,9 +50,9 @@ public abstract class CreeperUtils {
      * @return An array containing the elements of both arrays in the correct
      *         order.
      */
-    public static <T> T[] concat (T[] first, T[] second) {
-        T[] result = Arrays.copyOf (first, first.length + second.length);
-        System.arraycopy (second, 0, result, first.length, second.length);
+    public static <T> T[] concat(T[] first, T[] second) {
+        T[] result = Arrays.copyOf(first, first.length + second.length);
+        System.arraycopy(second, 0, result, first.length, second.length);
         return result;
     }
 
@@ -65,13 +65,13 @@ public abstract class CreeperUtils {
      *            The elements to be added in the HashSet.
      * @return An unmodifiable HashSet containing the elements.
      */
-    public static <T> Set<T> createFinalHashSet (T... elements) {
-        Set<T> set = new HashSet<T> (elements.length);
+    public static <T> Set<T> createFinalHashSet(T... elements) {
+        Set<T> set = new HashSet<T>(elements.length);
 
         for (T element : elements)
-            set.add (element);
+            set.add(element);
 
-        return Collections.unmodifiableSet (set);
+        return Collections.unmodifiableSet(set);
     }
 
 }

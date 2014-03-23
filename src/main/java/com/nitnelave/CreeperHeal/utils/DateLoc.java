@@ -23,7 +23,7 @@ public class DateLoc {
      * @param location
      *            The location to be stored.
      */
-    public DateLoc (Date date, Location location) {
+    public DateLoc(Date date, Location location) {
         this.date = date;
         this.location = location;
     }
@@ -33,7 +33,7 @@ public class DateLoc {
      * 
      * @return The stored date.
      */
-    public Date getTime () {
+    public Date getTime() {
         return date;
     }
 
@@ -42,7 +42,7 @@ public class DateLoc {
      * 
      * @return The stored location.
      */
-    public Location getLocation () {
+    public Location getLocation() {
         return location;
     }
 
@@ -51,8 +51,8 @@ public class DateLoc {
      * 
      * @return The location's world.
      */
-    public World getWorld () {
-        return location.getWorld ();
+    public World getWorld() {
+        return location.getWorld();
     }
 
 }

@@ -19,17 +19,18 @@ public class NeighborDateLoc extends NeighborFinder<DateLoc> {
 
     /*
      * (non-Javadoc)
+     * 
      * @see
      * com.nitnelave.CreeperHeal.utils.NeighborFinder#getNeighbor(org.bukkit
      * .Location, java.util.LinkedList)
      */
     @Override
-    protected DateLoc getNeighbor (Location loc, LinkedList<DateLoc> list) {
+    protected DateLoc getNeighbor(Location loc, LinkedList<DateLoc> list) {
         if (list != null)
         {
-            World w = loc.getWorld ();
+            World w = loc.getWorld();
             for (DateLoc dl : list)
-                if (dl.getWorld () == w && loc.distance (dl.getLocation ()) < 10)
+                if (dl.getWorld() == w && loc.distance(dl.getLocation()) < 10)
                     return dl;
         }
         return null;
@@ -37,26 +38,28 @@ public class NeighborDateLoc extends NeighborFinder<DateLoc> {
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.nitnelave.CreeperHeal.utils.NeighborFinder#clean()
      */
     @Override
-    public void clean () {
-        Iterator<LinkedList<DateLoc>> iter = map.values ().iterator ();
-        Date delay = new Date (new Date ().getTime () - 200 * CreeperConfig.getInt (CfgVal.BLOCK_PER_BLOCK_INTERVAL));
-        while (iter.hasNext ())
+    public void clean() {
+        Iterator<LinkedList<DateLoc>> iter = map.values().iterator();
+        Date delay = new Date(new Date().getTime() - 200
+                              * CreeperConfig.getInt(CfgVal.BLOCK_PER_BLOCK_INTERVAL));
+        while (iter.hasNext())
         {
-            LinkedList<DateLoc> list = iter.next ();
-            Iterator<DateLoc> it = list.iterator ();
-            while (it.hasNext ())
+            LinkedList<DateLoc> list = iter.next();
+            Iterator<DateLoc> it = list.iterator();
+            while (it.hasNext())
             {
-                Date date = it.next ().getTime ();
-                if (date.before (delay))
-                    it.remove ();
+                Date date = it.next().getTime();
+                if (date.before(delay))
+                    it.remove();
                 else
                     break;
             }
-            if (list.isEmpty ())
-                iter.remove ();
+            if (list.isEmpty())
+                iter.remove();
         }
     }
 

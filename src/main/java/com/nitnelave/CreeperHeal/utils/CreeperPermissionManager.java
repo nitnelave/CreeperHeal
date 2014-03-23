@@ -22,13 +22,13 @@ public class CreeperPermissionManager {
      */
     static
     {
-        PluginManager pm = Bukkit.getServer ().getPluginManager ();
+        PluginManager pm = Bukkit.getServer().getPluginManager();
 
-        Plugin bPermissions = pm.getPlugin ("bPermissions");
+        Plugin bPermissions = pm.getPlugin("bPermissions");
         if (bPermissions != null)
         {
             bPerms = true;
-            CreeperLog.logInfo ("Successfully hooked in bPermissions", 0);
+            CreeperLog.logInfo("Successfully hooked in bPermissions", 0);
         }
     }
 
@@ -44,27 +44,29 @@ public class CreeperPermissionManager {
      *            The permissions to check.
      * @return Whether the player has any of the permissions listed in nodes.
      */
-    public static boolean checkPermissions (Player player, boolean warning, String... nodes) {
-        if (!warning && player.isOp ())
+    public static boolean checkPermissions(Player player, boolean warning, String... nodes) {
+        if (!warning && player.isOp())
             return true;
         if (bPerms)
         {
-            if (!warning && ApiLayer.hasPermission (player.getWorld ().getName (), CalculableType.USER, player.getName (), "CreeperHeal.*"))
+            if (!warning
+                && ApiLayer.hasPermission(player.getWorld().getName(), CalculableType.USER, player.getName(), "CreeperHeal.*"))
                 return true;
 
             for (String node : nodes)
-                if (ApiLayer.hasPermission (player.getWorld ().getName (), CalculableType.USER, player.getName (), "CreeperHeal." + node))
+                if (ApiLayer.hasPermission(player.getWorld().getName(), CalculableType.USER, player.getName(), "CreeperHeal."
+                                                                                                               + node))
                     return true;
 
         }
         else
         {
-            if (!warning && player.hasPermission ("CreeperHeal.*"))
+            if (!warning && player.hasPermission("CreeperHeal.*"))
                 return true;
             for (String node : nodes)
-                if (player.hasPermission ("CreeperHeal." + node))
+                if (player.hasPermission("CreeperHeal." + node))
                     return true;
-            if (player.hasPermission ("CreeperHeal.*"))
+            if (player.hasPermission("CreeperHeal.*"))
                 return true;
         }
         return false;

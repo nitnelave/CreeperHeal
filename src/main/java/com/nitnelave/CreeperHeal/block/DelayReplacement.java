@@ -38,7 +38,7 @@ public class DelayReplacement implements Runnable {
      *            The number of times a replacement has already been attempted.
      * @param reason
      */
-    public DelayReplacement (Replaceable replaceable, int replaced, CHBlockHealReason reason) {
+    public DelayReplacement(Replaceable replaceable, int replaced, CHBlockHealReason reason) {
         blockState = replaceable;
         counter = replaced + 1;
         this.reason = reason;
@@ -49,33 +49,33 @@ public class DelayReplacement implements Runnable {
      * failure either re-schedule the replacement for later or drop the block.
      */
     @Override
-    public void run () {
+    public void run() {
         if (counter < REPLACEMENT_THRESHOLD)
         {
-            if ((blockState instanceof Attachable && blockState.getBlock ().getRelative (((Attachable) blockState).getAttachedFace ()).getType () == Material.AIR)
-                    || blockState.getBlock ().getRelative (BlockFace.DOWN).getType () == Material.AIR)
+            if ((blockState instanceof Attachable && blockState.getBlock().getRelative(((Attachable) blockState).getAttachedFace()).getType() == Material.AIR)
+                || blockState.getBlock().getRelative(BlockFace.DOWN).getType() == Material.AIR)
                 counter++;
             else
             {
-                CHBlockHealEvent event = new CHBlockHealEvent (blockState, true, reason);
-                Bukkit.getPluginManager ().callEvent (event);
-                if (!event.isCancelled ())
-                    blockState.replace (event.shouldDrop ());
-                Bukkit.getScheduler ().cancelTask (id);
+                CHBlockHealEvent event = new CHBlockHealEvent(blockState, true, reason);
+                Bukkit.getPluginManager().callEvent(event);
+                if (!event.isCancelled())
+                    blockState.replace(event.shouldDrop());
+                Bukkit.getScheduler().cancelTask(id);
             }
         }
         else
         {
-            CHBlockHealEvent event = new CHBlockHealEvent (blockState, true, reason);
-            Bukkit.getPluginManager ().callEvent (event);
-            if (!event.isCancelled ())
-                blockState.replace (event.shouldDrop ());
-            Bukkit.getScheduler ().cancelTask (id);
+            CHBlockHealEvent event = new CHBlockHealEvent(blockState, true, reason);
+            Bukkit.getPluginManager().callEvent(event);
+            if (!event.isCancelled())
+                blockState.replace(event.shouldDrop());
+            Bukkit.getScheduler().cancelTask(id);
         }
 
     }
 
-    public void setId (int id) {
+    public void setId(int id) {
         this.id = id;
     }
 

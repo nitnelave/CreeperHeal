@@ -8,10 +8,10 @@ import com.nitnelave.CreeperHeal.config.WCfgVal;
 
 class CreeperGrass extends CreeperBlock {
 
-    protected CreeperGrass (BlockState blockState) {
-        super (blockState);
-        if (CreeperConfig.getWorld (getWorld ()).getBool (WCfgVal.GRASS_TO_DIRT))
-            blockState.setType (Material.DIRT);
+    protected CreeperGrass(BlockState blockState) {
+        super(blockState);
+        if (CreeperConfig.getWorld(getWorld()).getBool(WCfgVal.GRASS_TO_DIRT))
+            blockState.setType(Material.DIRT);
     }
 
 }

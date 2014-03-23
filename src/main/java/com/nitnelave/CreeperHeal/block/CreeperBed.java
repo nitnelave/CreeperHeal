@@ -24,56 +24,59 @@ class CreeperBed extends CreeperBlock {
     /*
      * Constructor.
      */
-    protected CreeperBed (BlockState blockState) {
-        orientation = getFacing (blockState.getRawData ());
-        Block block = blockState.getBlock ();
-        if ((blockState.getRawData () & 8) == 0)
-            block = block.getRelative (orientation.getOppositeFace ());
-        this.blockState = block.getState ();
+    protected CreeperBed(BlockState blockState) {
+        orientation = getFacing(blockState.getRawData());
+        Block block = blockState.getBlock();
+        if ((blockState.getRawData() & 8) == 0)
+            block = block.getRelative(orientation.getOppositeFace());
+        this.blockState = block.getState();
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#update()
      */
     @Override
-    public void update () {
-        super.update ();
-        byte data = (byte) (getRawData () & 3);
-        BlockFace face = getFacing (data);
-        getBlock ().getRelative (face).setTypeIdAndData (getTypeId (), data, false);
+    public void update() {
+        super.update();
+        byte data = (byte) (getRawData() & 3);
+        BlockFace face = getFacing(data);
+        getBlock().getRelative(face).setTypeIdAndData(getTypeId(), data, false);
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#remove()
      */
     @Override
-    public void remove () {
-        getBlock ().getRelative (orientation).setType (Material.AIR);
-        getBlock ().setType (Material.AIR);
+    public void remove() {
+        getBlock().getRelative(orientation).setType(Material.AIR);
+        getBlock().setType(Material.AIR);
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#getNeighbors()
      */
     @Override
-    public List<NeighborBlock> getDependentNeighbors () {
-        return new ArrayList<NeighborBlock> ();
+    public List<NeighborBlock> getDependentNeighbors() {
+        return new ArrayList<NeighborBlock>();
     }
 
-    private BlockFace getFacing (byte data) {
+    private BlockFace getFacing(byte data) {
         switch (data & 3)
         {
-            case 0:
-                return BlockFace.NORTH;
-            case 1:
-                return BlockFace.EAST;
-            case 2:
-                return BlockFace.SOUTH;
-            default:
-                return BlockFace.WEST;
+        case 0:
+            return BlockFace.NORTH;
+        case 1:
+            return BlockFace.EAST;
+        case 2:
+            return BlockFace.SOUTH;
+        default:
+            return BlockFace.WEST;
         }
 
     }

@@ -33,154 +33,160 @@ class CreeperChest extends CreeperBlock {
     /*
      * Constructor.
      */
-    protected CreeperChest (BlockState blockState) {
-        super (blockState);
-        chest = getBlock ();
-        Inventory inv = ((InventoryHolder) blockState).getInventory ();
-        storedInventory = inv.getContents ();
-        if (inv.getType () == InventoryType.CHEST)
+    protected CreeperChest(BlockState blockState) {
+        super(blockState);
+        chest = getBlock();
+        Inventory inv = ((InventoryHolder) blockState).getInventory();
+        storedInventory = inv.getContents();
+        if (inv.getType() == InventoryType.CHEST)
         {
-            neighbor = scanForNeighborChest (chest.getState ());
+            neighbor = scanForNeighborChest(chest.getState());
             if (neighbor != null)
             {
-                Inventory otherInv = neighbor.isRight () ? ((DoubleChestInventory) inv).getLeftSide () : ((DoubleChestInventory) inv).getRightSide ();
-                Inventory mainInv = neighbor.isRight () ? ((DoubleChestInventory) inv).getRightSide () : ((DoubleChestInventory) inv).getLeftSide ();
+                Inventory otherInv = neighbor.isRight() ? ((DoubleChestInventory) inv).getLeftSide()
+                                                       : ((DoubleChestInventory) inv).getRightSide();
+                Inventory mainInv = neighbor.isRight() ? ((DoubleChestInventory) inv).getRightSide()
+                                                      : ((DoubleChestInventory) inv).getLeftSide();
 
-                storedInventory = mainInv.getContents ();
-                neighborInventory = otherInv.getContents ();
+                storedInventory = mainInv.getContents();
+                neighborInventory = otherInv.getContents();
             }
         }
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#remove()
      */
     @Override
-    public void remove () {
-        if (CreeperConfig.getWorld (getWorld ()).getBool (WCfgVal.DROP_CHEST_CONTENTS))
+    public void remove() {
+        if (CreeperConfig.getWorld(getWorld()).getBool(WCfgVal.DROP_CHEST_CONTENTS))
         {
-            World w = getWorld ();
-            Location loc = getLocation ();
-            for (ItemStack st : ((InventoryHolder) blockState).getInventory ().getContents ())
+            World w = getWorld();
+            Location loc = getLocation();
+            for (ItemStack st : ((InventoryHolder) blockState).getInventory().getContents())
                 if (st != null)
-                    w.dropItemNaturally (loc, st);
+                    w.dropItemNaturally(loc, st);
         }
-        ((InventoryHolder) blockState).getInventory ().clear ();
-        getBlock ().setType (Material.AIR);
+        ((InventoryHolder) blockState).getInventory().clear();
+        getBlock().setType(Material.AIR);
         if (neighbor != null)
-            neighbor.getBlock ().setType (Material.AIR);
+            neighbor.getBlock().setType(Material.AIR);
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#dropBlock()
      */
     @Override
-    public boolean drop (boolean forced) {
-        ItemStack[] stacks = getTotalInventory ();
+    public boolean drop(boolean forced) {
+        ItemStack[] stacks = getTotalInventory();
         if (stacks != null)
             for (ItemStack stack : stacks)
                 if (stack != null)
-                    getWorld ().dropItemNaturally (getLocation (), stack);
-        return super.drop (forced);
+                    getWorld().dropItemNaturally(getLocation(), stack);
+        return super.drop(forced);
     }
 
     /*
      * Get the total inventory : it is either the normal one, or in case of a
      * double chest, the combined inventory of both chests.
      */
-    private ItemStack[] getTotalInventory () {
-        if (!hasNeighbor ())
+    private ItemStack[] getTotalInventory() {
+        if (!hasNeighbor())
             return storedInventory;
         else
         {
             ItemStack[] otherInv = neighborInventory;
             ItemStack[] newInv = storedInventory;
-            if (neighbor.isRight ())
-                return CreeperUtils.concat (otherInv, newInv);
+            if (neighbor.isRight())
+                return CreeperUtils.concat(otherInv, newInv);
             else
-                return CreeperUtils.concat (newInv, otherInv);
+                return CreeperUtils.concat(newInv, otherInv);
         }
     }
 
     /*
      * Get whether the chest has a neighbor (double chest).
      */
-    private boolean hasNeighbor () {
+    private boolean hasNeighbor() {
         return neighbor != null;
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#update(boolean)
      */
     @Override
-    public void update () {
-        super.update ();
+    public void update() {
+        super.update();
         getBlock().setType(blockState.getType());
         getBlock().setData(blockState.getRawData());
-        if (!CreeperConfig.getWorld (getWorld ()).getBool (WCfgVal.DROP_CHEST_CONTENTS))
+        if (!CreeperConfig.getWorld(getWorld()).getBool(WCfgVal.DROP_CHEST_CONTENTS))
             try
             {
-                if (hasNeighbor ())
+                if (hasNeighbor())
                 {
-                    neighbor.getChest ().update (true);
-                    Inventory i = ((InventoryHolder) chest.getState ()).getInventory ();
+                    neighbor.getChest().update(true);
+                    Inventory i = ((InventoryHolder) chest.getState()).getInventory();
                     ItemStack[] both;
                     ItemStack[] otherInv = neighborInventory;
                     ItemStack[] newInv = storedInventory;
-                    if (neighbor.isRight ())
-                        both = CreeperUtils.concat (otherInv, newInv);
+                    if (neighbor.isRight())
+                        both = CreeperUtils.concat(otherInv, newInv);
                     else
-                        both = CreeperUtils.concat (newInv, otherInv);
-                    i.setContents (both);
+                        both = CreeperUtils.concat(newInv, otherInv);
+                    i.setContents(both);
 
                 }
                 else
-                    ((InventoryHolder) chest.getState ()).getInventory ().setContents (storedInventory);
+                    ((InventoryHolder) chest.getState()).getInventory().setContents(storedInventory);
             } catch (java.lang.ClassCastException e)
             {
-                CreeperLog.warning ("Error detected, please report the whole message");
-                CreeperLog.warning ("ClassCastException when replacing a chest : ");
-                CreeperLog.warning (chest.getClass ().getCanonicalName ());
-                CreeperLog.displayBlockLocation (chest, true);
-                e.printStackTrace ();
+                CreeperLog.warning("Error detected, please report the whole message");
+                CreeperLog.warning("ClassCastException when replacing a chest : ");
+                CreeperLog.warning(chest.getClass().getCanonicalName());
+                CreeperLog.displayBlockLocation(chest, true);
+                e.printStackTrace();
             }
-        else if (hasNeighbor ())
-            neighbor.getChest ().update (true);
+        else if (hasNeighbor())
+            neighbor.getChest().update(true);
 
     }
 
     /*
      * Get the other chest of the double chest. null if it is a simple chest.
      */
-    private static NeighborChest scanForNeighborChest (BlockState block) {
-        return scanForNeighborChest (block.getWorld (), block.getX (), block.getY (), block.getZ (), block.getRawData (), block.getType ());
+    private static NeighborChest scanForNeighborChest(BlockState block) {
+        return scanForNeighborChest(block.getWorld(), block.getX(), block.getY(), block.getZ(), block.getRawData(), block.getType());
     }
 
     /*
      * Get the other chest of the double chest. null if it is a simple chest.
      */
-    private static NeighborChest scanForNeighborChest (World world, int x, int y, int z, short d, Material material) {
+    private static NeighborChest scanForNeighborChest(World world, int x, int y, int z, short d,
+                                                      Material material) {
         Block neighbor;
         if (d <= 3)
         {
-            neighbor = world.getBlockAt (x - 1, y, z);
-            if (neighbor.getType ().equals (material))
-                return new NeighborChest (neighbor, d == 3);
-            neighbor = world.getBlockAt (x + 1, y, z);
-            if (neighbor.getType ().equals (material))
-                return new NeighborChest (neighbor, d == 2);
+            neighbor = world.getBlockAt(x - 1, y, z);
+            if (neighbor.getType().equals(material))
+                return new NeighborChest(neighbor, d == 3);
+            neighbor = world.getBlockAt(x + 1, y, z);
+            if (neighbor.getType().equals(material))
+                return new NeighborChest(neighbor, d == 2);
         }
         else
         {
-            neighbor = world.getBlockAt (x, y, z - 1);
-            if (neighbor.getType ().equals (material))
-                return new NeighborChest (neighbor, d == 4);
-            neighbor = world.getBlockAt (x, y, z + 1);
-            if (neighbor.getType ().equals (material))
-                return new NeighborChest (neighbor, d == 5);
+            neighbor = world.getBlockAt(x, y, z - 1);
+            if (neighbor.getType().equals(material))
+                return new NeighborChest(neighbor, d == 4);
+            neighbor = world.getBlockAt(x, y, z + 1);
+            if (neighbor.getType().equals(material))
+                return new NeighborChest(neighbor, d == 5);
         }
         return null;
     }

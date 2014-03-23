@@ -27,26 +27,26 @@ public class PluginHandler {
 
     static
     {
-        Plugin lwcp = detectPlugin ("LWC");
+        Plugin lwcp = detectPlugin("LWC");
         if (lwcp != null)
-            lwc = ((LWCPlugin) lwcp).getLWC ();
+            lwc = ((LWCPlugin) lwcp).getLWC();
 
-        lockette = detectPlugin ("Lockette") != null;
+        lockette = detectPlugin("Lockette") != null;
 
-        if (detectPlugin ("MobArena") != null)
-            maHandler = new MobArenaHandler ();
+        if (detectPlugin("MobArena") != null)
+            maHandler = new MobArenaHandler();
 
-        spout = detectPlugin ("Spout") != null;
+        spout = detectPlugin("Spout") != null;
     }
 
     /*
      * Check if the plugin is active on the server, and if so, display a message
      * stating that it was successfully detected.
      */
-    private static Plugin detectPlugin (String name) {
-        Plugin plugin = Bukkit.getServer ().getPluginManager ().getPlugin (name);
+    private static Plugin detectPlugin(String name) {
+        Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin(name);
         if (plugin != null)
-            CreeperLog.logInfo ("Successfully hooked into " + name, 1);
+            CreeperLog.logInfo("Successfully hooked into " + name, 1);
         return plugin;
     }
 
@@ -57,11 +57,11 @@ public class PluginHandler {
      *            The block to check.
      * @return Whether the block is protected.
      */
-    public static boolean isProtected (Block block) {
+    public static boolean isProtected(Block block) {
         if (lwc != null)
-            return lwc.findProtection (block) != null;
+            return lwc.findProtection(block) != null;
         else if (lockette)
-            return Lockette.isProtected (block);
+            return Lockette.isProtected(block);
         else
             return false;
     }
@@ -73,9 +73,9 @@ public class PluginHandler {
      *            The location of the block.
      * @return Whether the block is inside an arena.
      */
-    public static boolean isInArena (Location location) {
+    public static boolean isInArena(Location location) {
         if (maHandler != null)
-            if (maHandler.inRegion (location))
+            if (maHandler.inRegion(location))
                 return true; //Explosion inside a mob arena
         return false;
     }
@@ -84,7 +84,7 @@ public class PluginHandler {
      * Meant only for CreeperTrap to call, on plugin startup. Register
      * CreeperTrap as enabled on the server.
      */
-    public static void setCreeperTrapEnabled () {
+    public static void setCreeperTrapEnabled() {
         creeperTrap = true;
     }
 
@@ -93,7 +93,7 @@ public class PluginHandler {
      * 
      * @return True if CreeperTrap is enabled.
      */
-    public static boolean isCreeperTrapEnabled () {
+    public static boolean isCreeperTrapEnabled() {
         return creeperTrap;
     }
 
@@ -106,13 +106,13 @@ public class PluginHandler {
      *            The command's arguments
      * @return False in case of a syntax error in the command.
      */
-    public static boolean trapCommand (CommandSender sender, String[] args) {
-        if (!isCreeperTrapEnabled ())
+    public static boolean trapCommand(CommandSender sender, String[] args) {
+        if (!isCreeperTrapEnabled())
         {
-            sender.sendMessage ("You have to install the CreeperTrap plugin to use traps");
+            sender.sendMessage("You have to install the CreeperTrap plugin to use traps");
             return true;
         }
-        return CreeperTrapCommands.onCommand (sender, args);
+        return CreeperTrapCommands.onCommand(sender, args);
     }
 
     /**
@@ -120,11 +120,11 @@ public class PluginHandler {
      * 
      * @return true, if Factions is enabled
      */
-    public static boolean isFactionsEnabled () {
-        return detectPlugin ("Factions") != null;
+    public static boolean isFactionsEnabled() {
+        return detectPlugin("Factions") != null;
     }
 
-    public static boolean isSpoutEnabled () {
+    public static boolean isSpoutEnabled() {
         return spout;
     }
 

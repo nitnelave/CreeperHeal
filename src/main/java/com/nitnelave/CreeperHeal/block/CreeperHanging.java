@@ -36,9 +36,9 @@ public abstract class CreeperHanging implements Replaceable {
      * @param fire
      *            Whether the hanging was destroyed by fire.
      */
-    protected CreeperHanging (Hanging hanging) {
+    protected CreeperHanging(Hanging hanging) {
         this.hanging = hanging;
-        location = computeLocation ();
+        location = computeLocation();
     }
 
     /**
@@ -48,11 +48,11 @@ public abstract class CreeperHanging implements Replaceable {
      *            The hanging to be represented by the Object.
      * @return An instance of the right subclass of CreeperHanging.
      */
-    public static CreeperHanging newHanging (Hanging hanging) {
+    public static CreeperHanging newHanging(Hanging hanging) {
         if (hanging.getType() == EntityType.PAINTING)
-            return new CreeperPainting ((Painting) hanging);
+            return new CreeperPainting((Painting) hanging);
         if (hanging.getType() == EntityType.ITEM_FRAME)
-            return new CreeperItemFrame ((ItemFrame) hanging);
+            return new CreeperItemFrame((ItemFrame) hanging);
         return null;
     }
 
@@ -62,72 +62,79 @@ public abstract class CreeperHanging implements Replaceable {
      * 
      * @return The location of the painting.
      */
-    protected abstract Location computeLocation ();
+    protected abstract Location computeLocation();
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getWorld()
      */
     @Override
-    public World getWorld () {
-        return hanging.getWorld ();
+    public World getWorld() {
+        return hanging.getWorld();
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getLocation()
      */
     @Override
-    public Location getLocation () {
+    public Location getLocation() {
         return location;
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getBlock()
      */
     @Override
-    public Block getBlock () {
-        return hanging.getLocation ().getBlock ();
+    public Block getBlock() {
+        return hanging.getLocation().getBlock();
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getAttachingFace()
      */
     @Override
-    public BlockFace getAttachingFace () {
-        return hanging.getAttachedFace ();
+    public BlockFace getAttachingFace() {
+        return hanging.getAttachedFace();
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.nitnelave.CreeperHeal.block.Replaceable#isDependent()
      */
     @Override
-    public boolean isDependent () {
+    public boolean isDependent() {
         return true;
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.nitnelave.CreeperHeal.block.Replaceable#remove()
      */
     @Override
-    public void remove () {
-        hanging.remove ();
+    public void remove() {
+        hanging.remove();
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.nitnelave.CreeperHeal.block.Replaceable#delayReplacement()
      */
     @Override
-    public void delayReplacement (CHBlockHealReason reason) {
-        long delay = CreeperConfig.getInt (CfgVal.BLOCK_PER_BLOCK_INTERVAL);
-        DelayReplacement dr = new DelayReplacement (this, 0, reason);
-        int id = Bukkit.getServer ().getScheduler ().scheduleSyncRepeatingTask (CreeperHeal.getInstance (), dr, delay, delay);
-        dr.setId (id);
+    public void delayReplacement(CHBlockHealReason reason) {
+        long delay = CreeperConfig.getInt(CfgVal.BLOCK_PER_BLOCK_INTERVAL);
+        DelayReplacement dr = new DelayReplacement(this, 0, reason);
+        int id = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(CreeperHeal.getInstance(), dr, delay, delay);
+        dr.setId(id);
     }
 
 }

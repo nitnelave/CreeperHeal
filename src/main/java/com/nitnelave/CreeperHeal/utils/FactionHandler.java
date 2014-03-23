@@ -23,7 +23,7 @@ public abstract class FactionHandler {
 
     static
     {
-        setFactionsEnabled (PluginHandler.isFactionsEnabled ());
+        setFactionsEnabled(PluginHandler.isFactionsEnabled());
     }
 
     /**
@@ -32,7 +32,7 @@ public abstract class FactionHandler {
      * @param enabled
      *            Whether it is enabled.
      */
-    public static void setFactionsEnabled (boolean enabled) {
+    public static void setFactionsEnabled(boolean enabled) {
         isFactionsEnabled = enabled;
     }
 
@@ -45,16 +45,16 @@ public abstract class FactionHandler {
      *            The CH configuration for the world.
      * @return Whether the explosion should be ignored.
      */
-    public static boolean shouldIgnore (List<Block> list, WorldConfig world) {
+    public static boolean shouldIgnore(List<Block> list, WorldConfig world) {
         if (!isFactionsEnabled)
             return false;
 
-        boolean wild = world.getBool (WCfgVal.FACTIONS_IGNORE_WILDERNESS), territory = world.getBool (WCfgVal.FACTIONS_IGNORE_TERRITORY);
+        boolean wild = world.getBool(WCfgVal.FACTIONS_IGNORE_WILDERNESS), territory = world.getBool(WCfgVal.FACTIONS_IGNORE_TERRITORY);
         if (wild == territory)
             return wild;
 
         for (Block block : list)
-            if (wild != BoardColls.get ().getFactionAt (PS.valueOf (block.getLocation ())).isNone ())
+            if (wild != BoardColls.get().getFactionAt(PS.valueOf(block.getLocation())).isNone())
                 return false;
         return true;
     }
@@ -68,10 +68,10 @@ public abstract class FactionHandler {
      *            The CH configuration for the world.
      * @return Whether the replacement should be ignored.
      */
-    public static boolean shouldIgnore (Block block, WorldConfig world) {
-        ArrayList<Block> l = new ArrayList<Block> ();
-        l.add (block);
-        return shouldIgnore (l, world);
+    public static boolean shouldIgnore(Block block, WorldConfig world) {
+        ArrayList<Block> l = new ArrayList<Block>();
+        l.add(block);
+        return shouldIgnore(l, world);
     }
 
 }

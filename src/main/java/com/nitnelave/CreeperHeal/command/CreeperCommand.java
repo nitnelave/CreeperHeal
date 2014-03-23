@@ -27,19 +27,20 @@ public class CreeperCommand extends Command {
      * @param owner
      *            The CommandExecutor associated.
      */
-    public CreeperCommand (String[] aliases, String desc, String usage, CommandExecutor owner) {
-        super (aliases[0], desc, usage, Arrays.asList (aliases));
+    public CreeperCommand(String[] aliases, String desc, String usage, CommandExecutor owner) {
+        super(aliases[0], desc, usage, Arrays.asList(aliases));
         this.owner = owner;
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see org.bukkit.command.Command#execute(org.bukkit.command.CommandSender,
      * java.lang.String, java.lang.String[])
      */
     @Override
-    public boolean execute (CommandSender sender, String label, String[] args) {
-        return owner.onCommand (sender, this, label, args);
+    public boolean execute(CommandSender sender, String label, String[] args) {
+        return owner.onCommand(sender, this, label, args);
     }
 
 }
