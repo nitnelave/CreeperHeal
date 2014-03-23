@@ -10,6 +10,8 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
+import com.nitnelave.CreeperHeal.events.CHExplosionRecordEvent;
+import com.nitnelave.CreeperHeal.utils.CreeperUtils;
 
 /**
  * Public API interface.
@@ -39,17 +41,51 @@ public abstract class CreeperHandler {
      *            The location of the explosion.
      */
     public static void recordBlocks (List<Block> list, Location location) {
-        ExplodedBlockManager.processExplosion (list, location);
+        ExplodedBlockManager.processExplosion (list, location,
+                                               CHExplosionRecordEvent.ExplosionReason.OTHER);
     }
 
     /**
-     * Record the explosion as a normal one.
+     * Record all the blocks in the list as for an explosion. The location of
+     * the explosion is provided, as well as the reason for the explosion.
+     * 
+     * @param list
+     *            The list of blocks.
+     * @param location
+     *            The location of the explosion.
+     * @param reason
+     *            The cause of the explosion.
+     */
+    public static void
+        recordBlocks (List<Block> list, Location location,
+                      CHExplosionRecordEvent.ExplosionReason reason) {
+        ExplodedBlockManager.processExplosion (list, location, reason);
+    }
+
+    /**
+     * Record the explosion for an event.
      * 
      * @param event
      *            The event corresponding to an explosion.
      */
     public static void recordBlocks (EntityExplodeEvent event) {
-        ExplodedBlockManager.processExplosion (event, CreeperConfig.getWorld (event.getLocation ().getWorld ()));
+        ExplodedBlockManager.processExplosion (event, CreeperConfig.getWorld (event.getLocation ().getWorld ()),
+                                               CreeperUtils.getReason (event.getEntity ()));
+    }
+
+    /**
+     * Record the explosion for an event, but specify the reason.
+     * 
+     * @param event
+     *            The event corresponding to an explosion.
+     * @param reason
+     *            The cause of the explosion.
+     */
+    public static void
+        recordBlocks (EntityExplodeEvent event,
+                      CHExplosionRecordEvent.ExplosionReason reason) {
+        ExplodedBlockManager.processExplosion (event, CreeperConfig.getWorld (event.getLocation ().getWorld ()),
+                                               reason);
     }
 
     /**
