@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Hanging;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Painting;
@@ -48,9 +49,9 @@ public abstract class CreeperHanging implements Replaceable {
      * @return An instance of the right subclass of CreeperHanging.
      */
     public static CreeperHanging newHanging (Hanging hanging) {
-        if (hanging instanceof Painting)
+        if (hanging.getType() == EntityType.PAINTING)
             return new CreeperPainting ((Painting) hanging);
-        if (hanging instanceof ItemFrame)
+        if (hanging.getType() == EntityType.ITEM_FRAME)
             return new CreeperItemFrame ((ItemFrame) hanging);
         return null;
     }

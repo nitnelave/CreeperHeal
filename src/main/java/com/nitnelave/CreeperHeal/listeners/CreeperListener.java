@@ -5,7 +5,6 @@ import java.util.Date;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Hanging;
@@ -98,7 +97,7 @@ public class CreeperListener implements Listener {
         if (event.getEntityType () == EntityType.SILVERFISH && event.getBlock ().getType () == Material.MONSTER_EGGS
                 && CreeperConfig.getBool (CfgVal.REPLACE_SILVERFISH_BLOCKS))
             Bukkit.getScheduler ().runTask (CreeperHeal.getInstance (), new ReplaceMonsterEgg (event.getBlock ()));
-        else if (event.getEntity () instanceof Enderman)
+        else if (event.getEntity ().getType () == EntityType.ENDERMAN)
         {
             WorldConfig world = CreeperConfig.getWorld (event.getBlock ().getWorld ());
             if (world.getBool (WCfgVal.ENDERMAN))
