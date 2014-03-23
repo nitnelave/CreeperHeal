@@ -10,35 +10,35 @@ abstract class ConfigValue<T> {
     protected T value;
     private final T defaultValue;
     protected final YamlConfiguration config;
-    protected final Logger log = Logger.getLogger ("Minecraft");
+    protected final Logger log = Logger.getLogger("Minecraft");
 
-    protected ConfigValue (T value, YamlConfiguration config, String key) {
+    protected ConfigValue(T value, YamlConfiguration config, String key) {
         defaultValue = value;
         this.config = config;
         this.key = key;
         this.value = value;
     }
 
-    protected T getValue () {
+    protected T getValue() {
         return value;
     }
 
-    protected void setValue (T value) {
+    protected void setValue(T value) {
         this.value = value;
     }
 
-    protected T getDefaultValue () {
+    protected T getDefaultValue() {
         return defaultValue;
     }
 
-    protected String getKey () {
+    protected String getKey() {
         return key;
     }
 
-    protected abstract void load ();
+    protected abstract void load();
 
-    protected void write () {
-        config.set (key, value);
+    protected void write() {
+        config.set(key, value);
     }
 
 }

@@ -29,8 +29,8 @@ public class NeighborChest {
      * @param right
      *            Whether the block is the right part of the double chest.
      */
-    public NeighborChest (Block chest, boolean right) {
-        this (chest.getState (), right);
+    public NeighborChest(Block chest, boolean right) {
+        this(chest.getState(), right);
     }
 
     /**
@@ -41,7 +41,7 @@ public class NeighborChest {
      * @param right
      *            Whether the block is the right part of the double chest.
      */
-    public NeighborChest (BlockState chest, boolean right) {
+    public NeighborChest(BlockState chest, boolean right) {
         this.chest = chest;
         this.right = right;
     }
@@ -51,7 +51,7 @@ public class NeighborChest {
      * 
      * @return Whether the block is the right part of the double chest.
      */
-    public boolean isRight () {
+    public boolean isRight() {
         return right;
     }
 
@@ -60,7 +60,7 @@ public class NeighborChest {
      * 
      * @return The blockState representing the chest.
      */
-    public BlockState getChest () {
+    public BlockState getChest() {
         return chest;
     }
 
@@ -69,7 +69,7 @@ public class NeighborChest {
      * 
      * @return The block.
      */
-    public Block getBlock () {
-        return chest.getBlock ();
+    public Block getBlock() {
+        return chest.getBlock();
     }
 }

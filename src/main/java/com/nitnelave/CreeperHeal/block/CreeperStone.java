@@ -8,11 +8,11 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 public class CreeperStone extends CreeperBlock {
 
-    protected CreeperStone (BlockState blockState) {
-        super (blockState);
+    protected CreeperStone(BlockState blockState) {
+        super(blockState);
 
-        if (CreeperConfig.getBool (CfgVal.STONE_TO_COBBLE))
-            blockState.setType (Material.COBBLESTONE);
+        if (CreeperConfig.getBool(CfgVal.STONE_TO_COBBLE))
+            blockState.setType(Material.COBBLESTONE);
     }
 
 }

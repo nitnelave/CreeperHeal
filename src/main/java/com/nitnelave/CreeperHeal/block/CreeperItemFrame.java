@@ -25,35 +25,37 @@ class CreeperItemFrame extends CreeperHanging {
      * @param frame
      *            The item frame represented.
      */
-    protected CreeperItemFrame (ItemFrame frame) {
-        super (frame);
+    protected CreeperItemFrame(ItemFrame frame) {
+        super(frame);
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.nitnelave.CreeperHeal.block.CreeperHanging#computeLocation()
      */
     @Override
-    protected Location computeLocation () {
-        BlockFace face = hanging.getAttachedFace ();
-        Location loc = hanging.getLocation ().getBlock ().getRelative (face).getLocation ();
-        return loc.getBlock ().getRelative (face.getOppositeFace ()).getLocation ();
+    protected Location computeLocation() {
+        BlockFace face = hanging.getAttachedFace();
+        Location loc = hanging.getLocation().getBlock().getRelative(face).getLocation();
+        return loc.getBlock().getRelative(face.getOppositeFace()).getLocation();
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.nitnelave.CreeperHeal.block.Replaceable#replace(boolean)
      */
     //TODO : frame position is not updated.
     @Override
-    public boolean replace (boolean shouldDrop) {
+    public boolean replace(boolean shouldDrop) {
         try
         {
-            ItemFrame f = getWorld ().spawn (location.getBlock ().getRelative (hanging.getAttachedFace ()).getLocation (), ItemFrame.class);
-            f.teleport (location);
-            f.setItem (((ItemFrame) hanging).getItem ());
-            f.setRotation (((ItemFrame) hanging).getRotation ());
-            f.setFacingDirection (hanging.getFacing (), true);
+            ItemFrame f = getWorld().spawn(location.getBlock().getRelative(hanging.getAttachedFace()).getLocation(), ItemFrame.class);
+            f.teleport(location);
+            f.setItem(((ItemFrame) hanging).getItem());
+            f.setRotation(((ItemFrame) hanging).getRotation());
+            f.setFacingDirection(hanging.getFacing(), true);
         } catch (IllegalArgumentException e)
         {
             return false;
@@ -64,17 +66,18 @@ class CreeperItemFrame extends CreeperHanging {
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.nitnelave.CreeperHeal.block.Replaceable#drop()
      */
     @Override
-    public boolean drop (boolean forced) {
-        if (forced || new Random ().nextInt (100) < CreeperConfig.getInt (CfgVal.DROP_CHANCE))
+    public boolean drop(boolean forced) {
+        if (forced || new Random().nextInt(100) < CreeperConfig.getInt(CfgVal.DROP_CHANCE))
         {
             ItemFrame f = (ItemFrame) hanging;
-            ItemStack s = f.getItem ();
-            if (s.getType () != Material.AIR)
-                getWorld ().dropItemNaturally (getLocation (), s);
-            getWorld ().dropItemNaturally (getLocation (), new ItemStack (389, 1));
+            ItemStack s = f.getItem();
+            if (s.getType() != Material.AIR)
+                getWorld().dropItemNaturally(getLocation(), s);
+            getWorld().dropItemNaturally(getLocation(), new ItemStack(389, 1));
             return true;
         }
         return false;
@@ -82,10 +85,11 @@ class CreeperItemFrame extends CreeperHanging {
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getTypeId()
      */
     @Override
-    public int getTypeId () {
+    public int getTypeId() {
         return 389;
     }
 }

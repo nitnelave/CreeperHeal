@@ -31,8 +31,8 @@ public class NeighborBlock {
      * @param face
      *            The BlockFace with which it was obtained.
      */
-    public NeighborBlock (Block block, BlockFace face) {
-        this.block = CreeperBlock.newBlock (block.getState ());
+    public NeighborBlock(Block block, BlockFace face) {
+        this.block = CreeperBlock.newBlock(block.getState());
         this.face = face;
     }
 
@@ -43,11 +43,11 @@ public class NeighborBlock {
      * @return Whether this block depends on the block provided in the
      *         constructor.
      */
-    public boolean isNeighbor () {
-        if (block instanceof CreeperRail && ((CreeperRail) block).isAscending ())
+    public boolean isNeighbor() {
+        if (block instanceof CreeperRail && ((CreeperRail) block).isAscending())
             return true;
 
-        return block != null && block.getAttachingFace () == face.getOppositeFace ();
+        return block != null && block.getAttachingFace() == face.getOppositeFace();
     }
 
     /**
@@ -55,8 +55,8 @@ public class NeighborBlock {
      * 
      * @return The represented block.
      */
-    public Block getBlock () {
-        return block.getBlock ();
+    public Block getBlock() {
+        return block.getBlock();
     }
 
 }

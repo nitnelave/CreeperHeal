@@ -12,13 +12,13 @@ class StringConfigValue extends ConfigValue<String> {
      * @param file
      *            The configuration file in which the value is stored.
      */
-    public StringConfigValue (CfgVal val, YamlConfiguration file) {
-        super ((String) val.getDefaultValue (), file, val.getKey ());
+    public StringConfigValue(CfgVal val, YamlConfiguration file) {
+        super((String) val.getDefaultValue(), file, val.getKey());
     }
 
     @Override
-    protected void load () {
-        setValue (config.getString (getKey (), getDefaultValue ()));
+    protected void load() {
+        setValue(config.getString(getKey(), getDefaultValue()));
     }
 
 }

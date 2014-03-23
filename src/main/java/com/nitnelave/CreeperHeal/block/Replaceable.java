@@ -25,28 +25,28 @@ public interface Replaceable {
      *            postponed.
      * @return False if the replacement was postponed.
      */
-    public boolean replace (boolean shouldDrop);
+    public boolean replace(boolean shouldDrop);
 
     /**
      * Get the block represented.
      * 
      * @return The block represented.
      */
-    public Block getBlock ();
+    public Block getBlock();
 
     /**
      * Get the world containing the block.
      * 
      * @return The world containing the block.
      */
-    public World getWorld ();
+    public World getWorld();
 
     /**
      * Get the type id of the block represented.
      * 
      * @return The type id of the block represented.
      */
-    public int getTypeId ();
+    public int getTypeId();
 
     /**
      * Get the face the block is attached by. SELF if the block is not
@@ -55,21 +55,21 @@ public interface Replaceable {
      * @return The blockFace the block is attached by, SELF if the block is not
      *         dependent.
      */
-    public BlockFace getAttachingFace ();
+    public BlockFace getAttachingFace();
 
     /**
      * Get the block's location.
      * 
      * @return The block's location.
      */
-    public Location getLocation ();
+    public Location getLocation();
 
     /**
      * Get whether the block depends on another block.
      * 
      * @return Whether the block depends on another block.
      */
-    public boolean isDependent ();
+    public boolean isDependent();
 
     /**
      * Drop the item on the ground.
@@ -79,12 +79,12 @@ public interface Replaceable {
      *            chance in the config.
      * @return True if the block was dropped.
      */
-    public boolean drop (boolean forced);
+    public boolean drop(boolean forced);
 
     /**
      * Remove the block from the world.
      */
-    public void remove ();
+    public void remove();
 
     /**
      * Delay the block's replacement until it is possible for it to spawn, or
@@ -93,5 +93,5 @@ public interface Replaceable {
      * @param reason
      *            How was this block replaced
      */
-    public void delayReplacement (CHBlockHealReason reason);
+    public void delayReplacement(CHBlockHealReason reason);
 }

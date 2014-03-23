@@ -7,12 +7,12 @@ interface CfgValEnumMember {
      * 
      * @return The default value.
      */
-    public Object getDefaultValue ();
+    public Object getDefaultValue();
 
     /**
      * Gets the configuration path to the value.
      * 
      * @return The path.
      */
-    public String getKey ();
+    public String getKey();
 }

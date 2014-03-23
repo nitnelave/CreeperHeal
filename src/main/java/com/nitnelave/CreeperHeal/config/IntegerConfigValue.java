@@ -12,13 +12,13 @@ class IntegerConfigValue extends ConfigValue<Integer> {
      * @param file
      *            The configuration file in which the value is stored.
      */
-    public IntegerConfigValue (CfgValEnumMember val, YamlConfiguration file) {
-        super ((Integer) val.getDefaultValue (), file, val.getKey ());
+    public IntegerConfigValue(CfgValEnumMember val, YamlConfiguration file) {
+        super((Integer) val.getDefaultValue(), file, val.getKey());
     }
 
     @Override
-    protected void load () {
-        setValue (config.getInt (getKey (), getDefaultValue ()));
+    protected void load() {
+        setValue(config.getInt(getKey(), getDefaultValue()));
     }
 
 }

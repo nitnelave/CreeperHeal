@@ -19,8 +19,8 @@ public class BlockId {
      * @param id
      *            The block id.
      */
-    public BlockId (int id) {
-        this (id, (byte) -1);
+    public BlockId(int id) {
+        this(id, (byte) -1);
     }
 
     /**
@@ -32,8 +32,8 @@ public class BlockId {
      * @param data
      *            The block data.
      */
-    public BlockId (int id, byte data) {
-        this (id, data, data != -1);
+    public BlockId(int id, byte data) {
+        this(id, data, data != -1);
     }
 
     /**
@@ -46,7 +46,7 @@ public class BlockId {
      * @param hasData
      *            Whether the data should be used in comparing.
      */
-    public BlockId (int id, byte data, boolean hasData) {
+    public BlockId(int id, byte data, boolean hasData) {
         this.id = id;
         this.data = data;
         this.hasData = hasData && data != -1;
@@ -62,24 +62,24 @@ public class BlockId {
      * @throws NumberFormatException
      *             If the string does not match any pattern.
      */
-    public BlockId (String str) throws NumberFormatException {
-        str = str.trim ();
+    public BlockId(String str) throws NumberFormatException {
+        str = str.trim();
         try
         {
-            id = Integer.parseInt (str);
+            id = Integer.parseInt(str);
             data = -1;
             hasData = false;
         } catch (NumberFormatException e)
         {
-            String[] split = str.split (":");
+            String[] split = str.split(":");
             if (split.length == 2)
             {
-                id = Integer.parseInt (split[0]);
-                data = Byte.parseByte (split[1]);
+                id = Integer.parseInt(split[0]);
+                data = Byte.parseByte(split[1]);
                 hasData = true;
             }
             else
-                throw new NumberFormatException ();
+                throw new NumberFormatException();
         }
     }
 
@@ -89,8 +89,8 @@ public class BlockId {
      * @param block
      *            The block.
      */
-    public BlockId (Block block) {
-        this (block.getTypeId (), block.getData ());
+    public BlockId(Block block) {
+        this(block.getTypeId(), block.getData());
     }
 
     /**
@@ -98,7 +98,7 @@ public class BlockId {
      * 
      * @return The id stored.
      */
-    public int getId () {
+    public int getId() {
         return id;
     }
 
@@ -107,7 +107,7 @@ public class BlockId {
      * 
      * @return The block data.
      */
-    public byte getData () {
+    public byte getData() {
         return data;
     }
 
@@ -116,28 +116,30 @@ public class BlockId {
      * 
      * @return Whether the block's data is used in comparing.
      */
-    public boolean hasData () {
+    public boolean hasData() {
         return hasData;
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
-    public String toString () {
-        String str = String.valueOf (id);
+    public String toString() {
+        String str = String.valueOf(id);
         if (hasData)
-            str += ":" + String.valueOf (data);
+            str += ":" + String.valueOf(data);
         return str;
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals (Object obj) {
+    public boolean equals(Object obj) {
         if (obj == this)
             return true;
 
@@ -156,10 +158,11 @@ public class BlockId {
 
     /*
      * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
-    public int hashCode () {
+    public int hashCode() {
         return id;
     }
 }

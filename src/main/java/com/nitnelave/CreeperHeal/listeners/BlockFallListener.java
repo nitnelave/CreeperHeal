@@ -30,13 +30,15 @@ public class BlockFallListener implements Listener {
      *            The BlockPhysics event.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onBlockPhysics (BlockPhysicsEvent event) {
-        Block b = event.getBlock ();
-        if (CreeperConfig.getBool (CfgVal.PREVENT_BLOCK_FALL) && b.getType ().hasGravity ())
+    public void onBlockPhysics(BlockPhysicsEvent event) {
+        Block b = event.getBlock();
+        if (CreeperConfig.getBool(CfgVal.PREVENT_BLOCK_FALL) && b.getType().hasGravity())
         {
-            Location bLoc = b.getLocation ();
-            if (FallIndex.isNextToFallPrevention (bLoc) || ExplodedBlockManager.isNextToExplosion (bLoc) || BurntBlockManager.isNextToFire (bLoc))
-                event.setCancelled (true);
+            Location bLoc = b.getLocation();
+            if (FallIndex.isNextToFallPrevention(bLoc)
+                || ExplodedBlockManager.isNextToExplosion(bLoc)
+                || BurntBlockManager.isNextToFire(bLoc))
+                event.setCancelled(true);
         }
     }
 
@@ -48,12 +50,13 @@ public class BlockFallListener implements Listener {
      *            The EntityChangeBlock event.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onEntityChangeBlock (EntityChangeBlockEvent event) {
-        if (event.getEntityType () != EntityType.ENDERMAN && event.getBlock ().getType ().hasGravity ())
+    public void onEntityChangeBlock(EntityChangeBlockEvent event) {
+        if (event.getEntityType() != EntityType.ENDERMAN && event.getBlock().getType().hasGravity())
         {
-            Location l = event.getBlock ().getLocation ();
-            if (FallIndex.isNextToFallPrevention (l) || ExplodedBlockManager.isNextToExplosion (l) || BurntBlockManager.isNextToFire (l))
-                event.setCancelled (true);
+            Location l = event.getBlock().getLocation();
+            if (FallIndex.isNextToFallPrevention(l) || ExplodedBlockManager.isNextToExplosion(l)
+                || BurntBlockManager.isNextToFire(l))
+                event.setCancelled(true);
         }
     }
 

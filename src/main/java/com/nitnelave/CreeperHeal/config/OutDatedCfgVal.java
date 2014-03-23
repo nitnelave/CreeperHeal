@@ -9,16 +9,16 @@ public enum OutDatedCfgVal {
     private final String key;
     private final boolean advanced;
 
-    private OutDatedCfgVal (String key, boolean adv) {
+    private OutDatedCfgVal(String key, boolean adv) {
         this.key = key;
         advanced = adv;
     }
 
-    public String getKey () {
+    public String getKey() {
         return key;
     }
 
-    public boolean isAdvanced () {
+    public boolean isAdvanced() {
         return advanced;
     }
 

@@ -21,46 +21,49 @@ class CreeperDoor extends CreeperBlock {
     /*
      * Constructor.
      */
-    protected CreeperDoor (BlockState blockState) {
-        Block block = blockState.getBlock ();
-        if ((blockState.getRawData () & 8) != 0)
-            block = block.getRelative (BlockFace.DOWN);
-        this.blockState = block.getState ();
-        hingeRight = (block.getRelative (BlockFace.UP).getState ().getRawData () & 1) == 0;
+    protected CreeperDoor(BlockState blockState) {
+        Block block = blockState.getBlock();
+        if ((blockState.getRawData() & 8) != 0)
+            block = block.getRelative(BlockFace.DOWN);
+        this.blockState = block.getState();
+        hingeRight = (block.getRelative(BlockFace.UP).getState().getRawData() & 1) == 0;
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#update()
      */
     @Override
-    public void update () {
-        Block blockUp = blockState.getBlock ().getRelative (BlockFace.UP);
-        if (checkForDrop (blockUp))
+    public void update() {
+        Block blockUp = blockState.getBlock().getRelative(BlockFace.UP);
+        if (checkForDrop(blockUp))
             return;
 
-        super.update ();
+        super.update();
         byte b = (byte) (8 + (hingeRight ? 0 : 1));
-        blockUp.setTypeIdAndData (getTypeId (), b, false);
+        blockUp.setTypeIdAndData(getTypeId(), b, false);
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#remove()
      */
     @Override
-    public void remove () {
-        getBlock ().setType (Material.AIR);
-        getBlock ().getRelative (BlockFace.UP).setType (Material.AIR);
+    public void remove() {
+        getBlock().setType(Material.AIR);
+        getBlock().getRelative(BlockFace.UP).setType(Material.AIR);
     }
 
     /*
      * (non-Javadoc)
+     * 
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#getNeighbors()
      */
     @Override
-    public List<NeighborBlock> getDependentNeighbors () {
-        return new ArrayList<NeighborBlock> ();
+    public List<NeighborBlock> getDependentNeighbors() {
+        return new ArrayList<NeighborBlock>();
     }
 
 }

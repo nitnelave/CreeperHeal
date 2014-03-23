@@ -46,16 +46,16 @@ public class CreeperListener implements Listener {
      *            The EntityExplode event.
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onEntityExplode (EntityExplodeEvent event) {
-        WorldConfig world = CreeperConfig.getWorld (event.getLocation ().getWorld ());
+    public void onEntityExplode(EntityExplodeEvent event) {
+        WorldConfig world = CreeperConfig.getWorld(event.getLocation().getWorld());
 
-        if (!FactionHandler.shouldIgnore (event.blockList (), world))
+        if (!FactionHandler.shouldIgnore(event.blockList(), world))
         {
-            Entity entity = event.getEntity ();
-            if (entity == null && !world.isAbove (event.getLocation ()))
+            Entity entity = event.getEntity();
+            if (entity == null && !world.isAbove(event.getLocation()))
                 return;
-            if (world.shouldReplace (entity))
-                ExplodedBlockManager.processExplosion (event, world, CreeperUtils.getReason (entity));
+            if (world.shouldReplace(entity))
+                ExplodedBlockManager.processExplosion(event, world, CreeperUtils.getReason(entity));
         }
     }
 
@@ -67,20 +67,20 @@ public class CreeperListener implements Listener {
      *            The HangingBreakEvent.
      */
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onHangingBreak (HangingBreakEvent event) {
-        Hanging h = event.getEntity ();
-        WorldConfig world = CreeperConfig.getWorld (h.getWorld ());
-        switch (event.getCause ())
+    public void onHangingBreak(HangingBreakEvent event) {
+        Hanging h = event.getEntity();
+        WorldConfig world = CreeperConfig.getWorld(h.getWorld());
+        switch (event.getCause())
         {
-            case EXPLOSION:
-                ExplodedBlockManager.recordHanging (h);
-                break;
-            case PHYSICS:
-            case OBSTRUCTION:
-                if (BurntBlockManager.isNextToFire (h.getLocation ()) && world.getBool (WCfgVal.FIRE))
-                    BurntBlockManager.recordBurntBlock (new CreeperBurntBlock (new Date (), CreeperHanging.newHanging (h)));
-                break;
-            default:
+        case EXPLOSION:
+            ExplodedBlockManager.recordHanging(h);
+            break;
+        case PHYSICS:
+        case OBSTRUCTION:
+            if (BurntBlockManager.isNextToFire(h.getLocation()) && world.getBool(WCfgVal.FIRE))
+                BurntBlockManager.recordBurntBlock(new CreeperBurntBlock(new Date(), CreeperHanging.newHanging(h)));
+            break;
+        default:
         }
 
     }
@@ -93,15 +93,16 @@ public class CreeperListener implements Listener {
      *            The EntityChangeBlock event.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onEntityChangeBlock (EntityChangeBlockEvent event) {
-        if (event.getEntityType () == EntityType.SILVERFISH && event.getBlock ().getType () == Material.MONSTER_EGGS
-                && CreeperConfig.getBool (CfgVal.REPLACE_SILVERFISH_BLOCKS))
-            Bukkit.getScheduler ().runTask (CreeperHeal.getInstance (), new ReplaceMonsterEgg (event.getBlock ()));
-        else if (event.getEntity ().getType () == EntityType.ENDERMAN)
+    public void onEntityChangeBlock(EntityChangeBlockEvent event) {
+        if (event.getEntityType() == EntityType.SILVERFISH
+            && event.getBlock().getType() == Material.MONSTER_EGGS
+            && CreeperConfig.getBool(CfgVal.REPLACE_SILVERFISH_BLOCKS))
+            Bukkit.getScheduler().runTask(CreeperHeal.getInstance(), new ReplaceMonsterEgg(event.getBlock()));
+        else if (event.getEntity().getType() == EntityType.ENDERMAN)
         {
-            WorldConfig world = CreeperConfig.getWorld (event.getBlock ().getWorld ());
-            if (world.getBool (WCfgVal.ENDERMAN))
-                event.setCancelled (true);
+            WorldConfig world = CreeperConfig.getWorld(event.getBlock().getWorld());
+            if (world.getBool(WCfgVal.ENDERMAN))
+                event.setCancelled(true);
         }
     }
 
@@ -112,12 +113,12 @@ public class CreeperListener implements Listener {
      *            The EntityBreakDoor event.
      */
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onEntityBreakDoor (EntityBreakDoorEvent event) {
-        WorldConfig world = CreeperConfig.getWorld (event.getBlock ().getWorld ());
-        if (event.getEntityType () == EntityType.ZOMBIE && world.getBool (WCfgVal.ZOMBIE_DOOR))
+    public void onEntityBreakDoor(EntityBreakDoorEvent event) {
+        WorldConfig world = CreeperConfig.getWorld(event.getBlock().getWorld());
+        if (event.getEntityType() == EntityType.ZOMBIE && world.getBool(WCfgVal.ZOMBIE_DOOR))
         {
-            CreeperLog.displayBlockLocation (event.getBlock (), false);
-            BurntBlockManager.recordBurntBlock (event.getBlock ());
+            CreeperLog.displayBlockLocation(event.getBlock(), false);
+            BurntBlockManager.recordBurntBlock(event.getBlock());
         }
     }
 
@@ -125,25 +126,25 @@ public class CreeperListener implements Listener {
         private final Block block;
         private final Material type;
 
-        public ReplaceMonsterEgg (Block block) {
-            switch (block.getData ())
+        public ReplaceMonsterEgg(Block block) {
+            switch (block.getData())
             {
-                case 0:
-                    type = Material.STONE;
-                    break;
-                case 1:
-                    type = Material.COBBLESTONE;
-                    break;
-                default:
-                    type = Material.SMOOTH_BRICK;
+            case 0:
+                type = Material.STONE;
+                break;
+            case 1:
+                type = Material.COBBLESTONE;
+                break;
+            default:
+                type = Material.SMOOTH_BRICK;
             }
             this.block = block;
         }
 
         @Override
-        public void run () {
-            block.setType (type);
-            Suffocating.checkPlayerOneBlock (block.getLocation ());
+        public void run() {
+            block.setType(type);
+            Suffocating.checkPlayerOneBlock(block.getLocation());
         }
     }
 

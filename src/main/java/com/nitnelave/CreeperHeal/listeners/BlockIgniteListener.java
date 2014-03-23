@@ -12,11 +12,11 @@ import com.nitnelave.CreeperHeal.block.CreeperBlock;
 public class BlockIgniteListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    void onBlockIgnite (BlockIgniteEvent e) {
+    void onBlockIgnite(BlockIgniteEvent e) {
         for (BlockFace b : CreeperBlock.CARDINALS)
-            if (BurntBlockManager.wasRecentlyBurnt (e.getBlock ().getRelative (b)))
+            if (BurntBlockManager.wasRecentlyBurnt(e.getBlock().getRelative(b)))
             {
-                e.setCancelled (true);
+                e.setCancelled(true);
                 return;
             }
     }
