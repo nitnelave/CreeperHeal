@@ -1,6 +1,7 @@
 package com.nitnelave.CreeperHeal.config;
 
-interface CfgValEnumMember {
+interface CfgValEnumMember
+{
 
     /**
      * Gets the default value.

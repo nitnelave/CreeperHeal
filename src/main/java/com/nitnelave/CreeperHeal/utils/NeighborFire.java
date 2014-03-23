@@ -19,7 +19,8 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
  * @author nitnelave
  * 
  */
-public class NeighborFire extends NeighborFinder<CreeperBurntBlock> {
+public class NeighborFire extends NeighborFinder<CreeperBurntBlock>
+{
 
     private static final int DISTANCE_NEAR = 10;
 
@@ -31,7 +32,8 @@ public class NeighborFire extends NeighborFinder<CreeperBurntBlock> {
      * .Location, java.util.LinkedList)
      */
     @Override
-    protected CreeperBurntBlock getNeighbor(Location loc, LinkedList<CreeperBurntBlock> list) {
+    protected CreeperBurntBlock getNeighbor(Location loc, LinkedList<CreeperBurntBlock> list)
+    {
         if (list != null)
         {
             World w = loc.getWorld();
@@ -48,7 +50,8 @@ public class NeighborFire extends NeighborFinder<CreeperBurntBlock> {
      * @see com.nitnelave.CreeperHeal.utils.NeighborFinder#clean()
      */
     @Override
-    public void clean() {
+    public void clean()
+    {
         Iterator<LinkedList<CreeperBurntBlock>> iter = map.values().iterator();
         Date delay = new Date(new Date().getTime() - 1000
                               * CreeperConfig.getInt(CfgVal.WAIT_BEFORE_HEAL_BURNT) + 4000000
@@ -76,7 +79,8 @@ public class NeighborFire extends NeighborFinder<CreeperBurntBlock> {
      * @param block
      *            The block to be removed.
      */
-    public void removeElement(CreeperBurntBlock block) {
+    public void removeElement(CreeperBurntBlock block)
+    {
         Location l = block.getLocation();
         removeElement(block, l.getBlockX(), l.getBlockZ());
     }
@@ -87,7 +91,8 @@ public class NeighborFire extends NeighborFinder<CreeperBurntBlock> {
      * @param block
      *            The block to add.
      */
-    public void addElement(CreeperBurntBlock block) {
+    public void addElement(CreeperBurntBlock block)
+    {
         Location l = block.getLocation();
         addElement(block, l.getBlockX(), l.getBlockZ());
     }

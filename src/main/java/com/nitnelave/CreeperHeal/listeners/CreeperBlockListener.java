@@ -17,7 +17,8 @@ import com.nitnelave.CreeperHeal.utils.FactionHandler;
  * @author nitnelave
  * 
  */
-public class CreeperBlockListener implements Listener {
+public class CreeperBlockListener implements Listener
+{
 
     /**
      * Listener for the BlockBurntEvent. If appropriate, the block is recorded
@@ -27,7 +28,8 @@ public class CreeperBlockListener implements Listener {
      *            The BlockBurntEvent.
      */
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onBlockBurn(BlockBurnEvent event) {
+    public void onBlockBurn(BlockBurnEvent event)
+    {
         WorldConfig world = CreeperConfig.getWorld(event.getBlock().getLocation().getWorld());
 
         if (world.getBool(WCfgVal.FIRE) && !world.isProtected(event.getBlock())

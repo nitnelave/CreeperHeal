@@ -8,12 +8,14 @@ import org.bukkit.block.Sign;
  * @author nitnelave
  * 
  */
-class CreeperSign extends CreeperBlock {
+class CreeperSign extends CreeperBlock
+{
 
     /*
      * Constructor.
      */
-    protected CreeperSign(Sign sign) {
+    protected CreeperSign(Sign sign)
+    {
         super(sign);
     }
 
@@ -23,7 +25,8 @@ class CreeperSign extends CreeperBlock {
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#update()
      */
     @Override
-    public void update() {
+    public void update()
+    {
         super.update();
         Sign state = (Sign) getBlock().getState();
         Sign sign = (Sign) blockState;

@@ -19,7 +19,8 @@ import com.nitnelave.CreeperHeal.utils.CreeperUtils;
  * @author nitnelave
  * 
  */
-public abstract class CreeperHandler {
+public abstract class CreeperHandler
+{
 
     /**
      * Record all the blocks in the list as for an explosion.
@@ -27,7 +28,8 @@ public abstract class CreeperHandler {
      * @param list
      *            The list of blocks.
      */
-    public static void recordBlocks(List<Block> list) {
+    public static void recordBlocks(List<Block> list)
+    {
         recordBlocks(list, list.get(0).getLocation());
     }
 
@@ -40,7 +42,8 @@ public abstract class CreeperHandler {
      * @param location
      *            The location of the explosion.
      */
-    public static void recordBlocks(List<Block> list, Location location) {
+    public static void recordBlocks(List<Block> list, Location location)
+    {
         ExplodedBlockManager.processExplosion(list, location,
                                               CHExplosionRecordEvent.ExplosionReason.OTHER);
     }
@@ -58,7 +61,8 @@ public abstract class CreeperHandler {
      */
     public static void
         recordBlocks(List<Block> list, Location location,
-                     CHExplosionRecordEvent.ExplosionReason reason) {
+                     CHExplosionRecordEvent.ExplosionReason reason)
+    {
         ExplodedBlockManager.processExplosion(list, location, reason);
     }
 
@@ -68,7 +72,8 @@ public abstract class CreeperHandler {
      * @param event
      *            The event corresponding to an explosion.
      */
-    public static void recordBlocks(EntityExplodeEvent event) {
+    public static void recordBlocks(EntityExplodeEvent event)
+    {
         ExplodedBlockManager.processExplosion(event, CreeperUtils.getReason(event.getEntity()));
     }
 
@@ -82,7 +87,8 @@ public abstract class CreeperHandler {
      */
     public static void
         recordBlocks(EntityExplodeEvent event,
-                     CHExplosionRecordEvent.ExplosionReason reason) {
+                     CHExplosionRecordEvent.ExplosionReason reason)
+    {
         ExplodedBlockManager.processExplosion(event, reason);
     }
 
@@ -93,7 +99,8 @@ public abstract class CreeperHandler {
      * @param block
      *            The block to record.
      */
-    public static void recordBlock(Block block) {
+    public static void recordBlock(Block block)
+    {
         BurntBlockManager.recordBurntBlock(block);
     }
 
@@ -105,7 +112,8 @@ public abstract class CreeperHandler {
      *            The source of the explosion.
      * @return Whether the protection should be removed.
      */
-    public static boolean shouldRemoveLWCProtection(Entity entity) {
+    public static boolean shouldRemoveLWCProtection(Entity entity)
+    {
         return !CreeperConfig.getWorld(entity.getWorld()).shouldReplace(entity);
     }
 

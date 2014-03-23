@@ -15,7 +15,8 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
  * 
  * @author nitnelave
  */
-public class NeighborDateLoc extends NeighborFinder<DateLoc> {
+public class NeighborDateLoc extends NeighborFinder<DateLoc>
+{
 
     /*
      * (non-Javadoc)
@@ -25,7 +26,8 @@ public class NeighborDateLoc extends NeighborFinder<DateLoc> {
      * .Location, java.util.LinkedList)
      */
     @Override
-    protected DateLoc getNeighbor(Location loc, LinkedList<DateLoc> list) {
+    protected DateLoc getNeighbor(Location loc, LinkedList<DateLoc> list)
+    {
         if (list != null)
         {
             World w = loc.getWorld();
@@ -42,7 +44,8 @@ public class NeighborDateLoc extends NeighborFinder<DateLoc> {
      * @see com.nitnelave.CreeperHeal.utils.NeighborFinder#clean()
      */
     @Override
-    public void clean() {
+    public void clean()
+    {
         Iterator<LinkedList<DateLoc>> iter = map.values().iterator();
         Date delay = new Date(new Date().getTime() - 200
                               * CreeperConfig.getInt(CfgVal.BLOCK_PER_BLOCK_INTERVAL));

@@ -16,7 +16,8 @@ import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
  * 
  * @author nitnelave
  */
-public class LeavesListener implements Listener {
+public class LeavesListener implements Listener
+{
 
     /**
      * Listener for the BLockPhysicsEvent. Prevent vine disappearance when
@@ -26,7 +27,8 @@ public class LeavesListener implements Listener {
      *            The BlockPhysics event.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onBlockPhysics(BlockPhysicsEvent event) {
+    public void onBlockPhysics(BlockPhysicsEvent event)
+    {
         Block b = event.getBlock();
         if (b.getType() == Material.VINE
             && (ExplodedBlockManager.isNextToExplosion(b.getLocation()) || BurntBlockManager.isNextToFire(b.getLocation())))
@@ -41,7 +43,8 @@ public class LeavesListener implements Listener {
      *            The LeavesDecay event.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onLeavesDecay(LeavesDecayEvent event) {
+    public void onLeavesDecay(LeavesDecayEvent event)
+    {
         Block b = event.getBlock();
         if (ExplodedBlockManager.isNextToExplosion(b.getLocation())
             || BurntBlockManager.isNextToFire(b.getLocation()))

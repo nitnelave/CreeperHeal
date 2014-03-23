@@ -17,7 +17,8 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
  * @author nitnelave
  * 
  */
-class CreeperPainting extends CreeperHanging {
+class CreeperPainting extends CreeperHanging
+{
 
     /**
      * Constructor.
@@ -25,7 +26,8 @@ class CreeperPainting extends CreeperHanging {
      * @param painting
      *            The painting represented.
      */
-    protected CreeperPainting(Painting painting) {
+    protected CreeperPainting(Painting painting)
+    {
         super(painting);
     }
 
@@ -35,7 +37,8 @@ class CreeperPainting extends CreeperHanging {
      * @see com.nitnelave.CreeperHeal.block.CreeperHanging#computeLocation()
      */
     @Override
-    protected Location computeLocation() {
+    protected Location computeLocation()
+    {
         BlockFace face = hanging.getAttachedFace();
         Location loc = hanging.getLocation().getBlock().getRelative(face).getLocation();
         Art art = ((Painting) hanging).getArt();
@@ -81,7 +84,8 @@ class CreeperPainting extends CreeperHanging {
      * @see com.nitnelave.CreeperHeal.block.Replaceable#replace(boolean)
      */
     @Override
-    public boolean replace(boolean shouldDrop) {
+    public boolean replace(boolean shouldDrop)
+    {
 
         try
         {
@@ -102,7 +106,8 @@ class CreeperPainting extends CreeperHanging {
      * @see com.nitnelave.CreeperHeal.block.Replaceable#drop()
      */
     @Override
-    public boolean drop(boolean forced) {
+    public boolean drop(boolean forced)
+    {
         if (forced || new Random().nextInt(100) < CreeperConfig.getInt(CfgVal.DROP_CHANCE))
         {
             getWorld().dropItemNaturally(getLocation(), new ItemStack(321, 1));
@@ -117,7 +122,8 @@ class CreeperPainting extends CreeperHanging {
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getTypeId()
      */
     @Override
-    public int getTypeId() {
+    public int getTypeId()
+    {
         return 321;
     }
 

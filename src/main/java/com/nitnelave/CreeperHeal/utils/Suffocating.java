@@ -18,7 +18,8 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
  * @author nitnelave
  * 
  */
-public abstract class Suffocating {
+public abstract class Suffocating
+{
 
     /**
      * Check the living entities around the location. If any is suffocating,
@@ -27,7 +28,8 @@ public abstract class Suffocating {
      * @param loc
      *            The location around which to check.
      */
-    public static void checkPlayerOneBlock(Location loc) {
+    public static void checkPlayerOneBlock(Location loc)
+    {
         Entity[] play_list = loc.getBlock().getChunk().getEntities();
         for (Entity en : play_list)
             if (en instanceof LivingEntity && loc.distance(en.getLocation()) < 2)
@@ -43,7 +45,8 @@ public abstract class Suffocating {
      * @param radius
      *            The radius of the explosion.
      */
-    public static void checkPlayerExplosion(Location loc, double radius) {
+    public static void checkPlayerExplosion(Location loc, double radius)
+    {
         List<? extends Entity> entityList;
         if (CreeperConfig.getBool(CfgVal.SUFFOCATING_ANIMALS))
             entityList = loc.getWorld().getEntities();
@@ -57,7 +60,8 @@ public abstract class Suffocating {
     /*
      * Get the location to which an entity should be teleported for safety.
      */
-    private static Location check_player_suffocate(LivingEntity en) {
+    private static Location check_player_suffocate(LivingEntity en)
+    {
         Location loc = en.getLocation();
 
         if (CreeperBlock.isSolid(loc.getBlock())
@@ -91,7 +95,8 @@ public abstract class Suffocating {
      * Check if the block at the coordinates, or one above or below is suitable
      * to put a living being.
      */
-    private static boolean check_free_horizontal(Location loc) {
+    private static boolean check_free_horizontal(Location loc)
+    {
         loc.add(0, -1, 0);
         for (int k = -1; k < 2; k++)
         {
@@ -107,7 +112,8 @@ public abstract class Suffocating {
      * Get whether the location is suitable ground so a player doesn't
      * suffocate.
      */
-    private static boolean check_free(Location loc) {
+    private static boolean check_free(Location loc)
+    {
         Block block = loc.getBlock();
         if (!CreeperBlock.isSolid(block) && !CreeperBlock.isSolid(block.getRelative(0, 1, 0))
             && CreeperBlock.isSolid(block.getRelative(0, -1, 0)))

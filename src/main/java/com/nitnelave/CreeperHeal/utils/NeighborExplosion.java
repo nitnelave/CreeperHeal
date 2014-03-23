@@ -16,7 +16,8 @@ import com.nitnelave.CreeperHeal.block.CreeperExplosion;
  * @author nitnelave
  * 
  */
-public class NeighborExplosion extends NeighborFinder<CreeperExplosion> {
+public class NeighborExplosion extends NeighborFinder<CreeperExplosion>
+{
 
     /*
      * (non-Javadoc)
@@ -26,7 +27,8 @@ public class NeighborExplosion extends NeighborFinder<CreeperExplosion> {
      * .Location, java.util.LinkedList)
      */
     @Override
-    protected CreeperExplosion getNeighbor(Location loc, LinkedList<CreeperExplosion> list) {
+    protected CreeperExplosion getNeighbor(Location loc, LinkedList<CreeperExplosion> list)
+    {
         if (list != null)
         {
             World w = loc.getWorld();
@@ -46,7 +48,8 @@ public class NeighborExplosion extends NeighborFinder<CreeperExplosion> {
      * @see com.nitnelave.CreeperHeal.utils.NeighborFinder#clean()
      */
     @Override
-    public void clean() {
+    public void clean()
+    {
         Iterator<LinkedList<CreeperExplosion>> iter = map.values().iterator();
         while (iter.hasNext())
         {
@@ -69,7 +72,8 @@ public class NeighborExplosion extends NeighborFinder<CreeperExplosion> {
      * @param ex
      *            The explosion to remove.
      */
-    public void removeElement(CreeperExplosion ex) {
+    public void removeElement(CreeperExplosion ex)
+    {
         Location l = ex.getLocation();
         removeElement(ex, l.getX(), l.getZ());
     }

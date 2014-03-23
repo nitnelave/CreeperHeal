@@ -17,7 +17,8 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
  * @author nitnelave
  * 
  */
-public class RailsIndex {
+public class RailsIndex
+{
 
     /*
      * Block whose update should be prevented.
@@ -28,9 +29,11 @@ public class RailsIndex {
     {
         railsIndex = new HashMap<CreeperRail, Date>();
 
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(CreeperHeal.getInstance(), new Runnable() {
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(CreeperHeal.getInstance(), new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 cleanUp();
             }
         }, 500, 7200);
@@ -44,7 +47,8 @@ public class RailsIndex {
      * @return Whether the location is next to a block whose update is
      *         prevented.
      */
-    public static boolean isUpdatePrevented(CreeperBlock block) {
+    public static boolean isUpdatePrevented(CreeperBlock block)
+    {
         if (!(block instanceof CreeperRail))
             return false;
         return railsIndex.containsKey(block);
@@ -58,12 +62,14 @@ public class RailsIndex {
      * @param block
      *            The block.
      */
-    public static void putUpdatePrevention(CreeperRail block) {
+    public static void putUpdatePrevention(CreeperRail block)
+    {
         if (CreeperConfig.getBool(CfgVal.RAIL_REPLACEMENT))
             railsIndex.put(block, new Date());
     }
 
-    private static void cleanUp() {
+    private static void cleanUp()
+    {
         if (CreeperConfig.getBool(CfgVal.RAIL_REPLACEMENT))
         {
             Date delay = new Date(new Date().getTime() - 200

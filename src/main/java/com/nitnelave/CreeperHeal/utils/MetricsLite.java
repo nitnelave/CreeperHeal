@@ -43,7 +43,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.scheduler.BukkitTask;
 
-public class MetricsLite {
+public class MetricsLite
+{
 
     /**
      * The current revision number
@@ -100,7 +101,8 @@ public class MetricsLite {
      */
     private volatile BukkitTask task = null;
 
-    public MetricsLite(Plugin plugin) throws IOException {
+    public MetricsLite(Plugin plugin) throws IOException
+    {
         if (plugin == null)
             throw new IllegalArgumentException("Plugin cannot be null");
 
@@ -135,7 +137,8 @@ public class MetricsLite {
      * 
      * @return True if statistics measuring is running, otherwise false.
      */
-    public boolean start() {
+    public boolean start()
+    {
         synchronized (optOutLock)
         {
             // Did we opt out?
@@ -147,12 +150,14 @@ public class MetricsLite {
                 return true;
 
             // Begin hitting the server with glorious data
-            task = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
+            task = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new Runnable()
+            {
 
                 private boolean firstPost = true;
 
                 @Override
-                public void run() {
+                public void run()
+                {
                     try
                     {
                         // This has to be synchronized or it can collide with the disable method.
@@ -191,7 +196,8 @@ public class MetricsLite {
      * 
      * @return true if metrics should be opted out of it
      */
-    public boolean isOptOut() {
+    public boolean isOptOut()
+    {
         synchronized (optOutLock)
         {
             try
@@ -219,7 +225,8 @@ public class MetricsLite {
      * 
      * @throws java.io.IOException
      */
-    public void enable() throws IOException {
+    public void enable() throws IOException
+    {
         // This has to be synchronized or it can collide with the check in the task.
         synchronized (optOutLock)
         {
@@ -242,7 +249,8 @@ public class MetricsLite {
      * 
      * @throws java.io.IOException
      */
-    public void disable() throws IOException {
+    public void disable() throws IOException
+    {
         // This has to be synchronized or it can collide with the check in the task.
         synchronized (optOutLock)
         {
@@ -268,7 +276,8 @@ public class MetricsLite {
      * 
      * @return the File object for the config file
      */
-    public File getConfigFile() {
+    public File getConfigFile()
+    {
         // I believe the easiest way to get the base folder (e.g craftbukkit set via -P) for plugins to use
         // is to abuse the plugin object we already have
         // plugin.getDataFolder() => base/plugins/PluginA/
@@ -283,7 +292,8 @@ public class MetricsLite {
     /**
      * Generic method that posts a plugin to the metrics website
      */
-    private void postPlugin(boolean isPing) throws IOException {
+    private void postPlugin(boolean isPing) throws IOException
+    {
         // Server software specific section
         PluginDescriptionFile description = plugin.getDescription();
         String pluginName = description.getName();
@@ -364,7 +374,8 @@ public class MetricsLite {
      * 
      * @return true if mineshafter is installed on the server
      */
-    private boolean isMineshafterPresent() {
+    private boolean isMineshafterPresent()
+    {
         try
         {
             Class.forName("mineshafter.MineServer");
@@ -394,7 +405,8 @@ public class MetricsLite {
      *            the value
      */
     private static void encodeDataPair(final StringBuilder buffer, final String key,
-                                       final String value) throws UnsupportedEncodingException {
+                                       final String value) throws UnsupportedEncodingException
+    {
         buffer.append('&').append(encode(key)).append('=').append(encode(value));
     }
 
@@ -405,7 +417,8 @@ public class MetricsLite {
      *            the text to encode
      * @return the encoded text, as UTF-8
      */
-    private static String encode(final String text) throws UnsupportedEncodingException {
+    private static String encode(final String text) throws UnsupportedEncodingException
+    {
         return URLEncoder.encode(text, "UTF-8");
     }
 

@@ -21,7 +21,8 @@ import com.nitnelave.CreeperHeal.events.CHBlockHealEvent.CHBlockHealReason;
  * @author nitnelave
  * 
  */
-public abstract class CreeperHanging implements Replaceable {
+public abstract class CreeperHanging implements Replaceable
+{
     protected final Hanging hanging;
     protected final Location location;
 
@@ -36,7 +37,8 @@ public abstract class CreeperHanging implements Replaceable {
      * @param fire
      *            Whether the hanging was destroyed by fire.
      */
-    protected CreeperHanging(Hanging hanging) {
+    protected CreeperHanging(Hanging hanging)
+    {
         this.hanging = hanging;
         location = computeLocation();
     }
@@ -48,7 +50,8 @@ public abstract class CreeperHanging implements Replaceable {
      *            The hanging to be represented by the Object.
      * @return An instance of the right subclass of CreeperHanging.
      */
-    public static CreeperHanging newHanging(Hanging hanging) {
+    public static CreeperHanging newHanging(Hanging hanging)
+    {
         if (hanging.getType() == EntityType.PAINTING)
             return new CreeperPainting((Painting) hanging);
         if (hanging.getType() == EntityType.ITEM_FRAME)
@@ -70,7 +73,8 @@ public abstract class CreeperHanging implements Replaceable {
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getWorld()
      */
     @Override
-    public World getWorld() {
+    public World getWorld()
+    {
         return hanging.getWorld();
     }
 
@@ -80,7 +84,8 @@ public abstract class CreeperHanging implements Replaceable {
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getLocation()
      */
     @Override
-    public Location getLocation() {
+    public Location getLocation()
+    {
         return location;
     }
 
@@ -90,7 +95,8 @@ public abstract class CreeperHanging implements Replaceable {
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getBlock()
      */
     @Override
-    public Block getBlock() {
+    public Block getBlock()
+    {
         return hanging.getLocation().getBlock();
     }
 
@@ -100,7 +106,8 @@ public abstract class CreeperHanging implements Replaceable {
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getAttachingFace()
      */
     @Override
-    public BlockFace getAttachingFace() {
+    public BlockFace getAttachingFace()
+    {
         return hanging.getAttachedFace();
     }
 
@@ -110,7 +117,8 @@ public abstract class CreeperHanging implements Replaceable {
      * @see com.nitnelave.CreeperHeal.block.Replaceable#isDependent()
      */
     @Override
-    public boolean isDependent() {
+    public boolean isDependent()
+    {
         return true;
     }
 
@@ -120,7 +128,8 @@ public abstract class CreeperHanging implements Replaceable {
      * @see com.nitnelave.CreeperHeal.block.Replaceable#remove()
      */
     @Override
-    public void remove() {
+    public void remove()
+    {
         hanging.remove();
     }
 
@@ -130,7 +139,8 @@ public abstract class CreeperHanging implements Replaceable {
      * @see com.nitnelave.CreeperHeal.block.Replaceable#delayReplacement()
      */
     @Override
-    public void delayReplacement(CHBlockHealReason reason) {
+    public void delayReplacement(CHBlockHealReason reason)
+    {
         long delay = CreeperConfig.getInt(CfgVal.BLOCK_PER_BLOCK_INTERVAL);
         DelayReplacement dr = new DelayReplacement(this, 0, reason);
         int id = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(CreeperHeal.getInstance(), dr, delay, delay);

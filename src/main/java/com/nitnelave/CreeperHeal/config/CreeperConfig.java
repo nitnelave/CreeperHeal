@@ -24,7 +24,8 @@ import com.nitnelave.CreeperHeal.utils.FileUtils;
  * @author nitnelave
  * 
  */
-public abstract class CreeperConfig {
+public abstract class CreeperConfig
+{
 
     private static final int CONFIG_VERSION = 12;
     private static final File CONFIG_FILE = new File(CreeperHeal.getCHFolder() + "/config.yml"),
@@ -50,7 +51,8 @@ public abstract class CreeperConfig {
     /*
      * Put the config values in the maps, with the default values.
      */
-    private static void fillMaps() {
+    private static void fillMaps()
+    {
         booleans.clear();
         integers.clear();
         for (CfgVal v : CfgVal.values())
@@ -70,7 +72,8 @@ public abstract class CreeperConfig {
 
     }
 
-    private static void loadSound() {
+    private static void loadSound()
+    {
         CreeperLog.debug("Loading sound");
         try
         {
@@ -81,7 +84,8 @@ public abstract class CreeperConfig {
         }
     }
 
-    private static YamlConfiguration getFile(CfgVal v) {
+    private static YamlConfiguration getFile(CfgVal v)
+    {
         return v.isAdvanced() ? advanced : config;
     }
 
@@ -92,7 +96,8 @@ public abstract class CreeperConfig {
      *            The config key.
      * @return The boolean value.
      */
-    public static boolean getBool(CfgVal val) {
+    public static boolean getBool(CfgVal val)
+    {
         ConfigValue<Boolean> v = booleans.get(val.getKey());
         if (v == null)
             throw new NullPointerException("Missing config value : " + val.getKey());
@@ -106,7 +111,8 @@ public abstract class CreeperConfig {
      *            The config key.
      * @return The int value.
      */
-    public static int getInt(CfgVal val) {
+    public static int getInt(CfgVal val)
+    {
         ConfigValue<Integer> v = integers.get(val.getKey());
         if (v == null)
             throw new NullPointerException("Missing config value : " + val.getKey());
@@ -121,7 +127,8 @@ public abstract class CreeperConfig {
      * @param value
      *            The value.
      */
-    public static void setBool(CfgVal val, boolean value) {
+    public static void setBool(CfgVal val, boolean value)
+    {
         ConfigValue<Boolean> v = booleans.get(val.getKey());
         if (v == null)
             throw new NullPointerException("Unknown config key path : " + val.getKey());
@@ -136,7 +143,8 @@ public abstract class CreeperConfig {
      * @param value
      *            The value.
      */
-    public static void setInt(CfgVal val, int value) {
+    public static void setInt(CfgVal val, int value)
+    {
         ConfigValue<Integer> v = integers.get(val.getKey());
         if (v == null)
             throw new NullPointerException("Unknown config key path : " + val.getKey());
@@ -146,7 +154,8 @@ public abstract class CreeperConfig {
     /*
      * Load a file, with all the checks that go with this.
      */
-    private static void loadFile(YamlConfiguration conf, File f) {
+    private static void loadFile(YamlConfiguration conf, File f)
+    {
         try
         {
             conf.load(f);
@@ -176,7 +185,8 @@ public abstract class CreeperConfig {
     /**
      * Load/reload the main and advanced configuration.
      */
-    public static void load() {
+    public static void load()
+    {
         if (!CONFIG_FILE.exists())
         {
             FileUtils.copyJarConfig(CONFIG_FILE);
@@ -213,7 +223,8 @@ public abstract class CreeperConfig {
         loadWorlds();
     }
 
-    private static void loadLightWeight() {
+    private static void loadLightWeight()
+    {
         if (!advanced.getBoolean("lightweight-mode", false))
         {
             CreeperConfig.setBool(CfgVal.RAIL_REPLACEMENT, false);
@@ -227,7 +238,8 @@ public abstract class CreeperConfig {
     /*
      * Load every world detected.
      */
-    private static void loadWorlds() {
+    private static void loadWorlds()
+    {
         world_config.clear();
         try
         {
@@ -246,7 +258,8 @@ public abstract class CreeperConfig {
     /*
      * Load a world, and return the loaded world.
      */
-    private static WorldConfig loadWorld(String name) {
+    private static WorldConfig loadWorld(String name)
+    {
         WorldConfig w;
         if (configVersion < 8)
         {
@@ -266,7 +279,8 @@ public abstract class CreeperConfig {
     /**
      * Save the main and advanced configuration to the file.
      */
-    public static void write() {
+    public static void write()
+    {
         if (!CONFIG_FILE.exists() && !FileUtils.createNewFile(CONFIG_FILE)
             || !ADVANCED_FILE.exists() && !FileUtils.createNewFile(ADVANCED_FILE))
             return;
@@ -302,7 +316,8 @@ public abstract class CreeperConfig {
      *            The world to load.
      * @return The world configuration file.
      */
-    public static WorldConfig getWorld(World world) {
+    public static WorldConfig getWorld(World world)
+    {
         return getWorld(world.getName());
     }
 
@@ -314,7 +329,8 @@ public abstract class CreeperConfig {
      *            The name of the world to be loaded.
      * @return The world configuration file.
      */
-    public static WorldConfig getWorld(String name) {
+    public static WorldConfig getWorld(String name)
+    {
         WorldConfig returnValue = world_config.get(name);
         if (returnValue == null)
             try
@@ -329,7 +345,8 @@ public abstract class CreeperConfig {
         return returnValue;
     }
 
-    protected static void setAlias(String cmdAlias) {
+    protected static void setAlias(String cmdAlias)
+    {
         alias.setValue(cmdAlias);
     }
 
@@ -338,7 +355,8 @@ public abstract class CreeperConfig {
      * 
      * @return The command alias.
      */
-    public static String getAlias() {
+    public static String getAlias()
+    {
         return alias.getValue();
     }
 
@@ -347,18 +365,21 @@ public abstract class CreeperConfig {
      * 
      * @return The list of worlds.
      */
-    public static Collection<WorldConfig> getWorlds() {
+    public static Collection<WorldConfig> getWorlds()
+    {
         return world_config.values();
     }
 
-    protected static void remove(String key, boolean isAdvanced) {
+    protected static void remove(String key, boolean isAdvanced)
+    {
         if (isAdvanced)
             advanced.set(key, null);
         else
             config.set(key, null);
     }
 
-    public static Sound getSound() {
+    public static Sound getSound()
+    {
         return sound;
     }
 

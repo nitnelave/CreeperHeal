@@ -11,7 +11,8 @@ import com.nitnelave.CreeperHeal.CreeperHeal;
 /**
  * A class to handle common file operations.
  */
-public class FileUtils {
+public class FileUtils
+{
 
     /**
      * Creates a file, making parent directories if necessary.
@@ -20,7 +21,8 @@ public class FileUtils {
      *            The file to be created.
      * @return True, if successful
      */
-    public static boolean createNewFile(File file) {
+    public static boolean createNewFile(File file)
+    {
         file.delete();
         file.getParentFile().mkdirs();
         try
@@ -40,7 +42,8 @@ public class FileUtils {
      * @param file
      *            The file to be copied.
      */
-    public static void copyJarConfig(File file) {
+    public static void copyJarConfig(File file)
+    {
         copyJarConfig(file, file.getName());
     }
 
@@ -52,7 +55,8 @@ public class FileUtils {
      * @param source
      *            The source file's name.
      */
-    public static void copyJarConfig(File file, String source) {
+    public static void copyJarConfig(File file, String source)
+    {
         if (!createNewFile(file))
             return;
         InputStream in = CreeperHeal.getInstance().getResource(source);
@@ -78,9 +82,11 @@ public class FileUtils {
             ex.printStackTrace();
         }
 
-        try {
+        try
+        {
             in.close();
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
     }

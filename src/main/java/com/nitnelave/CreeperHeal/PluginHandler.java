@@ -19,7 +19,8 @@ import com.nitnelave.CreeperTrap.CreeperTrapCommands;
  * @author nitnelave
  * 
  */
-public class PluginHandler {
+public class PluginHandler
+{
 
     private static MobArenaHandler maHandler = null;
     private static LWC lwc = null;
@@ -43,7 +44,8 @@ public class PluginHandler {
      * Check if the plugin is active on the server, and if so, display a message
      * stating that it was successfully detected.
      */
-    private static Plugin detectPlugin(String name) {
+    private static Plugin detectPlugin(String name)
+    {
         Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin(name);
         if (plugin != null)
             CreeperLog.logInfo("Successfully hooked into " + name, 1);
@@ -57,7 +59,8 @@ public class PluginHandler {
      *            The block to check.
      * @return Whether the block is protected.
      */
-    public static boolean isProtected(Block block) {
+    public static boolean isProtected(Block block)
+    {
         if (lwc != null)
             return lwc.findProtection(block) != null;
         else if (lockette)
@@ -73,7 +76,8 @@ public class PluginHandler {
      *            The location of the block.
      * @return Whether the block is inside an arena.
      */
-    public static boolean isInArena(Location location) {
+    public static boolean isInArena(Location location)
+    {
         if (maHandler != null)
             if (maHandler.inRegion(location))
                 return true; //Explosion inside a mob arena
@@ -84,7 +88,8 @@ public class PluginHandler {
      * Meant only for CreeperTrap to call, on plugin startup. Register
      * CreeperTrap as enabled on the server.
      */
-    public static void setCreeperTrapEnabled() {
+    public static void setCreeperTrapEnabled()
+    {
         creeperTrap = true;
     }
 
@@ -93,7 +98,8 @@ public class PluginHandler {
      * 
      * @return True if CreeperTrap is enabled.
      */
-    public static boolean isCreeperTrapEnabled() {
+    public static boolean isCreeperTrapEnabled()
+    {
         return creeperTrap;
     }
 
@@ -106,7 +112,8 @@ public class PluginHandler {
      *            The command's arguments
      * @return False in case of a syntax error in the command.
      */
-    public static boolean trapCommand(CommandSender sender, String[] args) {
+    public static boolean trapCommand(CommandSender sender, String[] args)
+    {
         if (!isCreeperTrapEnabled())
         {
             sender.sendMessage("You have to install the CreeperTrap plugin to use traps");
@@ -120,11 +127,13 @@ public class PluginHandler {
      * 
      * @return true, if Factions is enabled
      */
-    public static boolean isFactionsEnabled() {
+    public static boolean isFactionsEnabled()
+    {
         return detectPlugin("Factions") != null;
     }
 
-    public static boolean isSpoutEnabled() {
+    public static boolean isSpoutEnabled()
+    {
         return spout;
     }
 

@@ -34,7 +34,8 @@ import com.nitnelave.CreeperHeal.utils.CreeperUtils;
  * @author nitnelave
  * 
  */
-public class CreeperBlock implements Replaceable {
+public class CreeperBlock implements Replaceable
+{
 
     /*
      * These blocks (may) need a block under them not to drop.
@@ -68,7 +69,8 @@ public class CreeperBlock implements Replaceable {
      *            The block to be represented.
      * @return A new CreeperBlock of the right subclass.
      */
-    public static CreeperBlock newBlock(BlockState blockState) {
+    public static CreeperBlock newBlock(BlockState blockState)
+    {
         //if (PluginHandler.isSpoutEnabled () && SpoutBlock.isCustomBlock (blockState))
         //    return new SpoutBlock (blockState);
         if (blockState instanceof InventoryHolder)
@@ -124,16 +126,19 @@ public class CreeperBlock implements Replaceable {
     /*
      * The constructor.
      */
-    protected CreeperBlock(BlockState blockState) {
+    protected CreeperBlock(BlockState blockState)
+    {
         this.blockState = blockState;
     }
 
-    protected CreeperBlock() {}
+    protected CreeperBlock()
+    {}
 
     /**
      * Replace the block in the world.
      */
-    public void update() {
+    public void update()
+    {
         getLocation().getChunk().load();
         blockState.update(true);
         getWorld().playSound(getLocation(), CreeperConfig.getSound(), CreeperConfig.getInt(CfgVal.SOUND_VOLUME) / 10F, random.nextFloat() * 2);
@@ -145,7 +150,8 @@ public class CreeperBlock implements Replaceable {
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getLocation()
      */
     @Override
-    public Location getLocation() {
+    public Location getLocation()
+    {
         return blockState.getLocation();
     }
 
@@ -155,7 +161,8 @@ public class CreeperBlock implements Replaceable {
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getWorld()
      */
     @Override
-    public World getWorld() {
+    public World getWorld()
+    {
         return blockState.getWorld();
     }
 
@@ -165,7 +172,8 @@ public class CreeperBlock implements Replaceable {
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getBlock()
      */
     @Override
-    public Block getBlock() {
+    public Block getBlock()
+    {
         return blockState.getBlock();
     }
 
@@ -175,7 +183,8 @@ public class CreeperBlock implements Replaceable {
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getTypeId()
      */
     @Override
-    public int getTypeId() {
+    public int getTypeId()
+    {
         return blockState.getTypeId();
     }
 
@@ -184,7 +193,8 @@ public class CreeperBlock implements Replaceable {
      * 
      * @return The block's raw data.
      */
-    public byte getRawData() {
+    public byte getRawData()
+    {
         return blockState.getRawData();
     }
 
@@ -198,7 +208,8 @@ public class CreeperBlock implements Replaceable {
      * @return True if the block dropped.
      */
     @Override
-    public boolean drop(boolean forced) {
+    public boolean drop(boolean forced)
+    {
         if (forced || new Random().nextInt(100) < CreeperConfig.getInt(CfgVal.DROP_CHANCE))
         {
             Location loc = blockState.getBlock().getLocation();
@@ -218,7 +229,8 @@ public class CreeperBlock implements Replaceable {
      * @see com.nitnelave.CreeperHeal.block.Replaceable#replace(boolean)
      */
     @Override
-    public final boolean replace(boolean shouldDrop) {
+    public final boolean replace(boolean shouldDrop)
+    {
         if (checkForDrop(getBlock()))
             return true;
 
@@ -232,7 +244,8 @@ public class CreeperBlock implements Replaceable {
         return true;
     }
 
-    protected boolean checkForDrop(Block block) {
+    protected boolean checkForDrop(Block block)
+    {
         int blockId = block.getTypeId();
 
         if (!CreeperConfig.getBool(CfgVal.OVERWRITE_BLOCKS) && !isEmpty(blockId))
@@ -259,7 +272,8 @@ public class CreeperBlock implements Replaceable {
      * Get whether the block is empty, i.e. if a player can breathe inside it
      * and if it can be replaced by other blocks (snow, water...)
      */
-    private static boolean isEmpty(int typeId) {
+    private static boolean isEmpty(int typeId)
+    {
         return EMPTY_BLOCKS.contains(typeId);
     }
 
@@ -269,7 +283,8 @@ public class CreeperBlock implements Replaceable {
      * @see com.nitnelave.CreeperHeal.block.Replaceable#delayReplacement()
      */
     @Override
-    public void delayReplacement(CHBlockHealReason reason) {
+    public void delayReplacement(CHBlockHealReason reason)
+    {
         long delay = CreeperConfig.getInt(CfgVal.BLOCK_PER_BLOCK_INTERVAL);
         DelayReplacement dr = new DelayReplacement(this, 0, reason);
         int id = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(CreeperHeal.getInstance(), dr, delay, delay);
@@ -283,7 +298,8 @@ public class CreeperBlock implements Replaceable {
      *            The type of the block.
      * @return Whether the block is dependent.
      */
-    private static boolean isDependentDown(int typeId) {
+    private static boolean isDependentDown(int typeId)
+    {
         return DEPENDENT_DOWN_BLOCKS.contains(typeId);
     }
 
@@ -294,7 +310,8 @@ public class CreeperBlock implements Replaceable {
      *            The type of the block.
      * @return Whether the block is solid.
      */
-    public static boolean isSolid(int typeId) {
+    public static boolean isSolid(int typeId)
+    {
         return Material.getMaterial(typeId).isSolid();
     }
 
@@ -305,7 +322,8 @@ public class CreeperBlock implements Replaceable {
      *            The type of the block.
      * @return Whether the block is solid.
      */
-    public static boolean isSolid(Block block) {
+    public static boolean isSolid(Block block)
+    {
         return block.getType().isSolid();
     }
 
@@ -316,7 +334,8 @@ public class CreeperBlock implements Replaceable {
      *            The type of the block.
      * @return Whether the block is dependent.
      */
-    public static boolean isDependent(int typeId) {
+    public static boolean isDependent(int typeId)
+    {
         return DEPENDENT_BLOCKS.contains(typeId) || isDependentDown(typeId);
     }
 
@@ -324,7 +343,8 @@ public class CreeperBlock implements Replaceable {
      * Test the blocks directly in contact, and if they are ascending rails, add
      * them to the updatePrevention list.
      */
-    private void checkForAscendingRails() {
+    private void checkForAscendingRails()
+    {
         Block block = blockState.getBlock();
         for (BlockFace face : CARDINALS)
         {
@@ -346,7 +366,8 @@ public class CreeperBlock implements Replaceable {
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getAttachingFace()
      */
     @Override
-    public BlockFace getAttachingFace() {
+    public BlockFace getAttachingFace()
+    {
         if (blockState.getData() instanceof Attachable)
             return ((Attachable) blockState.getData()).getAttachedFace();
         if (isDependentDown(blockState.getTypeId()))
@@ -360,7 +381,8 @@ public class CreeperBlock implements Replaceable {
      * @see com.nitnelave.CreeperHeal.block.Replaceable#remove()
      */
     @Override
-    public void remove() {
+    public void remove()
+    {
         getBlock().setType(Material.AIR);
     }
 
@@ -370,7 +392,8 @@ public class CreeperBlock implements Replaceable {
      * @see com.nitnelave.CreeperHeal.block.Replaceable#isDependent()
      */
     @Override
-    public boolean isDependent() {
+    public boolean isDependent()
+    {
         return getAttachingFace() != BlockFace.SELF;
     }
 
@@ -381,7 +404,8 @@ public class CreeperBlock implements Replaceable {
      * 
      * @return The list of potentially dependent blocks.
      */
-    public List<NeighborBlock> getDependentNeighbors() {
+    public List<NeighborBlock> getDependentNeighbors()
+    {
         List<NeighborBlock> neighbors = new ArrayList<NeighborBlock>();
         Block block = getBlock();
         for (BlockFace face : CARDINALS)

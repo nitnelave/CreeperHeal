@@ -16,7 +16,8 @@ import com.nitnelave.CreeperHeal.events.CHBlockHealEvent.CHBlockHealReason;
  * @author nitnelave
  * 
  */
-public class DelayReplacement implements Runnable {
+public class DelayReplacement implements Runnable
+{
     /*
      * The block to be replaced.
      */
@@ -38,7 +39,8 @@ public class DelayReplacement implements Runnable {
      *            The number of times a replacement has already been attempted.
      * @param reason
      */
-    public DelayReplacement(Replaceable replaceable, int replaced, CHBlockHealReason reason) {
+    public DelayReplacement(Replaceable replaceable, int replaced, CHBlockHealReason reason)
+    {
         blockState = replaceable;
         counter = replaced + 1;
         this.reason = reason;
@@ -49,7 +51,8 @@ public class DelayReplacement implements Runnable {
      * failure either re-schedule the replacement for later or drop the block.
      */
     @Override
-    public void run() {
+    public void run()
+    {
         if (counter < REPLACEMENT_THRESHOLD)
         {
             if ((blockState instanceof Attachable && blockState.getBlock().getRelative(((Attachable) blockState).getAttachedFace()).getType() == Material.AIR)
@@ -75,7 +78,8 @@ public class DelayReplacement implements Runnable {
 
     }
 
-    public void setId(int id) {
+    public void setId(int id)
+    {
         this.id = id;
     }
 

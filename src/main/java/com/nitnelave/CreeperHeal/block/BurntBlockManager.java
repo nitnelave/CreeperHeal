@@ -24,7 +24,8 @@ import com.nitnelave.CreeperHeal.utils.NeighborFire;
  * @author nitnelave
  * 
  */
-public abstract class BurntBlockManager {
+public abstract class BurntBlockManager
+{
 
     /*
      * The list of burnt blocks waiting to be replaced.
@@ -41,22 +42,27 @@ public abstract class BurntBlockManager {
      */
     private static NeighborFire fireIndex;
 
-    public static void init() {
+    public static void init()
+    {
         if (CreeperConfig.getInt(CfgVal.WAIT_BEFORE_BURN_AGAIN) > 0)
             recentlyBurnt = new HashMap<Location, Date>();
         if (CreeperConfig.getBool(CfgVal.LEAVES_VINES))
             fireIndex = new NeighborFire();
 
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(CreeperHeal.getInstance(), new Runnable() {
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(CreeperHeal.getInstance(), new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 cleanUp();
             }
         }, 300, 7200);
 
-        Bukkit.getScheduler().runTaskTimer(CreeperHeal.getInstance(), new Runnable() {
+        Bukkit.getScheduler().runTaskTimer(CreeperHeal.getInstance(), new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 replaceBurnt();
             }
         }, 0, 20);
@@ -69,7 +75,8 @@ public abstract class BurntBlockManager {
      * @param worldConfig
      *            The world in which to replace the blocks.
      */
-    public static void forceReplaceBurnt(WorldConfig worldConfig) {
+    public static void forceReplaceBurnt(WorldConfig worldConfig)
+    {
         World world = Bukkit.getServer().getWorld(worldConfig.getName());
 
         Iterator<CreeperBurntBlock> iter = burntList.iterator();
@@ -93,7 +100,8 @@ public abstract class BurntBlockManager {
     /**
      * Force immediate replacement of all blocks burnt.
      */
-    public static void forceReplaceBurnt() {
+    public static void forceReplaceBurnt()
+    {
         Iterator<CreeperBurntBlock> iter = burntList.iterator();
         int d = CreeperConfig.getInt(CfgVal.WAIT_BEFORE_BURN_AGAIN);
         Date time = new Date(new Date().getTime() + 1000 * d);
@@ -113,7 +121,8 @@ public abstract class BurntBlockManager {
     /**
      * Replace the burnt blocks that have disappeared for long enough.
      */
-    private static void replaceBurnt() {
+    private static void replaceBurnt()
+    {
 
         int d = CreeperConfig.getInt(CfgVal.WAIT_BEFORE_BURN_AGAIN);
         Date time = new Date(new Date().getTime() + 1000 * d);
@@ -143,7 +152,8 @@ public abstract class BurntBlockManager {
      * @param block
      *            The block to be recorded.
      */
-    public static void recordBurntBlock(Block block) {
+    public static void recordBurntBlock(Block block)
+    {
         CreeperBlock b = CreeperBlock.newBlock(block.getState());
         if (b == null)
             return;
@@ -161,7 +171,8 @@ public abstract class BurntBlockManager {
      * @param block
      *            The block to add.
      */
-    public static void recordBurntBlock(CreeperBurntBlock block) {
+    public static void recordBurntBlock(CreeperBurntBlock block)
+    {
         if (block.getBlock() != null)
         {
             burntList.add(block);
@@ -178,7 +189,8 @@ public abstract class BurntBlockManager {
      *            The location to check.
      * @return Whether the location is close to a recently burnt block.
      */
-    public static boolean isNextToFire(Location location) {
+    public static boolean isNextToFire(Location location)
+    {
         if (!CreeperConfig.getBool(CfgVal.LEAVES_VINES))
             return false;
         return fireIndex.hasNeighbor(location);
@@ -189,7 +201,8 @@ public abstract class BurntBlockManager {
      * 
      * @return Whether there is no recorded blocks to be replaced.
      */
-    public static boolean isIndexEmpty() {
+    public static boolean isIndexEmpty()
+    {
         if (!CreeperConfig.getBool(CfgVal.LEAVES_VINES))
             return false;
         return fireIndex.isEmpty();
@@ -202,7 +215,8 @@ public abstract class BurntBlockManager {
      *            The block.
      * @return Whether the block was recently burnt.
      */
-    public static boolean wasRecentlyBurnt(Block block) {
+    public static boolean wasRecentlyBurnt(Block block)
+    {
         if (CreeperConfig.getInt(CfgVal.WAIT_BEFORE_BURN_AGAIN) <= 0)
             return false;
         Date d = recentlyBurnt.get(block.getLocation());
@@ -213,7 +227,8 @@ public abstract class BurntBlockManager {
      * Clean up the block lists, remove the useless blocks. Do not use when in
      * light weight mode.
      */
-    private static void cleanUp() {
+    private static void cleanUp()
+    {
         if (CreeperConfig.getBool(CfgVal.LEAVES_VINES))
             fireIndex.clean();
         if (CreeperConfig.getInt(CfgVal.WAIT_BEFORE_BURN_AGAIN) > 0)

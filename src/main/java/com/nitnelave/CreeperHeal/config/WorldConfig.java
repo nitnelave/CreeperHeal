@@ -29,7 +29,8 @@ import com.nitnelave.CreeperHeal.utils.FileUtils;
  * @author nitnelave
  * 
  */
-public class WorldConfig {
+public class WorldConfig
+{
 
     private final HashMap<String, ConfigValue<Boolean>> booleans = new HashMap<String, ConfigValue<Boolean>>();
     private final String name;
@@ -46,7 +47,8 @@ public class WorldConfig {
      * @param name
      *            The world's name.
      */
-    public WorldConfig(String name) {
+    public WorldConfig(String name)
+    {
         this.name = name;
         worldFolder = new File(CreeperHeal.getCHFolder().getPath() + "/" + name);
         configFile = new File(worldFolder + "/config.yml");
@@ -55,7 +57,8 @@ public class WorldConfig {
         fillMaps();
     }
 
-    private void fillMaps() {
+    private void fillMaps()
+    {
         for (WCfgVal v : WCfgVal.values())
             if (v.getDefaultValue() instanceof Boolean)
                 booleans.put(v.getKey(), new BooleanConfigValue(v, getFile(v)));
@@ -85,7 +88,8 @@ public class WorldConfig {
                 }
     }
 
-    private YamlConfiguration getFile(WCfgVal v) {
+    private YamlConfiguration getFile(WCfgVal v)
+    {
         switch (v.getFile())
         {
         case ADVANCED:
@@ -103,7 +107,8 @@ public class WorldConfig {
      * 
      * @return The world's name.
      */
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
@@ -112,14 +117,16 @@ public class WorldConfig {
      * 
      * @return Whether the world has timed repairs enabled.
      */
-    public boolean isRepairTimed() {
+    public boolean isRepairTimed()
+    {
         return repairTime.getValue() > -1;
     }
 
     /**
      * Load the config from the file.
      */
-    protected void load() {
+    protected void load()
+    {
         worldFolder.mkdirs();
         if (!configFile.exists())
             FileUtils.copyJarConfig(configFile, "world.yml");
@@ -156,9 +163,11 @@ public class WorldConfig {
         griefPlaceList.load();
 
         if (isRepairTimed())
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(CreeperHeal.getInstance(), new Runnable() {
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(CreeperHeal.getInstance(), new Runnable()
+            {
                 @Override
-                public void run() {
+                public void run()
+                {
                     checkReplaceTime();
                 }
             }, 200, 1200);
@@ -167,7 +176,8 @@ public class WorldConfig {
     /*
      * Task to check if the explosions should be replaced.
      */
-    protected void checkReplaceTime() {
+    protected void checkReplaceTime()
+    {
         long time = Bukkit.getServer().getWorld(getName()).getTime();
         if (((Math.abs(getRepairTime() - time) < 600) || (Math.abs(Math.abs(getRepairTime()
                                                                             - time) - 24000)) < 600))
@@ -180,7 +190,8 @@ public class WorldConfig {
     /**
      * Write the world's settings to the corresponding file.
      */
-    protected void save() {
+    protected void save()
+    {
         for (ConfigValue<Boolean> v : booleans.values())
             v.write();
         repairTime.write();
@@ -210,7 +221,8 @@ public class WorldConfig {
      * @throws NullPointerException
      *             If the key does not represent a boolean.
      */
-    public boolean getBool(WCfgVal key) throws NullPointerException {
+    public boolean getBool(WCfgVal key) throws NullPointerException
+    {
         return booleans.get(key.getKey()).getValue();
     }
 
@@ -221,7 +233,8 @@ public class WorldConfig {
      *            The entity that caused the damage.
      * @return Whether the damage should be replaced.
      */
-    public boolean shouldReplace(Entity entity) {
+    public boolean shouldReplace(Entity entity)
+    {
         if (getBool(WCfgVal.WORLD_ON))
         {
             if (entity != null)
@@ -258,7 +271,8 @@ public class WorldConfig {
      * @return Whether the location is above the limit, or true if height
      *         replacement is not enabled.
      */
-    public boolean isAbove(Location loc) {
+    public boolean isAbove(Location loc)
+    {
         return !getBool(WCfgVal.REPLACE_ABOVE) || loc.getBlockY() >= replaceLimit.getValue();
     }
 
@@ -269,7 +283,8 @@ public class WorldConfig {
      *            The block to test.
      * @return Whether the block's type is protected.
      */
-    public boolean isProtected(Block block) {
+    public boolean isProtected(Block block)
+    {
         return protectList.getValue().contains(new BlockId(block))
                || (block.getState() instanceof InventoryHolder
                    && CreeperConfig.getBool(CfgVal.REPLACE_PROTECTED_CHESTS) && PluginHandler
@@ -282,7 +297,8 @@ public class WorldConfig {
      * 
      * @return Whether any grief protection is enabled.
      */
-    public boolean hasGriefProtection() {
+    public boolean hasGriefProtection()
+    {
         return getBool(WCfgVal.BLOCK_LAVA)
                || getBool(WCfgVal.BLOCK_IGNITE)
                || getBool(WCfgVal.BLOCK_PVP)
@@ -306,7 +322,8 @@ public class WorldConfig {
      *            The block to test.
      * @return Whether the block is blacklisted.
      */
-    public boolean isGriefBlackListed(Block block) {
+    public boolean isGriefBlackListed(Block block)
+    {
         return griefPlaceList.getValue().contains(new BlockId(block));
     }
 
@@ -315,7 +332,8 @@ public class WorldConfig {
      * 
      * @return The world.
      */
-    public World getWorld() {
+    public World getWorld()
+    {
         return Bukkit.getWorld(name);
     }
 
@@ -329,7 +347,8 @@ public class WorldConfig {
      * @throws NullPointerException
      *             If the key is not a valid boolean configuration value.
      */
-    public void setBool(WCfgVal key, boolean value) throws NullPointerException {
+    public void setBool(WCfgVal key, boolean value) throws NullPointerException
+    {
         ConfigValue<Boolean> v = booleans.get(key.getKey());
         if (v == null)
             throw new NullPointerException("Unknown config key path : " + key.getKey());
@@ -346,7 +365,8 @@ public class WorldConfig {
      * @throws NullPointerException
      *             If the key is not a valid Integer configuration value.
      */
-    public void setInt(WCfgVal key, int value) throws NullPointerException {
+    public void setInt(WCfgVal key, int value) throws NullPointerException
+    {
         switch (key)
         {
         case REPAIR_TIME:
@@ -360,7 +380,8 @@ public class WorldConfig {
         }
     }
 
-    protected void setList(WCfgVal val, HashSet<BlockId> value) {
+    protected void setList(WCfgVal val, HashSet<BlockId> value)
+    {
         switch (val)
         {
         case REPLACE_BLACK_LIST:
@@ -385,7 +406,8 @@ public class WorldConfig {
      * 
      * @return The time at which repairs are enforced, -1 if deactivated.
      */
-    public int getRepairTime() {
+    public int getRepairTime()
+    {
         return repairTime.getValue();
     }
 
@@ -397,7 +419,8 @@ public class WorldConfig {
      *            The blockId of the block.
      * @return True if the block should not be blacklisted.
      */
-    public boolean isBlackListed(BlockId id) {
+    public boolean isBlackListed(BlockId id)
+    {
         if (getBool(WCfgVal.USE_REPLACE_WHITE_LIST))
             return !replaceWhiteList.getValue().contains(id);
         else

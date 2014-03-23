@@ -22,7 +22,8 @@ import com.nitnelave.CreeperHeal.utils.CreeperUtils;
  * @author nitnelave
  * 
  */
-class CreeperChest extends CreeperBlock {
+class CreeperChest extends CreeperBlock
+{
 
     private final Block chest;
 
@@ -33,7 +34,8 @@ class CreeperChest extends CreeperBlock {
     /*
      * Constructor.
      */
-    protected CreeperChest(BlockState blockState) {
+    protected CreeperChest(BlockState blockState)
+    {
         super(blockState);
         chest = getBlock();
         Inventory inv = ((InventoryHolder) blockState).getInventory();
@@ -60,7 +62,8 @@ class CreeperChest extends CreeperBlock {
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#remove()
      */
     @Override
-    public void remove() {
+    public void remove()
+    {
         if (CreeperConfig.getWorld(getWorld()).getBool(WCfgVal.DROP_CHEST_CONTENTS))
         {
             World w = getWorld();
@@ -81,7 +84,8 @@ class CreeperChest extends CreeperBlock {
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#dropBlock()
      */
     @Override
-    public boolean drop(boolean forced) {
+    public boolean drop(boolean forced)
+    {
         ItemStack[] stacks = getTotalInventory();
         if (stacks != null)
             for (ItemStack stack : stacks)
@@ -94,7 +98,8 @@ class CreeperChest extends CreeperBlock {
      * Get the total inventory : it is either the normal one, or in case of a
      * double chest, the combined inventory of both chests.
      */
-    private ItemStack[] getTotalInventory() {
+    private ItemStack[] getTotalInventory()
+    {
         if (!hasNeighbor())
             return storedInventory;
         ItemStack[] otherInv = neighborInventory;
@@ -107,7 +112,8 @@ class CreeperChest extends CreeperBlock {
     /*
      * Get whether the chest has a neighbor (double chest).
      */
-    private boolean hasNeighbor() {
+    private boolean hasNeighbor()
+    {
         return neighbor != null;
     }
 
@@ -117,7 +123,8 @@ class CreeperChest extends CreeperBlock {
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#update(boolean)
      */
     @Override
-    public void update() {
+    public void update()
+    {
         super.update();
         getBlock().setType(blockState.getType());
         getBlock().setData(blockState.getRawData());
@@ -156,7 +163,8 @@ class CreeperChest extends CreeperBlock {
     /*
      * Get the other chest of the double chest. null if it is a simple chest.
      */
-    private static NeighborChest scanForNeighborChest(BlockState block) {
+    private static NeighborChest scanForNeighborChest(BlockState block)
+    {
         return scanForNeighborChest(block.getWorld(), block.getX(), block.getY(), block.getZ(), block.getRawData(), block.getType());
     }
 
@@ -164,7 +172,8 @@ class CreeperChest extends CreeperBlock {
      * Get the other chest of the double chest. null if it is a simple chest.
      */
     private static NeighborChest scanForNeighborChest(World world, int x, int y, int z, short d,
-                                                      Material material) {
+                                                      Material material)
+    {
         Block neighbor;
         if (d <= 3)
         {

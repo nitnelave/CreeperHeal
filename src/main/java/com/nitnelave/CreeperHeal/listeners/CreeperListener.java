@@ -36,7 +36,8 @@ import com.nitnelave.CreeperHeal.utils.Suffocating;
  * @author nitnelave
  * 
  */
-public class CreeperListener implements Listener {
+public class CreeperListener implements Listener
+{
 
     /**
      * Listener for the EntityExplodeEvent. Record when appropriate the
@@ -46,7 +47,8 @@ public class CreeperListener implements Listener {
      *            The EntityExplode event.
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onEntityExplode(EntityExplodeEvent event) {
+    public void onEntityExplode(EntityExplodeEvent event)
+    {
         WorldConfig world = CreeperConfig.getWorld(event.getLocation().getWorld());
 
         if (!FactionHandler.shouldIgnore(event.blockList(), world))
@@ -67,7 +69,8 @@ public class CreeperListener implements Listener {
      *            The HangingBreakEvent.
      */
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onHangingBreak(HangingBreakEvent event) {
+    public void onHangingBreak(HangingBreakEvent event)
+    {
         Hanging h = event.getEntity();
         WorldConfig world = CreeperConfig.getWorld(h.getWorld());
         switch (event.getCause())
@@ -93,7 +96,8 @@ public class CreeperListener implements Listener {
      *            The EntityChangeBlock event.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onEntityChangeBlock(EntityChangeBlockEvent event) {
+    public void onEntityChangeBlock(EntityChangeBlockEvent event)
+    {
         if (event.getEntityType() == EntityType.SILVERFISH
             && event.getBlock().getType() == Material.MONSTER_EGGS
             && CreeperConfig.getBool(CfgVal.REPLACE_SILVERFISH_BLOCKS))
@@ -113,7 +117,8 @@ public class CreeperListener implements Listener {
      *            The EntityBreakDoor event.
      */
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onEntityBreakDoor(EntityBreakDoorEvent event) {
+    public void onEntityBreakDoor(EntityBreakDoorEvent event)
+    {
         WorldConfig world = CreeperConfig.getWorld(event.getBlock().getWorld());
         if (event.getEntityType() == EntityType.ZOMBIE && world.getBool(WCfgVal.ZOMBIE_DOOR))
         {
@@ -122,11 +127,13 @@ public class CreeperListener implements Listener {
         }
     }
 
-    class ReplaceMonsterEgg implements Runnable {
+    class ReplaceMonsterEgg implements Runnable
+    {
         private final Block block;
         private final Material type;
 
-        public ReplaceMonsterEgg(Block block) {
+        public ReplaceMonsterEgg(Block block)
+        {
             switch (block.getData())
             {
             case 0:
@@ -142,7 +149,8 @@ public class CreeperListener implements Listener {
         }
 
         @Override
-        public void run() {
+        public void run()
+        {
             block.setType(type);
             Suffocating.checkPlayerOneBlock(block.getLocation());
         }

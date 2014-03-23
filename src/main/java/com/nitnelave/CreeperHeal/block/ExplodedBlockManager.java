@@ -28,7 +28,8 @@ import com.nitnelave.CreeperHeal.utils.NeighborExplosion;
  * @author nitnelave
  * 
  */
-public class ExplodedBlockManager {
+public class ExplodedBlockManager
+{
 
     /*
      * List of explosions, to replace the blocks.
@@ -50,13 +51,16 @@ public class ExplodedBlockManager {
      */
     private static BukkitTask task;
 
-    public static void init() {
+    public static void init()
+    {
         if (CreeperConfig.getBool(CfgVal.LEAVES_VINES))
         {
             explosionIndex = new NeighborExplosion();
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(CreeperHeal.getInstance(), new Runnable() {
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(CreeperHeal.getInstance(), new Runnable()
+            {
                 @Override
-                public void run() {
+                public void run()
+                {
                     cleanIndex();
                 }
             }, 200, 7200);
@@ -71,14 +75,16 @@ public class ExplodedBlockManager {
      * @param target
      *            The player around whom the explosions are replaced.
      */
-    public static void replaceNear(Player target) {
+    public static void replaceNear(Player target)
+    {
         removeExplosionsAround(target.getLocation(), CreeperConfig.getInt(CfgVal.DISTANCE_NEAR));
     }
 
     /*
      * Remove all the explosions close enough around the location.
      */
-    private static void removeExplosionsAround(Location loc, float distanceNear) {
+    private static void removeExplosionsAround(Location loc, float distanceNear)
+    {
         World w = loc.getWorld();
         LinkedList<CreeperExplosion> pass = new LinkedList<CreeperExplosion>();
         ListIterator<CreeperExplosion> iter = explosionList.listIterator();
@@ -108,7 +114,8 @@ public class ExplodedBlockManager {
      * @param world
      *            The world in which the explosions happened.
      */
-    public static void forceReplace(WorldConfig world) {
+    public static void forceReplace(WorldConfig world)
+    {
         removeExplosionsAround(world.getWorld().getSpawnLocation(), Float.POSITIVE_INFINITY);
         BurntBlockManager.forceReplaceBurnt(world);
     }
@@ -116,7 +123,8 @@ public class ExplodedBlockManager {
     /**
      * Force the replacement of all explosions.
      */
-    public static void forceReplace() {
+    public static void forceReplace()
+    {
         ListIterator<CreeperExplosion> iter = explosionList.listIterator();
         LinkedList<CreeperExplosion> pass = new LinkedList<CreeperExplosion>();
         while (iter.hasNext())
@@ -142,7 +150,8 @@ public class ExplodedBlockManager {
      *            The explosion.
      */
     public static void processExplosion(EntityExplodeEvent event,
-                                        CHExplosionRecordEvent.ExplosionReason reason) {
+                                        CHExplosionRecordEvent.ExplosionReason reason)
+    {
         processExplosion(event.blockList(), event.getLocation(), reason);
     }
 
@@ -156,7 +165,8 @@ public class ExplodedBlockManager {
      *            The location of the explosion.
      */
     public static void processExplosion(List<Block> blocks, Location location,
-                                        CHExplosionRecordEvent.ExplosionReason reason) {
+                                        CHExplosionRecordEvent.ExplosionReason reason)
+    {
         if (PluginHandler.isInArena(location))
             return;
 
@@ -195,7 +205,8 @@ public class ExplodedBlockManager {
     /**
      * Check to see if any block has to be replaced in the explosions.
      */
-    private static void checkReplace() { //check to see if any block has to be replaced
+    private static void checkReplace()
+    { //check to see if any block has to be replaced
         ListIterator<CreeperExplosion> iter = explosionList.listIterator();
         while (iter.hasNext())
         {
@@ -224,7 +235,8 @@ public class ExplodedBlockManager {
      *            The location to check.
      * @return Whether the location is in the radius of an explosion.
      */
-    public static boolean isNextToExplosion(Location location) {
+    public static boolean isNextToExplosion(Location location)
+    {
         if (!CreeperConfig.getBool(CfgVal.LEAVES_VINES))
             return false;
         return explosionIndex.hasNeighbor(location);
@@ -234,7 +246,8 @@ public class ExplodedBlockManager {
      * Clean the explosion map from useless empty explosions. Do not use when in
      * light weight mode.
      */
-    private static void cleanIndex() {
+    private static void cleanIndex()
+    {
         if (!CreeperConfig.getBool(CfgVal.LEAVES_VINES))
             return;
         explosionIndex.clean();
@@ -245,7 +258,8 @@ public class ExplodedBlockManager {
      * 
      * @return Whether there are no more explosions to replace.
      */
-    public static boolean isExplosionListEmpty() {
+    public static boolean isExplosionListEmpty()
+    {
         return explosionList.isEmpty();
     }
 
@@ -255,7 +269,8 @@ public class ExplodedBlockManager {
      * @param hanging
      *            The hanging to record.
      */
-    public static void recordHanging(Hanging hanging) {
+    public static void recordHanging(Hanging hanging)
+    {
         CreeperHanging h = CreeperHanging.newHanging(hanging);
         if (h != null)
         {
@@ -264,10 +279,13 @@ public class ExplodedBlockManager {
         }
     }
 
-    private static void scheduleTask() {
-        task = Bukkit.getServer().getScheduler().runTaskTimer(CreeperHeal.getInstance(), new Runnable() {
+    private static void scheduleTask()
+    {
+        task = Bukkit.getServer().getScheduler().runTaskTimer(CreeperHeal.getInstance(), new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 checkReplace(); //check to replace explosions/blocks
             }
         }, 0, CreeperConfig.getBool(CfgVal.BLOCK_PER_BLOCK) ? CreeperConfig.getInt(CfgVal.BLOCK_PER_BLOCK_INTERVAL)
@@ -278,7 +296,8 @@ public class ExplodedBlockManager {
      * Cancel and re-schedule the block replacement task, to update the block
      * interval.
      */
-    public static void rescheduleTask() {
+    public static void rescheduleTask()
+    {
         task.cancel();
         scheduleTask();
     }

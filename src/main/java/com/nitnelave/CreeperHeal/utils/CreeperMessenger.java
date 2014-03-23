@@ -25,7 +25,8 @@ import com.nitnelave.CreeperHeal.utils.CreeperPlayer.WarningCause;
  * @author nitnelave
  * 
  */
-public abstract class CreeperMessenger {
+public abstract class CreeperMessenger
+{
     /*
      * The properties generated from reading the messages file.
      */
@@ -46,7 +47,8 @@ public abstract class CreeperMessenger {
     /*
      * Load the messages from the file.
      */
-    private static void load() {
+    private static void load()
+    {
         prop = new Properties();
         File messageFile = new File(CreeperHeal.getCHFolder().getPath() + "/messages.properties");
         try
@@ -71,7 +73,8 @@ public abstract class CreeperMessenger {
     /*
      * Replace the color keywords in the messages by the chat codes equivalents.
      */
-    private static String colorToChat(String message) {
+    private static String colorToChat(String message)
+    {
         String result = message;
         for (ChatColor c : ChatColor.values())
             result = result.replaceAll("\\{" + c.name() + "\\}", c.toString());
@@ -90,7 +93,8 @@ public abstract class CreeperMessenger {
      *            Values to replace the formatting keywords.
      * @return A formatted string for chat.
      */
-    public static String processMessage(String type, String... values) {
+    public static String processMessage(String type, String... values)
+    {
         String message = prop.getProperty(type);
         try
         {
@@ -130,7 +134,8 @@ public abstract class CreeperMessenger {
      * @return A formatted message.
      */
     private static String getMessage(WarningCause cause, String offender, String world,
-                                     boolean blocked, String data, boolean player) {
+                                     boolean blocked, String data, boolean player)
+    {
         String prefix = blocked ? "block-" : "warn-";
         String suffix = blocked ? (player ? "-player" : "-admin") : "";
         String message = null;
@@ -161,7 +166,8 @@ public abstract class CreeperMessenger {
     /**
      * Initialize the warn list with all concerned players.
      */
-    private static void populateWarnList() {
+    private static void populateWarnList()
+    {
         warnList.clear();
         for (Player p : Bukkit.getServer().getOnlinePlayers())
             registerPlayer(new CreeperPlayer(p));
@@ -179,7 +185,8 @@ public abstract class CreeperMessenger {
      * @param material
      *            Some info about the message.
      */
-    public static void warn(WarningCause cause, Player offender, boolean blocked, String material) {
+    public static void warn(WarningCause cause, Player offender, boolean blocked, String material)
+    {
         String message = CreeperMessenger.getMessage(cause, offender.getName(), offender.getWorld().getName(), blocked, material, false);
         SimpleDateFormat f = new SimpleDateFormat("HH:mm:ss");
         if (CreeperConfig.getBool(CfgVal.LOG_WARNINGS))
@@ -198,7 +205,8 @@ public abstract class CreeperMessenger {
      * @param player
      *            The player to remove.
      */
-    public static void removeFromWarnList(CreeperPlayer player) {
+    public static void removeFromWarnList(CreeperPlayer player)
+    {
         warnList.remove(player);
     }
 
@@ -208,7 +216,8 @@ public abstract class CreeperMessenger {
      * @param player
      *            The player to add.
      */
-    public static void registerPlayer(CreeperPlayer player) {
+    public static void registerPlayer(CreeperPlayer player)
+    {
         if (player.hasWarnings())
             warnList.add(player);
 

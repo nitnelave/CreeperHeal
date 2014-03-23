@@ -6,7 +6,8 @@ package com.nitnelave.CreeperHeal.utils;
  * @author nitnelave
  * 
  */
-public class Point {
+public class Point
+{
     /**
      * The coordinates.
      */
@@ -20,7 +21,8 @@ public class Point {
      * @param y
      *            The y coordinate.
      */
-    public Point(int x, int y) {
+    public Point(int x, int y)
+    {
         this.x = x;
         this.y = y;
     }
@@ -31,7 +33,8 @@ public class Point {
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         if (this == o)
             return true;
         if (o instanceof Point)
@@ -49,7 +52,8 @@ public class Point {
      * @see java.lang.Object#hashCode()
      */
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return x * 10000 + y;
     }
 

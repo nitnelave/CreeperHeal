@@ -14,7 +14,8 @@ import com.nitnelave.CreeperHeal.block.RailsIndex;
  * 
  * @author nitnelave
  */
-public class RailsUpdateListener implements Listener {
+public class RailsUpdateListener implements Listener
+{
 
     /**
      * Listener for the blockPhysicsEvent, to prevent rails from updating.
@@ -23,7 +24,8 @@ public class RailsUpdateListener implements Listener {
      *            The BlockPhysicsEvent
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onBlockPhysics(BlockPhysicsEvent event) {
+    public void onBlockPhysics(BlockPhysicsEvent event)
+    {
         Block b = event.getBlock();
         if (RailsIndex.isUpdatePrevented(CreeperBlock.newBlock(b.getState())))
             event.setCancelled(true);

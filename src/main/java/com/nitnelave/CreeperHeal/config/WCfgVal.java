@@ -7,7 +7,8 @@ import com.nitnelave.CreeperHeal.block.BlockId;
 /**
  * An enum with all of the config values related to a single world.
  */
-public enum WCfgVal implements CfgValEnumMember {
+public enum WCfgVal implements CfgValEnumMember
+{
     CREEPERS("creepers", true, CONFIG_FILES.CONFIG),
     TNT("TNT", true, CONFIG_FILES.CONFIG),
     GHAST("ghast", true, CONFIG_FILES.CONFIG),
@@ -47,7 +48,8 @@ public enum WCfgVal implements CfgValEnumMember {
     WORLD_ON("enabled", true, CONFIG_FILES.CONFIG),
     DROP_CHEST_CONTENTS("drop-chest-contents", false, CONFIG_FILES.ADVANCED);
 
-    protected static enum CONFIG_FILES {
+    protected static enum CONFIG_FILES
+    {
         CONFIG,
         ADVANCED,
         GRIEF;
@@ -57,7 +59,8 @@ public enum WCfgVal implements CfgValEnumMember {
     private final Object defaultValue;
     private final CONFIG_FILES file;
 
-    private WCfgVal(String key, Object value, CONFIG_FILES file) {
+    private WCfgVal(String key, Object value, CONFIG_FILES file)
+    {
         this.key = key;
         defaultValue = value;
         this.file = file;
@@ -69,7 +72,8 @@ public enum WCfgVal implements CfgValEnumMember {
      * @see com.nitnelave.CreeperHeal.config.CfgValEnumMember#getKey()
      */
     @Override
-    public String getKey() {
+    public String getKey()
+    {
         return key;
     }
 
@@ -79,11 +83,13 @@ public enum WCfgVal implements CfgValEnumMember {
      * @see com.nitnelave.CreeperHeal.config.CfgValEnumMember#getDefaultValue()
      */
     @Override
-    public Object getDefaultValue() {
+    public Object getDefaultValue()
+    {
         return defaultValue;
     }
 
-    protected CONFIG_FILES getFile() {
+    protected CONFIG_FILES getFile()
+    {
         return file;
     }
 }

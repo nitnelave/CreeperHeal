@@ -27,14 +27,16 @@ import com.nitnelave.CreeperHeal.utils.CreeperPermissionManager;
  * @author nitnelave
  * 
  */
-public class CreeperCommandManager implements CommandExecutor {
+public class CreeperCommandManager implements CommandExecutor
+{
     private final static String GREEN = ChatColor.GREEN.toString(),
                     PURPLE = ChatColor.DARK_PURPLE.toString();
 
     /**
      * Register commands.
      */
-    public static void registerCommands() {
+    public static void registerCommands()
+    {
         CommandMap commandMap = null;
         try
         {
@@ -66,7 +68,8 @@ public class CreeperCommandManager implements CommandExecutor {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String commandLabel,
-                             String[] args) {
+                             String[] args)
+    {
         if (args.length != 0)
         {
             String cmd = args[0];
@@ -150,7 +153,8 @@ public class CreeperCommandManager implements CommandExecutor {
     /*
      * Displays the help according to the permissions of the player.
      */
-    private void sendHelp(CommandSender sender) {
+    private void sendHelp(CommandSender sender)
+    {
         sender.sendMessage("CreeperHeal -- Repair explosions damage and make traps");
         sender.sendMessage("--------------------------------------------");
 
@@ -217,7 +221,8 @@ public class CreeperCommandManager implements CommandExecutor {
      *            The sender who performed the command.
      */
     private void booleanCmd(WorldConfig world, WCfgVal key, String[] args, String setting,
-                            CommandSender sender) {
+                            CommandSender sender)
+    {
         if (sender instanceof Player && !checkPermissions((Player) sender, "admin"))
             sender.sendMessage(getMessage("no-permission-command", null, sender.getName(), null, null, null, null));
 
@@ -258,7 +263,8 @@ public class CreeperCommandManager implements CommandExecutor {
      * @return The new value of the setting.
      */
     private void integerCmd(CfgVal key, String[] args, String help, String unit,
-                            CommandSender sender) {
+                            CommandSender sender)
+    {
         if (sender instanceof Player && !checkPermissions((Player) sender, "admin"))
             sender.sendMessage(getMessage("no-permission-command", null, sender.getName(), null, null, null, null));
 
@@ -300,7 +306,8 @@ public class CreeperCommandManager implements CommandExecutor {
      */
     private void
         forceCmd(String[] args, @SuppressWarnings("unused") String msg, CommandSender sender,
-                 WorldConfig currentWorld) {
+                 WorldConfig currentWorld)
+    {
         String cmd = args[0];
 
         if (sender instanceof Player && !checkPermissions((Player) sender, "heal", "admin"))
@@ -331,7 +338,8 @@ public class CreeperCommandManager implements CommandExecutor {
      * @param args
      *            The command arguments.
      */
-    private void healNear(CommandSender sender, String[] args) {
+    private void healNear(CommandSender sender, String[] args)
+    {
         if (sender instanceof Player)
         {
             Player player = (Player) sender;
@@ -384,7 +392,8 @@ public class CreeperCommandManager implements CommandExecutor {
     /*
      * Enable of disable CreeperHeal in a world.
      */
-    private void enable(boolean enable, WorldConfig currentWorld, CommandSender sender) {
+    private void enable(boolean enable, WorldConfig currentWorld, CommandSender sender)
+    {
         boolean hasPerm = true;
         if (sender instanceof Player)
         {
@@ -408,14 +417,16 @@ public class CreeperCommandManager implements CommandExecutor {
     /*
      * Check if the player has at least one of the permissions.
      */
-    private boolean checkPermissions(Player player, String... nodes) {
+    private boolean checkPermissions(Player player, String... nodes)
+    {
         return CreeperPermissionManager.checkPermissions(player, false, nodes);
     }
 
     /*
      * Get the formatted message to send to a player.
      */
-    private String getMessage(String message, String... values) {
+    private String getMessage(String message, String... values)
+    {
         return CreeperMessenger.processMessage(message, values);
     }
 

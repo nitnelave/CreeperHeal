@@ -8,12 +8,14 @@ import org.bukkit.block.NoteBlock;
  * @author nitnelave
  * 
  */
-class CreeperNoteBlock extends CreeperBlock {
+class CreeperNoteBlock extends CreeperBlock
+{
 
     /*
      * Constructor.
      */
-    protected CreeperNoteBlock(NoteBlock blockState) {
+    protected CreeperNoteBlock(NoteBlock blockState)
+    {
         super(blockState);
     }
 
@@ -23,7 +25,8 @@ class CreeperNoteBlock extends CreeperBlock {
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#update(boolean)
      */
     @Override
-    public void update() {
+    public void update()
+    {
         super.update();
         ((NoteBlock) getBlock().getState()).setRawNote(((NoteBlock) blockState).getRawNote());
     }

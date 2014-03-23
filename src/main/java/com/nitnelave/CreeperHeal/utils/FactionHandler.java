@@ -17,7 +17,8 @@ import com.nitnelave.CreeperHeal.config.WorldConfig;
  * @author nitnelave
  * 
  */
-public abstract class FactionHandler {
+public abstract class FactionHandler
+{
 
     private static boolean isFactionsEnabled = false;
 
@@ -32,7 +33,8 @@ public abstract class FactionHandler {
      * @param enabled
      *            Whether it is enabled.
      */
-    public static void setFactionsEnabled(boolean enabled) {
+    public static void setFactionsEnabled(boolean enabled)
+    {
         isFactionsEnabled = enabled;
     }
 
@@ -45,7 +47,8 @@ public abstract class FactionHandler {
      *            The CH configuration for the world.
      * @return Whether the explosion should be ignored.
      */
-    public static boolean shouldIgnore(List<Block> list, WorldConfig world) {
+    public static boolean shouldIgnore(List<Block> list, WorldConfig world)
+    {
         if (!isFactionsEnabled)
             return false;
 
@@ -68,7 +71,8 @@ public abstract class FactionHandler {
      *            The CH configuration for the world.
      * @return Whether the replacement should be ignored.
      */
-    public static boolean shouldIgnore(Block block, WorldConfig world) {
+    public static boolean shouldIgnore(Block block, WorldConfig world)
+    {
         ArrayList<Block> l = new ArrayList<Block>();
         l.add(block);
         return shouldIgnore(l, world);

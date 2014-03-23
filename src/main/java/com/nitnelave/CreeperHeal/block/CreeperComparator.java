@@ -16,7 +16,8 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
  * @author nitnelave
  * 
  */
-class CreeperComparator implements Comparator<Replaceable> {
+class CreeperComparator implements Comparator<Replaceable>
+{
 
     private final Location loc;
 
@@ -24,7 +25,8 @@ class CreeperComparator implements Comparator<Replaceable> {
      * Constructor. Order between blocks with the same dependency status and at
      * the same level is undefined.
      */
-    public CreeperComparator() {
+    public CreeperComparator()
+    {
         loc = null;
     }
 
@@ -35,7 +37,8 @@ class CreeperComparator implements Comparator<Replaceable> {
      * @param loc
      *            The center of the explosion.
      */
-    CreeperComparator(Location loc) {
+    CreeperComparator(Location loc)
+    {
         this.loc = loc;
     }
 
@@ -45,7 +48,8 @@ class CreeperComparator implements Comparator<Replaceable> {
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
     @Override
-    public int compare(Replaceable b1, Replaceable b2) {
+    public int compare(Replaceable b1, Replaceable b2)
+    {
         boolean d1 = b1.isDependent(), d2 = b2.isDependent();
         if (d1 && !d2)
             return 1;
@@ -69,7 +73,8 @@ class CreeperComparator implements Comparator<Replaceable> {
         return sgn(b2.getLocation().distance(loc) - b1.getLocation().distance(loc));
     }
 
-    private int sgn(double d) {
+    private int sgn(double d)
+    {
         if (d < 0)
             return -1;
         else if (d > 0)

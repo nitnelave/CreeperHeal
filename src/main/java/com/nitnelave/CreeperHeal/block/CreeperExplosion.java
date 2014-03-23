@@ -29,7 +29,8 @@ import com.nitnelave.CreeperHeal.utils.Suffocating;
  * @author nitnelave
  * 
  */
-public class CreeperExplosion {
+public class CreeperExplosion
+{
     /**
      * The time after which the block replacements begin.
      */
@@ -47,7 +48,8 @@ public class CreeperExplosion {
      * @param loc
      *            The location of the explosion.
      */
-    public CreeperExplosion(Location loc) {
+    public CreeperExplosion(Location loc)
+    {
         world = CreeperConfig.getWorld(loc.getWorld());
         timer = new ReplacementTimer(new Date(new Date().getTime() + 1000
                                               * CreeperConfig.getInt(CfgVal.WAIT_BEFORE_HEAL)), world.isRepairTimed());
@@ -62,7 +64,8 @@ public class CreeperExplosion {
      * @param blocks
      *            The list of blocks to add.
      */
-    public void addBlocks(List<Block> blocks, Location newLoc) {
+    public void addBlocks(List<Block> blocks, Location newLoc)
+    {
         timer = new ReplacementTimer(new Date(new Date().getTime() + 1000
                                               * CreeperConfig.getInt(CfgVal.WAIT_BEFORE_HEAL)), world.isRepairTimed());
         loc = new Location(loc.getWorld(), (locWeight * loc.getX() + newLoc.getX())
@@ -85,14 +88,16 @@ public class CreeperExplosion {
      * 
      * @return The time of the explosion.
      */
-    public Date getTime() {
+    public Date getTime()
+    {
         return timer.getTime();
     }
 
     /*
      * Get the distance between the explosion's location and the furthest block.
      */
-    private double computeRadius() {
+    private double computeRadius()
+    {
         double r = 0;
         for (Replaceable b : blockList)
         {
@@ -107,7 +112,8 @@ public class CreeperExplosion {
      * 
      * @return The location of the explosion.
      */
-    public Location getLocation() {
+    public Location getLocation()
+    {
         return loc;
     }
 
@@ -117,14 +123,16 @@ public class CreeperExplosion {
      * 
      * @return The radius of the explosion.
      */
-    public double getRadius() {
+    public double getRadius()
+    {
         return radius;
     }
 
     /*
      * Replace all the blocks in the list.
      */
-    protected void replace_blocks(boolean shouldDrop, CHBlockHealReason reason) {
+    protected void replace_blocks(boolean shouldDrop, CHBlockHealReason reason)
+    {
         Iterator<Replaceable> iter = blockList.iterator();
         while (iter.hasNext())
         {
@@ -148,7 +156,8 @@ public class CreeperExplosion {
      * 
      * @return False if the list is now empty.
      */
-    private void replace_one_block() {
+    private void replace_one_block()
+    {
         Replaceable block;
         if (blockList.isEmpty())
             return;
@@ -167,7 +176,8 @@ public class CreeperExplosion {
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         if (this == o)
             return true;
         if (o instanceof CreeperExplosion)
@@ -184,14 +194,16 @@ public class CreeperExplosion {
      * @see java.lang.Object#hashCode()
      */
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return (int) (timer.hashCode() + radius + loc.hashCode());
     }
 
     /*
      * Check for dependent blocks and record them first.
      */
-    private void recordBlocks(List<Block> blocks) {
+    private void recordBlocks(List<Block> blocks)
+    {
         if (!blocks.isEmpty())
         {
             Iterator<Block> iter = blocks.iterator();
@@ -213,7 +225,8 @@ public class CreeperExplosion {
      * In case of possible obsidian destruction, check for obsidian around, and
      * give them a chance to be destroyed.
      */
-    private void checkForObsidian() {
+    private void checkForObsidian()
+    {
         int radius = CreeperConfig.getInt(CfgVal.OBSIDIAN_RADIUS);
         double chance = ((float) CreeperConfig.getInt(CfgVal.OBSIDIAN_CHANCE)) / 100;
         World w = loc.getWorld();
@@ -235,7 +248,8 @@ public class CreeperExplosion {
                 }
     }
 
-    private boolean isObsidianLike(Material m, boolean table) {
+    private boolean isObsidianLike(Material m, boolean table)
+    {
         return m == Material.OBSIDIAN
                || (table && (m == Material.ENCHANTMENT_TABLE || m == Material.ENDER_CHEST));
     }
@@ -247,7 +261,8 @@ public class CreeperExplosion {
      * @param block
      *            The block to record.
      */
-    public void record(Block block) {
+    public void record(Block block)
+    {
         CreeperBlock cBlock = CreeperBlock.newBlock(block.getState());
 
         if (cBlock == null || checked.contains(new ShortLocation(block)))
@@ -298,7 +313,8 @@ public class CreeperExplosion {
      * @param block
      *            The Replaceable to add.
      */
-    public void record(Replaceable block) {
+    public void record(Replaceable block)
+    {
         if (block != null)
         {
             blockList.add(block);
@@ -313,7 +329,8 @@ public class CreeperExplosion {
      * @return False if the explosion has not started its replacements yet
      *         because it is not time.
      */
-    public boolean checkReplace() {
+    public boolean checkReplace()
+    {
         if (timer.isTimed())
             return true;
         if (timer.checkReplace())
@@ -334,7 +351,8 @@ public class CreeperExplosion {
      * 
      * @return True if the explosion has started replacing blocks
      */
-    public boolean hasStartedReplacing() {
+    public boolean hasStartedReplacing()
+    {
         if (timer.isTimed())
             return false;
         return timer.checkReplace();
@@ -345,7 +363,8 @@ public class CreeperExplosion {
      * 
      * @return Whether the list is empty.
      */
-    public boolean isEmpty() {
+    public boolean isEmpty()
+    {
         return blockList.isEmpty();
     }
 

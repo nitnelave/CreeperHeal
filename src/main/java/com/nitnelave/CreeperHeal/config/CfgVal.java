@@ -3,7 +3,8 @@ package com.nitnelave.CreeperHeal.config;
 /**
  * An enum with all of the configuration value.
  */
-public enum CfgVal implements CfgValEnumMember {
+public enum CfgVal implements CfgValEnumMember
+{
 
     BLOCK_PER_BLOCK_INTERVAL("block-per-block.interval", 20, false),
     WAIT_BEFORE_HEAL("wait-before-heal.explosions", 60, false),
@@ -41,7 +42,8 @@ public enum CfgVal implements CfgValEnumMember {
     private final Object defaultValue;
     private final boolean advanced;
 
-    private CfgVal(String key, Object value, boolean adv) {
+    private CfgVal(String key, Object value, boolean adv)
+    {
         this.key = key;
         defaultValue = value;
         advanced = adv;
@@ -53,7 +55,8 @@ public enum CfgVal implements CfgValEnumMember {
      * @see com.nitnelave.CreeperHeal.config.CfgValEnumMember#getKey()
      */
     @Override
-    public String getKey() {
+    public String getKey()
+    {
         return key;
     }
 
@@ -63,7 +66,8 @@ public enum CfgVal implements CfgValEnumMember {
      * @see com.nitnelave.CreeperHeal.config.CfgValEnumMember#getDefaultValue()
      */
     @Override
-    public Object getDefaultValue() {
+    public Object getDefaultValue()
+    {
         return defaultValue;
     }
 
@@ -71,7 +75,8 @@ public enum CfgVal implements CfgValEnumMember {
      * Get whether this value is in the advanced file or the config file. Return
      * true if it is in the advanced file.
      */
-    protected boolean isAdvanced() {
+    protected boolean isAdvanced()
+    {
         return advanced;
     }
 }

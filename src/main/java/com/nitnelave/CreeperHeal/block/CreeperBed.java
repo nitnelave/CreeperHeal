@@ -14,7 +14,8 @@ import org.bukkit.block.BlockState;
  * @author nitnelave
  * 
  */
-class CreeperBed extends CreeperBlock {
+class CreeperBed extends CreeperBlock
+{
 
     /*
      * The direction the bed is facing.
@@ -24,7 +25,8 @@ class CreeperBed extends CreeperBlock {
     /*
      * Constructor.
      */
-    protected CreeperBed(BlockState blockState) {
+    protected CreeperBed(BlockState blockState)
+    {
         orientation = getFacing(blockState.getRawData());
         Block block = blockState.getBlock();
         if ((blockState.getRawData() & 8) == 0)
@@ -38,7 +40,8 @@ class CreeperBed extends CreeperBlock {
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#update()
      */
     @Override
-    public void update() {
+    public void update()
+    {
         super.update();
         byte data = (byte) (getRawData() & 3);
         BlockFace face = getFacing(data);
@@ -51,7 +54,8 @@ class CreeperBed extends CreeperBlock {
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#remove()
      */
     @Override
-    public void remove() {
+    public void remove()
+    {
         getBlock().getRelative(orientation).setType(Material.AIR);
         getBlock().setType(Material.AIR);
     }
@@ -62,11 +66,13 @@ class CreeperBed extends CreeperBlock {
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#getNeighbors()
      */
     @Override
-    public List<NeighborBlock> getDependentNeighbors() {
+    public List<NeighborBlock> getDependentNeighbors()
+    {
         return new ArrayList<NeighborBlock>();
     }
 
-    private BlockFace getFacing(byte data) {
+    private BlockFace getFacing(byte data)
+    {
         switch (data & 3)
         {
         case 0:

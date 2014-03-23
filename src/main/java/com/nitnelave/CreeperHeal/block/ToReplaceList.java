@@ -15,7 +15,8 @@ import com.nitnelave.CreeperHeal.CreeperHeal;
  * @author nitnelave
  * 
  */
-public abstract class ToReplaceList {
+public abstract class ToReplaceList
+{
 
     /*
      * Block to be replaced immediately after an explosion.
@@ -28,7 +29,8 @@ public abstract class ToReplaceList {
      * @param block
      *            The block to add.
      */
-    protected static void addToReplace(CreeperBlock block) {
+    protected static void addToReplace(CreeperBlock block)
+    {
         toReplace.put(block.getLocation(), block);
     }
 
@@ -36,10 +38,13 @@ public abstract class ToReplaceList {
      * Replace the blocks that should be immediately replaced after an
      * explosion, in a task run one tick later.
      */
-    protected static void replaceProtected() {
-        Bukkit.getScheduler().scheduleSyncDelayedTask(CreeperHeal.getInstance(), new Runnable() {
+    protected static void replaceProtected()
+    {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(CreeperHeal.getInstance(), new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 replaceAll();
             }
         });
@@ -48,7 +53,8 @@ public abstract class ToReplaceList {
     /*
      * Replace all the blocks.
      */
-    private static void replaceAll() {
+    private static void replaceAll()
+    {
         Iterator<Replaceable> iter = toReplace.values().iterator();
         while (iter.hasNext())
             iter.next().replace(true);

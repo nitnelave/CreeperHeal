@@ -10,7 +10,8 @@ import org.bukkit.block.BlockState;
  * @author nitnelave
  * 
  */
-class CreeperPiston extends CreeperBlock {
+class CreeperPiston extends CreeperBlock
+{
 
     private final BlockFace orientation;
     private final boolean extended;
@@ -18,7 +19,8 @@ class CreeperPiston extends CreeperBlock {
     /*
      * Constructor.
      */
-    protected CreeperPiston(BlockState blockState) {
+    protected CreeperPiston(BlockState blockState)
+    {
         this.blockState = blockState;
         BlockFace face;
         switch (getRawData() & 7)
@@ -58,7 +60,8 @@ class CreeperPiston extends CreeperBlock {
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#remove()
      */
     @Override
-    public void remove() {
+    public void remove()
+    {
         getBlock().setType(Material.AIR);
         if (extended)
             getBlock().getRelative(orientation).setType(Material.AIR);

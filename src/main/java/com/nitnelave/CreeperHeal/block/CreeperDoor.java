@@ -14,14 +14,16 @@ import org.bukkit.block.BlockState;
  * @author nitnelave
  * 
  */
-class CreeperDoor extends CreeperBlock {
+class CreeperDoor extends CreeperBlock
+{
 
     private final boolean hingeRight;
 
     /*
      * Constructor.
      */
-    protected CreeperDoor(BlockState blockState) {
+    protected CreeperDoor(BlockState blockState)
+    {
         Block block = blockState.getBlock();
         if ((blockState.getRawData() & 8) != 0)
             block = block.getRelative(BlockFace.DOWN);
@@ -35,7 +37,8 @@ class CreeperDoor extends CreeperBlock {
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#update()
      */
     @Override
-    public void update() {
+    public void update()
+    {
         Block blockUp = blockState.getBlock().getRelative(BlockFace.UP);
         if (checkForDrop(blockUp))
             return;
@@ -51,7 +54,8 @@ class CreeperDoor extends CreeperBlock {
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#remove()
      */
     @Override
-    public void remove() {
+    public void remove()
+    {
         getBlock().setType(Material.AIR);
         getBlock().getRelative(BlockFace.UP).setType(Material.AIR);
     }
@@ -62,7 +66,8 @@ class CreeperDoor extends CreeperBlock {
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#getNeighbors()
      */
     @Override
-    public List<NeighborBlock> getDependentNeighbors() {
+    public List<NeighborBlock> getDependentNeighbors()
+    {
         return new ArrayList<NeighborBlock>();
     }
 

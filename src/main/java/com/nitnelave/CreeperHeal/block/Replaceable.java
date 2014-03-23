@@ -13,7 +13,8 @@ import com.nitnelave.CreeperHeal.events.CHBlockHealEvent.CHBlockHealReason;
  * @author nitnelave
  * 
  */
-public interface Replaceable {
+public interface Replaceable
+{
 
     /**
      * Replace the block in the world. In case of a dependent item whose support

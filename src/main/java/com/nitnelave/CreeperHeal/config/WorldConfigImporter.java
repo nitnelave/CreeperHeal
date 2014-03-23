@@ -12,7 +12,8 @@ import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.block.BlockId;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
 
-abstract class WorldConfigImporter {
+abstract class WorldConfigImporter
+{
 
     private final static String[] STRING_BOOLEAN_OPTIONS = { "true", "false", "time" };
     private static boolean enderman, replaceAbove, blockLava, blockTNT, blockIgnite,
@@ -23,7 +24,8 @@ abstract class WorldConfigImporter {
     private static int replaceLimit, repairTime;
     private static HashSet<BlockId> blockBlackList, blockWhiteList, protectList, placeList;
 
-    private static void storeSettings(WorldConfig w) {
+    private static void storeSettings(WorldConfig w)
+    {
         w.setBool(WCfgVal.ENDERMAN, enderman);
         w.setBool(WCfgVal.REPLACE_ABOVE, replaceAbove);
         w.setBool(WCfgVal.BLOCK_LAVA, blockLava);
@@ -59,7 +61,8 @@ abstract class WorldConfigImporter {
 
     }
 
-    private static void from4(String name) {
+    private static void from4(String name)
+    {
 
         YamlConfiguration config = new YamlConfiguration();
         try
@@ -98,7 +101,8 @@ abstract class WorldConfigImporter {
         }
     }
 
-    private static void from6(String name) {
+    private static void from6(String name)
+    {
         File configFile = new File(CreeperHeal.getCHFolder().getPath() + "/" + name + ".yml");
         if (!configFile.exists())
             return;
@@ -148,7 +152,8 @@ abstract class WorldConfigImporter {
         configFile.delete();
     }
 
-    private static HashSet<BlockId> loadList(YamlConfiguration config, String key) {
+    private static HashSet<BlockId> loadList(YamlConfiguration config, String key)
+    {
         HashSet<BlockId> set = new HashSet<BlockId>();
         String tmp_str1 = config.getString(key, "").trim();
         String[] split = tmp_str1.split(",");
@@ -167,7 +172,8 @@ abstract class WorldConfigImporter {
         }
     }
 
-    protected static WorldConfig importFrom(String name, int version) {
+    protected static WorldConfig importFrom(String name, int version)
+    {
         WorldConfig w = new WorldConfig(name);
         CreeperLog.logInfo("Importing settings for world : " + name, 1);
         switch (version)
@@ -226,7 +232,8 @@ abstract class WorldConfigImporter {
     }
 
     private static boolean getStringBoolean(String path, String defaultValue,
-                                            YamlConfiguration configFile) {
+                                            YamlConfiguration configFile)
+    {
         String result = "";
         try
         {

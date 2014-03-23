@@ -20,7 +20,8 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
  * 
  * @author nitnelave
  */
-public class BlockFallListener implements Listener {
+public class BlockFallListener implements Listener
+{
 
     /**
      * Listener for the BLockPhysicsEvent. Prevent block fall when appropriate
@@ -30,7 +31,8 @@ public class BlockFallListener implements Listener {
      *            The BlockPhysics event.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onBlockPhysics(BlockPhysicsEvent event) {
+    public void onBlockPhysics(BlockPhysicsEvent event)
+    {
         Block b = event.getBlock();
         if (CreeperConfig.getBool(CfgVal.PREVENT_BLOCK_FALL) && b.getType().hasGravity())
         {
@@ -50,7 +52,8 @@ public class BlockFallListener implements Listener {
      *            The EntityChangeBlock event.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onEntityChangeBlock(EntityChangeBlockEvent event) {
+    public void onEntityChangeBlock(EntityChangeBlockEvent event)
+    {
         if (event.getEntityType() != EntityType.ENDERMAN && event.getBlock().getType().hasGravity())
         {
             Location l = event.getBlock().getLocation();

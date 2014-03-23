@@ -8,7 +8,8 @@ import org.bukkit.block.Block;
  * @author nitnelave
  * 
  */
-public class BlockId {
+public class BlockId
+{
     private int id;
     private byte data;
     private boolean hasData;
@@ -19,7 +20,8 @@ public class BlockId {
      * @param id
      *            The block id.
      */
-    public BlockId(int id) {
+    public BlockId(int id)
+    {
         this(id, (byte) -1);
     }
 
@@ -32,7 +34,8 @@ public class BlockId {
      * @param data
      *            The block data.
      */
-    public BlockId(int id, byte data) {
+    public BlockId(int id, byte data)
+    {
         this(id, data, data != -1);
     }
 
@@ -46,7 +49,8 @@ public class BlockId {
      * @param hasData
      *            Whether the data should be used in comparing.
      */
-    public BlockId(int id, byte data, boolean hasData) {
+    public BlockId(int id, byte data, boolean hasData)
+    {
         this.id = id;
         this.data = data;
         this.hasData = hasData && data != -1;
@@ -62,7 +66,8 @@ public class BlockId {
      * @throws NumberFormatException
      *             If the string does not match any pattern.
      */
-    public BlockId(String str) throws NumberFormatException {
+    public BlockId(String str) throws NumberFormatException
+    {
         String res = str.trim();
         try
         {
@@ -89,7 +94,8 @@ public class BlockId {
      * @param block
      *            The block.
      */
-    public BlockId(Block block) {
+    public BlockId(Block block)
+    {
         this(block.getTypeId(), block.getData());
     }
 
@@ -98,7 +104,8 @@ public class BlockId {
      * 
      * @return The id stored.
      */
-    public int getId() {
+    public int getId()
+    {
         return id;
     }
 
@@ -107,7 +114,8 @@ public class BlockId {
      * 
      * @return The block data.
      */
-    public byte getData() {
+    public byte getData()
+    {
         return data;
     }
 
@@ -116,7 +124,8 @@ public class BlockId {
      * 
      * @return Whether the block's data is used in comparing.
      */
-    public boolean hasData() {
+    public boolean hasData()
+    {
         return hasData;
     }
 
@@ -126,7 +135,8 @@ public class BlockId {
      * @see java.lang.Object#toString()
      */
     @Override
-    public String toString() {
+    public String toString()
+    {
         String str = String.valueOf(id);
         if (hasData)
             str += ":" + String.valueOf(data);
@@ -139,7 +149,8 @@ public class BlockId {
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         if (obj == this)
             return true;
 
@@ -162,7 +173,8 @@ public class BlockId {
      * @see java.lang.Object#hashCode()
      */
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return id;
     }
 }

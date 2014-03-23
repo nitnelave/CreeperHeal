@@ -13,7 +13,8 @@ import org.bukkit.Location;
  *            The type of the data stored for each point.
  * @author nitnelave
  */
-public abstract class NeighborFinder<T> {
+public abstract class NeighborFinder<T>
+{
 
     /**
      * The size of each zone.
@@ -32,7 +33,8 @@ public abstract class NeighborFinder<T> {
      * @param y
      *            The y coordinate.
      */
-    public void addElement(T el, double x, double y) {
+    public void addElement(T el, double x, double y)
+    {
         if (el == null)
             return;
         Point p = new Point((int) (x / BLOCK_SIZE), (int) (y / BLOCK_SIZE));
@@ -56,7 +58,8 @@ public abstract class NeighborFinder<T> {
      * @param y
      *            The y coordinate for the zone.
      */
-    public void removeElement(T el, double x, double y) {
+    public void removeElement(T el, double x, double y)
+    {
         Point p = new Point((int) (x / BLOCK_SIZE), (int) (y / BLOCK_SIZE));
         LinkedList<T> list = map.get(p);
         if (list == null)
@@ -74,7 +77,8 @@ public abstract class NeighborFinder<T> {
      *            The point to check for neighbors.
      * @return Whether the location is close to an element.
      */
-    public boolean hasNeighbor(Location loc) {
+    public boolean hasNeighbor(Location loc)
+    {
         return getNeighbor(loc) != null;
     }
 
@@ -87,7 +91,8 @@ public abstract class NeighborFinder<T> {
      *            The location to check for neighbors.
      * @return A neighboring element, null if no such element exists.
      */
-    public T getNeighbor(Location loc) {
+    public T getNeighbor(Location loc)
+    {
         int x = (int) (loc.getX() / BLOCK_SIZE), y = (int) (loc.getZ() / BLOCK_SIZE);
         LinkedList<T> list = map.get(new Point(x, y));
         T neighbor = getNeighbor(loc, list);
@@ -113,7 +118,8 @@ public abstract class NeighborFinder<T> {
      * 
      * @return Whether the map is empty.
      */
-    public boolean isEmpty() {
+    public boolean isEmpty()
+    {
         return map.isEmpty();
     }
 
@@ -125,7 +131,8 @@ public abstract class NeighborFinder<T> {
     /**
      * Clear the map of all elements.
      */
-    public void clear() {
+    public void clear()
+    {
         map.clear();
     }
 }
