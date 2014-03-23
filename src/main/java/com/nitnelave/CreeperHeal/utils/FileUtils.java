@@ -69,7 +69,6 @@ public class FileUtils {
             while ((read = in.read(buf)) != -1)
                 out.write(buf, 0, read);
 
-            in.close();
             out.flush();
             out.close();
             CreeperLog.logInfo("[CreeperHeal] Defaults loaded for file " + file.getPath(), 1);
@@ -79,5 +78,10 @@ public class FileUtils {
             ex.printStackTrace();
         }
 
+        try {
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -140,10 +140,8 @@ public class ExplodedBlockManager {
      * 
      * @param event
      *            The explosion.
-     * @param world
-     *            The config for the explosion's world.
      */
-    public static void processExplosion(EntityExplodeEvent event, WorldConfig world,
+    public static void processExplosion(EntityExplodeEvent event,
                                         CHExplosionRecordEvent.ExplosionReason reason) {
         processExplosion(event.blockList(), event.getLocation(), reason);
     }
@@ -166,7 +164,7 @@ public class ExplodedBlockManager {
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled())
             return;
-        blocks = event.getBlocks();
+        List<Block> blockList = event.getBlocks();
 
         CreeperExplosion cEx = null;
 
@@ -182,7 +180,7 @@ public class ExplodedBlockManager {
                 explosionIndex.addElement(cEx, location.getX(), location.getZ());
         }
 
-        cEx.addBlocks(blocks, location);
+        cEx.addBlocks(blockList, location);
 
         for (CreeperHanging h : hangingList)
             cEx.record(h);

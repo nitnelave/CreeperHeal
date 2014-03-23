@@ -225,9 +225,8 @@ public class CreeperBlock implements Replaceable {
         if (!shouldDrop && isDependent(getTypeId())
             && isEmpty(getBlock().getRelative(getAttachingFace()).getTypeId()))
             return false;
-        else
-            update();
 
+        update();
         checkForAscendingRails();
 
         return true;

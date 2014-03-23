@@ -72,9 +72,10 @@ public abstract class CreeperMessenger {
      * Replace the color keywords in the messages by the chat codes equivalents.
      */
     private static String colorToChat(String message) {
+        String result = message;
         for (ChatColor c : ChatColor.values())
-            message = message.replaceAll("\\{" + c.name() + "\\}", c.toString());
-        return message;
+            result = result.replaceAll("\\{" + c.name() + "\\}", c.toString());
+        return result;
     }
 
     /**
