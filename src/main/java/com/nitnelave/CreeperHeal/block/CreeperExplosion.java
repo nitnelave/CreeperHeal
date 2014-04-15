@@ -263,6 +263,9 @@ public class CreeperExplosion
      */
     public void record(Block block)
     {
+    	if (block.getType() == Material.PORTAL)
+    		return;
+    	
         CreeperBlock cBlock = CreeperBlock.newBlock(block.getState());
 
         if (cBlock == null || checked.contains(new ShortLocation(block)))
