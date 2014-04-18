@@ -170,11 +170,14 @@ public class ExplodedBlockManager
         if (PluginHandler.isInArena(location))
             return;
 
-        CHExplosionRecordEvent event = new CHExplosionRecordEvent(blocks, location, reason);
+        List<Block> blockList = new LinkedList<Block>();
+        blockList.addAll(blocks);
+        
+        CHExplosionRecordEvent event = new CHExplosionRecordEvent(blockList, location, reason);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled())
             return;
-        List<Block> blockList = event.getBlocks();
+        blockList = event.getBlocks();
 
         CreeperExplosion cEx = null;
 
