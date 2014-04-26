@@ -6,13 +6,14 @@
 	<version>6.7.1</version>
 	<name>CreeperHeal</name>
 	<build>
-		<sourceDirectory>src</sourceDirectory>
 		<resources>
 			<resource>
-				<directory>src</directory>
-				<excludes>
-					<exclude>**/*.java</exclude>
-				</excludes>
+				<targetPath>.</targetPath>
+				<filtering>true</filtering>
+				<directory>${basedir}/src/main/resources</directory>
+				<includes>
+					<include>*.yml</include>
+				</includes>
 			</resource>
 		</resources>
 		<plugins>
