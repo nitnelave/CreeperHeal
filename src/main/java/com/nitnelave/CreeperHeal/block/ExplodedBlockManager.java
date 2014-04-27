@@ -178,9 +178,7 @@ public class ExplodedBlockManager
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled())
             return;
-        //setters removed for list, as list was mutable.
-        //blockList = event.getHealBlocks();
-        //blocks = event.getExplosionBlocks();
+        processList = event.getHealBlocks();
 
         CreeperExplosion cEx = null;
 
