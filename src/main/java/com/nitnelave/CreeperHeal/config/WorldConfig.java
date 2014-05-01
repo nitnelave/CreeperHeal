@@ -1,20 +1,5 @@
 package com.nitnelave.CreeperHeal.config;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Entity;
-import org.bukkit.inventory.InventoryHolder;
-
 import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.PluginHandler;
 import com.nitnelave.CreeperHeal.block.BlockId;
@@ -22,12 +7,28 @@ import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.FileUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
+import org.bukkit.inventory.InventoryHolder;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * World configuration settings. Gathers all the settings for a given world.
- * 
+ *
  * @author nitnelave
- * 
+ *
  */
 public class WorldConfig
 {
@@ -37,13 +38,14 @@ public class WorldConfig
     private IntegerConfigValue repairTime, replaceLimit;
     private BlockIdListValue replaceBlackList, griefPlaceList, protectList, replaceWhiteList;
     private final YamlConfiguration config = new YamlConfiguration(),
-                    advanced = new YamlConfiguration(), grief = new YamlConfiguration();
-    private final File worldFolder, configFile, advancedFile, griefFile;
+                    advanced = new YamlConfiguration(), grief = new YamlConfiguration(),
+                    replacement = new YamlConfiguration();
+    private final File worldFolder, configFile, advancedFile, griefFile, replaceFile;
 
     /**
      * Main constructor. Load the config from the file, or create a default one
      * if needed.
-     * 
+     *
      * @param name
      *            The world's name.
      */
@@ -54,6 +56,7 @@ public class WorldConfig
         configFile = new File(worldFolder + "/config.yml");
         advancedFile = new File(worldFolder + "/advanced.yml");
         griefFile = new File(worldFolder + "/grief.yml");
+        replaceFile = new File(worldFolder + "/replace.yml");
         fillMaps();
     }
 
@@ -104,7 +107,7 @@ public class WorldConfig
 
     /**
      * Get the world's name.
-     * 
+     *
      * @return The world's name.
      */
     public String getName()
@@ -114,7 +117,7 @@ public class WorldConfig
 
     /**
      * Get whether the world has timed repairs enabled.
-     * 
+     *
      * @return Whether the world has timed repairs enabled.
      */
     public boolean isRepairTimed()
@@ -134,11 +137,14 @@ public class WorldConfig
             FileUtils.copyJarConfig(advancedFile, "world-advanced.yml");
         if (!griefFile.exists())
             FileUtils.copyJarConfig(griefFile, "world-grief.yml");
+        if (!replaceFile.exists())
+            FileUtils.createNewFile(replaceFile);
         try
         {
             config.load(configFile);
             advanced.load(advancedFile);
             grief.load(griefFile);
+            replacement.load(replaceFile);
         } catch (FileNotFoundException e)
         {
             e.printStackTrace();
@@ -214,7 +220,7 @@ public class WorldConfig
 
     /**
      * Get the value of the boolean represented by the key.
-     * 
+     *
      * @param key
      *            The key
      * @return The value of the boolean.
@@ -228,7 +234,7 @@ public class WorldConfig
 
     /**
      * Get whether damage caused by an entity should be replaced in this world.
-     * 
+     *
      * @param entity
      *            The entity that caused the damage.
      * @return Whether the damage should be replaced.
@@ -265,7 +271,7 @@ public class WorldConfig
     /**
      * Get whether the location is above the replace limit defined in this
      * world, if height replacement is enabled.
-     * 
+     *
      * @param loc
      *            The location to test.
      * @return Whether the location is above the limit, or true if height
@@ -278,7 +284,7 @@ public class WorldConfig
 
     /**
      * Get whether the given block type is protected in this world.
-     * 
+     *
      * @param block
      *            The block to test.
      * @return Whether the block's type is protected.
@@ -294,7 +300,7 @@ public class WorldConfig
     /**
      * Get whether any grief protection feature is enabled, thus requiring to
      * listen to the grief events.
-     * 
+     *
      * @return Whether any grief protection is enabled.
      */
     public boolean hasGriefProtection()
@@ -317,7 +323,7 @@ public class WorldConfig
     /**
      * Get whether the block is in the grief blackList (or not in the whitelist,
      * if the whitelist is used).
-     * 
+     *
      * @param block
      *            The block to test.
      * @return Whether the block is blacklisted.
@@ -329,7 +335,7 @@ public class WorldConfig
 
     /**
      * Get the World corresponding to the WorldConfig.
-     * 
+     *
      * @return The world.
      */
     public World getWorld()
@@ -339,7 +345,7 @@ public class WorldConfig
 
     /**
      * Set the boolean value associated with the key.
-     * 
+     *
      * @param key
      *            The key.
      * @param value
@@ -357,7 +363,7 @@ public class WorldConfig
 
     /**
      * Set the boolean value associated with the key.
-     * 
+     *
      * @param key
      *            The key.
      * @param value
@@ -403,7 +409,7 @@ public class WorldConfig
 
     /**
      * Get the time at which all repairs are automatically enforced.
-     * 
+     *
      * @return The time at which repairs are enforced, -1 if deactivated.
      */
     public int getRepairTime()
@@ -414,7 +420,7 @@ public class WorldConfig
     /**
      * Get whether a block is blacklisted for replacement (i.e. should not be
      * replaced).
-     * 
+     *
      * @param id
      *            The blockId of the block.
      * @return True if the block should not be blacklisted.
@@ -425,5 +431,30 @@ public class WorldConfig
             return !replaceWhiteList.getValue().contains(id);
         else
             return replaceBlackList.getValue().contains(id);
+    }
+
+    public void getReplacement(BlockState state)
+    {
+        String key = state.getType().toString() + ';' + state.getRawData();
+        String s = replacement.getString(key + ".type");
+        if (s == null)
+        {
+            key = state.getType().toString();
+            s = replacement.getString(key + ".type");
+        }
+        if (s == null)
+            return;
+        Material material = Material.getMaterial(s);
+        if (material == null)
+        {
+            CreeperLog.warning("Invalid block type for " + key + " in world " + state.getWorld().getName());
+            return;
+        }
+        int data = replacement.getInt(key + ".data", -1);
+        state.setType(material);
+        if (data != -1)
+            state.setRawData((byte) data);
+        else
+            state.setRawData((byte) 0);
     }
 }

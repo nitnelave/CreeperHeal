@@ -1,38 +1,29 @@
 package com.nitnelave.CreeperHeal.block;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.CreatureSpawner;
-import org.bukkit.block.NoteBlock;
-import org.bukkit.block.Sign;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Attachable;
-
 import com.nitnelave.CreeperHeal.CreeperHeal;
-//import com.nitnelave.CreeperHeal.PluginHandler;
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.events.CHBlockHealEvent.CHBlockHealReason;
 import com.nitnelave.CreeperHeal.utils.CreeperUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.*;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Attachable;
+
+import java.util.*;
+
+//import com.nitnelave.CreeperHeal.PluginHandler;
 
 /**
  * Represents a block that can be replaced. Every special type of block derives
  * from this class, and can only be constructed by using the newBlock method.
- * 
+ *
  * @author nitnelave
- * 
+ *
  */
 public class CreeperBlock implements Replaceable
 {
@@ -64,62 +55,63 @@ public class CreeperBlock implements Replaceable
     /**
      * Create a new CreeperBlock of the right class. Factory method that should
      * be used as a constructor.
-     * 
-     * @param blockState
+     *
+     * @param state
      *            The block to be represented.
      * @return A new CreeperBlock of the right subclass.
      */
-    public static CreeperBlock newBlock(BlockState blockState)
+    public static CreeperBlock newBlock(BlockState state)
     {
+        CreeperConfig.getWorld(state.getWorld()).getReplacement(state);
         //if (PluginHandler.isSpoutEnabled () && SpoutBlock.isCustomBlock (blockState))
         //    return new SpoutBlock (blockState);
-        if (blockState instanceof InventoryHolder)
-            return new CreeperChest(blockState);
-        if (blockState.getType().hasGravity())
-            return new CreeperPhysicsBlock(blockState);
-        switch (blockState.getType())
+        if (state instanceof InventoryHolder)
+            return new CreeperChest(state);
+        if (state.getType().hasGravity())
+            return new CreeperPhysicsBlock(state);
+        switch (state.getType())
         {
         case BED_BLOCK:
-            return new CreeperBed(blockState);
+            return new CreeperBed(state);
         case RAILS:
         case POWERED_RAIL:
         case DETECTOR_RAIL:
-            return new CreeperRail(blockState);
+            return new CreeperRail(state);
         case SKULL:
-            return new CreeperHead(blockState);
+            return new CreeperHead(state);
         case PISTON_BASE:
         case PISTON_STICKY_BASE:
         case PISTON_EXTENSION:
-            return new CreeperPiston(blockState);
+            return new CreeperPiston(state);
         case WOODEN_DOOR:
         case IRON_DOOR_BLOCK:
-            return new CreeperDoor(blockState);
+            return new CreeperDoor(state);
         case NOTE_BLOCK:
-            return new CreeperNoteBlock((NoteBlock) blockState);
+            return new CreeperNoteBlock((NoteBlock) state);
         case SIGN_POST:
         case WALL_SIGN:
-            return new CreeperSign((Sign) blockState);
+            return new CreeperSign((Sign) state);
         case MOB_SPAWNER:
-            return new CreeperMonsterSpawner((CreatureSpawner) blockState);
+            return new CreeperMonsterSpawner((CreatureSpawner) state);
         case WOOD_PLATE:
         case STONE_PLATE:
-            return new CreeperPlate(blockState);
+            return new CreeperPlate(state);
         case GRASS:
-            return new CreeperGrass(blockState);
+            return new CreeperGrass(state);
         case SMOOTH_BRICK:
         case SMOOTH_STAIRS:
-            return new CreeperBrick(blockState);
+            return new CreeperBrick(state);
         case WOOD_BUTTON:
         case STONE_BUTTON:
-            return new CreeperButton(blockState);
+            return new CreeperButton(state);
         case TNT:
         case FIRE:
         case AIR:
             return null;
         case STONE:
-            return new CreeperStone(blockState);
+            return new CreeperStone(state);
         default:
-            return new CreeperBlock(blockState);
+            return new CreeperBlock(state);
         }
     }
 
@@ -146,7 +138,7 @@ public class CreeperBlock implements Replaceable
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getLocation()
      */
     @Override
@@ -157,7 +149,7 @@ public class CreeperBlock implements Replaceable
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getWorld()
      */
     @Override
@@ -168,7 +160,7 @@ public class CreeperBlock implements Replaceable
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getBlock()
      */
     @Override
@@ -179,7 +171,7 @@ public class CreeperBlock implements Replaceable
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getTypeId()
      */
     @Override
@@ -190,7 +182,7 @@ public class CreeperBlock implements Replaceable
 
     /**
      * Get the block's raw data.
-     * 
+     *
      * @return The block's raw data.
      */
     public byte getRawData()
@@ -200,7 +192,7 @@ public class CreeperBlock implements Replaceable
 
     /**
      * Drop the corresponding items on the ground.
-     * 
+     *
      * @param forced
      *            If false, the block will have a chance to drop, according to
      *            the configuration value of the drop chance. If true, the block
@@ -225,7 +217,7 @@ public class CreeperBlock implements Replaceable
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.nitnelave.CreeperHeal.block.Replaceable#replace(boolean)
      */
     @Override
@@ -279,7 +271,7 @@ public class CreeperBlock implements Replaceable
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.nitnelave.CreeperHeal.block.Replaceable#delayReplacement()
      */
     @Override
@@ -293,7 +285,7 @@ public class CreeperBlock implements Replaceable
 
     /**
      * Get whether blocks of a type are dependent on the block under.
-     * 
+     *
      * @param typeId
      *            The type of the block.
      * @return Whether the block is dependent.
@@ -305,7 +297,7 @@ public class CreeperBlock implements Replaceable
 
     /**
      * Get whether blocks of a type are solid.
-     * 
+     *
      * @param typeId
      *            The type of the block.
      * @return Whether the block is solid.
@@ -317,7 +309,7 @@ public class CreeperBlock implements Replaceable
 
     /**
      * Get whether blocks of a type are solid.
-     * 
+     *
      * @param block
      *            The type of the block.
      * @return Whether the block is solid.
@@ -329,7 +321,7 @@ public class CreeperBlock implements Replaceable
 
     /**
      * Get whether blocks of a type are dependent on another block .
-     * 
+     *
      * @param typeId
      *            The type of the block.
      * @return Whether the block is dependent.
@@ -362,7 +354,7 @@ public class CreeperBlock implements Replaceable
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getAttachingFace()
      */
     @Override
@@ -377,7 +369,7 @@ public class CreeperBlock implements Replaceable
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.nitnelave.CreeperHeal.block.Replaceable#remove()
      */
     @Override
@@ -388,7 +380,7 @@ public class CreeperBlock implements Replaceable
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.nitnelave.CreeperHeal.block.Replaceable#isDependent()
      */
     @Override
@@ -401,7 +393,7 @@ public class CreeperBlock implements Replaceable
      * Get the list of blocks that are possibly dependent on this block. To
      * check if they really are, simply check that neighborBlock.isNeighbor() is
      * true.
-     * 
+     *
      * @return The list of potentially dependent blocks.
      */
     public List<NeighborBlock> getDependentNeighbors()
