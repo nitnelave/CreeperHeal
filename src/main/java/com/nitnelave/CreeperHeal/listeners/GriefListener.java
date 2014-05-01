@@ -24,6 +24,7 @@ import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperMessenger;
 import com.nitnelave.CreeperHeal.utils.CreeperPermissionManager;
 import com.nitnelave.CreeperHeal.utils.CreeperPlayer;
+import org.bukkit.projectiles.ProjectileSource;
 
 /**
  * Listener for grief-related events.
@@ -35,7 +36,7 @@ public class GriefListener implements Listener
      * Listener for the BlockPlaceEvent. If the player does not have the rights
      * to place a block, the event is cancelled, and the appropriate warnings
      * are fired.
-     * 
+     *
      * @param event
      *            The BlockPlaceEvent.
      */
@@ -68,7 +69,7 @@ public class GriefListener implements Listener
     /**
      * Listener for the BlockIgniteEvent. If fire spreading or fire from lava is
      * disabled, cancel the event.
-     * 
+     *
      * @param event
      *            The BlockIgniteEvent.
      */
@@ -86,7 +87,7 @@ public class GriefListener implements Listener
     /**
      * Listener for the EntityDamageByEntityEvent. Control PVP and check for
      * destroyed paintings.
-     * 
+     *
      * @param event
      *            The EntityDamageByEntityEvent.
      */
@@ -111,9 +112,10 @@ public class GriefListener implements Listener
                 Entity damager = event.getDamager();
                 if (damager instanceof Projectile)
                 {
-                    attacker = ((Projectile) damager).getShooter();
-                    if (attacker instanceof Player)
-                        offender = (Player) attacker;
+                    ((Projectile) damager).getShooter();
+                    ProjectileSource source = ((Projectile) damager).getShooter();
+                    if (source instanceof Player)
+                        offender = (Player) source;
                 }
                 break;
             default:
@@ -133,7 +135,7 @@ public class GriefListener implements Listener
 
     /**
      * Listener for the PlayerBucketEmptyEvent. Check for lava placement.
-     * 
+     *
      * @param event
      *            The PlayerBucketEmpty event.
      */
@@ -157,7 +159,7 @@ public class GriefListener implements Listener
     /**
      * Listener for the PlayerInteractEvent. Check for monster egg use, and
      * block ignition.
-     * 
+     *
      * @param event
      *            The PlayerInteract event.
      */
@@ -196,7 +198,7 @@ public class GriefListener implements Listener
     /**
      * Listener for the PlayerJoinEvent. Add when appropriate to the warning
      * list.
-     * 
+     *
      * @param event
      *            The PlayerJoin event.
      */
@@ -209,7 +211,7 @@ public class GriefListener implements Listener
     /**
      * Listener for the PlayerQuitEvent. Remove when appropriate from the
      * warning list.
-     * 
+     *
      * @param event
      *            The PlayerQuit event.
      */
