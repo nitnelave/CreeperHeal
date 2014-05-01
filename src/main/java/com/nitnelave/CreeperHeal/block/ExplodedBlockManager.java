@@ -21,6 +21,7 @@ import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.events.CHBlockHealEvent.CHBlockHealReason;
 import com.nitnelave.CreeperHeal.events.CHExplosionRecordEvent;
 import com.nitnelave.CreeperHeal.utils.NeighborExplosion;
+import java.util.ArrayList;
 
 /**
  * Manager for the explosions list and the explosion index.
@@ -159,22 +160,29 @@ public class ExplodedBlockManager
      * Record all the blocks in the list, with the location as the source of the
      * explosion.
      * 
-     * @param blocks
+     * @param originalBlockList
      *            The list of destroyed blocks.
      * @param location
      *            The location of the explosion.
      */
-    public static void processExplosion(List<Block> blocks, Location location,
+    public static void processExplosion(List<Block> originalBlockList, Location location,
                                         CHExplosionRecordEvent.ExplosionReason reason)
     {
         if (PluginHandler.isInArena(location))
             return;
 
-        CHExplosionRecordEvent event = new CHExplosionRecordEvent(blocks, location, reason);
+        //process list is the list of blocks yet to be processed by creeperheal.
+        CHExplosionRecordEvent event = new CHExplosionRecordEvent(originalBlockList, location, reason);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled())
             return;
-        List<Block> blockList = event.getBlocks();
+        List<Block> processList = new ArrayList(event.getBlocks());
+        for(Block b : event.getProtectedBlocks())
+        {
+            CreeperBlock cb = CreeperBlock.newBlock(b.getState());
+            ToReplaceList.addToReplace(cb);
+            cb.remove();
+        }
 
         CreeperExplosion cEx = null;
 
@@ -190,7 +198,7 @@ public class ExplodedBlockManager
                 explosionIndex.addElement(cEx, location.getX(), location.getZ());
         }
 
-        cEx.addBlocks(blockList, location);
+        cEx.addBlocks(processList, location);
 
         for (CreeperHanging h : hangingList)
             cEx.record(h);
