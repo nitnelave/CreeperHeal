@@ -1,22 +1,10 @@
 *.class
-
-
-# Package Files #
-
 *.war
-
 *.ear
-
-
 .settings/*
-
-
 .classpath
-
 .project
-
 *.jardesc
-
 bin/*
 .checkstyle
 target/*
@@ -24,3 +12,5 @@ target/*
 doc/*
 javadoc.xml
 /bin
+.idea
+*.iml
