@@ -18,9 +18,9 @@ import com.nitnelave.CreeperHeal.utils.CreeperUtils;
 
 /**
  * InventoryHolder implementation of CreeperBlock.
- * 
+ *
  * @author nitnelave
- * 
+ *
  */
 class CreeperChest extends CreeperBlock
 {
@@ -58,7 +58,7 @@ class CreeperChest extends CreeperBlock
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#remove()
      */
     @Override
@@ -80,7 +80,7 @@ class CreeperChest extends CreeperBlock
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#dropBlock()
      */
     @Override
@@ -119,7 +119,7 @@ class CreeperChest extends CreeperBlock
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#update(boolean)
      */
     @Override
@@ -133,7 +133,7 @@ class CreeperChest extends CreeperBlock
             {
                 if (hasNeighbor())
                 {
-                    neighbor.getChest().update(true);
+                    neighbor.update(true);
                     Inventory i = ((InventoryHolder) chest.getState()).getInventory();
                     ItemStack[] both;
                     ItemStack[] otherInv = neighborInventory;
