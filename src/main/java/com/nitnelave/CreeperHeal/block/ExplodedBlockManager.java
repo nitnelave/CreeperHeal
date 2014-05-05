@@ -180,6 +180,8 @@ public class ExplodedBlockManager
         for(Block b : event.getProtectedBlocks())
         {
             CreeperBlock cb = CreeperBlock.newBlock(b.getState());
+            if(cb == null)
+                continue;
             ToReplaceList.addToReplace(cb);
             cb.remove();
         }
