@@ -67,7 +67,7 @@ public abstract class Suffocating
 
         if (CreeperBlock.isSolid(loc.getBlock())
             || CreeperBlock.isSolid(loc.getBlock().getRelative(0, 1, 0)))
-            for (int k = 1; k + loc.getBlockY() < 127; k++)
+            for (int k = 1; k + loc.getBlockY() < loc.getWorld().getMaxHeight(); k++)
             {
                 Location l = loc.clone().add(0, k, 0);
                 if (check_free(l))
