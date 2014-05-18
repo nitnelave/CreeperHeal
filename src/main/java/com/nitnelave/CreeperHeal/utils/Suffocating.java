@@ -1,22 +1,21 @@
 package com.nitnelave.CreeperHeal.utils;
 
-import java.util.List;
-
+import com.nitnelave.CreeperHeal.block.CreeperBlock;
+import com.nitnelave.CreeperHeal.config.CfgVal;
+import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
-import com.nitnelave.CreeperHeal.block.CreeperBlock;
-import com.nitnelave.CreeperHeal.config.CfgVal;
-import com.nitnelave.CreeperHeal.config.CreeperConfig;
+import java.util.List;
 
 /**
  * Utility class to check if a player is suffocating, and teleport him to
  * safety.
- * 
+ *
  * @author nitnelave
- * 
+ *
  */
 public abstract class Suffocating
 {
@@ -24,7 +23,7 @@ public abstract class Suffocating
     /**
      * Check the living entities around the location. If any is suffocating,
      * teleport it to a safe location.
-     * 
+     *
      * @param loc
      *            The location around which to check.
      */
@@ -32,14 +31,16 @@ public abstract class Suffocating
     {
         Entity[] play_list = loc.getBlock().getChunk().getEntities();
         for (Entity en : play_list)
-            if (en instanceof LivingEntity && loc.distance(en.getLocation()) < 2)
+            if (en instanceof LivingEntity
+                && en.getWorld().equals(loc.getWorld())
+                && loc.distance(en.getLocation()) < 2)
                 en.teleport(check_player_suffocate((LivingEntity) en));
     }
 
     /**
      * Check the players and other animals (except in lightweight mode) to see
      * if they were trapped by the explosion's replacement.
-     * 
+     *
      * @param loc
      *            The center of the explosion.
      * @param radius
