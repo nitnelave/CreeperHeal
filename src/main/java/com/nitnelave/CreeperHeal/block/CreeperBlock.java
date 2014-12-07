@@ -73,6 +73,8 @@ public class CreeperBlock implements Replaceable
         {
         case BED_BLOCK:
             return new CreeperBed(state);
+        case DOUBLE_PLANT:
+        	return new CreeperFlower(state);
         case RAILS:
         case POWERED_RAIL:
         case DETECTOR_RAIL:
