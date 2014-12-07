@@ -101,6 +101,8 @@ public class CreeperBlock implements Replaceable
         case MOB_SPAWNER:
             return new CreeperMonsterSpawner((CreatureSpawner) state);
         case WOOD_PLATE:
+        case GOLD_PLATE:
+        case IRON_PLATE:
         case STONE_PLATE:
             return new CreeperPlate(state);
         case GRASS:
