@@ -108,8 +108,12 @@ public class CreeperBlock implements Replaceable
         case FIRE:
         case AIR:
             return null;
+        case STANDING_BANNER:
+        	return new CreeperBanner((Banner) state);
         case STONE:
             return new CreeperStone(state);
+        case WALL_BANNER:
+        	return new CreeperBanner((Banner) state);
         default:
             return new CreeperBlock(state);
         }
