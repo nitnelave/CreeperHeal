@@ -1,7 +1,5 @@
 package com.nitnelave.CreeperHeal.block;
 
-import java.util.logging.Logger;
-
 import org.bukkit.block.Banner;
 import org.bukkit.block.BlockState;
 
