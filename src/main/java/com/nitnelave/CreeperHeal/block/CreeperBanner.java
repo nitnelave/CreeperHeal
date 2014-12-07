@@ -30,8 +30,6 @@ public class CreeperBanner extends CreeperBlock
     @Override
     public void update()
     {
-    	final Logger log = Logger.getLogger("Minecraft");
-   	    log.info("working");
         super.update();
         Banner state = (Banner) getBlock().getState();
         Banner banner = (Banner) blockState;
