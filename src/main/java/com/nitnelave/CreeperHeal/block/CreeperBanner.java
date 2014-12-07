@@ -14,8 +14,8 @@ import org.bukkit.block.BlockState;
 public class CreeperBanner extends CreeperBlock
 {
 	
-	  /*
-	   * Constructor.
+    /*
+     * Constructor.
      */
     protected CreeperBanner(Banner banner)
     {
