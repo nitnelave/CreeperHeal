@@ -84,6 +84,11 @@ public class CreeperBlock implements Replaceable
         case PISTON_EXTENSION:
             return new CreeperPiston(state);
         case WOODEN_DOOR:
+        case ACACIA_DOOR:
+        case BIRCH_DOOR:
+        case DARK_OAK_DOOR:
+        case JUNGLE_DOOR:
+        case SPRUCE_DOOR:
         case IRON_DOOR_BLOCK:
             return new CreeperDoor(state);
         case NOTE_BLOCK:
