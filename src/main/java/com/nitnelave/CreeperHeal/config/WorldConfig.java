@@ -433,7 +433,7 @@ public class WorldConfig
             return replaceBlackList.getValue().contains(id);
     }
 
-    public void getReplacement(BlockState state)
+	public void getReplacement(BlockState state)
     {
         String key = state.getType().toString() + ';' + state.getRawData();
         String s = replacement.getString(key + ".type");
