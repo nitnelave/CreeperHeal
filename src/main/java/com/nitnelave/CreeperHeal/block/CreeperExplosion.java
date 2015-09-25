@@ -212,15 +212,18 @@ public class CreeperExplosion
             while (iter.hasNext())
             {
                 Block b = iter.next();
+                
+               	CreeperLog.debug("Depedency check:" + b.getType().name());
+                
                 if (CreeperBlock.isDependent(b.getTypeId()))
                 {
                     record(b);
-                   	CreeperLog.debug("Removing block :" + b.getType().name());        	
+                   	CreeperLog.debug("Removing block:" + b.getType().name());        	
                     iter.remove();
                 }
             }
             for (Block b : blocks) {
-            	CreeperLog.debug("To Record :" + b.getType().name());        	
+            	CreeperLog.debug("To Record:" + b.getType().name());        	
                 record(b);
             }
         }
