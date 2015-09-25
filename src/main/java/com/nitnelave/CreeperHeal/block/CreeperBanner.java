@@ -1,7 +1,6 @@
 package com.nitnelave.CreeperHeal.block;
 
 import org.bukkit.block.Banner;
-import org.bukkit.block.BlockState;
 
 /**
  * Banner implementation of CreeperBlock.

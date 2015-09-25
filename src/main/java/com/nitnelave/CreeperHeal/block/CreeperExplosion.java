@@ -19,6 +19,7 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.events.CHBlockHealEvent;
 import com.nitnelave.CreeperHeal.events.CHBlockHealEvent.CHBlockHealReason;
+import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.ShortLocation;
 import com.nitnelave.CreeperHeal.utils.Suffocating;
 
@@ -75,6 +76,7 @@ public class CreeperExplosion
                                                                                  / (locWeight + 1));
         locWeight++;
         checked.clear();
+                
         recordBlocks(blocks);
         if (CreeperConfig.getBool(CfgVal.EXPLODE_OBSIDIAN))
             checkForObsidian();
@@ -210,14 +212,20 @@ public class CreeperExplosion
             while (iter.hasNext())
             {
                 Block b = iter.next();
+                
+               	CreeperLog.debug("Depedency check:" + b.getType().name());
+                
                 if (CreeperBlock.isDependent(b.getTypeId()))
                 {
                     record(b);
                     iter.remove();
                 }
             }
-            for (Block b : blocks)
+            Iterator<Block> it = blocks.iterator();
+            while (it.hasNext()) {
+            	Block b = it.next();
                 record(b);
+            }
         }
     }
 
@@ -263,6 +271,8 @@ public class CreeperExplosion
      */
     public void record(Block block)
     {
+    	CreeperLog.debug("Recording :" + block.getType().name());        	
+        
     	if (block.getType() == Material.PORTAL)
     		return;
     	

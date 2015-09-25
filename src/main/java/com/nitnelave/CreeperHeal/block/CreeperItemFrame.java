@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.Material;
 
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
@@ -82,7 +83,7 @@ class CreeperItemFrame extends CreeperHanging
             ItemStack s = f.getItem();
             if (s.getType() != Material.AIR)
                 getWorld().dropItemNaturally(getLocation(), s);
-            getWorld().dropItemNaturally(getLocation(), new ItemStack(389, 1));
+            getWorld().dropItemNaturally(getLocation(), new ItemStack(Material.ITEM_FRAME, 1));
             return true;
         }
         return false;

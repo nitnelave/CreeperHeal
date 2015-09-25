@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.bukkit.Art;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Painting;
 import org.bukkit.inventory.ItemStack;
@@ -110,7 +111,7 @@ class CreeperPainting extends CreeperHanging
     {
         if (forced || new Random().nextInt(100) < CreeperConfig.getInt(CfgVal.DROP_CHANCE))
         {
-            getWorld().dropItemNaturally(getLocation(), new ItemStack(321, 1));
+            getWorld().dropItemNaturally(getLocation(), new ItemStack(Material.PAINTING, 1));
             return true;
         }
         return false;
