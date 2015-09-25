@@ -76,12 +76,7 @@ public class CreeperExplosion
                                                                                  / (locWeight + 1));
         locWeight++;
         checked.clear();
-        Iterator<Block> it = blocks.iterator();
-        while (it.hasNext()) {
-        	Block b = it.next();
-        	CreeperLog.debug("Block List :" + b.getType().name());        	
-        }
-        
+                
         recordBlocks(blocks);
         if (CreeperConfig.getBool(CfgVal.EXPLODE_OBSIDIAN))
             checkForObsidian();
@@ -220,6 +215,7 @@ public class CreeperExplosion
                 if (CreeperBlock.isDependent(b.getTypeId()))
                 {
                     record(b);
+                   	CreeperLog.debug("Removing block :" + b.getType().name());        	
                     iter.remove();
                 }
             }
