@@ -219,8 +219,10 @@ public class CreeperExplosion
                     iter.remove();
                 }
             }
-            for (Block b : blocks)
+            for (Block b : blocks) {
+            	CreeperLog.debug("To Record :" + b.getType().name());        	
                 record(b);
+            }
         }
     }
 
