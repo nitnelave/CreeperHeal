@@ -19,6 +19,7 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.events.CHBlockHealEvent;
 import com.nitnelave.CreeperHeal.events.CHBlockHealEvent.CHBlockHealReason;
+import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.ShortLocation;
 import com.nitnelave.CreeperHeal.utils.Suffocating;
 
@@ -263,6 +264,8 @@ public class CreeperExplosion
      */
     public void record(Block block)
     {
+    	CreeperLog.debug("Added to replace List :" + block.getType().name());
+    	
     	if (block.getType() == Material.PORTAL)
     		return;
     	
