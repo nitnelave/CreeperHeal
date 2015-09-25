@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
+import com.nitnelave.CreeperHeal.utils.CreeperLog;
 
 /**
  * Class to handle the blocks to be replaced immediately.
@@ -31,7 +32,8 @@ public abstract class ToReplaceList
      */
     protected static void addToReplace(CreeperBlock block)
     {
-        toReplace.put(block.getLocation(), block);
+    	CreeperLog.debug("Added to replace List :" + block.getBlock().getType().name());
+        toReplace.put(block.getLocation(), block);        
     }
 
     /**

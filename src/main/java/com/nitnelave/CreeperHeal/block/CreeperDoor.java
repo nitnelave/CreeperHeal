@@ -27,7 +27,6 @@ class CreeperDoor extends CreeperBlock
     protected CreeperDoor(BlockState blockState)
     {
         Block block = blockState.getBlock();
-        CreeperLog.debug("Block exploded:" + block.getType().name());
         if ((blockState.getRawData() & 8) != 0)
             block = block.getRelative(BlockFace.DOWN);
         this.blockState = block.getState();
