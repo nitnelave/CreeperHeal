@@ -225,6 +225,7 @@ public class CreeperExplosion
             while (it.hasNext()) {
             	Block b = it.next();
                 record(b);
+                // Testing
             }
         }
     }
