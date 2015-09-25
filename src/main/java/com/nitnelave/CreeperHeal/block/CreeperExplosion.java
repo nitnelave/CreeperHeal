@@ -266,7 +266,8 @@ public class CreeperExplosion
      */
     public void record(Block block)
     {
-    	
+    	CreeperLog.debug("Recording :" + block.getType().name());        	
+        
     	if (block.getType() == Material.PORTAL)
     		return;
     	
