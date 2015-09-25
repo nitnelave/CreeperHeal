@@ -76,6 +76,12 @@ public class CreeperExplosion
                                                                                  / (locWeight + 1));
         locWeight++;
         checked.clear();
+        Iterator<Block> it = blocks.iterator();
+        while (it.hasNext()) {
+        	Block b = it.next();
+        	CreeperLog.debug("Block List :" + b.getType().name());        	
+        }
+        
         recordBlocks(blocks);
         if (CreeperConfig.getBool(CfgVal.EXPLODE_OBSIDIAN))
             checkForObsidian();
@@ -264,7 +270,6 @@ public class CreeperExplosion
      */
     public void record(Block block)
     {
-    	CreeperLog.debug("Added to replace List :" + block.getType().name());
     	
     	if (block.getType() == Material.PORTAL)
     		return;

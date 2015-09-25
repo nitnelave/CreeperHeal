@@ -32,7 +32,6 @@ public abstract class ToReplaceList
      */
     protected static void addToReplace(CreeperBlock block)
     {
-    	CreeperLog.debug("Added to instant replace List :" + block.getBlock().getType().name());
         toReplace.put(block.getLocation(), block);
     }
 
