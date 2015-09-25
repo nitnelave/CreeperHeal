@@ -1,5 +1,7 @@
 package com.nitnelave.CreeperHeal.block;
 
+import com.nitnelave.CreeperHeal.utils.CreeperLog;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +27,7 @@ class CreeperDoor extends CreeperBlock
     protected CreeperDoor(BlockState blockState)
     {
         Block block = blockState.getBlock();
+        CreeperLog.debug("Block exploded:" + block.getType().name());
         if ((blockState.getRawData() & 8) != 0)
             block = block.getRelative(BlockFace.DOWN);
         this.blockState = block.getState();

@@ -137,7 +137,7 @@ public abstract class CreeperLog
     public static void debug(String message)
     {
         if (debug)
-            log.info("[DEBUG] " + message);
+            log.info("[CreeperHeal] [DEBUG] " + message);
     }
 
     /**
