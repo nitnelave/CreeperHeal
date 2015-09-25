@@ -224,7 +224,7 @@ public class CreeperExplosion
             Iterator<Block> it = blocks.iterator();
             while (it.hasNext()) {
             	Block b = it.next();
-                record(b);        	
+                record(b);
             }
         }
     }
