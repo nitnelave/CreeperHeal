@@ -222,9 +222,11 @@ public class CreeperExplosion
                     iter.remove();
                 }
             }
-            for (Block b : blocks) {
+            Iterator<Block> it = blocks.iterator();
+            while (it.hasNext()) {
+            	Block b = it.next();
             	CreeperLog.debug("To Record:" + b.getType().name());        	
-                record(b);
+                record(b);        	
             }
         }
     }
