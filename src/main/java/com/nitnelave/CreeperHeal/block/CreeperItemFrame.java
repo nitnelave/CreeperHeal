@@ -82,7 +82,7 @@ class CreeperItemFrame extends CreeperHanging
             ItemStack s = f.getItem();
             if (s.getType() != Material.AIR)
                 getWorld().dropItemNaturally(getLocation(), s);
-            getWorld().dropItemNaturally(getLocation(), new ItemStack(389, 1));
+            getWorld().dropItemNaturally(getLocation(), new ItemStack(Material.ITEM_FRAME, 1));
             return true;
         }
         return false;
@@ -96,6 +96,6 @@ class CreeperItemFrame extends CreeperHanging
     @Override
     public int getTypeId()
     {
-        return 389;
+        return Material.ITEM_FRAME.getId();
     }
 }

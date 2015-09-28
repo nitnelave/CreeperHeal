@@ -32,7 +32,8 @@ public class CreeperBlock implements Replaceable
      * These blocks (may) need a block under them not to drop.
      */
     private final static Set<Integer> DEPENDENT_DOWN_BLOCKS = CreeperUtils.createFinalHashSet(6, 26, 27, 28, 31, 32, 37, 38, 39, 40, 55, 59, 63, 64, 66, 70,
-                                                                                              71, 72, 78, 81, 83, 93, 94, 104, 105, 115, 117, 132, 140, 141, 142, 171);
+                                                                                              71, 72, 78, 81, 83, 93, 94, 104, 105, 115, 117, 132, 140, 141,
+                                                                                              142, 171, 175, 193, 194, 195, 196, 197);
     /*
      * These blocks are dependent on another block
      */
