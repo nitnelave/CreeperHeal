@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.nitnelave.CreeperHeal</groupId>
   <artifactId>CreeperHeal</artifactId>
-  <version>6.8.0</version>
+  <version>6.8.1</version>
   <name>CreeperHeal</name>
 
   <licenses>
@@ -137,7 +137,7 @@
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.8.6-R0.1-SNAPSHOT</version>
+      <version>1.8.8-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -187,14 +187,14 @@
     </dependency>
     <dependency>
       <groupId>com.massivecraft.factions</groupId>
-      <artifactId>P</artifactId>
+      <artifactId>Factions</artifactId>
       <version>2.7.5</version>
       <scope>system</scope>
       <systemPath>${project.basedir}/lib/Factions.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.massivecraft.mcore</groupId>
-      <artifactId>P</artifactId>
+      <artifactId>MCore</artifactId>
       <version>2.7.5</version>
       <scope>system</scope>
       <systemPath>${project.basedir}/lib/mcore.jar</systemPath>
