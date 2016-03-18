@@ -305,7 +305,7 @@ public class CreeperCommandManager implements CommandExecutor
      *            to all worlds.
      */
     private void
-        forceCmd(String[] args, @SuppressWarnings("unused") String msg, CommandSender sender,
+        forceCmd(String[] args, String msg, CommandSender sender,
                  WorldConfig currentWorld)
     {
         String cmd = args[0];
