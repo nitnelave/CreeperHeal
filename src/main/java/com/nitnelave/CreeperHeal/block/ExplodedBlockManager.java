@@ -176,7 +176,7 @@ public class ExplodedBlockManager
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled())
             return;
-        List<Block> processList = new ArrayList(event.getBlocks());
+        List<Block> processList = new ArrayList<Block>(event.getBlocks());
         for(Block b : event.getProtectedBlocks())
         {
             CreeperBlock cb = CreeperBlock.newBlock(b.getState());
