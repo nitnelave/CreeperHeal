@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.nitnelave.CreeperHeal</groupId>
   <artifactId>CreeperHeal</artifactId>
-  <version>6.8.1</version>
+  <version>7.0.0</version>
   <name>CreeperHeal</name>
 
   <licenses>
@@ -154,14 +154,6 @@
       <systemPath>${project.basedir}/lib/bpermissions.jar</systemPath>
     </dependency>
     <dependency>
-      <groupId>com.nitnelave.CreeperTrap</groupId>
-      <artifactId>CreeperTrap</artifactId>
-      <version>2.0</version>
-      <type>jar</type>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/lib/CreeperTrap.jar</systemPath>
-    </dependency>
-    <dependency>
       <groupId>com.garbagemule.MobArena</groupId>
       <artifactId>MobArena</artifactId>
       <version>0.94.4.81</version>
@@ -178,12 +170,11 @@
       <systemPath>${project.basedir}/lib/LWC.jar</systemPath>
     </dependency>
     <dependency>
-      <groupId>org.yi.acru.bukkit.Lockette</groupId>
-      <artifactId>Lockette</artifactId>
-      <version>1.7.4</version>
-      <type>jar</type>
+      <groupId>com.massivecraft.mcore</groupId>
+      <artifactId>MCore</artifactId>
+      <version>2.7.5</version>
       <scope>system</scope>
-      <systemPath>${project.basedir}/lib/Lockette.jar</systemPath>
+      <systemPath>${project.basedir}/lib/mcore.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.massivecraft.factions</groupId>
@@ -191,13 +182,6 @@
       <version>2.7.5</version>
       <scope>system</scope>
       <systemPath>${project.basedir}/lib/Factions.jar</systemPath>
-    </dependency>
-    <dependency>
-      <groupId>com.massivecraft.mcore</groupId>
-      <artifactId>MCore</artifactId>
-      <version>2.7.5</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/lib/mcore.jar</systemPath>
     </dependency>
   </dependencies>
 </project>
