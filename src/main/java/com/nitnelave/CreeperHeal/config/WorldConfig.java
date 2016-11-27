@@ -254,6 +254,7 @@ public class WorldConfig
                     return getBool(WCfgVal.GHAST) && isAbove(entity.getLocation());
                 case ENDER_DRAGON:
                     return getBool(WCfgVal.DRAGONS);
+                case WITHER:
                 case WITHER_SKULL:
                     return getBool(WCfgVal.WITHER);
                 case MINECART_TNT:
