@@ -33,7 +33,7 @@ class CreeperSign extends CreeperBlock
         for (int k = 0; k < 4; k++)
             state.setLine(k, sign.getLine(k));
 
-        state.getData().setData(sign.getRawData());
+        state.setData(sign.getData());
         state.update(true);
     }
 

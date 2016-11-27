@@ -1,22 +1,16 @@
 package com.nitnelave.CreeperHeal.block;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-
 import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.utils.NeighborFire;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+
+import java.util.*;
 
 /**
  * Manager to handle the burnt blocks.
@@ -191,9 +185,7 @@ public abstract class BurntBlockManager
      */
     public static boolean isNextToFire(Location location)
     {
-        if (!CreeperConfig.getBool(CfgVal.LEAVES_VINES))
-            return false;
-        return fireIndex.hasNeighbor(location);
+        return CreeperConfig.getBool(CfgVal.LEAVES_VINES) && fireIndex.hasNeighbor(location);
     }
 
     /**
@@ -203,9 +195,7 @@ public abstract class BurntBlockManager
      */
     public static boolean isIndexEmpty()
     {
-        if (!CreeperConfig.getBool(CfgVal.LEAVES_VINES))
-            return false;
-        return fireIndex.isEmpty();
+        return CreeperConfig.getBool(CfgVal.LEAVES_VINES) && fireIndex.isEmpty();
     }
 
     /**

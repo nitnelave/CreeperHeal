@@ -1,8 +1,11 @@
 package com.nitnelave.CreeperHeal.block;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.material.PistonBaseMaterial;
+import org.bukkit.material.PistonExtensionMaterial;
 
 /**
  * Piston implementation of CreeperBlock.
@@ -19,39 +22,20 @@ class CreeperPiston extends CreeperBlock
     /*
      * Constructor.
      */
-    protected CreeperPiston(BlockState blockState)
+    CreeperPiston(BlockState blockState)
     {
-        this.blockState = blockState;
-        BlockFace face;
-        switch (getRawData() & 7)
-        {
-        case 0:
-            face = BlockFace.DOWN;
-            break;
-        case 1:
-            face = BlockFace.UP;
-            break;
-        case 2:
-            face = BlockFace.NORTH;
-            break;
-        case 3:
-            face = BlockFace.SOUTH;
-            break;
-        case 4:
-            face = BlockFace.WEST;
-            break;
-        default:
-            face = BlockFace.EAST;
-        }
+        Block block = blockState.getBlock();
         if (blockState.getType().equals(Material.PISTON_EXTENSION))
-        {
-            extended = true;
-            this.blockState = getBlock().getRelative(face.getOppositeFace()).getState();
-        }
-        else
-            extended = (getRawData() & 8) != 0;
-        orientation = face;
-        this.blockState.setRawData((byte) (blockState.getRawData() & 7));
+            block = block.getRelative(castData(blockState, PistonExtensionMaterial.class).getAttachedFace());
+        this.blockState = block.getState();
+        PistonBaseMaterial data = castData(this.blockState, PistonBaseMaterial.class);
+        orientation = data.getFacing();
+        Block extension_block = block.getRelative(orientation);
+        extended = extension_block.getType().equals(Material.PISTON_EXTENSION) &&
+                   castData(extension_block.getState(), PistonExtensionMaterial.class).getFacing().equals(orientation);
+        PistonBaseMaterial newdata = data.clone();
+        newdata.setPowered(false);
+        this.blockState.setData(newdata);
     }
 
     /*

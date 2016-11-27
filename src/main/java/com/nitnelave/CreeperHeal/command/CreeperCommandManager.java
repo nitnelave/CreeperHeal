@@ -1,7 +1,13 @@
 package com.nitnelave.CreeperHeal.command;
 
-import java.lang.reflect.Field;
-
+import com.nitnelave.CreeperHeal.block.BurntBlockManager;
+import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
+import com.nitnelave.CreeperHeal.config.CfgVal;
+import com.nitnelave.CreeperHeal.config.CreeperConfig;
+import com.nitnelave.CreeperHeal.config.WCfgVal;
+import com.nitnelave.CreeperHeal.config.WorldConfig;
+import com.nitnelave.CreeperHeal.utils.CreeperMessenger;
+import com.nitnelave.CreeperHeal.utils.CreeperPermissionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -11,15 +17,7 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.nitnelave.CreeperHeal.PluginHandler;
-import com.nitnelave.CreeperHeal.block.BurntBlockManager;
-import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
-import com.nitnelave.CreeperHeal.config.CfgVal;
-import com.nitnelave.CreeperHeal.config.CreeperConfig;
-import com.nitnelave.CreeperHeal.config.WCfgVal;
-import com.nitnelave.CreeperHeal.config.WorldConfig;
-import com.nitnelave.CreeperHeal.utils.CreeperMessenger;
-import com.nitnelave.CreeperHeal.utils.CreeperPermissionManager;
+import java.lang.reflect.Field;
 
 /**
  * The command manager for CreeperHeal.
@@ -73,9 +71,6 @@ public class CreeperCommandManager implements CommandExecutor
         if (args.length != 0)
         {
             String cmd = args[0];
-            if (cmd.equalsIgnoreCase("trap"))
-                return PluginHandler.trapCommand(sender, args);
-
             //the last argument can be a world
             WorldConfig currentWorld = null;
             World w = Bukkit.getWorld(args[args.length - 1]);
@@ -199,10 +194,10 @@ public class CreeperCommandManager implements CommandExecutor
                                    + " Heal all burnt blocks.");
             }
 
-            if (healNear)
-                sender.sendMessage(GREEN + "/ch healNear" + (healNearOther ? " (player)" : "")
-                                   + " :" + PURPLE + " Heals all explosions around"
-                                   + (healNearOther ? " the given player" : ""));
+            // healNear
+            sender.sendMessage(GREEN + "/ch healNear" + (healNearOther ? " (player)" : "")
+                               + " :" + PURPLE + " Heals all explosions around"
+                               + (healNearOther ? " the given player" : ""));
         }
     }
 
@@ -256,11 +251,12 @@ public class CreeperCommandManager implements CommandExecutor
      *            The setting to change.
      * @param args
      *            The command arguments.
-     * @param setting
-     *            The name of the setting.
+     * @param help
+     *            The help message.
+     * @param unit
+     *            The unit in the measurement.
      * @param sender
      *            The command's sender.
-     * @return The new value of the setting.
      */
     private void integerCmd(CfgVal key, String[] args, String help, String unit,
                             CommandSender sender)

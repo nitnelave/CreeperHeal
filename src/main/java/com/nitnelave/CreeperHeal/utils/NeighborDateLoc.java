@@ -1,14 +1,13 @@
 package com.nitnelave.CreeperHeal.utils;
 
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
-
+import com.nitnelave.CreeperHeal.config.CfgVal;
+import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import com.nitnelave.CreeperHeal.config.CfgVal;
-import com.nitnelave.CreeperHeal.config.CreeperConfig;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 
 /**
  * Implementation of the NeighborFinder for DateLoc.
@@ -26,7 +25,7 @@ public class NeighborDateLoc extends NeighborFinder<DateLoc>
      * .Location, java.util.LinkedList)
      */
     @Override
-    protected DateLoc getNeighbor(Location loc, LinkedList<DateLoc> list)
+    protected DateLoc getNeighbor(Location loc, ArrayList<DateLoc> list)
     {
         if (list != null)
         {
@@ -46,12 +45,12 @@ public class NeighborDateLoc extends NeighborFinder<DateLoc>
     @Override
     public void clean()
     {
-        Iterator<LinkedList<DateLoc>> iter = map.values().iterator();
+        Iterator<ArrayList<DateLoc>> iter = map.values().iterator();
         Date delay = new Date(new Date().getTime() - 200
                               * CreeperConfig.getInt(CfgVal.BLOCK_PER_BLOCK_INTERVAL));
         while (iter.hasNext())
         {
-            LinkedList<DateLoc> list = iter.next();
+            ArrayList<DateLoc> list = iter.next();
             Iterator<DateLoc> it = list.iterator();
             while (it.hasNext())
             {

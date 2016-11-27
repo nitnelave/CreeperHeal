@@ -1,12 +1,8 @@
 package com.nitnelave.CreeperHeal.utils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import com.nitnelave.CreeperHeal.CreeperHeal;
+
+import java.io.*;
 
 /**
  * A class to handle common file operations.
@@ -21,6 +17,7 @@ public class FileUtils
      *            The file to be created.
      * @return True, if successful
      */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static boolean createNewFile(File file)
     {
         file.delete();

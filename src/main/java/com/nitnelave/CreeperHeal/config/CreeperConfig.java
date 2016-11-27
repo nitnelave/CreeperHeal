@@ -1,22 +1,22 @@
 package com.nitnelave.CreeperHeal.config;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Logger;
-
+import com.nitnelave.CreeperHeal.CreeperHeal;
+import com.nitnelave.CreeperHeal.utils.CreeperLog;
+import com.nitnelave.CreeperHeal.utils.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.nitnelave.CreeperHeal.CreeperHeal;
-import com.nitnelave.CreeperHeal.utils.CreeperLog;
-import com.nitnelave.CreeperHeal.utils.FileUtils;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.logging.Logger;
 
 /**
  * Configuration management class.
@@ -168,17 +168,14 @@ public abstract class CreeperConfig
             } catch (Exception e)
             {
                 e.printStackTrace();
-                return;
             }
         } catch (IOException e1)
         {
             e1.printStackTrace();
-            return;
         } catch (InvalidConfigurationException e1)
         {
             CreeperLog.warning("Invalid configuration : " + f.getName()
                                + " is not a valid YAML file.");
-            return;
         }
     }
 
@@ -293,7 +290,6 @@ public abstract class CreeperConfig
 
         alias.write();
         soundName.write();
-        loadSound();
         advanced.set("config-version", CONFIG_VERSION);
 
         try
@@ -381,6 +377,11 @@ public abstract class CreeperConfig
     public static Sound getSound()
     {
         return sound;
+    }
+
+    public static boolean shouldDrop()
+    {
+        return new Random().nextInt(100) < CreeperConfig.getInt(CfgVal.DROP_CHANCE);
     }
 
 }

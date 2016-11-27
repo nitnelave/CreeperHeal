@@ -42,7 +42,7 @@ public enum CfgVal implements CfgValEnumMember
     private final Object defaultValue;
     private final boolean advanced;
 
-    private CfgVal(String key, Object value, boolean adv)
+    CfgVal(String key, Object value, boolean adv)
     {
         this.key = key;
         defaultValue = value;

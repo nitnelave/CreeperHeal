@@ -1,5 +1,10 @@
 package com.nitnelave.CreeperHeal.listeners;
 
+import com.nitnelave.CreeperHeal.block.BurntBlockManager;
+import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
+import com.nitnelave.CreeperHeal.block.FallIndex;
+import com.nitnelave.CreeperHeal.config.CfgVal;
+import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
@@ -8,12 +13,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
-
-import com.nitnelave.CreeperHeal.block.BurntBlockManager;
-import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
-import com.nitnelave.CreeperHeal.block.FallIndex;
-import com.nitnelave.CreeperHeal.config.CfgVal;
-import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 /**
  * Listener for all events related to blocks falling.

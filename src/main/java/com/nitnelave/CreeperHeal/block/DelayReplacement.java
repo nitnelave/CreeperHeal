@@ -22,6 +22,7 @@ public class DelayReplacement implements Runnable
      * The block to be replaced.
      */
     private final Replaceable blockState;
+    @SuppressWarnings("FieldCanBeLocal")
     private final int REPLACEMENT_THRESHOLD = 150;
     private final CHBlockHealReason reason;
     /*
@@ -38,6 +39,7 @@ public class DelayReplacement implements Runnable
      * @param replaced
      *            The number of times a replacement has already been attempted.
      * @param reason
+     *            The reason for the delay
      */
     public DelayReplacement(Replaceable replaceable, int replaced, CHBlockHealReason reason)
     {

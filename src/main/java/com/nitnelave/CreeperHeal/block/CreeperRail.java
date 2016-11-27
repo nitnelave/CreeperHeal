@@ -1,8 +1,13 @@
 package com.nitnelave.CreeperHeal.block;
 
+import com.nitnelave.CreeperHeal.utils.CreeperUtils;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.material.Rails;
+
+import java.util.Set;
 
 /**
  * Rail implementation of CreeperBlock.
@@ -16,12 +21,21 @@ class CreeperRail extends CreeperBlock
                                               BlockFace.SOUTH };
     private static final BlockFace[] UP_DOWN = { BlockFace.DOWN, BlockFace.SELF, BlockFace.UP };
 
+    public static final Set<Material> RAIL_TYPES =
+            CreeperUtils.createFinalHashSet(Material.RAILS,
+                                            Material.ACTIVATOR_RAIL,
+                                            Material.DETECTOR_RAIL,
+                                            Material.POWERED_RAIL);
+
+    private final Rails data;
+
     /*
      * Constructor.
      */
-    protected CreeperRail(BlockState blockState)
+    CreeperRail(BlockState blockState)
     {
         super(blockState);
+        data = castData(blockState, Rails.class);
     }
 
     /*
@@ -33,25 +47,30 @@ class CreeperRail extends CreeperBlock
     public void update()
     {
 
-        byte data = getRawData();
-        byte[][] railData = new byte[3][4];
+        Rails[][] railData = new Rails[3][4];
         Block block = getBlock();
         for (int i = 0; i < 3; i++)
+        {
+            Block upBlock = block.getRelative(UP_DOWN[i]);
             for (int j = 0; j < 4; j++)
             {
-                Block tmpBlock = block.getRelative(FACES[j]);
-                tmpBlock = tmpBlock.getRelative(UP_DOWN[i]);
-                railData[i][j] = tmpBlock.getData();
+                Block tmpBlock = upBlock.getRelative(FACES[j]);
+                if (RAIL_TYPES.contains(tmpBlock.getType()))
+                    railData[i][j] = castData(tmpBlock.getState(), Rails.class);
             }
+        }
         super.update();
-        block.setData(data);
+        block.getState().setData(data);
         for (int i = 0; i < 3; i++)
+        {
+            Block upBlock = block.getRelative(UP_DOWN[i]);
             for (int j = 0; j < 4; j++)
             {
-                Block tmpBlock = block.getRelative(FACES[j]);
-                tmpBlock = tmpBlock.getRelative(UP_DOWN[i]);
-                tmpBlock.setData(railData[i][j]);
+                Block tmpBlock = upBlock.getRelative(FACES[j]);
+                if (RAIL_TYPES.contains(tmpBlock.getType()))
+                    tmpBlock.getState().setData(railData[i][j]);
             }
+        }
     }
 
     /*
@@ -62,19 +81,9 @@ class CreeperRail extends CreeperBlock
     @Override
     public BlockFace getAttachingFace()
     {
-        switch (getRawData())
-        {
-        case 5:
-            return BlockFace.WEST;
-        case 4:
-            return BlockFace.EAST;
-        case 3:
-            return BlockFace.NORTH;
-        case 2:
-            return BlockFace.SOUTH;
-        default:
-            return BlockFace.DOWN;
-        }
+        if (data.isOnSlope())
+            return data.getDirection();
+        return BlockFace.DOWN;
     }
 
     /**
@@ -84,6 +93,6 @@ class CreeperRail extends CreeperBlock
      */
     public boolean isAscending()
     {
-        return getRawData() > 1;
+        return data.isOnSlope();
     }
 }

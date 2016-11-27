@@ -1,12 +1,13 @@
 package com.nitnelave.CreeperHeal.block;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.material.Bed;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Bed implementation of CreeperBlock.
@@ -25,13 +26,24 @@ class CreeperBed extends CreeperBlock
     /*
      * Constructor.
      */
-    protected CreeperBed(BlockState blockState)
+    CreeperBed(BlockState blockState)
     {
-        orientation = getFacing(blockState.getRawData());
+        Bed bedData = castData(blockState, Bed.class);
+        orientation = bedData.getFacing();
         Block block = blockState.getBlock();
-        if ((blockState.getRawData() & 8) == 0)
-            block = block.getRelative(orientation.getOppositeFace());
+        if (!bedData.isHeadOfBed())
+            block = block.getRelative(orientation);
         this.blockState = block.getState();
+    }
+
+    /**
+     * The blockstate is always the head of the bed, this gets the foot.
+     *
+     * @return the foot of the bed.
+     */
+    public Block getFoot()
+    {
+        return getBlock().getRelative(orientation.getOppositeFace());
     }
 
     /*
@@ -43,9 +55,14 @@ class CreeperBed extends CreeperBlock
     public void update()
     {
         super.update();
-        byte data = (byte) (getRawData() & 3);
-        BlockFace face = getFacing(data);
-        getBlock().getRelative(face).setTypeIdAndData(getTypeId(), data, false);
+        Block foot = getFoot();
+        foot.setType(Material.BED_BLOCK, false);
+        BlockState fs = foot.getState();
+        Bed d = castData(blockState, Bed.class);
+        d.setHeadOfBed(false);
+        d.setFacingDirection(orientation);
+        fs.setData(d);
+        fs.update(true, false);
     }
 
     /*
@@ -56,8 +73,8 @@ class CreeperBed extends CreeperBlock
     @Override
     public void remove()
     {
-        getBlock().getRelative(orientation).setType(Material.AIR);
-        getBlock().setType(Material.AIR);
+        getFoot().setType(Material.AIR, false);
+        getBlock().setType(Material.AIR, false);
     }
 
     /*
@@ -70,21 +87,4 @@ class CreeperBed extends CreeperBlock
     {
         return new ArrayList<NeighborBlock>();
     }
-
-    private BlockFace getFacing(byte data)
-    {
-        switch (data & 3)
-        {
-        case 0:
-            return BlockFace.NORTH;
-        case 1:
-            return BlockFace.EAST;
-        case 2:
-            return BlockFace.SOUTH;
-        default:
-            return BlockFace.WEST;
-        }
-
-    }
-
 }

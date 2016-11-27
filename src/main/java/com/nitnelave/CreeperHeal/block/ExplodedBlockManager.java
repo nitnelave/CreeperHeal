@@ -1,18 +1,5 @@
 package com.nitnelave.CreeperHeal.block;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Hanging;
-import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.scheduler.BukkitTask;
-
 import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.PluginHandler;
 import com.nitnelave.CreeperHeal.config.CfgVal;
@@ -21,7 +8,20 @@ import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.events.CHBlockHealEvent.CHBlockHealReason;
 import com.nitnelave.CreeperHeal.events.CHExplosionRecordEvent;
 import com.nitnelave.CreeperHeal.utils.NeighborExplosion;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Hanging;
+import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.scheduler.BukkitTask;
+
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Manager for the explosions list and the explosion index.
@@ -45,7 +45,7 @@ public class ExplodedBlockManager
      * List to temporarily store the paintings before adding them to the
      * explosion right after.
      */
-    private static List<CreeperHanging> hangingList = new LinkedList<CreeperHanging>();
+    private static List<Replaceable> brokenEntityList = new ArrayList<Replaceable>();
 
     /*
      * Block replacement task.
@@ -176,10 +176,11 @@ public class ExplodedBlockManager
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled())
             return;
-        List<Block> processList = new ArrayList(event.getBlocks());
+        List<Block> processList = new ArrayList<Block>(event.getBlocks());
         for(Block b : event.getProtectedBlocks())
         {
             CreeperBlock cb = CreeperBlock.newBlock(b.getState());
+            assert cb != null;
             ToReplaceList.addToReplace(cb);
             cb.remove();
         }
@@ -200,9 +201,9 @@ public class ExplodedBlockManager
 
         cEx.addBlocks(processList, location);
 
-        for (CreeperHanging h : hangingList)
+        for (Replaceable h : brokenEntityList)
             cEx.record(h);
-        hangingList.clear();
+        brokenEntityList.clear();
 
         /*
          * Immediately replace the blocks marked for immediate replacement.
@@ -282,9 +283,17 @@ public class ExplodedBlockManager
         CreeperHanging h = CreeperHanging.newHanging(hanging);
         if (h != null)
         {
-            hangingList.add(h);
+            brokenEntityList.add(h);
             h.remove();
         }
+    }
+
+    /**
+     * Record a hanging as part of the explosion.
+     */
+    public static void recordArmorStand(ArmorStand stand)
+    {
+        brokenEntityList.add(new CreeperArmorStand(stand));
     }
 
     private static void scheduleTask()

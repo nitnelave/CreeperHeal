@@ -1,16 +1,14 @@
 package com.nitnelave.CreeperHeal.config;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.HashSet;
-
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.block.BlockId;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashSet;
 
 abstract class WorldConfigImporter
 {
@@ -61,45 +59,6 @@ abstract class WorldConfigImporter
 
     }
 
-    private static void from4(String name)
-    {
-
-        YamlConfiguration config = new YamlConfiguration();
-        try
-        {
-            config.load(new File(CreeperHeal.getCHFolder() + "/config.yml"));
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-            return;
-        }
-
-        creepers = getStringBoolean(name + ".Creepers", "true", config);
-        tnt = getStringBoolean(name + ".TNT", "true", config);
-        fire = getStringBoolean(name + ".Fire", "true", config);
-        ghast = getStringBoolean(name + ".Ghast", "true", config);
-        custom = getStringBoolean(name + ".Magical", "false", config);
-        replaceAbove = config.getBoolean(name + ".replace-above-limit-only", false);
-        replaceLimit = config.getInt(name + ".replace-limit", 64);
-        enderman = config.getBoolean(name + ".block-enderman-pickup", false);
-        dragons = getStringBoolean(name + ".dragons", "false", config);
-        repairTime = config.getInt(name + ".repair-time", -1);
-
-        HashSet<BlockId> restrict_list = new HashSet<BlockId>();
-        try
-        {
-            String tmp_str1 = config.getString(name + ".restrict-list", "").trim();
-            String[] split = tmp_str1.split(",");
-            for (String elem : split)
-                restrict_list.add(new BlockId(elem));
-        } catch (NumberFormatException e)
-        {
-            CreeperLog.warning("[CreeperHeal] Wrong values for restrict-list field for world "
-                               + name);
-            restrict_list.clear();
-            restrict_list.add(new BlockId(0));
-        }
-    }
 
     private static void from6(String name)
     {
@@ -178,16 +137,13 @@ abstract class WorldConfigImporter
         CreeperLog.logInfo("Importing settings for world : " + name, 1);
         switch (version)
         {
-        case 4:
-            from4(name);
-            break;
         case 5:
         case 6:
         case 7:
             from6(name);
             break;
         default:
-            CreeperLog.warning("Trying to import a world from an unknown version.");
+            CreeperLog.warning("Trying to import a world from an unknown (too old?) version.");
         }
         storeSettings(w);
         File f = new File(CreeperHeal.getCHFolder() + "/" + name + ".yml");
@@ -203,29 +159,15 @@ abstract class WorldConfigImporter
             config.load(configFile);
             advanced.load(advancedFile);
             grief.load(griefFile);
-        } catch (FileNotFoundException e)
-        {} catch (IOException e)
-        {} catch (InvalidConfigurationException e)
+        } catch (IOException ignored)
+        {} catch (InvalidConfigurationException ignored)
         {}
-        for (OutDatedWCfgVal v : OutDatedWCfgVal.values())
-            switch (v.getFile())
-            {
-            case CONFIG:
-                config.set(v.getKey(), null);
-                break;
-            case ADVANCED:
-                advanced.set(v.getKey(), null);
-                break;
-            case GRIEF:
-                grief.set(v.getKey(), null);
-                break;
-            }
         try
         {
             config.save(configFile);
             advanced.save(advancedFile);
             grief.save(griefFile);
-        } catch (IOException e)
+        } catch (IOException ignored)
         {}
 
         return w;

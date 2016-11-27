@@ -1,21 +1,5 @@
 package com.nitnelave.CreeperHeal.listeners;
 
-import java.util.Date;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Hanging;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityBreakDoorEvent;
-import org.bukkit.event.entity.EntityChangeBlockEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.hanging.HangingBreakEvent;
-
 import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.block.CreeperBurntBlock;
@@ -29,6 +13,20 @@ import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.CreeperUtils;
 import com.nitnelave.CreeperHeal.utils.FactionHandler;
 import com.nitnelave.CreeperHeal.utils.Suffocating;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Hanging;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.*;
+import org.bukkit.event.hanging.HangingBreakEvent;
+
+import java.util.Date;
 
 /**
  * Listener for the entity events.
@@ -49,6 +47,7 @@ public class CreeperListener implements Listener
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent event)
     {
+        CreeperLog.debug("Entity explode event");
         WorldConfig world = CreeperConfig.getWorld(event.getLocation().getWorld());
 
         if (!FactionHandler.shouldIgnore(event.blockList(), world))
@@ -72,7 +71,6 @@ public class CreeperListener implements Listener
     public void onHangingBreak(HangingBreakEvent event)
     {
         Hanging h = event.getEntity();
-        WorldConfig world = CreeperConfig.getWorld(h.getWorld());
         switch (event.getCause())
         {
         case EXPLOSION:
@@ -80,6 +78,7 @@ public class CreeperListener implements Listener
             break;
         case PHYSICS:
         case OBSTRUCTION:
+            WorldConfig world = CreeperConfig.getWorld(h.getWorld());
             if (BurntBlockManager.isNextToFire(h.getLocation()) && world.getBool(WCfgVal.FIRE))
                 BurntBlockManager.recordBurntBlock(new CreeperBurntBlock(new Date(), CreeperHanging.newHanging(h)));
             break;
@@ -98,16 +97,38 @@ public class CreeperListener implements Listener
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEntityChangeBlock(EntityChangeBlockEvent event)
     {
+        CreeperLog.debug("Entity change block event");
         if (event.getEntityType() == EntityType.SILVERFISH
             && event.getBlock().getType() == Material.MONSTER_EGGS
             && CreeperConfig.getBool(CfgVal.REPLACE_SILVERFISH_BLOCKS))
-            Bukkit.getScheduler().runTask(CreeperHeal.getInstance(), new ReplaceMonsterEgg(event.getBlock()));
+            Bukkit.getScheduler().runTask(CreeperHeal.getInstance(), new ReplaceSilverfishBlock(event.getBlock()));
         else if (event.getEntity().getType() == EntityType.ENDERMAN)
         {
             WorldConfig world = CreeperConfig.getWorld(event.getBlock().getWorld());
             if (world.getBool(WCfgVal.ENDERMAN))
                 event.setCancelled(true);
         }
+    }
+
+    /**
+     * Listener for the EntityDamagedByEntity event. Check for broken armor stands.
+     *
+     * @param event
+     *            The EntityDamagedByEntity event.
+     */
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onEntityDamagedByEntity(EntityDamageByEntityEvent event)
+    {
+        CreeperLog.debug("Entity damaged by entity event");
+        WorldConfig world = CreeperConfig.getWorld(event.getEntity().getWorld());
+        if (event.getEntityType() == EntityType.ARMOR_STAND
+            && event.getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION
+            && world.shouldReplace(event.getDamager()))
+        {
+            assert event.getEntity() instanceof ArmorStand;
+            ExplodedBlockManager.recordArmorStand((ArmorStand) event.getEntity());
+        }
+
     }
 
     /**
@@ -127,13 +148,14 @@ public class CreeperListener implements Listener
         }
     }
 
-    class ReplaceMonsterEgg implements Runnable
+    private class ReplaceSilverfishBlock implements Runnable
     {
         private final Block block;
         private final Material type;
 
-        public ReplaceMonsterEgg(Block block)
+        ReplaceSilverfishBlock(Block block)
         {
+            //noinspection deprecation
             switch (block.getData())
             {
             case 0:

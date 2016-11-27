@@ -1,11 +1,8 @@
 package com.nitnelave.CreeperHeal.block;
 
-import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
-import com.nitnelave.CreeperHeal.events.CHBlockHealEvent.CHBlockHealReason;
 import com.nitnelave.CreeperHeal.utils.CreeperUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -13,10 +10,9 @@ import org.bukkit.block.*;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Attachable;
+import org.bukkit.material.MaterialData;
 
 import java.util.*;
-
-//import com.nitnelave.CreeperHeal.PluginHandler;
 
 /**
  * Represents a block that can be replaced. Every special type of block derives
@@ -29,19 +25,43 @@ public class CreeperBlock implements Replaceable
 {
 
     /*
+     * Blocks a player can breathe in and that are replaced by other blocks.
+     */
+    protected final static Set<Material> EMPTY_BLOCKS =
+            CreeperUtils.createFinalHashSet(Material.AIR, Material.WATER, Material.STATIONARY_WATER,
+                                            Material.LAVA, Material.STATIONARY_LAVA, Material.FIRE, Material.SNOW);
+    /*
      * These blocks (may) need a block under them not to drop.
      */
-    private final static Set<Integer> DEPENDENT_DOWN_BLOCKS = CreeperUtils.createFinalHashSet(6, 26, 27, 28, 31, 32, 37, 38, 39, 40, 55, 59, 63, 64, 66, 70,
-                                                                                              71, 72, 78, 81, 83, 93, 94, 104, 105, 115, 117, 132, 140, 141,
-                                                                                              142, 171, 175, 193, 194, 195, 196, 197);
+    private final static Set<Material> DEPENDENT_DOWN_BLOCKS =
+            CreeperUtils.createFinalHashSet(Material.SAPLING, Material.BED_BLOCK, Material.POWERED_RAIL,
+                                            Material.DETECTOR_RAIL, Material.LONG_GRASS, Material.DEAD_BUSH,
+                                            Material.YELLOW_FLOWER, Material.RED_ROSE, Material.BROWN_MUSHROOM,
+                                            Material.RED_MUSHROOM, Material.REDSTONE_WIRE, Material.WHEAT,
+                                            Material.SIGN_POST, Material.WOODEN_DOOR,
+                                            Material.RAILS, Material.STONE_PLATE,
+                                            Material.IRON_DOOR_BLOCK, Material.WOOD_PLATE, Material.SNOW,
+                                            Material.CACTUS, Material.SUGAR_CANE, Material.SUGAR_CANE_BLOCK,
+                                            Material.DIODE_BLOCK_OFF, Material.DIODE_BLOCK_ON, Material.PUMPKIN_STEM,
+                                            Material.MELON_STEM, Material.WATER_LILY, Material.NETHER_WART_BLOCK,
+                                            Material.NETHER_WARTS,
+                                            Material.BREWING_STAND, Material.TRIPWIRE, Material.FLOWER_POT,
+                                            Material.CARROT, Material.POTATO, Material.GOLD_PLATE, Material.IRON_PLATE,
+                                            Material.REDSTONE_COMPARATOR_OFF, Material.REDSTONE_COMPARATOR_ON,
+                                            Material.ACTIVATOR_RAIL, Material.CARPET, Material.DOUBLE_PLANT,
+                                            Material.STANDING_BANNER, Material.SPRUCE_DOOR, Material.BIRCH_DOOR,
+                                            Material.JUNGLE_DOOR, Material.ACACIA_DOOR, Material.DARK_OAK_DOOR,
+                                            Material.CHORUS_PLANT, Material.CHORUS_FLOWER,
+                                            Material.BEETROOT_BLOCK);
     /*
      * These blocks are dependent on another block
      */
-    private final static Set<Integer> DEPENDENT_BLOCKS = CreeperUtils.createFinalHashSet(50, 65, 68, 69, 75, 76, 77, 96, 106, 127, 131, 143);
-    /*
-     * Blocks a player can breathe in and that are replaced by other blocks.
-     */
-    protected final static Set<Integer> EMPTY_BLOCKS = CreeperUtils.createFinalHashSet(0, 8, 9, 10, 11, 51, 78);
+    private final static Set<Material> DEPENDENT_BLOCKS =
+            CreeperUtils.createFinalHashSet(Material.TORCH, Material.LADDER, Material.WALL_SIGN, Material.LEVER,
+                                            Material.REDSTONE_TORCH_OFF, Material.REDSTONE_TORCH_ON,
+                                            Material.STONE_BUTTON, Material.TRAP_DOOR, Material.VINE, Material.COCOA,
+                                            Material.TRIPWIRE_HOOK, Material.WOOD_BUTTON, Material.IRON_TRAPDOOR,
+                                            Material.WALL_BANNER);
 
     public final static BlockFace[] CARDINALS = { BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST,
                                                  BlockFace.NORTH, BlockFace.UP, BlockFace.DOWN };
@@ -119,11 +139,10 @@ public class CreeperBlock implements Replaceable
         case AIR:
             return null;
         case STANDING_BANNER:
-        	return new CreeperBanner((Banner) state);
+        case WALL_BANNER:
+            return new CreeperBanner((Banner) state);
         case STONE:
             return new CreeperStone(state);
-        case WALL_BANNER:
-        	return new CreeperBanner((Banner) state);
         default:
             return new CreeperBlock(state);
         }
@@ -140,14 +159,13 @@ public class CreeperBlock implements Replaceable
     protected CreeperBlock()
     {}
 
-    /**
-     * Replace the block in the world.
+    /*
+     * Get whether the block is empty, i.e. if a player can breathe inside it
+     * and if it can be replaced by other blocks (snow, water...)
      */
-    public void update()
+    private static boolean isEmpty(Material type)
     {
-        getLocation().getChunk().load();
-        blockState.update(true);
-        getWorld().playSound(getLocation(), CreeperConfig.getSound(), CreeperConfig.getInt(CfgVal.SOUND_VOLUME) / 10F, random.nextFloat() * 2);
+        return EMPTY_BLOCKS.contains(type);
     }
 
     /*
@@ -183,15 +201,62 @@ public class CreeperBlock implements Replaceable
         return blockState.getBlock();
     }
 
+    /**
+     * Get whether blocks of a type are dependent on the block under.
+     *
+     * @param type
+     *            The type of the block.
+     * @return Whether the block is dependent.
+     */
+    private static boolean isDependentDown(Material type)
+    {
+        return DEPENDENT_DOWN_BLOCKS.contains(type);
+    }
+
+    /**
+     * Get whether blocks of a type are solid.
+     *
+     * @param type
+     *            The type of the block.
+     * @return Whether the block is solid.
+     */
+    @SuppressWarnings("unused")
+    public static boolean isSolid(Material type)
+    {
+        return type.isSolid();
+    }
+
+    /**
+     * Get whether blocks of a type are dependent on another block .
+     *
+     * @param type
+     *            The type of the block.
+     * @return Whether the block is dependent.
+     */
+    public static boolean isDependent(Material type)
+    {
+        return DEPENDENT_BLOCKS.contains(type) || isDependentDown(type);
+    }
+
+    /**
+     * Replace the block in the world.
+     */
+    public void update()
+    {
+        getLocation().getChunk().load();
+        blockState.update(true, false);
+        getWorld().playSound(getLocation(), CreeperConfig.getSound(), CreeperConfig.getInt(CfgVal.SOUND_VOLUME) / 10F, random.nextFloat() * 2);
+    }
+
     /*
      * (non-Javadoc)
      *
-     * @see com.nitnelave.CreeperHeal.block.Replaceable#getTypeId()
+     * @see com.nitnelave.CreeperHeal.block.Replaceable#getType()
      */
     @Override
-    public int getTypeId()
+    public Material getType()
     {
-        return blockState.getTypeId();
+        return blockState.getType();
     }
 
     /**
@@ -216,7 +281,7 @@ public class CreeperBlock implements Replaceable
     @Override
     public boolean drop(boolean forced)
     {
-        if (forced || new Random().nextInt(100) < CreeperConfig.getInt(CfgVal.DROP_CHANCE))
+        if (forced || CreeperConfig.shouldDrop())
         {
             Location loc = blockState.getBlock().getLocation();
             World w = loc.getWorld();
@@ -240,85 +305,14 @@ public class CreeperBlock implements Replaceable
         if (checkForDrop(getBlock()))
             return true;
 
-        if (!shouldDrop && isDependent(getTypeId())
-            && isEmpty(getBlock().getRelative(getAttachingFace()).getTypeId()))
+        if (!shouldDrop && isDependent(getType())
+            && isEmpty(getBlock().getRelative(getAttachingFace()).getType()))
             return false;
 
         update();
         checkForAscendingRails();
 
         return true;
-    }
-
-    protected boolean checkForDrop(Block block)
-    {
-        int blockId = block.getTypeId();
-
-        if (!CreeperConfig.getBool(CfgVal.OVERWRITE_BLOCKS) && !isEmpty(blockId))
-        {
-            if (CreeperConfig.getBool(CfgVal.DROP_DESTROYED_BLOCKS))
-                drop(true);
-            return true;
-        }
-        else if (CreeperConfig.getBool(CfgVal.OVERWRITE_BLOCKS) && !isEmpty(blockId)
-                 && CreeperConfig.getBool(CfgVal.DROP_DESTROYED_BLOCKS))
-        {
-            CreeperBlock b = CreeperBlock.newBlock(block.getState());
-            if (b != null)
-            {
-                b.drop(true);
-                b.remove();
-            }
-        }
-        return false;
-
-    }
-
-    /*
-     * Get whether the block is empty, i.e. if a player can breathe inside it
-     * and if it can be replaced by other blocks (snow, water...)
-     */
-    private static boolean isEmpty(int typeId)
-    {
-        return EMPTY_BLOCKS.contains(typeId);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.nitnelave.CreeperHeal.block.Replaceable#delayReplacement()
-     */
-    @Override
-    public void delayReplacement(CHBlockHealReason reason)
-    {
-        long delay = CreeperConfig.getInt(CfgVal.BLOCK_PER_BLOCK_INTERVAL);
-        DelayReplacement dr = new DelayReplacement(this, 0, reason);
-        int id = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(CreeperHeal.getInstance(), dr, delay, delay);
-        dr.setId(id);
-    }
-
-    /**
-     * Get whether blocks of a type are dependent on the block under.
-     *
-     * @param typeId
-     *            The type of the block.
-     * @return Whether the block is dependent.
-     */
-    private static boolean isDependentDown(int typeId)
-    {
-        return DEPENDENT_DOWN_BLOCKS.contains(typeId);
-    }
-
-    /**
-     * Get whether blocks of a type are solid.
-     *
-     * @param typeId
-     *            The type of the block.
-     * @return Whether the block is solid.
-     */
-    public static boolean isSolid(int typeId)
-    {
-        return Material.getMaterial(typeId).isSolid();
     }
 
     /**
@@ -333,16 +327,25 @@ public class CreeperBlock implements Replaceable
         return block.getType().isSolid();
     }
 
-    /**
-     * Get whether blocks of a type are dependent on another block .
-     *
-     * @param typeId
-     *            The type of the block.
-     * @return Whether the block is dependent.
-     */
-    public static boolean isDependent(int typeId)
+    protected boolean checkForDrop(Block block)
     {
-        return DEPENDENT_BLOCKS.contains(typeId) || isDependentDown(typeId);
+        Material type = block.getType();
+
+        if (!CreeperConfig.getBool(CfgVal.OVERWRITE_BLOCKS) && !isEmpty(type))
+        {
+            if (CreeperConfig.getBool(CfgVal.DROP_DESTROYED_BLOCKS))
+                drop(true);
+            return true;
+        } else if (CreeperConfig.getBool(CfgVal.OVERWRITE_BLOCKS) && !isEmpty(type)
+                   && CreeperConfig.getBool(CfgVal.DROP_DESTROYED_BLOCKS))
+        {
+            CreeperBlock b = CreeperBlock.newBlock(block.getState());
+            assert b != null;
+            b.drop(true);
+            b.remove();
+        }
+        return false;
+
     }
 
     /*
@@ -356,10 +359,12 @@ public class CreeperBlock implements Replaceable
         {
             if (face == BlockFace.DOWN)
                 continue;
-            CreeperBlock cb = CreeperBlock.newBlock(block.getRelative(face).getState());
-            if (cb instanceof CreeperRail)
+            Block rel = block.getRelative(face);
+            if (CreeperRail.RAIL_TYPES.contains(rel.getType()))
             {
+                CreeperBlock cb = CreeperBlock.newBlock(rel.getState());
                 CreeperRail r = (CreeperRail) cb;
+                assert r != null;
                 if (r.isAscending())
                     RailsIndex.putUpdatePrevention(r);
             }
@@ -375,8 +380,10 @@ public class CreeperBlock implements Replaceable
     public BlockFace getAttachingFace()
     {
         if (blockState.getData() instanceof Attachable)
+        {
             return ((Attachable) blockState.getData()).getAttachedFace();
-        if (isDependentDown(blockState.getTypeId()))
+        }
+        if (isDependentDown(blockState.getType()))
             return BlockFace.DOWN;
         return BlockFace.SELF;
     }
@@ -417,6 +424,15 @@ public class CreeperBlock implements Replaceable
         for (BlockFace face : CARDINALS)
             neighbors.add(new NeighborBlock(block.getRelative(face), face));
         return neighbors;
+    }
+
+    protected <T extends MaterialData> T castData(BlockState b, Class<T> c)
+    {
+        MaterialData data = b.getData();
+        if (c.isInstance(data))
+            return c.cast(data);
+        throw new IllegalArgumentException("Invalid block castData: " + data.getClass().toString() +
+                                           ", data for a " + b.getType().toString() + ", is not a " + c.toString());
     }
 
 }

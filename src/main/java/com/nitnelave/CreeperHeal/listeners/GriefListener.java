@@ -1,5 +1,12 @@
 package com.nitnelave.CreeperHeal.listeners;
 
+import com.nitnelave.CreeperHeal.config.CreeperConfig;
+import com.nitnelave.CreeperHeal.config.WCfgVal;
+import com.nitnelave.CreeperHeal.config.WorldConfig;
+import com.nitnelave.CreeperHeal.utils.CreeperLog;
+import com.nitnelave.CreeperHeal.utils.CreeperMessenger;
+import com.nitnelave.CreeperHeal.utils.CreeperPermissionManager;
+import com.nitnelave.CreeperHeal.utils.CreeperPlayer;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -17,13 +24,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-
-import com.nitnelave.CreeperHeal.config.CreeperConfig;
-import com.nitnelave.CreeperHeal.config.WCfgVal;
-import com.nitnelave.CreeperHeal.config.WorldConfig;
-import com.nitnelave.CreeperHeal.utils.CreeperMessenger;
-import com.nitnelave.CreeperHeal.utils.CreeperPermissionManager;
-import com.nitnelave.CreeperHeal.utils.CreeperPlayer;
 import org.bukkit.projectiles.ProjectileSource;
 
 /**
@@ -43,6 +43,7 @@ public class GriefListener implements Listener
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event)
     {
+        CreeperLog.debug("Block placement event");
         Player player = event.getPlayer();
         WorldConfig world = CreeperConfig.getWorld(player.getWorld());
         if (event.getBlockPlaced().getType() == Material.TNT
@@ -50,7 +51,10 @@ public class GriefListener implements Listener
         {
             boolean blocked = world.getBool(WCfgVal.BLOCK_TNT);
             if (blocked)
+            {
                 event.setCancelled(true);
+                CreeperLog.logInfo("Blocked placement of a " + event.getBlockPlaced().getType().toString() + " at ", 1);
+            }
             if (world.getBool(WCfgVal.WARN_TNT))
                 CreeperMessenger.warn(CreeperPlayer.WarningCause.TNT, player, blocked, null);
         }
@@ -59,7 +63,10 @@ public class GriefListener implements Listener
         {
             boolean blocked = world.getBool(WCfgVal.GRIEF_BLOCK_BLACKLIST);
             if (blocked)
+            {
                 event.setCancelled(true);
+                CreeperLog.logInfo("Blocked placement of a " + event.getBlockPlaced().getType().toString() + " at ", 1);
+            }
             if (world.getBool(WCfgVal.WARN_BLACKLIST))
                 CreeperMessenger.warn(CreeperPlayer.WarningCause.BLACKLIST, player, blocked, event.getBlockPlaced().getType().toString());
         }
@@ -76,6 +83,7 @@ public class GriefListener implements Listener
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockIgnite(BlockIgniteEvent event)
     {
+        CreeperLog.debug("Block ignition event");
         WorldConfig world = CreeperConfig.getWorld(event.getBlock().getWorld());
 
         if (event.getCause() == IgniteCause.SPREAD && world.getBool(WCfgVal.PREVENT_FIRE_SPREAD))
@@ -94,6 +102,7 @@ public class GriefListener implements Listener
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event)
     {
+        CreeperLog.debug("Entity damaged by entity event");
         if (event.getEntity() instanceof Player)
         {
             Player attacked = (Player) event.getEntity();
@@ -142,6 +151,7 @@ public class GriefListener implements Listener
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event)
     {
+        CreeperLog.debug("Bucket empty event");
         WorldConfig world = CreeperConfig.getWorld(event.getPlayer().getWorld());
 
         Player player = event.getPlayer();
@@ -166,6 +176,7 @@ public class GriefListener implements Listener
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event)
     {
+        CreeperLog.debug("Player interact event");
         ItemStack item = event.getItem();
         if (item == null)
             return;
@@ -205,6 +216,7 @@ public class GriefListener implements Listener
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event)
     {
+        CreeperLog.debug("Player join event");
         CreeperMessenger.registerPlayer(new CreeperPlayer(event.getPlayer()));
     }
 
@@ -218,6 +230,7 @@ public class GriefListener implements Listener
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event)
     {
+        CreeperLog.debug("Player quit event");
         CreeperMessenger.removeFromWarnList(new CreeperPlayer(event.getPlayer()));
     }
 

@@ -1,5 +1,9 @@
 package com.nitnelave.CreeperHeal.block;
 
+import com.nitnelave.CreeperHeal.config.CreeperConfig;
+import com.nitnelave.CreeperHeal.config.WCfgVal;
+import com.nitnelave.CreeperHeal.utils.CreeperLog;
+import com.nitnelave.CreeperHeal.utils.CreeperUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -10,11 +14,6 @@ import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-
-import com.nitnelave.CreeperHeal.config.CreeperConfig;
-import com.nitnelave.CreeperHeal.config.WCfgVal;
-import com.nitnelave.CreeperHeal.utils.CreeperLog;
-import com.nitnelave.CreeperHeal.utils.CreeperUtils;
 
 /**
  * InventoryHolder implementation of CreeperBlock.
@@ -34,7 +33,7 @@ class CreeperChest extends CreeperBlock
     /*
      * Constructor.
      */
-    protected CreeperChest(BlockState blockState)
+    CreeperChest(BlockState blockState)
     {
         super(blockState);
         chest = getBlock();
