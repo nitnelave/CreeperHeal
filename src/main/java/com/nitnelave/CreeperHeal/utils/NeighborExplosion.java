@@ -1,12 +1,11 @@
 package com.nitnelave.CreeperHeal.utils;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-
+import com.nitnelave.CreeperHeal.block.CreeperExplosion;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import com.nitnelave.CreeperHeal.block.CreeperExplosion;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Implementation of the NeighborFinder for explosions.
@@ -27,7 +26,7 @@ public class NeighborExplosion extends NeighborFinder<CreeperExplosion>
      * .Location, java.util.LinkedList)
      */
     @Override
-    protected CreeperExplosion getNeighbor(Location loc, LinkedList<CreeperExplosion> list)
+    protected CreeperExplosion getNeighbor(Location loc, ArrayList<CreeperExplosion> list)
     {
         if (list != null)
         {
@@ -50,10 +49,10 @@ public class NeighborExplosion extends NeighborFinder<CreeperExplosion>
     @Override
     public void clean()
     {
-        Iterator<LinkedList<CreeperExplosion>> iter = map.values().iterator();
+        Iterator<ArrayList<CreeperExplosion>> iter = map.values().iterator();
         while (iter.hasNext())
         {
-            LinkedList<CreeperExplosion> list = iter.next();
+            ArrayList<CreeperExplosion> list = iter.next();
             Iterator<CreeperExplosion> it = list.iterator();
             while (it.hasNext())
             {

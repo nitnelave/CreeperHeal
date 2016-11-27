@@ -1,31 +1,31 @@
 package com.nitnelave.CreeperHeal.block;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class CreeperFlower extends CreeperBlock
 {
 
     /*
-     * the Realtive Flower blocks.
+     * The Relative Flower blocks.
      */
-    private final boolean realitive;
+    private final boolean relative;
 
     /*
      * Constructor.
      */
-    protected CreeperFlower(BlockState blockState)
+    CreeperFlower(BlockState blockState)
     {
     	Block block = blockState.getBlock();
         if ((blockState.getRawData() & 8) != 0)
             block = block.getRelative(BlockFace.DOWN);
         this.blockState = block.getState();
-        realitive = (block.getRelative(BlockFace.UP).getState().getRawData() & 1) == 0;
+        relative = (block.getRelative(BlockFace.UP).getState().getRawData() & 1) == 0;
     }
 
     /*
@@ -41,8 +41,8 @@ class CreeperFlower extends CreeperBlock
             return;
 
         super.update();
-        byte b = (byte) (8 + (realitive ? 0 : 1));
-        blockUp.setTypeIdAndData(getTypeId(), b, false);
+        byte b = (byte) (8 + (relative ? 0 : 1));
+        blockUp.setTypeIdAndData(getType().getId(), b, false);
     }
 
     /*

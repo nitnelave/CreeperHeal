@@ -1,16 +1,12 @@
 package com.nitnelave.CreeperHeal.block;
 
-import java.util.Random;
-
+import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import org.bukkit.Art;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Painting;
 import org.bukkit.inventory.ItemStack;
-
-import com.nitnelave.CreeperHeal.config.CfgVal;
-import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 /**
  * Painting implementation of the CreeperHanging. Represents a painting.
@@ -90,11 +86,11 @@ class CreeperPainting extends CreeperHanging
 
         try
         {
-            Painting p = getWorld().spawn(location.getBlock().getRelative(hanging.getAttachedFace()).getLocation(), Painting.class);
+            Painting p = getWorld().spawn(location, Painting.class);
             p.teleport(location);
             p.setFacingDirection(hanging.getFacing(), true);
-            p.setArt(((Painting) hanging).getArt());
-        } catch (IllegalArgumentException e)
+            p.setArt(((Painting) hanging).getArt(), true);
+        } catch (IllegalArgumentException e) // Could not place the painting
         {
             return false;
         }
@@ -109,7 +105,7 @@ class CreeperPainting extends CreeperHanging
     @Override
     public boolean drop(boolean forced)
     {
-        if (forced || new Random().nextInt(100) < CreeperConfig.getInt(CfgVal.DROP_CHANCE))
+        if (forced || CreeperConfig.shouldDrop())
         {
             getWorld().dropItemNaturally(getLocation(), new ItemStack(Material.PAINTING, 1));
             return true;
@@ -123,9 +119,9 @@ class CreeperPainting extends CreeperHanging
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getTypeId()
      */
     @Override
-    public int getTypeId()
+    public Material getType()
     {
-        return Material.PAINTING.getId();
+        return Material.PAINTING;
     }
 
 }

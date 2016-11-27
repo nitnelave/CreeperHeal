@@ -1,26 +1,20 @@
 package com.nitnelave.CreeperHeal.block;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-
+import com.nitnelave.CreeperHeal.config.CfgVal;
+import com.nitnelave.CreeperHeal.config.CreeperConfig;
+import com.nitnelave.CreeperHeal.config.WorldConfig;
+import com.nitnelave.CreeperHeal.events.CHBlockHealEvent;
+import com.nitnelave.CreeperHeal.events.CHBlockHealEvent.CHBlockHealReason;
+import com.nitnelave.CreeperHeal.utils.CreeperUtils;
+import com.nitnelave.CreeperHeal.utils.ShortLocation;
+import com.nitnelave.CreeperHeal.utils.Suffocating;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
-import com.nitnelave.CreeperHeal.config.CfgVal;
-import com.nitnelave.CreeperHeal.config.CreeperConfig;
-import com.nitnelave.CreeperHeal.config.WorldConfig;
-import com.nitnelave.CreeperHeal.events.CHBlockHealEvent;
-import com.nitnelave.CreeperHeal.events.CHBlockHealEvent.CHBlockHealReason;
-import com.nitnelave.CreeperHeal.utils.ShortLocation;
-import com.nitnelave.CreeperHeal.utils.Suffocating;
+import java.util.*;
 
 /**
  * Represents an explosion, with the list of blocks destroyed, the time of the
@@ -165,7 +159,7 @@ public class CreeperExplosion
         CHBlockHealEvent event = new CHBlockHealEvent(block, false, CHBlockHealReason.BLOCK_BY_BLOCK);
         Bukkit.getPluginManager().callEvent(event);
         if (!event.isCancelled() && !block.replace(event.shouldDrop()))
-            block.delayReplacement(CHBlockHealReason.BLOCK_BY_BLOCK);
+            CreeperUtils.delayReplacement(block, CHBlockHealReason.BLOCK_BY_BLOCK);
         if (CreeperConfig.getBool(CfgVal.TELEPORT_ON_SUFFOCATE))
             Suffocating.checkPlayerOneBlock(block.getBlock().getLocation());
     }
@@ -210,7 +204,7 @@ public class CreeperExplosion
             while (iter.hasNext())
             {
                 Block b = iter.next();
-                if (CreeperBlock.isDependent(b.getTypeId()))
+                if (CreeperBlock.isDependent(b.getType()))
                 {
                     record(b);
                     iter.remove();
@@ -276,12 +270,8 @@ public class CreeperExplosion
         if ((CreeperConfig.getBool(CfgVal.PREVENT_CHAIN_REACTION) && block.getType().equals(Material.TNT))
             || world.isProtected(block))
         {
-            CreeperBlock b = CreeperBlock.newBlock(block.getState());
-            if (b != null)
-            {
-                ToReplaceList.addToReplace(b);
-                b.remove();
-            }
+            ToReplaceList.addToReplace(cBlock);
+            cBlock.remove();
             return;
         }
 
@@ -294,12 +284,8 @@ public class CreeperExplosion
                 if (b.isNeighbor())
                     record(b.getBlock());
 
-            CreeperBlock b = CreeperBlock.newBlock(block.getState());
-            if (b != null)
-            {
-                blockList.add(b);
-                b.remove();
-            }
+            blockList.add(cBlock);
+            cBlock.remove();
         }
         else if (CreeperConfig.getBool(CfgVal.DROP_DESTROYED_BLOCKS))
         {

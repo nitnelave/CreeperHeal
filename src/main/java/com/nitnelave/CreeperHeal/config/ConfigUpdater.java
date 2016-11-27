@@ -1,14 +1,12 @@
 package com.nitnelave.CreeperHeal.config;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
+import com.nitnelave.CreeperHeal.CreeperHeal;
+import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.nitnelave.CreeperHeal.CreeperHeal;
-import com.nitnelave.CreeperHeal.utils.CreeperLog;
+import java.io.File;
+import java.io.IOException;
 
 class ConfigUpdater
 {
@@ -49,11 +47,9 @@ class ConfigUpdater
         CreeperConfig.setInt(CfgVal.OBSIDIAN_RADIUS, obsidianRadius);
         CreeperConfig.setInt(CfgVal.WAIT_BEFORE_BURN_AGAIN, waitBeforeBurnAgain);
         CreeperConfig.setAlias(cmdAlias);
-        for (OutDatedCfgVal v : OutDatedCfgVal.values())
-            CreeperConfig.remove(v.getKey(), v.isAdvanced());
     }
 
-    private static void from4() throws FileNotFoundException, IOException,
+    private static void from4() throws IOException,
                                InvalidConfigurationException
     {
         CreeperLog.logInfo("Importing config from version 4", 1);
@@ -75,7 +71,7 @@ class ConfigUpdater
             CreeperLog.warning("[CreeperHeal] Wrong value for replacement method field. Defaulting to block-per-block.");
         waitBeforeHeal = config.getInt("wait-before-heal-explosions", 60);
         logLevel = config.getInt("verbose-level", 1);
-        blockPerBlock = (tmp_str.equalsIgnoreCase("all-at-once")) ? false : true;
+        blockPerBlock = !tmp_str.equalsIgnoreCase("all-at-once");
         teleportOnSuffocate = config.getBoolean("teleport-when-buried", true);
         waitBeforeHealBurnt = config.getInt("wait-before-heal-fire", 45);
         dropDestroyedBlocks = config.getBoolean("drop-destroyed-blocks", true);
@@ -104,17 +100,16 @@ class ConfigUpdater
         }
 
         if (!tmp_str.equalsIgnoreCase("no") && !tmp_str.equalsIgnoreCase("lwc")
-            && !tmp_str.equalsIgnoreCase("all")
-            && !tmp_str.equalsIgnoreCase("lockette"))
+            && !tmp_str.equalsIgnoreCase("all"))
             CreeperLog.warning("[CreeperHeal] Wrong value for chest protection field. Defaulting to no.");
-        else if (tmp_str.equals("all") || tmp_str.equals("lwc") || tmp_str.equals("lockette"))
+        else if (tmp_str.equals("all") || tmp_str.equals("lwc"))
             replaceProtectedChests = true;
 
         configFile.delete();
 
     }
 
-    private static void from5() throws FileNotFoundException, IOException,
+    private static void from5() throws IOException,
                                InvalidConfigurationException
     {
         CreeperLog.logInfo("Importing config from version 5", 1);
@@ -154,7 +149,7 @@ class ConfigUpdater
 
     }
 
-    private static void from6() throws FileNotFoundException, IOException,
+    private static void from6() throws IOException,
                                InvalidConfigurationException
     {
         CreeperLog.logInfo("Importing config from version 6", 1);

@@ -1,6 +1,5 @@
 package com.nitnelave.CreeperHeal.block;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -9,11 +8,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Hanging;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Painting;
-
-import com.nitnelave.CreeperHeal.CreeperHeal;
-import com.nitnelave.CreeperHeal.config.CfgVal;
-import com.nitnelave.CreeperHeal.config.CreeperConfig;
-import com.nitnelave.CreeperHeal.events.CHBlockHealEvent.CHBlockHealReason;
 
 /**
  * Represents a hanging, i.e. either a painting or an ItemFrame.
@@ -32,10 +26,6 @@ public abstract class CreeperHanging implements Replaceable
      * 
      * @param hanging
      *            The hanging destroyed.
-     * @param time
-     *            The time of the destruction.
-     * @param fire
-     *            Whether the hanging was destroyed by fire.
      */
     protected CreeperHanging(Hanging hanging)
     {
@@ -132,19 +122,4 @@ public abstract class CreeperHanging implements Replaceable
     {
         hanging.remove();
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.nitnelave.CreeperHeal.block.Replaceable#delayReplacement()
-     */
-    @Override
-    public void delayReplacement(CHBlockHealReason reason)
-    {
-        long delay = CreeperConfig.getInt(CfgVal.BLOCK_PER_BLOCK_INTERVAL);
-        DelayReplacement dr = new DelayReplacement(this, 0, reason);
-        int id = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(CreeperHeal.getInstance(), dr, delay, delay);
-        dr.setId(id);
-    }
-
 }

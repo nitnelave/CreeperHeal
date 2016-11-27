@@ -1,12 +1,13 @@
 package com.nitnelave.CreeperHeal.block;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.material.Door;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Door implementation of the CreeperBlock.
@@ -17,18 +18,18 @@ import org.bukkit.block.BlockState;
 class CreeperDoor extends CreeperBlock
 {
 
-    private final boolean hingeRight;
+    private final Door data;
 
     /*
      * Constructor.
      */
-    protected CreeperDoor(BlockState blockState)
+    CreeperDoor(BlockState blockState)
     {
+        data = castData(blockState, Door.class);
         Block block = blockState.getBlock();
-        if ((blockState.getRawData() & 8) != 0)
+        if (data.isTopHalf())
             block = block.getRelative(BlockFace.DOWN);
         this.blockState = block.getState();
-        hingeRight = (block.getRelative(BlockFace.UP).getState().getRawData() & 1) == 0;
     }
 
     /*
@@ -44,8 +45,10 @@ class CreeperDoor extends CreeperBlock
             return;
 
         super.update();
-        byte b = (byte) (8 + (hingeRight ? 0 : 1));
-        blockUp.setTypeIdAndData(getTypeId(), b, false);
+        blockUp.setType(blockState.getType(), false);
+        Door d = data;
+        d.setTopHalf(true);
+        blockUp.getState().setData(d);
     }
 
     /*

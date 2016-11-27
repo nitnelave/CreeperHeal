@@ -1,15 +1,12 @@
 package com.nitnelave.CreeperHeal.block;
 
-import java.util.Random;
-
+import com.nitnelave.CreeperHeal.config.CreeperConfig;
+import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.inventory.ItemStack;
-
-import com.nitnelave.CreeperHeal.config.CfgVal;
-import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 /**
  * ItemFrame implementation of the CreeperHanging. Represents an ItemFrame.
@@ -29,6 +26,7 @@ class CreeperItemFrame extends CreeperHanging
     protected CreeperItemFrame(ItemFrame frame)
     {
         super(frame);
+        CreeperLog.debug("Registered item frame");
     }
 
     /*
@@ -55,12 +53,12 @@ class CreeperItemFrame extends CreeperHanging
     {
         try
         {
-            ItemFrame f = getWorld().spawn(location.getBlock().getRelative(hanging.getAttachedFace()).getLocation(), ItemFrame.class);
+            ItemFrame f = getWorld().spawn(location, ItemFrame.class);
             f.teleport(location);
             f.setItem(((ItemFrame) hanging).getItem());
             f.setRotation(((ItemFrame) hanging).getRotation());
             f.setFacingDirection(hanging.getFacing(), true);
-        } catch (IllegalArgumentException e)
+        } catch (IllegalArgumentException e) // Could not place the item frame
         {
             return false;
         }
@@ -76,7 +74,7 @@ class CreeperItemFrame extends CreeperHanging
     @Override
     public boolean drop(boolean forced)
     {
-        if (forced || new Random().nextInt(100) < CreeperConfig.getInt(CfgVal.DROP_CHANCE))
+        if (forced || CreeperConfig.shouldDrop())
         {
             ItemFrame f = (ItemFrame) hanging;
             ItemStack s = f.getItem();
@@ -94,8 +92,8 @@ class CreeperItemFrame extends CreeperHanging
      * @see com.nitnelave.CreeperHeal.block.Replaceable#getTypeId()
      */
     @Override
-    public int getTypeId()
+    public Material getType()
     {
-        return Material.ITEM_FRAME.getId();
+        return Material.ITEM_FRAME;
     }
 }

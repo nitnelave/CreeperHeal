@@ -1,9 +1,9 @@
 package com.nitnelave.CreeperHeal.utils;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-
 import org.bukkit.Location;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * 2-D map, allowing for fast neighbor search. The map is divided in zones, and
@@ -20,7 +20,7 @@ public abstract class NeighborFinder<T>
      * The size of each zone.
      */
     private static final int BLOCK_SIZE = 64;
-    protected HashMap<Point, LinkedList<T>> map = new HashMap<Point, LinkedList<T>>();
+    protected HashMap<Point, ArrayList<T>> map = new HashMap<Point, ArrayList<T>>();
 
     /**
      * Add an element to the map. It is placed in the correct zone, created if
@@ -38,10 +38,10 @@ public abstract class NeighborFinder<T>
         if (el == null)
             return;
         Point p = new Point((int) (x / BLOCK_SIZE), (int) (y / BLOCK_SIZE));
-        LinkedList<T> list = map.get(p);
+        ArrayList<T> list = map.get(p);
         if (list == null)
         {
-            list = new LinkedList<T>();
+            list = new ArrayList<T>();
             map.put(p, list);
         }
         list.add(el);
@@ -61,7 +61,7 @@ public abstract class NeighborFinder<T>
     public void removeElement(T el, double x, double y)
     {
         Point p = new Point((int) (x / BLOCK_SIZE), (int) (y / BLOCK_SIZE));
-        LinkedList<T> list = map.get(p);
+        ArrayList<T> list = map.get(p);
         if (list == null)
             return;
         list.remove(el);
@@ -94,7 +94,7 @@ public abstract class NeighborFinder<T>
     public T getNeighbor(Location loc)
     {
         int x = (int) (loc.getX() / BLOCK_SIZE), y = (int) (loc.getZ() / BLOCK_SIZE);
-        LinkedList<T> list = map.get(new Point(x, y));
+        ArrayList<T> list = map.get(new Point(x, y));
         T neighbor = getNeighbor(loc, list);
         if (neighbor != null)
             return neighbor;
@@ -111,7 +111,7 @@ public abstract class NeighborFinder<T>
         return null;
     }
 
-    protected abstract T getNeighbor(Location loc, LinkedList<T> list);
+    protected abstract T getNeighbor(Location loc, ArrayList<T> list);
 
     /**
      * Get whether the map is completely empty (no zones).

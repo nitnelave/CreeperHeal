@@ -1,7 +1,6 @@
 package com.nitnelave.CreeperHeal.block;
 
 import org.bukkit.block.Banner;
-import org.bukkit.block.BlockState;
 
 /**
  * Banner implementation of CreeperBlock.
@@ -33,8 +32,8 @@ public class CreeperBanner extends CreeperBlock
         Banner banner = (Banner) blockState;
         state.setBaseColor(banner.getBaseColor());
         state.setPatterns(banner.getPatterns());
-        
-        state.getData().setData(banner.getRawData());
+
+        state.setData(banner.getData());
         state.update(true);
     }
 }

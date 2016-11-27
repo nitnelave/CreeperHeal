@@ -1,12 +1,11 @@
 package com.nitnelave.CreeperHeal.utils;
 
+import de.bananaco.bpermissions.api.ApiLayer;
+import de.bananaco.bpermissions.api.util.CalculableType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
-
-import de.bananaco.bpermissions.api.ApiLayer;
-import de.bananaco.bpermissions.api.util.CalculableType;
 
 /**
  * Handler for permissions.
@@ -18,7 +17,7 @@ public class CreeperPermissionManager
 {
     private static boolean bPerms = false;
 
-    /**
+    /*
      * Constructor, to initiate contact with the permission plugins.
      */
     static

@@ -1,15 +1,15 @@
 package com.nitnelave.CreeperHeal.block;
 
+import com.nitnelave.CreeperHeal.CreeperHeal;
+import com.nitnelave.CreeperHeal.config.CfgVal;
+import com.nitnelave.CreeperHeal.config.CreeperConfig;
+import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import org.bukkit.Bukkit;
-
-import com.nitnelave.CreeperHeal.CreeperHeal;
-import com.nitnelave.CreeperHeal.config.CfgVal;
-import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
 /**
  * Contains and manages the list of rails whose update should be prevented.
@@ -47,11 +47,11 @@ public class RailsIndex
      * @return Whether the location is next to a block whose update is
      *         prevented.
      */
-    public static boolean isUpdatePrevented(CreeperBlock block)
+    public static boolean isUpdatePrevented(Block block)
     {
-        if (!(block instanceof CreeperRail))
+        if (!(CreeperRail.RAIL_TYPES.contains(block.getType())))
             return false;
-        return railsIndex.containsKey(block);
+        return railsIndex.containsKey(new CreeperRail(block.getState()));
     }
 
     /**

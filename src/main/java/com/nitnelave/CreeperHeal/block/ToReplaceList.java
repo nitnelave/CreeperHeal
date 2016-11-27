@@ -1,13 +1,11 @@
 package com.nitnelave.CreeperHeal.block;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
+import com.nitnelave.CreeperHeal.CreeperHeal;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
-import com.nitnelave.CreeperHeal.CreeperHeal;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class to handle the blocks to be replaced immediately.
@@ -55,9 +53,8 @@ public abstract class ToReplaceList
      */
     private static void replaceAll()
     {
-        Iterator<Replaceable> iter = toReplace.values().iterator();
-        while (iter.hasNext())
-            iter.next().replace(true);
+        for (Replaceable replaceable : toReplace.values())
+            replaceable.replace(true);
         toReplace.clear();
     }
 

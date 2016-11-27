@@ -1,16 +1,16 @@
 package com.nitnelave.CreeperHeal.config;
 
-import java.util.HashSet;
-
+import com.nitnelave.CreeperHeal.block.BlockId;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.nitnelave.CreeperHeal.block.BlockId;
+import java.util.HashSet;
 
 class BlockIdListValue extends ConfigValue<HashSet<BlockId>>
 {
 
     protected BlockIdListValue(CfgValEnumMember v, YamlConfiguration file)
     {
+        //noinspection unchecked
         super((HashSet<BlockId>) v.getDefaultValue(), file, v.getKey());
     }
 

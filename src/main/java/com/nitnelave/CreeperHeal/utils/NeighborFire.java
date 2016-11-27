@@ -1,15 +1,14 @@
 package com.nitnelave.CreeperHeal.utils;
 
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
-
-import org.bukkit.Location;
-import org.bukkit.World;
-
 import com.nitnelave.CreeperHeal.block.CreeperBurntBlock;
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
+import org.bukkit.Location;
+import org.bukkit.World;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 
 /**
  * Implementation of the NeighborFinder for burnt blocks.
@@ -32,7 +31,7 @@ public class NeighborFire extends NeighborFinder<CreeperBurntBlock>
      * .Location, java.util.LinkedList)
      */
     @Override
-    protected CreeperBurntBlock getNeighbor(Location loc, LinkedList<CreeperBurntBlock> list)
+    protected CreeperBurntBlock getNeighbor(Location loc, ArrayList<CreeperBurntBlock> list)
     {
         if (list != null)
         {
@@ -52,13 +51,13 @@ public class NeighborFire extends NeighborFinder<CreeperBurntBlock>
     @Override
     public void clean()
     {
-        Iterator<LinkedList<CreeperBurntBlock>> iter = map.values().iterator();
+        Iterator<ArrayList<CreeperBurntBlock>> iter = map.values().iterator();
         Date delay = new Date(new Date().getTime() - 1000
                               * CreeperConfig.getInt(CfgVal.WAIT_BEFORE_HEAL_BURNT) + 4000000
                               * CreeperConfig.getInt(CfgVal.BLOCK_PER_BLOCK_INTERVAL));
         while (iter.hasNext())
         {
-            LinkedList<CreeperBurntBlock> list = iter.next();
+            ArrayList<CreeperBurntBlock> list = iter.next();
             Iterator<CreeperBurntBlock> it = list.iterator();
             while (it.hasNext())
             {

@@ -1,13 +1,11 @@
 package com.nitnelave.CreeperHeal.listeners;
 
+import com.nitnelave.CreeperHeal.block.RailsIndex;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPhysicsEvent;
-
-import com.nitnelave.CreeperHeal.block.CreeperBlock;
-import com.nitnelave.CreeperHeal.block.RailsIndex;
 
 /**
  * Listener for the rails' update event.
@@ -27,7 +25,7 @@ public class RailsUpdateListener implements Listener
     public void onBlockPhysics(BlockPhysicsEvent event)
     {
         Block b = event.getBlock();
-        if (RailsIndex.isUpdatePrevented(CreeperBlock.newBlock(b.getState())))
+        if (RailsIndex.isUpdatePrevented(b))
             event.setCancelled(true);
     }
 }

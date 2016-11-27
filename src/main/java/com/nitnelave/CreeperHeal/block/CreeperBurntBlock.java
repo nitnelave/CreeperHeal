@@ -1,17 +1,17 @@
 package com.nitnelave.CreeperHeal.block;
 
-import java.util.Date;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.events.CHBlockHealEvent;
 import com.nitnelave.CreeperHeal.events.CHBlockHealEvent.CHBlockHealReason;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+
+import java.util.Date;
 
 /**
  * This class represents a burnt block.
@@ -36,7 +36,7 @@ public class CreeperBurntBlock
     public CreeperBurntBlock(Date now, Replaceable block)
     {
         this.block = block;
-        boolean timed = block == null ? false : CreeperConfig.getWorld(getWorld()).isRepairTimed();
+        boolean timed = block != null && CreeperConfig.getWorld(getWorld()).isRepairTimed();
         timer = new ReplacementTimer(new Date(now.getTime() + 1000
                                               * CreeperConfig.getInt(CfgVal.WAIT_BEFORE_HEAL_BURNT)), timed);
     }
@@ -100,9 +100,9 @@ public class CreeperBurntBlock
      * @throws NullPointerException
      *             If the block is invalid.
      */
-    public int getTypeId() throws NullPointerException
+    public Material getType() throws NullPointerException
     {
-        return block.getTypeId();
+        return block.getType();
     }
 
     /**
@@ -111,6 +111,7 @@ public class CreeperBurntBlock
      * @return The block's attaching face, or BlockFace.SELF if the block is
      *         invalid.
      */
+    @SuppressWarnings("unused")
     public BlockFace getAttachingFace()
     {
         if (block != null)

@@ -35,7 +35,7 @@ class CreeperHead extends CreeperBlock
         newSkull.setRotation(skull.getRotation());
         newSkull.setSkullType(skull.getSkullType());
         if (skull.hasOwner())
-            newSkull.setOwner(skull.getOwner());
+            newSkull.setOwningPlayer(skull.getOwningPlayer());
         newSkull.update(true);
     }
 

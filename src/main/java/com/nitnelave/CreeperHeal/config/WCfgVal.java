@@ -1,8 +1,8 @@
 package com.nitnelave.CreeperHeal.config;
 
-import java.util.HashSet;
-
 import com.nitnelave.CreeperHeal.block.BlockId;
+
+import java.util.HashSet;
 
 /**
  * An enum with all of the config values related to a single world.
@@ -48,18 +48,18 @@ public enum WCfgVal implements CfgValEnumMember
     WORLD_ON("enabled", true, CONFIG_FILES.CONFIG),
     DROP_CHEST_CONTENTS("drop-chest-contents", false, CONFIG_FILES.ADVANCED);
 
-    protected static enum CONFIG_FILES
+    protected enum CONFIG_FILES
     {
         CONFIG,
         ADVANCED,
-        GRIEF;
+        GRIEF,
     }
 
     private final String key;
     private final Object defaultValue;
     private final CONFIG_FILES file;
 
-    private WCfgVal(String key, Object value, CONFIG_FILES file)
+    WCfgVal(String key, Object value, CONFIG_FILES file)
     {
         this.key = key;
         defaultValue = value;
