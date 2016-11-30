@@ -15,6 +15,7 @@ import org.bukkit.block.BlockFace;
  * if (neighbor.isNeighbor())
  *   // neighbor depends on solidBlock
  * }
+ * </pre>
  * 
  * @author nitnelave
  * 
