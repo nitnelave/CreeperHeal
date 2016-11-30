@@ -86,7 +86,7 @@
       <plugin>
         <groupId>com.github.github</groupId>
         <artifactId>site-maven-plugin</artifactId>
-        <version>0.9</version>
+        <version>0.12</version>
         <configuration>
           <message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
           <noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
@@ -117,8 +117,8 @@
   </distributionManagement>
   <repositories>
     <repository>
-      <id>spigot-repo</id>
-      <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+        <id>spigot-repo</id>
+        <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
     </repository>
     <repository>
       <id>sonatype-nexus-releases</id>
@@ -134,12 +134,6 @@
     </repository>
   </repositories>
   <dependencies>
-    <dependency>
-      <groupId>org.bukkit</groupId>
-      <artifactId>bukkit</artifactId>
-      <version>1.8.8-R0.1-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency>
     <dependency>
       <groupId>com.garbagemule.MobArena</groupId>
       <artifactId>MobArena</artifactId>
@@ -169,6 +163,20 @@
       <version>2.7.5</version>
       <scope>system</scope>
       <systemPath>${project.basedir}/lib/Factions.jar</systemPath>
+    </dependency>
+    <!--Spigot API-->
+    <dependency>
+        <groupId>org.spigotmc</groupId>
+        <artifactId>spigot-api</artifactId>
+        <version>1.11-R0.1-SNAPSHOT</version>
+        <scope>provided</scope>
+    </dependency>
+    <!--Bukkit API-->
+    <dependency>
+        <groupId>org.bukkit</groupId>
+        <artifactId>bukkit</artifactId>
+        <version>1.11-R0.1-SNAPSHOT</version>
+        <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>
