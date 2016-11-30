@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.nitnelave.CreeperHeal</groupId>
   <artifactId>CreeperHeal</artifactId>
-  <version>6.7.6</version>
+  <version>7.0.1</version>
   <name>CreeperHeal</name>
 
   <licenses>
@@ -86,7 +86,7 @@
       <plugin>
         <groupId>com.github.github</groupId>
         <artifactId>site-maven-plugin</artifactId>
-        <version>0.9</version>
+        <version>0.12</version>
         <configuration>
           <message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
           <noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
@@ -117,43 +117,23 @@
   </distributionManagement>
   <repositories>
     <repository>
-      <id>bukkit-repo</id>
-      <url>http://repo.bukkit.org/content/groups/public</url>
+        <id>spigot-repo</id>
+        <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
     </repository>
     <repository>
-      <id>spout-repo</id>
-      <url>http://repo.spout.org</url>
+      <id>sonatype-nexus-releases</id>
+      <url>https://oss.sonatype.org/content/repositories/releases</url>
+    </repository>
+    <repository>
+      <id>sonatype-nexus-snapshots</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
     </repository>
   </repositories>
   <dependencies>
-    <dependency>
-      <groupId>org.bukkit</groupId>
-      <artifactId>bukkit</artifactId>
-      <version>1.7.2-R0.3</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.bukkit</groupId>
-      <artifactId>craftbukkit</artifactId>
-      <version>1.7.2-R0.3</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>de.bananaco.bpermissions.imp</groupId>
-      <artifactId>bPermissions</artifactId>
-      <version>2.9.23</version>
-      <type>jar</type>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/lib/bpermissions.jar</systemPath>
-    </dependency>
-    <dependency>
-      <groupId>com.nitnelave.CreeperTrap</groupId>
-      <artifactId>CreeperTrap</artifactId>
-      <version>2.0</version>
-      <type>jar</type>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/lib/CreeperTrap.jar</systemPath>
-    </dependency>
     <dependency>
       <groupId>com.garbagemule.MobArena</groupId>
       <artifactId>MobArena</artifactId>
@@ -171,26 +151,32 @@
       <systemPath>${project.basedir}/lib/LWC.jar</systemPath>
     </dependency>
     <dependency>
-      <groupId>org.yi.acru.bukkit.Lockette</groupId>
-      <artifactId>Lockette</artifactId>
-      <version>1.7.4</version>
-      <type>jar</type>
+      <groupId>com.massivecraft.mcore</groupId>
+      <artifactId>MCore</artifactId>
+      <version>2.7.5</version>
       <scope>system</scope>
-      <systemPath>${project.basedir}/lib/Lockette.jar</systemPath>
+      <systemPath>${project.basedir}/lib/mcore.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.massivecraft.factions</groupId>
-      <artifactId>P</artifactId>
-      <version>1.6.9.1</version>
+      <artifactId>Factions</artifactId>
+      <version>2.7.5</version>
       <scope>system</scope>
       <systemPath>${project.basedir}/lib/Factions.jar</systemPath>
     </dependency>
+    <!--Spigot API-->
     <dependency>
-      <groupId>com.massivecraft.mcore</groupId>
-      <artifactId>P</artifactId>
-      <version>6.4.3</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/lib/mcore.jar</systemPath>
+        <groupId>org.spigotmc</groupId>
+        <artifactId>spigot-api</artifactId>
+        <version>1.11-R0.1-SNAPSHOT</version>
+        <scope>provided</scope>
+    </dependency>
+    <!--Bukkit API-->
+    <dependency>
+        <groupId>org.bukkit</groupId>
+        <artifactId>bukkit</artifactId>
+        <version>1.11-R0.1-SNAPSHOT</version>
+        <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>
