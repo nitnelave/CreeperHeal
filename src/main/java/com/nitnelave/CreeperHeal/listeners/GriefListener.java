@@ -83,12 +83,10 @@ public class GriefListener implements Listener
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockIgnite(BlockIgniteEvent event)
     {
-        CreeperLog.debug("Block ignition event");
         WorldConfig world = CreeperConfig.getWorld(event.getBlock().getWorld());
 
-        if (event.getCause() == IgniteCause.SPREAD && world.getBool(WCfgVal.PREVENT_FIRE_SPREAD))
-            event.setCancelled(true);
-        else if (event.getCause() == IgniteCause.LAVA && world.getBool(WCfgVal.PREVENT_FIRE_LAVA))
+        if (event.getCause() == IgniteCause.SPREAD && world.getBool(WCfgVal.PREVENT_FIRE_SPREAD)
+            || event.getCause() == IgniteCause.LAVA && world.getBool(WCfgVal.PREVENT_FIRE_LAVA))
             event.setCancelled(true);
     }
 
@@ -102,8 +100,7 @@ public class GriefListener implements Listener
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event)
     {
-        CreeperLog.debug("Entity damaged by entity event");
-        if (event.getEntity() instanceof Player)
+        if (event.getEntity() instanceof Player && !event.getEntity().hasMetadata("NPC"))
         {
             Player attacked = (Player) event.getEntity();
             Player offender = null;
@@ -113,7 +110,7 @@ public class GriefListener implements Listener
             {
             case ENTITY_ATTACK:
                 attacker = event.getDamager();
-                if (attacker instanceof Player)
+                if (event.getEntity() instanceof Player && !event.getEntity().hasMetadata("NPC"))
                     offender = (Player) attacker;
                 break;
             case PROJECTILE:
