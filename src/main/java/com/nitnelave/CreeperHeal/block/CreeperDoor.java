@@ -11,9 +11,9 @@ import java.util.List;
 
 /**
  * Door implementation of the CreeperBlock.
- * 
+ *
  * @author nitnelave
- * 
+ *
  */
 class CreeperDoor extends CreeperBlock
 {
@@ -34,7 +34,7 @@ class CreeperDoor extends CreeperBlock
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#update()
      */
     @Override
@@ -48,12 +48,14 @@ class CreeperDoor extends CreeperBlock
         blockUp.setType(blockState.getType(), false);
         Door d = data;
         d.setTopHalf(true);
-        blockUp.getState().setData(d);
+        BlockState s = blockUp.getState();
+        s.setData(d);
+        s.update(true);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#remove()
      */
     @Override
@@ -65,7 +67,7 @@ class CreeperDoor extends CreeperBlock
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#getNeighbors()
      */
     @Override
