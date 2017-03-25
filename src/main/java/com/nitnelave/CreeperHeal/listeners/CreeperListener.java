@@ -9,6 +9,7 @@ import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WCfgVal;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
+import com.nitnelave.CreeperHeal.events.CHExplosionRecordEvent;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.CreeperUtils;
 import com.nitnelave.CreeperHeal.utils.FactionHandler;
@@ -23,6 +24,7 @@ import org.bukkit.entity.Hanging;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.hanging.HangingBreakEvent;
 
@@ -57,6 +59,31 @@ public class CreeperListener implements Listener
                 return;
             if (world.shouldReplace(entity))
                 ExplodedBlockManager.processExplosion(event, CreeperUtils.getReason(entity));
+        }
+    }
+
+    /**
+     * Listener for the EntityExplodeEvent. Record when appropriate the
+     * explosion for later replacement.
+     *
+     * @param event
+     *            The EntityExplode event.
+     */
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onBlockExplode(BlockExplodeEvent event)
+    {
+        CreeperLog.debug("Block explode event: " + event.blockList().size());
+        WorldConfig world = CreeperConfig.getWorld(event.getBlock().getWorld());
+
+        if (!FactionHandler.shouldIgnore(event.blockList(), world))
+        {
+            if (!world.isAbove(event.getBlock().getLocation()))
+                return;
+            if (world.getBool(WCfgVal.CUSTOM))
+            {
+                ExplodedBlockManager.processExplosion(event);
+                event.blockList().clear();
+            }
         }
     }
 

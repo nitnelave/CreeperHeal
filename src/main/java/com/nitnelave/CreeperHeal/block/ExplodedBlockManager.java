@@ -15,6 +15,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Hanging;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -145,7 +146,7 @@ public class ExplodedBlockManager
     }
 
     /**
-     * Record all the blocks destroyed by an explosion.
+     * Record all the blocks destroyed by an entity exploding.
      * 
      * @param event
      *            The explosion.
@@ -154,6 +155,18 @@ public class ExplodedBlockManager
                                         CHExplosionRecordEvent.ExplosionReason reason)
     {
         processExplosion(event.blockList(), event.getLocation(), reason);
+    }
+
+    /**
+     * Record all the blocks destroyed by an block exploding.
+     *
+     * @param event
+     *            The explosion.
+     */
+    public static void processExplosion(BlockExplodeEvent event)
+    {
+        processExplosion(event.blockList(), event.getBlock().getLocation(),
+                         CHExplosionRecordEvent.ExplosionReason.OTHER);
     }
 
     /**
@@ -246,9 +259,7 @@ public class ExplodedBlockManager
      */
     public static boolean isNextToExplosion(Location location)
     {
-        if (!CreeperConfig.getBool(CfgVal.LEAVES_VINES))
-            return false;
-        return explosionIndex.hasNeighbor(location);
+        return CreeperConfig.getBool(CfgVal.LEAVES_VINES) && explosionIndex.hasNeighbor(location);
     }
 
     /*

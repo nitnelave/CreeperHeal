@@ -2,6 +2,7 @@ package com.nitnelave.CreeperHeal.block;
 
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
+import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.CreeperUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -134,7 +135,6 @@ public class CreeperBlock implements Replaceable
         case WOOD_BUTTON:
         case STONE_BUTTON:
             return new CreeperButton(state);
-        case TNT:
         case FIRE:
         case AIR:
             return null;
@@ -340,7 +340,8 @@ public class CreeperBlock implements Replaceable
                    && CreeperConfig.getBool(CfgVal.DROP_DESTROYED_BLOCKS))
         {
             CreeperBlock b = CreeperBlock.newBlock(block.getState());
-            assert b != null;
+            if (b == null)
+                throw new IllegalArgumentException("Null block for: " + block.getState().getType().toString());
             b.drop(true);
             b.remove();
         }
