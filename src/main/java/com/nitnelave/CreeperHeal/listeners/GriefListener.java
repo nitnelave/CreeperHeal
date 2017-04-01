@@ -38,7 +38,7 @@ public class GriefListener implements Listener
      * are fired.
      *
      * @param event
-     *            The BlockPlaceEvent.
+     *         The BlockPlaceEvent.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event)
@@ -68,7 +68,8 @@ public class GriefListener implements Listener
                 CreeperLog.logInfo("Blocked placement of a " + event.getBlockPlaced().getType().toString() + " at ", 1);
             }
             if (world.getBool(WCfgVal.WARN_BLACKLIST))
-                CreeperMessenger.warn(CreeperPlayer.WarningCause.BLACKLIST, player, blocked, event.getBlockPlaced().getType().toString());
+                CreeperMessenger.warn(CreeperPlayer.WarningCause.BLACKLIST, player, blocked,
+                                      event.getBlockPlaced().getType().toString());
         }
 
     }
@@ -78,7 +79,7 @@ public class GriefListener implements Listener
      * disabled, cancel the event.
      *
      * @param event
-     *            The BlockIgniteEvent.
+     *         The BlockIgniteEvent.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockIgnite(BlockIgniteEvent event)
@@ -95,7 +96,7 @@ public class GriefListener implements Listener
      * destroyed paintings.
      *
      * @param event
-     *            The EntityDamageByEntityEvent.
+     *         The EntityDamageByEntityEvent.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event)
@@ -144,7 +145,7 @@ public class GriefListener implements Listener
      * Listener for the PlayerBucketEmptyEvent. Check for lava placement.
      *
      * @param event
-     *            The PlayerBucketEmpty event.
+     *         The PlayerBucketEmpty event.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event)
@@ -169,7 +170,7 @@ public class GriefListener implements Listener
      * block ignition.
      *
      * @param event
-     *            The PlayerInteract event.
+     *         The PlayerInteract event.
      */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event)
@@ -209,7 +210,7 @@ public class GriefListener implements Listener
      * list.
      *
      * @param event
-     *            The PlayerJoin event.
+     *         The PlayerJoin event.
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event)
@@ -223,7 +224,7 @@ public class GriefListener implements Listener
      * warning list.
      *
      * @param event
-     *            The PlayerQuit event.
+     *         The PlayerQuit event.
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event)
