@@ -110,7 +110,8 @@ public class GriefListener implements Listener
             {
             case ENTITY_ATTACK:
                 attacker = event.getDamager();
-                if (event.getEntity() instanceof Player && !event.getEntity().hasMetadata("NPC"))
+                if (event.getEntity() instanceof Player && !event.getEntity().hasMetadata("NPC") &&
+                    attacker instanceof Player)
                     offender = (Player) attacker;
                 break;
             case PROJECTILE:
