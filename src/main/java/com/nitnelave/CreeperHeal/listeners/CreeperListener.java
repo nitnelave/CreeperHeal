@@ -121,7 +121,7 @@ public class CreeperListener implements Listener
      * @param event
      *            The EntityChangeBlock event.
      */
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityChangeBlock(EntityChangeBlockEvent event)
     {
         CreeperLog.debug("Entity change block event");
@@ -143,7 +143,7 @@ public class CreeperListener implements Listener
      * @param event
      *            The EntityDamagedByEntity event.
      */
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityDamagedByEntity(EntityDamageByEntityEvent event)
     {
         CreeperLog.debug("Entity damaged by entity event");
