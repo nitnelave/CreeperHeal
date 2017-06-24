@@ -26,7 +26,7 @@ public class LeavesListener implements Listener
      * @param event
      *            The BlockPhysics event.
      */
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockPhysics(BlockPhysicsEvent event)
     {
         Block b = event.getBlock();
@@ -42,7 +42,7 @@ public class LeavesListener implements Listener
      * @param event
      *            The LeavesDecay event.
      */
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onLeavesDecay(LeavesDecayEvent event)
     {
         Block b = event.getBlock();
