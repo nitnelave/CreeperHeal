@@ -26,9 +26,11 @@ class CreeperChest extends CreeperBlock
 
     private final Block chest;
 
-    private int size;
+    private NeighborChest neighbor = null;
 
-    private ItemStack[] storedInventory = null;
+    private ItemStack[] storedInventory = null, neighborInventory = null;
+    
+    private byte data; // Not sure if this is actually a byte
 
     /*
      * Constructor.
@@ -37,9 +39,23 @@ class CreeperChest extends CreeperBlock
     {
         super(blockState);
         chest = getBlock();
+        data = chest.getData();
         Inventory inv = ((InventoryHolder) blockState).getInventory();
         storedInventory = inv.getContents();
-        size = inv.getContents().length;
+        if (inv.getType() == InventoryType.CHEST)
+        {
+            neighbor = scanForNeighborChest(chest.getState());
+            if (neighbor != null)
+            {
+                Inventory otherInv = neighbor.isRight() ? ((DoubleChestInventory) inv).getLeftSide()
+                                                       : ((DoubleChestInventory) inv).getRightSide();
+                Inventory mainInv = neighbor.isRight() ? ((DoubleChestInventory) inv).getRightSide()
+                                                      : ((DoubleChestInventory) inv).getLeftSide();
+
+                storedInventory = mainInv.getContents();
+                neighborInventory = otherInv.getContents();
+            }
+        }
     }
 
     /*
@@ -114,10 +130,74 @@ class CreeperChest extends CreeperBlock
         super.update();
         getBlock().setType(blockState.getType());
         getBlock().setData(blockState.getRawData());
-        if(CreeperConfig.getWorld(getWorld()).getBool(WCfgVal.DROP_CHEST_CONTENTS) && getBlock().getState() instanceof InventoryHolder) {
-            InventoryHolder holder = (InventoryHolder) getBlock().getState();
-            Inventory inventory = holder.getInventory();
-            if(inventory.getContents().length == size) inventory.setContents(storedInventory);
+        if (!CreeperConfig.getWorld(getWorld()).getBool(WCfgVal.DROP_CHEST_CONTENTS))
+            try
+            {
+                if (hasNeighbor())
+                {
+                    neighbor.update(true);
+                    Inventory i = ((InventoryHolder) chest.getState()).getInventory();
+                    ItemStack[] both;
+                    ItemStack[] otherInv = neighborInventory;
+                    ItemStack[] newInv = storedInventory;
+                    if (neighbor.isRight())
+                        both = CreeperUtils.concat(otherInv, newInv);
+                    else
+                        both = CreeperUtils.concat(newInv, otherInv);
+                    i.setContents(both);
+
+                }
+                else {
+                    chest.setType(Material.CHEST, false); // False so it doesn't do any block physics
+                    chest.setData(data, false); // Set facing direction
+                    ((InventoryHolder) chest.getState()).getInventory().setContents(storedInventory);
+                }
+            } catch (java.lang.ClassCastException e)
+            {
+                CreeperLog.warning("Error detected, please report the whole message");
+                CreeperLog.warning("ClassCastException when replacing a chest : ");
+                CreeperLog.warning(chest.getClass().getCanonicalName());
+                CreeperLog.displayBlockLocation(chest, true);
+                e.printStackTrace();
+            }
+        else if (hasNeighbor())
+            neighbor.getChest().update(true);
+
+    }
+
+    /*
+     * Get the other chest of the double chest. null if it is a simple chest.
+     */
+    private static NeighborChest scanForNeighborChest(BlockState block)
+    {
+        return scanForNeighborChest(block.getWorld(), block.getX(), block.getY(), block.getZ(), block.getRawData(), block.getType());
+    }
+
+    /*
+     * Get the other chest of the double chest. null if it is a simple chest.
+     */
+    private static NeighborChest scanForNeighborChest(World world, int x, int y, int z, short d,
+                                                      Material material)
+    {
+        Block neighbor;
+        if (d <= 3)
+        {
+            neighbor = world.getBlockAt(x - 1, y, z);
+            if (neighbor.getType().equals(material))
+                return new NeighborChest(neighbor, d == 3);
+            neighbor = world.getBlockAt(x + 1, y, z);
+            if (neighbor.getType().equals(material))
+                return new NeighborChest(neighbor, d == 2);
         }
+        else
+        {
+            neighbor = world.getBlockAt(x, y, z - 1);
+            if (neighbor.getType().equals(material))
+                return new NeighborChest(neighbor, d == 4);
+            neighbor = world.getBlockAt(x, y, z + 1);
+            if (neighbor.getType().equals(material))
+                return new NeighborChest(neighbor, d == 5);
+        }
+        return null;
     }
 }
