@@ -14,6 +14,7 @@ import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Chest;
 
 /**
  * InventoryHolder implementation of CreeperBlock.
@@ -30,8 +31,6 @@ class CreeperChest extends CreeperBlock
 
     private ItemStack[] storedInventory = null, neighborInventory = null;
     
-    private byte data; // Not sure if this is actually a byte
-
     /*
      * Constructor.
      */
@@ -39,7 +38,6 @@ class CreeperChest extends CreeperBlock
     {
         super(blockState);
         chest = getBlock();
-        data = chest.getData();
         Inventory inv = ((InventoryHolder) blockState).getInventory();
         storedInventory = inv.getContents();
         if (inv.getType() == InventoryType.CHEST)
@@ -128,8 +126,7 @@ class CreeperChest extends CreeperBlock
     public void update()
     {
         super.update();
-        getBlock().setType(blockState.getType());
-        getBlock().setData(blockState.getRawData());
+        blockState.update(true, false); // This makes the original block state update and doesn't call physics.
         if (!CreeperConfig.getWorld(getWorld()).getBool(WCfgVal.DROP_CHEST_CONTENTS))
             try
             {
@@ -145,13 +142,8 @@ class CreeperChest extends CreeperBlock
                     else
                         both = CreeperUtils.concat(newInv, otherInv);
                     i.setContents(both);
-
                 }
-                else {
-                    chest.setType(Material.CHEST, false); // False so it doesn't do any block physics
-                    chest.setData(data, false); // Set facing direction
-                    ((InventoryHolder) chest.getState()).getInventory().setContents(storedInventory);
-                }
+                else ((InventoryHolder) chest.getState()).getInventory().setContents(storedInventory);
             } catch (java.lang.ClassCastException e)
             {
                 CreeperLog.warning("Error detected, please report the whole message");
