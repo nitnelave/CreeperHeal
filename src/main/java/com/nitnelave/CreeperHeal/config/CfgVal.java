@@ -35,7 +35,7 @@ public enum CfgVal implements CfgValEnumMember
     JOIN_EXPLOSIONS("join-nearby-explosions", true, true),
     STONE_TO_COBBLE("change-stone-to-cobble", false, true),
     OBSIDIAN_TABLE("obsidian.enchant-tables-and-chests", false, true),
-    SOUND_NAME("sound.type", "ITEM_PICKUP", false),
+    SOUND_NAME("sound.type", "ENTITY_ITEM_PICKUP", false),
     SOUND_VOLUME("sound.volume", 1, false);
 
     private final String key;
