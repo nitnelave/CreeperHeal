@@ -41,7 +41,9 @@ class CreeperHead extends CreeperBlock
         newSkull.setRotation(skull.getRotation());
         newSkull.setSkullType(skull.getSkullType());
         if (skull.hasOwner())
-            newSkull.setOwningPlayer(skull.getOwningPlayer());
+            // Should be newSkull.setOwningPlayer(skull.getOwningPlayer()) instead of newSkull.setOwner(skull.getOwner())
+            // but skull.getOwningPlayer() somehow always returns null, so we need to use the deprecated method
+            newSkull.setOwner(skull.getOwner());
         newSkull.update(true);
     }
 
@@ -62,8 +64,8 @@ class CreeperHead extends CreeperBlock
             ItemStack s = new ItemStack(Material.SKULL_ITEM);
             SkullMeta m = (SkullMeta) s.getItemMeta();
             if (skull.hasOwner())
-                // Should be skull.getOwningPlayer().getName() instead of skull.getOwner();
-                // but somehow always returns null, so we need to use the deprecated method
+                // Should be skull.getOwningPlayer().getName() instead of skull.getOwner()
+                // but skull.getOwningPlayer() somehow always returns null, so we need to use the deprecated method
                 m.setOwner(skull.getOwner());
             s.setItemMeta(m);
             s.setDurability((short) skull.getSkullType().ordinal());
