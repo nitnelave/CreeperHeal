@@ -13,7 +13,7 @@ public enum WCfgVal implements CfgValEnumMember
     TNT("TNT", true, CONFIG_FILES.CONFIG),
     GHAST("ghast", true, CONFIG_FILES.CONFIG),
     DRAGONS("dragons", false, CONFIG_FILES.CONFIG),
-    CUSTOM("custom", false, CONFIG_FILES.CONFIG),
+    CUSTOM("custom", true, CONFIG_FILES.CONFIG),
     FIRE("fire", true, CONFIG_FILES.CONFIG),
     ENDERMAN("enderman", false, CONFIG_FILES.CONFIG),
     WITHER("wither", true, CONFIG_FILES.CONFIG),

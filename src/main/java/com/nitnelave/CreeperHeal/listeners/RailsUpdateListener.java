@@ -21,7 +21,7 @@ public class RailsUpdateListener implements Listener
      * @param event
      *            The BlockPhysicsEvent
      */
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockPhysics(BlockPhysicsEvent event)
     {
         Block b = event.getBlock();

@@ -29,7 +29,7 @@ public class BlockFallListener implements Listener
      * @param event
      *            The BlockPhysics event.
      */
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockPhysics(BlockPhysicsEvent event)
     {
         Block b = event.getBlock();
@@ -50,7 +50,7 @@ public class BlockFallListener implements Listener
      * @param event
      *            The EntityChangeBlock event.
      */
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityChangeBlock(EntityChangeBlockEvent event)
     {
         if (event.getEntityType() != EntityType.ENDERMAN && event.getBlock().getType().hasGravity())

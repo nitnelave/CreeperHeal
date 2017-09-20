@@ -40,7 +40,7 @@ public class GriefListener implements Listener
      * @param event
      *         The BlockPlaceEvent.
      */
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event)
     {
         CreeperLog.debug("Block placement event");
@@ -81,7 +81,7 @@ public class GriefListener implements Listener
      * @param event
      *         The BlockIgniteEvent.
      */
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockIgnite(BlockIgniteEvent event)
     {
         WorldConfig world = CreeperConfig.getWorld(event.getBlock().getWorld());
@@ -98,7 +98,7 @@ public class GriefListener implements Listener
      * @param event
      *         The EntityDamageByEntityEvent.
      */
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event)
     {
         if (event.getEntity() instanceof Player && !event.getEntity().hasMetadata("NPC"))
@@ -147,7 +147,7 @@ public class GriefListener implements Listener
      * @param event
      *         The PlayerBucketEmpty event.
      */
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event)
     {
         CreeperLog.debug("Bucket empty event");
@@ -172,7 +172,7 @@ public class GriefListener implements Listener
      * @param event
      *         The PlayerInteract event.
      */
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event)
     {
         CreeperLog.debug("Player interact event");
