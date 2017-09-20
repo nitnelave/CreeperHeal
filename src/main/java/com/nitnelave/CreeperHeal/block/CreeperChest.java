@@ -29,7 +29,7 @@ class CreeperChest extends CreeperBlock
     private NeighborChest neighbor = null;
 
     private ItemStack[] storedInventory = null, neighborInventory = null;
-
+    
     /*
      * Constructor.
      */
@@ -125,8 +125,7 @@ class CreeperChest extends CreeperBlock
     public void update()
     {
         super.update();
-        getBlock().setType(blockState.getType());
-        getBlock().setData(blockState.getRawData());
+        blockState.update(true, false); // This makes the original block state update and doesn't call physics.
         if (!CreeperConfig.getWorld(getWorld()).getBool(WCfgVal.DROP_CHEST_CONTENTS))
             try
             {
@@ -142,10 +141,8 @@ class CreeperChest extends CreeperBlock
                     else
                         both = CreeperUtils.concat(newInv, otherInv);
                     i.setContents(both);
-
                 }
-                else
-                    ((InventoryHolder) chest.getState()).getInventory().setContents(storedInventory);
+                else ((InventoryHolder) chest.getState()).getInventory().setContents(storedInventory);
             } catch (java.lang.ClassCastException e)
             {
                 CreeperLog.warning("Error detected, please report the whole message");
