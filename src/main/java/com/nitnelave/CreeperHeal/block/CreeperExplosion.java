@@ -15,7 +15,13 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Represents an explosion, with the list of blocks destroyed, the time of the
@@ -47,8 +53,8 @@ public class CreeperExplosion
     {
         world = CreeperConfig.getWorld(loc.getWorld());
         timer = new ReplacementTimer(new Date(new Date().getTime() + 1000
-                                              * CreeperConfig.getInt(CfgVal.WAIT_BEFORE_HEAL)), world.isRepairTimed());
-        blockList = new LinkedList<Replaceable>();
+                * CreeperConfig.getInt(CfgVal.WAIT_BEFORE_HEAL)), world.isRepairTimed());
+        blockList = new LinkedList<>();
         this.loc = loc;
     }
 
@@ -62,12 +68,12 @@ public class CreeperExplosion
     public void addBlocks(List<Block> blocks, Location newLoc)
     {
         timer = new ReplacementTimer(new Date(new Date().getTime() + 1000
-                                              * CreeperConfig.getInt(CfgVal.WAIT_BEFORE_HEAL)), world.isRepairTimed());
+                * CreeperConfig.getInt(CfgVal.WAIT_BEFORE_HEAL)), world.isRepairTimed());
         loc = new Location(loc.getWorld(), (locWeight * loc.getX() + newLoc.getX())
-                                           / (locWeight + 1), (locWeight * loc.getY() + newLoc.getY())
-                                                              / (locWeight + 1), (locWeight
-                                                                                  * loc.getZ() + newLoc.getZ())
-                                                                                 / (locWeight + 1));
+                / (locWeight + 1), (locWeight * loc.getY() + newLoc.getY())
+                / (locWeight + 1), (locWeight
+                                            * loc.getZ() + newLoc.getZ())
+                / (locWeight + 1));
         locWeight++;
         checked.clear();
         recordBlocks(blocks);
@@ -229,7 +235,7 @@ public class CreeperExplosion
 
         for (int i = loc.getBlockX() - radius; i < loc.getBlockX() + radius; i++)
             for (int j = Math.max(0, loc.getBlockY() - radius); j < Math.min(w.getMaxHeight(), loc.getBlockY()
-                                                                                               + radius); j++)
+                    + radius); j++)
                 for (int k = loc.getBlockZ() - radius; k < loc.getBlockZ() + radius; k++)
                 {
                     Location l = new Location(w, i, j, k);
@@ -244,7 +250,7 @@ public class CreeperExplosion
     private boolean isObsidianLike(Material m, boolean table)
     {
         return m == Material.OBSIDIAN
-               || (table && (m == Material.ENCHANTMENT_TABLE || m == Material.ENDER_CHEST));
+                || (table && (m == Material.ENCHANTING_TABLE || m == Material.ENDER_CHEST));
     }
 
     /**
@@ -256,7 +262,7 @@ public class CreeperExplosion
      */
     public void record(Block block)
     {
-        if (block.getType() == Material.PORTAL || checked.contains(new ShortLocation(block)))
+        if (block.getType() == Material.NETHER_PORTAL || checked.contains(new ShortLocation(block)))
             return;
 
         CreeperBlock cBlock = CreeperBlock.newBlock(block.getState());
@@ -275,7 +281,7 @@ public class CreeperExplosion
      */
     public void record(Replaceable replaceable)
     {
-        if (replaceable == null || replaceable.getType() == Material.PORTAL)
+        if (replaceable == null || replaceable.getType() == Material.NETHER_PORTAL)
             return;
 
         ShortLocation location = new ShortLocation(replaceable.getLocation());
@@ -310,8 +316,7 @@ public class CreeperExplosion
             return;
         }
 
-        BlockId id = new BlockId(creeperBlock.getBlock());
-        if (!world.isBlackListed(id))
+        if (!world.isBlackListed(replaceable.getType()))
         {
             // The block should be replaced.
 

@@ -4,6 +4,7 @@ import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import org.bukkit.Bukkit;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 
 import java.util.Date;
@@ -23,7 +24,7 @@ public class RailsIndex
     /*
      * Block whose update should be prevented.
      */
-    private static Map<CreeperRail, Date> railsIndex;
+    private static Map<Block, Date> railsIndex;
 
     static
     {
@@ -49,9 +50,9 @@ public class RailsIndex
      */
     public static boolean isUpdatePrevented(Block block)
     {
-        if (!(CreeperRail.RAIL_TYPES.contains(block.getType())))
+        if (!Tag.RAILS.isTagged(block.getType()))
             return false;
-        return railsIndex.containsKey(new CreeperRail(block.getState()));
+        return railsIndex.containsKey(block);
     }
 
     /**
@@ -62,7 +63,7 @@ public class RailsIndex
      * @param block
      *            The block.
      */
-    public static void putUpdatePrevention(CreeperRail block)
+    public static void putUpdatePrevention(Block block)
     {
         if (CreeperConfig.getBool(CfgVal.RAIL_REPLACEMENT))
             railsIndex.put(block, new Date());
@@ -73,7 +74,7 @@ public class RailsIndex
         if (CreeperConfig.getBool(CfgVal.RAIL_REPLACEMENT))
         {
             Date delay = new Date(new Date().getTime() - 200
-                                  * CreeperConfig.getInt(CfgVal.BLOCK_PER_BLOCK_INTERVAL));
+                    * CreeperConfig.getInt(CfgVal.BLOCK_PER_BLOCK_INTERVAL));
             Iterator<Date> iter;
             iter = railsIndex.values().iterator();
             while (iter.hasNext())

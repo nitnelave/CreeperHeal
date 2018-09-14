@@ -2,7 +2,6 @@ package com.nitnelave.CreeperHeal.config;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.PluginHandler;
-import com.nitnelave.CreeperHeal.block.BlockId;
 import com.nitnelave.CreeperHeal.block.BurntBlockManager;
 import com.nitnelave.CreeperHeal.block.ExplodedBlockManager;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
@@ -36,7 +35,7 @@ public class WorldConfig
     private final HashMap<String, ConfigValue<Boolean>> booleans = new HashMap<String, ConfigValue<Boolean>>();
     private final String name;
     private IntegerConfigValue repairTime, replaceLimit;
-    private BlockIdListValue replaceBlackList, griefPlaceList, protectList, replaceWhiteList;
+    private MaterialListValue replaceBlackList, griefPlaceList, protectList, replaceWhiteList;
     private final YamlConfiguration config = new YamlConfiguration(),
                     advanced = new YamlConfiguration(), grief = new YamlConfiguration(),
                     replacement = new YamlConfiguration();
@@ -75,16 +74,16 @@ public class WorldConfig
                     replaceLimit = new IntegerConfigValue(v, getFile(v));
                     break;
                 case REPLACE_BLACK_LIST:
-                    replaceBlackList = new BlockIdListValue(v, getFile(v));
+                    replaceBlackList = new MaterialListValue(v, getFile(v));
                     break;
                 case REPLACE_WHITE_LIST:
-                    replaceWhiteList = new BlockIdListValue(v, getFile(v));
+                    replaceWhiteList = new MaterialListValue(v, getFile(v));
                     break;
                 case GRIEF_PLACE_LIST:
-                    griefPlaceList = new BlockIdListValue(v, getFile(v));
+                    griefPlaceList = new MaterialListValue(v, getFile(v));
                     break;
                 case PROTECTED_LIST:
-                    protectList = new BlockIdListValue(v, getFile(v));
+                    protectList = new MaterialListValue(v, getFile(v));
                     break;
                 default:
                     CreeperLog.warning("Unknown config value : " + v.toString());
@@ -292,7 +291,7 @@ public class WorldConfig
      */
     public boolean isProtected(Block block)
     {
-        return protectList.getValue().contains(new BlockId(block))
+        return protectList.getValue().contains(block.getType().name())
                || (block.getState() instanceof InventoryHolder
                    && CreeperConfig.getBool(CfgVal.REPLACE_PROTECTED_CHESTS) && PluginHandler
                                .isProtected(block));
@@ -331,7 +330,7 @@ public class WorldConfig
      */
     public boolean isGriefBlackListed(Block block)
     {
-        return griefPlaceList.getValue().contains(new BlockId(block));
+        return griefPlaceList.getValue().contains(block.getType().name());
     }
 
     /**
@@ -387,7 +386,7 @@ public class WorldConfig
         }
     }
 
-    protected void setList(WCfgVal val, HashSet<BlockId> value)
+    protected void setList(WCfgVal val, HashSet<Material> value)
     {
         switch (val)
         {
@@ -422,21 +421,21 @@ public class WorldConfig
      * Get whether a block is blacklisted for replacement (i.e. should not be
      * replaced).
      *
-     * @param id
-     *            The blockId of the block.
+     * @param material
+     *            The material of the block.
      * @return True if the block should not be blacklisted.
      */
-    public boolean isBlackListed(BlockId id)
+    public boolean isBlackListed(Material material)
     {
         if (getBool(WCfgVal.USE_REPLACE_WHITE_LIST))
-            return !replaceWhiteList.getValue().contains(id);
+            return !replaceWhiteList.getValue().contains(material.name());
         else
-            return replaceBlackList.getValue().contains(id);
+            return replaceBlackList.getValue().contains(material.name());
     }
 
     public void getReplacement(BlockState state)
     {
-        String key = state.getType().toString() + ';' + state.getRawData();
+        String key = state.getType().toString() + ";0";
         String s = replacement.getString(key + ".type");
         if (s == null)
         {
@@ -451,11 +450,6 @@ public class WorldConfig
             CreeperLog.warning("Invalid block type for " + key + " in world " + state.getWorld().getName());
             return;
         }
-        int data = replacement.getInt(key + ".data", -1);
         state.setType(material);
-        if (data != -1)
-            state.setRawData((byte) data);
-        else
-            state.setRawData((byte) 0);
     }
 }

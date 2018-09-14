@@ -5,6 +5,7 @@ author: nitnelave
 authors: [Jikoo]
 description: Replaces terrain destroyed by creeper explosions
 softdepend: [LWC, MobArena, Factions]
+api-version: 1.13
 
 commands:
     CreeperHeal:

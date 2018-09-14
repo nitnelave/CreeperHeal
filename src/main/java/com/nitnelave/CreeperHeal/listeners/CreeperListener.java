@@ -10,6 +10,7 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WCfgVal;
 import com.nitnelave.CreeperHeal.config.WorldConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
+import com.nitnelave.CreeperHeal.utils.CreeperTag;
 import com.nitnelave.CreeperHeal.utils.CreeperUtils;
 import com.nitnelave.CreeperHeal.utils.FactionHandler;
 import com.nitnelave.CreeperHeal.utils.Suffocating;
@@ -125,7 +126,7 @@ public class CreeperListener implements Listener
     {
         CreeperLog.debug("Entity change block event");
         if (event.getEntityType() == EntityType.SILVERFISH
-            && event.getBlock().getType() == Material.MONSTER_EGGS
+            && CreeperTag.INFESTED_BLOCKS.isTagged(event.getTo())
             && CreeperConfig.getBool(CfgVal.REPLACE_SILVERFISH_BLOCKS))
             Bukkit.getScheduler().runTask(CreeperHeal.getInstance(), new ReplaceSilverfishBlock(event.getBlock()));
         else if (event.getEntity().getType() == EntityType.ENDERMAN)
@@ -177,22 +178,22 @@ public class CreeperListener implements Listener
     private class ReplaceSilverfishBlock implements Runnable
     {
         private final Block block;
-        private final Material type;
+        private Material type;
 
         ReplaceSilverfishBlock(Block block)
         {
-            //noinspection deprecation
-            switch (block.getData())
+            String name = block.getType().name();
+            String prefix = "INFESTED_";
+
+            if (name.startsWith(prefix))
             {
-            case 0:
-                type = Material.STONE;
-                break;
-            case 1:
-                type = Material.COBBLESTONE;
-                break;
-            default:
-                type = Material.SMOOTH_BRICK;
+                name = name.substring(prefix.length());
+                type = Material.getMaterial(name);
             }
+
+            if (type == null)
+                type = Material.STONE;
+
             this.block = block;
         }
 

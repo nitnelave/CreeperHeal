@@ -183,10 +183,12 @@ public class GriefListener implements Listener
         Player player = event.getPlayer();
         WorldConfig world = CreeperConfig.getWorld(player.getWorld());
 
-        if (item.getType() == Material.MONSTER_EGG
+        String spawnEggSuffix = "_SPAWN_EGG";
+        if (item.getType().name().endsWith(spawnEggSuffix)
             && !CreeperPermissionManager.checkPermissions(player, true, "bypass.spawnEgg"))
         {
-            String entityType = EntityType.fromId(event.getItem().getData().getData()).getName();
+            String name = item.getType().name();
+            String entityType = name.substring(0, name.length() - spawnEggSuffix.length());
 
             boolean blocked = world.getBool(WCfgVal.BLOCK_SPAWN_EGGS);
             if (blocked)

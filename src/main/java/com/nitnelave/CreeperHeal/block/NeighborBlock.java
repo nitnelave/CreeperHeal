@@ -48,9 +48,6 @@ public class NeighborBlock
      */
     public boolean isNeighbor()
     {
-        if (block instanceof CreeperRail && ((CreeperRail) block).isAscending())
-            return true;
-
         return block != null && block.getAttachingFace() == face.getOppositeFace();
     }
 

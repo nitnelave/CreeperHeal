@@ -1,6 +1,6 @@
 package com.nitnelave.CreeperHeal.config;
 
-import com.nitnelave.CreeperHeal.block.BlockId;
+import org.bukkit.Material;
 
 import java.util.HashSet;
 
@@ -22,10 +22,10 @@ public enum WCfgVal implements CfgValEnumMember
     ZOMBIE_DOOR("door-broken-by-zombie", false, CONFIG_FILES.CONFIG),
     REPLACE_ABOVE("replace-above-limit-only", false, CONFIG_FILES.CONFIG),
     REPLACE_LIMIT("replace-limit", 64, CONFIG_FILES.CONFIG),
-    REPLACE_BLACK_LIST("restrict.blacklist", new HashSet<BlockId>(), CONFIG_FILES.ADVANCED),
-    REPLACE_WHITE_LIST("restrict.whitelist", new HashSet<BlockId>(), CONFIG_FILES.ADVANCED),
+    REPLACE_BLACK_LIST("restrict.blacklist", new HashSet<Material>(), CONFIG_FILES.ADVANCED),
+    REPLACE_WHITE_LIST("restrict.whitelist", new HashSet<Material>(), CONFIG_FILES.ADVANCED),
     USE_REPLACE_WHITE_LIST("restrict.use-whitelist", false, CONFIG_FILES.ADVANCED),
-    PROTECTED_LIST("protected-list", new HashSet<BlockId>(), CONFIG_FILES.ADVANCED),
+    PROTECTED_LIST("protected-list", new HashSet<Material>(), CONFIG_FILES.ADVANCED),
     REPAIR_TIME("repair-time-of-day", -1, CONFIG_FILES.ADVANCED),
     FACTIONS_IGNORE_WILDERNESS("factions.ignore-wilderness", false, CONFIG_FILES.ADVANCED),
     FACTIONS_IGNORE_TERRITORY("factions.ignore-territory", false, CONFIG_FILES.ADVANCED),
@@ -44,7 +44,7 @@ public enum WCfgVal implements CfgValEnumMember
     WARN_PVP("warn.PvP", false, CONFIG_FILES.GRIEF),
     PREVENT_FIRE_SPREAD("prevent-fire-spread.fire", false, CONFIG_FILES.GRIEF),
     PREVENT_FIRE_LAVA("prevent-fire-spread.lava", false, CONFIG_FILES.GRIEF),
-    GRIEF_PLACE_LIST("blacklist", new HashSet<BlockId>(), CONFIG_FILES.GRIEF),
+    GRIEF_PLACE_LIST("blacklist", new HashSet<Material>(), CONFIG_FILES.GRIEF),
     WORLD_ON("enabled", true, CONFIG_FILES.CONFIG),
     DROP_CHEST_CONTENTS("drop-chest-contents", false, CONFIG_FILES.ADVANCED);
 

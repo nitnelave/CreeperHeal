@@ -1,8 +1,8 @@
 package com.nitnelave.CreeperHeal.config;
 
 import com.nitnelave.CreeperHeal.CreeperHeal;
-import com.nitnelave.CreeperHeal.block.BlockId;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
+import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -20,7 +20,7 @@ abstract class WorldConfigImporter
                     preventFireLava, creepers, tnt, fire, ghast, custom, dragons, wither,
                     ignoreFactionsWilderness, ignoreFactionsTerritory;
     private static int replaceLimit, repairTime;
-    private static HashSet<BlockId> blockBlackList, blockWhiteList, protectList, placeList;
+    private static HashSet<Material> blockBlackList, blockWhiteList, protectList, placeList;
 
     private static void storeSettings(WorldConfig w)
     {
@@ -111,24 +111,19 @@ abstract class WorldConfigImporter
         configFile.delete();
     }
 
-    private static HashSet<BlockId> loadList(YamlConfiguration config, String key)
+    private static HashSet<Material> loadList(YamlConfiguration config, String key)
     {
         HashSet<BlockId> set = new HashSet<BlockId>();
         String tmp_str1 = config.getString(key, "").trim();
-        String[] split = tmp_str1.split(",");
-        try
+        String[] split = tmp_str1.split(",\\s?");
+        for (String elem : split)
         {
-            for (String elem : split)
-            {
-                BlockId bId = new BlockId(elem);
-                if (bId.getId() != 0)
-                    set.add(bId);
+            Material material = Material.getMaterial(elem.toUpperCase());
+            if (material != null) {
+                set.add(material);
             }
-            return set;
-        } catch (NumberFormatException e)
-        {
-            return new HashSet<BlockId>();
         }
+        return set;
     }
 
     protected static WorldConfig importFrom(String name, int version)
