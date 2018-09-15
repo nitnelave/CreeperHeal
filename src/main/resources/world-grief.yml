@@ -16,10 +16,7 @@
 #
 # blacklist: List of forbidden blocks. Only effective if warn:blacklist or
 # block:blacklist is set to true.
-# The format to enter a block is ID:DATA, with the data being optional. The
-# values are separated by comas. If no data is specified, then all data values
-# are included. For example, to block dirt, all types of wool, normal logs and
-# birch logs : 3, 35, 17:0, 17:2
+# Entries are Material names. Values are separated by commas.
 #
 
 prevent-fire-spread:
@@ -39,4 +36,4 @@ block:
   PvP: false
   flint-and-steel: false
   blacklist: false
-blacklist: '0'
+blacklist: 'AIR'

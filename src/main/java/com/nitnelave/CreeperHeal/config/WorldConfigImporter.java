@@ -115,13 +115,12 @@ abstract class WorldConfigImporter
     {
         HashSet<BlockId> set = new HashSet<BlockId>();
         String tmp_str1 = config.getString(key, "").trim();
-        String[] split = tmp_str1.split(",\\s?");
+        String[] split = tmp_str1.split(",");
         for (String elem : split)
         {
-            Material material = Material.getMaterial(elem.toUpperCase());
-            if (material != null) {
+            Material material = MaterialListValue.matchMaterial(elem);
+            if (material != null)
                 set.add(material);
-            }
         }
         return set;
     }

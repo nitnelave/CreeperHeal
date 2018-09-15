@@ -19,13 +19,13 @@ class MaterialListValue extends ConfigValue<HashSet<Material>>
     {
         HashSet<Material> set = new HashSet<>();
         String tmp_str1 = config.getString(getKey(), "").trim();
-        String[] split = tmp_str1.split(",\\s?");
+        String[] split = tmp_str1.split(",");
         for (String elem : split)
         {
-            Material material = Material.getMaterial(elem.toUpperCase());
-            if (material != null) {
+            elem = elem.trim();
+            Material material = matchMaterial(elem.toUpperCase());
+            if (material != null)
                 set.add(material);
-            }
         }
         setValue(set);
     }
@@ -39,7 +39,7 @@ class MaterialListValue extends ConfigValue<HashSet<Material>>
     private String formatList()
     {
         if (value.isEmpty())
-            return "0";
+            return "AIR";
         StringBuilder b = new StringBuilder();
         for (Material material : value)
         {
@@ -47,9 +47,56 @@ class MaterialListValue extends ConfigValue<HashSet<Material>>
             b.append(", ");
         }
 
-        String blocklist = b.toString();
-        return blocklist.substring(0, blocklist.length() - 2);
+        return b.delete(b.length() - 2, b.length()).toString();
 
+    }
+
+    /**
+     * Gets a Material from a material name. Will return null if no matches are found.
+     *
+     * @param materialName
+     *          the name of the Material
+     * @return
+     *          the Material, or `null` if no matching material is found
+     */
+    @SuppressWarnings("deprecation")
+    static Material matchMaterial(String materialName) {
+        materialName = materialName.trim();
+        Material material = Material.matchMaterial(materialName.toUpperCase());
+        if (material != null)
+            return material;
+
+        // Convert legacy numeric IDs
+        int id;
+        byte data;
+
+        try
+        {
+            if (materialName.indexOf(':') >= 0)
+            {
+                String[] elemSplit = materialName.split(":");
+                id = Integer.valueOf(elemSplit[0]);
+                data = Byte.valueOf(elemSplit[1]);
+            }
+            else
+            {
+                id = Integer.valueOf(materialName);
+                data = 0;
+            }
+        }
+        catch (NumberFormatException e)
+        {
+            return null;
+        }
+
+        for (int index = Material.LEGACY_AIR.ordinal(); index < Material.values().length; ++index)
+        {
+            material = Material.values()[index];
+            if (material.getId() == id)
+                return material.getNewData(data).getItemType();
+        }
+
+        return null;
     }
 
 }

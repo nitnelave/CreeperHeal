@@ -2,11 +2,8 @@
 #
 # restrict: Prevent replacement of some blocks. If use-whitelist is true, then
 # only the blocks listed in the whitelist are replaced, otherwise every block
-# except those listed in the blacklist are replaced.  The format to enter a
-# block is ID:DATA, with the data being optional. The
-# values are separated by comas. If no data is specified, then all data values
-# are included. For example, to block dirt, all types of wool, normal logs and
-# birch logs : 3, 35, 17:0, 17:2
+# except those listed in the blacklist are replaced. Entries are Material names.
+# Values are separated by commas.
 #
 # replace-grass-with-dirt: If true, then grass blocks that are blown up will be
 # replaced by plain dirt blocks.
@@ -26,11 +23,11 @@
 
 restrict:
   use-whitelist: false
-  blacklist: '0'
-  whitelist: '0'
+  blacklist: 'AIR'
+  whitelist: 'AIR'
 replace-grass-with-dirt: false
 repair-time-of-day: -1
-protected-list: '0'
+protected-list: 'AIR'
 factions:
   ignore-wilderness: false
   ignore-territory: false
