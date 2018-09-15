@@ -13,6 +13,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 
 import java.util.*;
 
@@ -147,8 +148,6 @@ public class CreeperExplosion
 
     /**
      * Replace the first block of the list.
-     * 
-     * @return False if the list is now empty.
      */
     private void replace_one_block()
     {
@@ -257,57 +256,77 @@ public class CreeperExplosion
      */
     public void record(Block block)
     {
-    	if (block.getType() == Material.PORTAL)
-    		return;
-    	
+        if (block.getType() == Material.PORTAL || checked.contains(new ShortLocation(block)))
+            return;
+
         CreeperBlock cBlock = CreeperBlock.newBlock(block.getState());
 
-        if (cBlock == null || checked.contains(new ShortLocation(block)))
+        if (cBlock == null)
             return;
 
-        checked.add(new ShortLocation(block));
-
-        if ((CreeperConfig.getBool(CfgVal.PREVENT_CHAIN_REACTION) && block.getType().equals(Material.TNT))
-            || world.isProtected(block))
-        {
-            ToReplaceList.addToReplace(cBlock);
-            cBlock.remove();
-            return;
-        }
-
-        BlockId id = new BlockId(block);
-        if (!world.isBlackListed(id))
-        {
-            // The block should be replaced.
-
-            for (NeighborBlock b : cBlock.getDependentNeighbors())
-                if (b.isNeighbor())
-                    record(b.getBlock());
-
-            blockList.add(cBlock);
-            cBlock.remove();
-        }
-        else if (CreeperConfig.getBool(CfgVal.DROP_DESTROYED_BLOCKS))
-        {
-            cBlock.drop(false);
-            cBlock.remove();
-
-        }
-
+        record(cBlock);
     }
 
     /**
      * Add a Replaceable to the list, and remove it from the world.
-     * 
-     * @param block
+     *
+     * @param replaceable
      *            The Replaceable to add.
      */
-    public void record(Replaceable block)
+    public void record(Replaceable replaceable)
     {
-        if (block != null)
+        if (replaceable == null || replaceable.getType() == Material.PORTAL)
+            return;
+
+        ShortLocation location = new ShortLocation(replaceable.getLocation());
+
+        if (checked.contains(location))
+            return;
+
+        checked.add(location);
+
+        if (replaceable instanceof CreeperMultiblock)
         {
-            blockList.add(block);
-            block.remove();
+            for (BlockState dependent : ((CreeperMultiblock) replaceable).dependents)
+            {
+                checked.add(new ShortLocation(dependent.getLocation()));
+            }
+        }
+
+        if (!(replaceable instanceof CreeperBlock))
+        {
+            blockList.add(replaceable);
+            replaceable.remove();
+            return;
+        }
+
+        CreeperBlock creeperBlock = (CreeperBlock) replaceable;
+
+        if ((CreeperConfig.getBool(CfgVal.PREVENT_CHAIN_REACTION) && replaceable.getType().equals(Material.TNT))
+                || world.isProtected(replaceable.getBlock()))
+        {
+            ToReplaceList.addToReplace(creeperBlock);
+            replaceable.remove();
+            return;
+        }
+
+        BlockId id = new BlockId(creeperBlock.getBlock());
+        if (!world.isBlackListed(id))
+        {
+            // The block should be replaced.
+
+            for (NeighborBlock neighborBlock : creeperBlock.getDependentNeighbors())
+                if (neighborBlock.isNeighbor())
+                    record(neighborBlock.getBlock());
+
+            blockList.add(replaceable);
+            replaceable.remove();
+        }
+        else if (CreeperConfig.getBool(CfgVal.DROP_DESTROYED_BLOCKS))
+        {
+            replaceable.drop(false);
+            replaceable.remove();
+
         }
     }
 

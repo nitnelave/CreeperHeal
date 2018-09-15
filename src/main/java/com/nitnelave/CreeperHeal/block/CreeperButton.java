@@ -9,6 +9,6 @@ public class CreeperButton extends CreeperBlock
     {
         super(b);
 
-        b.setRawData((byte) (getRawData() & 7));
+        b.setRawData((byte) (b.getRawData() & 7));
     }
 }

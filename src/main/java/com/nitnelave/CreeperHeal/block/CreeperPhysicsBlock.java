@@ -17,7 +17,7 @@ class CreeperPhysicsBlock extends CreeperBlock
     /*
      * Constructor.
      */
-    protected CreeperPhysicsBlock(BlockState blockState)
+    CreeperPhysicsBlock(BlockState blockState)
     {
         super(blockState);
     }
