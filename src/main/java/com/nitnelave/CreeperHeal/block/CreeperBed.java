@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Bed implementation of a CreeperMultiblock.
+ * Bed implementation of CreeperMultiblock.
  *
  * @author Jikoo
  */
@@ -30,7 +30,7 @@ class CreeperBed extends CreeperMultiblock
         {
             head = blockState;
             foot = blockState.getBlock().getRelative(bed.getFacing().getOppositeFace()).getState();
-        } 
+        }
         else
         {
             head = blockState.getBlock().getRelative(bed.getFacing()).getState();

@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Bisected implementation of a CreeperMultiblock.
+ * Bisected implementation of CreeperMultiblock.
  *
  * @author Jikoo
  */

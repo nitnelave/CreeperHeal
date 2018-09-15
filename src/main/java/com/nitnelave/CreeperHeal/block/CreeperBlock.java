@@ -8,9 +8,13 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.World;
+import org.bukkit.block.Banner;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.Container;
+import org.bukkit.block.Jukebox;
+import org.bukkit.block.ShulkerBox;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Rail;
@@ -18,7 +22,6 @@ import org.bukkit.block.data.type.Piston;
 import org.bukkit.block.data.type.PistonHead;
 import org.bukkit.block.data.type.Stairs;
 import org.bukkit.block.data.type.TrapDoor;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Attachable;
 
@@ -43,7 +46,7 @@ public class CreeperBlock implements Replaceable
      */
     private static final Set<Material> EMPTY_BLOCKS =
             CreeperUtils.createFinalHashSet(Material.AIR, Material.WATER, Material.CAVE_AIR,
-                                            Material.LAVA, Material.VOID_AIR, Material.FIRE, Material.SNOW);
+                    Material.LAVA, Material.VOID_AIR, Material.FIRE, Material.SNOW);
     /*
      * These blocks (may) need a block under them not to drop.
      */
@@ -64,7 +67,7 @@ public class CreeperBlock implements Replaceable
                     Material.REDSTONE_TORCH, Material.VINE, Material.COCOA, Material.TRIPWIRE_HOOK);
 
     public static final BlockFace[] CARDINALS = { BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST,
-                                                 BlockFace.NORTH, BlockFace.UP, BlockFace.DOWN };
+            BlockFace.NORTH, BlockFace.UP, BlockFace.DOWN };
 
     /*
      * The block represented.
@@ -82,31 +85,38 @@ public class CreeperBlock implements Replaceable
     public static CreeperBlock newBlock(BlockState state)
     {
         CreeperConfig.getWorld(state.getWorld()).getReplacement(state);
-        if (state instanceof InventoryHolder)
-            return new CreeperContainer(state);
+
+        if (state instanceof ShulkerBox)
+            return new CreeperShulkerBox((ShulkerBox) state);
+        if (state instanceof Container)
+            return new CreeperContainer((Container) state);
+        if (state instanceof Banner)
+            return new CreeperBanner((Banner) state);
+        if (state instanceof Jukebox)
+            return new CreeperJukebox((Jukebox) state);
         if (state.getType().hasGravity())
             return new CreeperPhysicsBlock(state);
+
         BlockData data = state.getBlockData();
-        if (data instanceof org.bukkit.block.data.type.Bed) {
+
+        if (data instanceof org.bukkit.block.data.type.Bed)
             return new CreeperBed(state);
-        }
-        if (data instanceof Bisected && !(data instanceof Stairs) && !(data instanceof TrapDoor)) {
+        if (data instanceof Bisected && !(data instanceof Stairs) && !(data instanceof TrapDoor))
             return new CreeperBisected(state);
-        }
-        if (data instanceof Piston || data instanceof PistonHead) {
+        if (data instanceof Piston || data instanceof PistonHead)
             return new CreeperPiston(state);
-        }
+
         switch (state.getType())
         {
+        case AIR:
+        case CAVE_AIR:
+        case FIRE:
+        case VOID_AIR:
+            return null;
         case GRASS_BLOCK:
             return new CreeperGrass(state);
         case STONE_BRICKS:
             return new CreeperBrick(state);
-        case FIRE:
-        case AIR:
-        case CAVE_AIR:
-        case VOID_AIR:
-            return null;
         case STONE:
             return new CreeperStone(state);
         default:
@@ -244,12 +254,14 @@ public class CreeperBlock implements Replaceable
     {
         if (forced || CreeperConfig.shouldDrop())
         {
-            Location loc = blockState.getBlock().getLocation();
-            World w = loc.getWorld();
-
+            BlockState current = blockState.getBlock().getState();
+            blockState.update(true, false);
             Collection<ItemStack> drop = blockState.getBlock().getDrops();
-            for (ItemStack s : drop)
-                w.dropItemNaturally(loc, s);
+            current.update(true, false);
+            Location location = blockState.getLocation().add(0.5, 0.5, 0.5);
+            World world = blockState.getWorld();
+            for (ItemStack itemStack : drop)
+                world.dropItemNaturally(location, itemStack);
             return true;
         }
         return false;
@@ -267,7 +279,7 @@ public class CreeperBlock implements Replaceable
             return true;
 
         if (!shouldDrop && isDependent(getType())
-            && isEmpty(getBlock().getRelative(getAttachingFace()).getType()))
+                && isEmpty(getBlock().getRelative(getAttachingFace()).getType()))
             return false;
 
         update();
@@ -300,7 +312,7 @@ public class CreeperBlock implements Replaceable
                 drop(true);
             return true;
         } else if (CreeperConfig.getBool(CfgVal.OVERWRITE_BLOCKS) && !isEmpty(type)
-                   && CreeperConfig.getBool(CfgVal.DROP_DESTROYED_BLOCKS))
+                && CreeperConfig.getBool(CfgVal.DROP_DESTROYED_BLOCKS))
         {
             CreeperBlock b = CreeperBlock.newBlock(block.getState());
             if (b == null)
