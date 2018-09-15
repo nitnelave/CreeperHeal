@@ -73,9 +73,10 @@ public abstract class CreeperUtils
      *            The elements to be added in the HashSet.
      * @return An unmodifiable HashSet containing the elements.
      */
+    @SafeVarargs
     public static <T> Set<T> createFinalHashSet(T... elements)
     {
-        Set<T> set = new HashSet<T>(elements.length);
+        Set<T> set = new HashSet<>(elements.length);
 
         Collections.addAll(set, elements);
 

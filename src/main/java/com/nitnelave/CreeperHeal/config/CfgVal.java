@@ -75,7 +75,7 @@ public enum CfgVal implements CfgValEnumMember
      * Get whether this value is in the advanced file or the config file. Return
      * true if it is in the advanced file.
      */
-    protected boolean isAdvanced()
+    boolean isAdvanced()
     {
         return advanced;
     }

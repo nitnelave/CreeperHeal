@@ -13,13 +13,13 @@ import java.util.Map;
  * @author nitnelave
  * 
  */
-public abstract class ToReplaceList
+abstract class ToReplaceList
 {
 
     /*
      * Block to be replaced immediately after an explosion.
      */
-    private static Map<Location, Replaceable> toReplace = new HashMap<Location, Replaceable>();
+    private static final Map<Location, Replaceable> toReplace = new HashMap<>();
 
     /**
      * Add a block to the list of blocks to be replaced immediately.
@@ -27,7 +27,7 @@ public abstract class ToReplaceList
      * @param block
      *            The block to add.
      */
-    protected static void addToReplace(CreeperBlock block)
+    static void addToReplace(CreeperBlock block)
     {
         toReplace.put(block.getLocation(), block);
     }
@@ -36,16 +36,9 @@ public abstract class ToReplaceList
      * Replace the blocks that should be immediately replaced after an
      * explosion, in a task run one tick later.
      */
-    protected static void replaceProtected()
+    static void replaceProtected()
     {
-        Bukkit.getScheduler().scheduleSyncDelayedTask(CreeperHeal.getInstance(), new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                replaceAll();
-            }
-        });
+        Bukkit.getScheduler().scheduleSyncDelayedTask(CreeperHeal.getInstance(), ToReplaceList::replaceAll);
     }
 
     /*

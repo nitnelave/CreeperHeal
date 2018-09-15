@@ -7,7 +7,6 @@ import org.bukkit.World;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 
 /**
  * Implementation of the NeighborFinder for DateLoc.
@@ -45,24 +44,12 @@ public class NeighborDateLoc extends NeighborFinder<DateLoc>
     @Override
     public void clean()
     {
-        Iterator<ArrayList<DateLoc>> iter = map.values().iterator();
         Date delay = new Date(new Date().getTime() - 200
                               * CreeperConfig.getInt(CfgVal.BLOCK_PER_BLOCK_INTERVAL));
-        while (iter.hasNext())
-        {
-            ArrayList<DateLoc> list = iter.next();
-            Iterator<DateLoc> it = list.iterator();
-            while (it.hasNext())
-            {
-                Date date = it.next().getTime();
-                if (date.before(delay))
-                    it.remove();
-                else
-                    break;
-            }
-            if (list.isEmpty())
-                iter.remove();
-        }
+        map.values().removeIf(list ->{
+            list.removeIf(dateLoc -> dateLoc.getTime().before(delay));
+            return list.isEmpty();
+        });
     }
 
 }

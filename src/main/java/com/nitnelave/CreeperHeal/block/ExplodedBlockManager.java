@@ -36,7 +36,7 @@ public class ExplodedBlockManager
     /*
      * List of explosions, to replace the blocks.
      */
-    private static List<CreeperExplosion> explosionList = new LinkedList<CreeperExplosion>();
+    private static final List<CreeperExplosion> explosionList = new LinkedList<>();
     /*
      * Map of the explosions, if the plugin is not in lightweight mode.
      */
@@ -46,7 +46,7 @@ public class ExplodedBlockManager
      * List to temporarily store the paintings before adding them to the
      * explosion right after.
      */
-    private static List<Replaceable> brokenEntityList = new ArrayList<Replaceable>();
+    private static final List<Replaceable> brokenEntityList = new ArrayList<>();
 
     /*
      * Block replacement task.
@@ -58,14 +58,8 @@ public class ExplodedBlockManager
         if (CreeperConfig.getBool(CfgVal.LEAVES_VINES))
         {
             explosionIndex = new NeighborExplosion();
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(CreeperHeal.getInstance(), new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    cleanIndex();
-                }
-            }, 200, 7200);
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(CreeperHeal.getInstance(),
+                    ExplodedBlockManager::cleanIndex, 200, 7200);
         }
         scheduleTask();
     }
@@ -88,7 +82,7 @@ public class ExplodedBlockManager
     private static void removeExplosionsAround(Location loc, float distanceNear)
     {
         World w = loc.getWorld();
-        LinkedList<CreeperExplosion> pass = new LinkedList<CreeperExplosion>();
+        LinkedList<CreeperExplosion> pass = new LinkedList<>();
         ListIterator<CreeperExplosion> iter = explosionList.listIterator();
         while (iter.hasNext())
         {
@@ -128,7 +122,7 @@ public class ExplodedBlockManager
     public static void forceReplace()
     {
         ListIterator<CreeperExplosion> iter = explosionList.listIterator();
-        LinkedList<CreeperExplosion> pass = new LinkedList<CreeperExplosion>();
+        LinkedList<CreeperExplosion> pass = new LinkedList<>();
         while (iter.hasNext())
         {
             CreeperExplosion ex = iter.next();
@@ -189,7 +183,7 @@ public class ExplodedBlockManager
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled())
             return;
-        List<Block> processList = new ArrayList<Block>(event.getBlocks());
+        List<Block> processList = new ArrayList<>(event.getBlocks());
         for(Block b : event.getProtectedBlocks())
         {
             CreeperBlock cb = CreeperBlock.newBlock(b.getState());
@@ -311,15 +305,10 @@ public class ExplodedBlockManager
 
     private static void scheduleTask()
     {
-        task = Bukkit.getServer().getScheduler().runTaskTimer(CreeperHeal.getInstance(), new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                checkReplace(); //check to replace explosions/blocks
-            }
-        }, 0, CreeperConfig.getBool(CfgVal.BLOCK_PER_BLOCK) ? CreeperConfig.getInt(CfgVal.BLOCK_PER_BLOCK_INTERVAL)
-                                                           : 100);
+        //check to replace explosions/blocks
+        task = Bukkit.getServer().getScheduler().runTaskTimer(CreeperHeal.getInstance(),
+                ExplodedBlockManager::checkReplace, 0,
+                CreeperConfig.getBool(CfgVal.BLOCK_PER_BLOCK) ? CreeperConfig.getInt(CfgVal.BLOCK_PER_BLOCK_INTERVAL) : 100);
     }
 
     /**

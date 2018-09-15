@@ -63,8 +63,7 @@ public class ShortLocation
         if (obj instanceof ShortLocation)
         {
             ShortLocation other = (ShortLocation) obj;
-            if (x == other.x && y == other.y && z == other.z)
-                return true;
+            return x == other.x && y == other.y && z == other.z;
         }
         return false;
     }

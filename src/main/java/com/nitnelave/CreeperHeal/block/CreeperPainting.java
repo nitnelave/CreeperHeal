@@ -23,7 +23,7 @@ class CreeperPainting extends CreeperHanging
      * @param painting
      *            The painting represented.
      */
-    protected CreeperPainting(Painting painting)
+    CreeperPainting(Painting painting)
     {
         super(painting);
     }

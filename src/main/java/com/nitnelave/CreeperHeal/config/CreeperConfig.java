@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Logger;
 
 /**
@@ -32,9 +32,9 @@ public abstract class CreeperConfig
                     ADVANCED_FILE = new File(CreeperHeal.getCHFolder()
                                              + "/advanced.yml");
     private static final Logger LOG = Logger.getLogger("Minecraft");
-    private static final Map<String, WorldConfig> world_config = new HashMap<String, WorldConfig>();
-    private static final Map<String, ConfigValue<Boolean>> booleans = new HashMap<String, ConfigValue<Boolean>>();
-    private static final Map<String, ConfigValue<Integer>> integers = new HashMap<String, ConfigValue<Integer>>();
+    private static final Map<String, WorldConfig> world_config = new HashMap<>();
+    private static final Map<String, ConfigValue<Boolean>> booleans = new HashMap<>();
+    private static final Map<String, ConfigValue<Integer>> integers = new HashMap<>();
     private static final YamlConfiguration config = new YamlConfiguration(),
                     advanced = new YamlConfiguration();
 
@@ -341,7 +341,7 @@ public abstract class CreeperConfig
         return returnValue;
     }
 
-    protected static void setAlias(String cmdAlias)
+    static void setAlias(String cmdAlias)
     {
         alias.setValue(cmdAlias);
     }
@@ -381,7 +381,7 @@ public abstract class CreeperConfig
 
     public static boolean shouldDrop()
     {
-        return new Random().nextInt(100) < CreeperConfig.getInt(CfgVal.DROP_CHANCE);
+        return ThreadLocalRandom.current().nextInt(100) < CreeperConfig.getInt(CfgVal.DROP_CHANCE);
     }
 
 }

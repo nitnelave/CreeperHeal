@@ -2,7 +2,6 @@ package com.nitnelave.CreeperHeal.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,7 +35,7 @@ public abstract class CreeperMessenger
      */
     private final static String[] variables = { "WORLD", "PLAYER", "TARGET", "MOB", "BLOCK" };
 
-    private static List<CreeperPlayer> warnList = new LinkedList<CreeperPlayer>();
+    private static final List<CreeperPlayer> warnList = new LinkedList<>();
 
     static
     {
@@ -59,11 +58,8 @@ public abstract class CreeperMessenger
             FileInputStream input = new FileInputStream(messageFile);
             prop.load(input);
             input.close();
-        } catch (FileNotFoundException e)
-        {
-            CreeperLog.warning("[CreeperHeal] Failed to read file: messages.properties");
-            e.printStackTrace();
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             CreeperLog.warning("[CreeperHeal] Failed to read file: messages.properties");
             e.printStackTrace();
@@ -77,7 +73,7 @@ public abstract class CreeperMessenger
     {
         String result = message;
         for (ChatColor c : ChatColor.values())
-            result = result.replaceAll("\\{" + c.name() + "\\}", c.toString());
+            result = result.replaceAll("\\{" + c.name() + "}", c.toString());
         return result;
     }
 
@@ -107,7 +103,7 @@ public abstract class CreeperMessenger
         {
             for (int i = 0; i < variables.length; i++)
                 if (values[i] != null)
-                    message = message.replaceAll("\\{" + variables[i] + "\\}", values[i]);
+                    message = message.replaceAll("\\{" + variables[i] + "}", values[i]);
         } catch (NullPointerException e)
         {
             CreeperLog.warning("[CreeperHeal] Wrong variable used in message " + type);

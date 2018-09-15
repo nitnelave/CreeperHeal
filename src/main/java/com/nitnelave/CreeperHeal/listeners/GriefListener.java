@@ -9,7 +9,6 @@ import com.nitnelave.CreeperHeal.utils.CreeperPermissionManager;
 import com.nitnelave.CreeperHeal.utils.CreeperPlayer;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;

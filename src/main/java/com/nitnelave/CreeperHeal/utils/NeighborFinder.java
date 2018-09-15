@@ -20,7 +20,7 @@ public abstract class NeighborFinder<T>
      * The size of each zone.
      */
     private static final int BLOCK_SIZE = 64;
-    protected HashMap<Point, ArrayList<T>> map = new HashMap<Point, ArrayList<T>>();
+    final HashMap<Point, ArrayList<T>> map = new HashMap<>();
 
     /**
      * Add an element to the map. It is placed in the correct zone, created if
@@ -38,12 +38,7 @@ public abstract class NeighborFinder<T>
         if (el == null)
             return;
         Point p = new Point((int) (x / BLOCK_SIZE), (int) (y / BLOCK_SIZE));
-        ArrayList<T> list = map.get(p);
-        if (list == null)
-        {
-            list = new ArrayList<T>();
-            map.put(p, list);
-        }
+        ArrayList<T> list = map.computeIfAbsent(p, k -> new ArrayList<>());
         list.add(el);
     }
 

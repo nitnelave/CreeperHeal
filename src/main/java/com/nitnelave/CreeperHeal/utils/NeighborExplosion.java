@@ -5,7 +5,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Implementation of the NeighborFinder for explosions.
@@ -49,20 +48,11 @@ public class NeighborExplosion extends NeighborFinder<CreeperExplosion>
     @Override
     public void clean()
     {
-        Iterator<ArrayList<CreeperExplosion>> iter = map.values().iterator();
-        while (iter.hasNext())
+        map.values().removeIf(list ->
         {
-            ArrayList<CreeperExplosion> list = iter.next();
-            Iterator<CreeperExplosion> it = list.iterator();
-            while (it.hasNext())
-            {
-                CreeperExplosion e = it.next();
-                if (e.isEmpty())
-                    it.remove();
-            }
-            if (list.isEmpty())
-                iter.remove();
-        }
+            list.removeIf(CreeperExplosion::isEmpty);
+            return list.isEmpty();
+        });
     }
 
     /**

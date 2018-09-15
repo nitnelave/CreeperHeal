@@ -18,15 +18,15 @@ public class CHExplosionRecordEvent extends Event implements Cancellable
 {
     private boolean cancelled = false;
     private static final HandlerList handlers = new HandlerList();
-    private List<Block> healBlocks;
-    private List<Block> protectBlocks;
+    private final List<Block> healBlocks;
+    private final List<Block> protectBlocks;
     private final Location location;
     private final ExplosionReason reason;
 
     public CHExplosionRecordEvent(List<Block> blocks, Location location, ExplosionReason reason)
     {
-        this.healBlocks = new ArrayList<Block>(blocks);
-        this.protectBlocks = new ArrayList<Block>();
+        this.healBlocks = new ArrayList<>(blocks);
+        this.protectBlocks = new ArrayList<>();
         this.location = location;
         this.reason = reason;
     }
@@ -55,7 +55,7 @@ public class CHExplosionRecordEvent extends Event implements Cancellable
     }
 
     /**
-     * Blocks removed from this list will explode naturally if they were in the 
+     * Blocks removed from this list will explode naturally if they were in the
      * explosion.
      * 
      * Adding blocks to this list will mark them for deletion (if normally exploded
@@ -82,7 +82,8 @@ public class CHExplosionRecordEvent extends Event implements Cancellable
     @Deprecated
     public void setBlocks(List<Block> blockList)
     {
-        healBlocks = blockList;
+        healBlocks.clear();
+        healBlocks.addAll(blockList);
     }
 
     /**
@@ -107,7 +108,7 @@ public class CHExplosionRecordEvent extends Event implements Cancellable
         if(!protectBlocks.contains(block))
             protectBlocks.add(block);
     }
-    
+
     /**
      * Adds the block to the list for CreeperHeal to process (not guaranteed to heal
      * depends on config).
@@ -119,7 +120,7 @@ public class CHExplosionRecordEvent extends Event implements Cancellable
         protectBlocks.remove(block);
     }
 
-    /** 
+    /**
      * Prevents CreeperHeal processing the block, letting minecraft/bukkit/plugins
      * deal with the block as appropriate.
      */

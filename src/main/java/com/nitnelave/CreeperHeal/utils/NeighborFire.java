@@ -8,7 +8,6 @@ import org.bukkit.World;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 
 /**
  * Implementation of the NeighborFinder for burnt blocks.
@@ -51,25 +50,14 @@ public class NeighborFire extends NeighborFinder<CreeperBurntBlock>
     @Override
     public void clean()
     {
-        Iterator<ArrayList<CreeperBurntBlock>> iter = map.values().iterator();
         Date delay = new Date(new Date().getTime() - 1000
-                              * CreeperConfig.getInt(CfgVal.WAIT_BEFORE_HEAL_BURNT) + 4000000
-                              * CreeperConfig.getInt(CfgVal.BLOCK_PER_BLOCK_INTERVAL));
-        while (iter.hasNext())
+                * CreeperConfig.getInt(CfgVal.WAIT_BEFORE_HEAL_BURNT) + 4000000
+                * CreeperConfig.getInt(CfgVal.BLOCK_PER_BLOCK_INTERVAL));
+        map.values().removeIf(list ->
         {
-            ArrayList<CreeperBurntBlock> list = iter.next();
-            Iterator<CreeperBurntBlock> it = list.iterator();
-            while (it.hasNext())
-            {
-                Date date = it.next().getTime();
-                if (date.before(delay))
-                    it.remove();
-                else
-                    break;
-            }
-            if (list.isEmpty())
-                iter.remove();
-        }
+            list.removeIf(dateLoc -> dateLoc.getTime().before(delay));
+            return list.isEmpty();
+        });
     }
 
     /**

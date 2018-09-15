@@ -18,10 +18,9 @@ import org.bukkit.block.BlockState;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Represents an explosion, with the list of blocks destroyed, the time of the
@@ -40,7 +39,7 @@ public class CreeperExplosion
     private int locWeight = 0;
     private double radius = 0;
     private final WorldConfig world;
-    private final HashSet<ShortLocation> checked = new HashSet<ShortLocation>();
+    private final HashSet<ShortLocation> checked = new HashSet<>();
     private ReplacementTimer timer;
 
     /**
@@ -132,17 +131,15 @@ public class CreeperExplosion
     /*
      * Replace all the blocks in the list.
      */
-    protected void replace_blocks(boolean shouldDrop, CHBlockHealReason reason)
+    void replace_blocks(boolean shouldDrop, CHBlockHealReason reason)
     {
-        Iterator<Replaceable> iter = blockList.iterator();
-        while (iter.hasNext())
+        blockList.removeIf(block ->
         {
-            Replaceable block = iter.next();
             CHBlockHealEvent event = new CHBlockHealEvent(block, shouldDrop, reason);
             Bukkit.getPluginManager().callEvent(event);
-            if (!event.isCancelled() && block.replace(event.shouldDrop()))
-                iter.remove();
-        }
+
+            return !event.isCancelled() && block.replace(event.shouldDrop());
+        });
         if (shouldDrop)
         {
             blockList.clear();
@@ -205,18 +202,17 @@ public class CreeperExplosion
     {
         if (!blocks.isEmpty())
         {
-            Iterator<Block> iter = blocks.iterator();
-            while (iter.hasNext())
+            blocks.removeIf(block ->
             {
-                Block b = iter.next();
-                if (CreeperBlock.isDependent(b.getType()))
+                if (CreeperBlock.isDependent(block.getType()))
                 {
-                    record(b);
-                    iter.remove();
+                    record(block);
+                    return true;
                 }
-            }
-            for (Block b : blocks)
-                record(b);
+                return false;
+            });
+
+            blocks.forEach(this::record);
         }
     }
 
@@ -230,7 +226,6 @@ public class CreeperExplosion
         double chance = ((float) CreeperConfig.getInt(CfgVal.OBSIDIAN_CHANCE)) / 100;
         World w = loc.getWorld();
 
-        Random r = new Random(System.currentTimeMillis());
         boolean table = CreeperConfig.getBool(CfgVal.OBSIDIAN_TABLE);
 
         for (int i = loc.getBlockX() - radius; i < loc.getBlockX() + radius; i++)
@@ -242,7 +237,7 @@ public class CreeperExplosion
                     if (l.distance(loc) > radius)
                         continue;
                     Block b = l.getBlock();
-                    if (isObsidianLike(b.getType(), table) && r.nextDouble() < chance)
+                    if (isObsidianLike(b.getType(), table) && ThreadLocalRandom.current().nextDouble() < chance)
                         record(b);
                 }
     }

@@ -17,8 +17,8 @@ import org.bukkit.entity.Painting;
  */
 public abstract class CreeperHanging implements Replaceable
 {
-    protected final Hanging hanging;
-    protected final Location location;
+    final Hanging hanging;
+    final Location location;
 
     /**
      * Constructor. The date is the time the hanging was destroyed, and fire is
@@ -27,7 +27,7 @@ public abstract class CreeperHanging implements Replaceable
      * @param hanging
      *            The hanging destroyed.
      */
-    protected CreeperHanging(Hanging hanging)
+    CreeperHanging(Hanging hanging)
     {
         this.hanging = hanging;
         location = computeLocation();

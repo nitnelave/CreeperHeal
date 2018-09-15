@@ -23,7 +23,7 @@ class CreeperItemFrame extends CreeperHanging
      * @param frame
      *            The item frame represented.
      */
-    protected CreeperItemFrame(ItemFrame frame)
+    CreeperItemFrame(ItemFrame frame)
     {
         super(frame);
         CreeperLog.debug("Registered item frame");

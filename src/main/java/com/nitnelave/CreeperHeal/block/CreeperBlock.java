@@ -25,8 +25,8 @@ import org.bukkit.material.Attachable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Represents a block that can be replaced. Every special type of block derives
@@ -66,12 +66,10 @@ public class CreeperBlock implements Replaceable
     public static final BlockFace[] CARDINALS = { BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST,
                                                  BlockFace.NORTH, BlockFace.UP, BlockFace.DOWN };
 
-    private final static Random random = new Random();
-
     /*
      * The block represented.
      */
-    protected BlockState blockState;
+    BlockState blockState;
 
     /**
      * Create a new CreeperBlock of the right class. Factory method that should
@@ -119,7 +117,7 @@ public class CreeperBlock implements Replaceable
     /*
      * The constructor.
      */
-    protected CreeperBlock(BlockState blockState)
+    CreeperBlock(BlockState blockState)
     {
         this.blockState = blockState;
     }
@@ -128,7 +126,7 @@ public class CreeperBlock implements Replaceable
      * Get whether the block is empty, i.e. if a player can breathe inside it
      * and if it can be replaced by other blocks (snow, water...)
      */
-    protected static boolean isEmpty(Material type)
+    static boolean isEmpty(Material type)
     {
         return EMPTY_BLOCKS.contains(type);
     }
@@ -217,7 +215,8 @@ public class CreeperBlock implements Replaceable
     {
         getLocation().getChunk().load();
         blockState.update(true, false);
-        getWorld().playSound(getLocation(), CreeperConfig.getSound(), CreeperConfig.getInt(CfgVal.SOUND_VOLUME) / 10F, random.nextFloat() * 2);
+        getWorld().playSound(getLocation(), CreeperConfig.getSound(), CreeperConfig.getInt(CfgVal.SOUND_VOLUME) / 10F,
+                ThreadLocalRandom.current().nextFloat() * 2);
     }
 
     /*
@@ -289,7 +288,7 @@ public class CreeperBlock implements Replaceable
         return block.getType().isSolid();
     }
 
-    protected boolean checkForDrop()
+    boolean checkForDrop()
     {
 
         Block block = blockState.getBlock();
@@ -383,7 +382,7 @@ public class CreeperBlock implements Replaceable
      */
     public List<NeighborBlock> getDependentNeighbors()
     {
-        List<NeighborBlock> neighbors = new ArrayList<NeighborBlock>();
+        List<NeighborBlock> neighbors = new ArrayList<>();
         Block block = getBlock();
         for (BlockFace face : CARDINALS)
             neighbors.add(new NeighborBlock(block.getRelative(face), face));

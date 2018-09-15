@@ -9,7 +9,6 @@ import org.bukkit.block.Block;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -24,20 +23,13 @@ public class RailsIndex
     /*
      * Block whose update should be prevented.
      */
-    private static Map<Block, Date> railsIndex;
+    private static final Map<Block, Date> railsIndex;
 
     static
     {
-        railsIndex = new HashMap<CreeperRail, Date>();
+        railsIndex = new HashMap<>();
 
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(CreeperHeal.getInstance(), new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                cleanUp();
-            }
-        }, 500, 7200);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(CreeperHeal.getInstance(), RailsIndex::cleanUp, 500, 7200);
     }
 
     /**
@@ -71,20 +63,11 @@ public class RailsIndex
 
     private static void cleanUp()
     {
-        if (CreeperConfig.getBool(CfgVal.RAIL_REPLACEMENT))
-        {
-            Date delay = new Date(new Date().getTime() - 200
-                    * CreeperConfig.getInt(CfgVal.BLOCK_PER_BLOCK_INTERVAL));
-            Iterator<Date> iter;
-            iter = railsIndex.values().iterator();
-            while (iter.hasNext())
-            {
-                Date date = iter.next();
-                if (date.before(delay))
-                    iter.remove();
-                else
-                    break;
-            }
-        }
+        if (!CreeperConfig.getBool(CfgVal.RAIL_REPLACEMENT))
+            return;
+
+        Date delay = new Date(new Date().getTime() - 200
+                * CreeperConfig.getInt(CfgVal.BLOCK_PER_BLOCK_INTERVAL));
+        railsIndex.values().removeIf(date -> date.before(delay));
     }
 }

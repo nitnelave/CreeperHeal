@@ -88,7 +88,7 @@ public enum WCfgVal implements CfgValEnumMember
         return defaultValue;
     }
 
-    protected CONFIG_FILES getFile()
+    CONFIG_FILES getFile()
     {
         return file;
     }

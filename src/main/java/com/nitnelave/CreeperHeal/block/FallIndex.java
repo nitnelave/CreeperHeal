@@ -27,14 +27,7 @@ public class FallIndex
 
     static
     {
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(CreeperHeal.getInstance(), new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                cleanUp();
-            }
-        }, 400, 7200);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(CreeperHeal.getInstance(), FallIndex::cleanUp, 400, 7200);
     }
 
     /**

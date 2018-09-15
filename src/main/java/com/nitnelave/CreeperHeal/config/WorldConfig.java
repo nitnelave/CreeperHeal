@@ -18,7 +18,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.inventory.InventoryHolder;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,7 +31,7 @@ import java.util.HashSet;
 public class WorldConfig
 {
 
-    private final HashMap<String, ConfigValue<Boolean>> booleans = new HashMap<String, ConfigValue<Boolean>>();
+    private final HashMap<String, ConfigValue<Boolean>> booleans = new HashMap<>();
     private final String name;
     private IntegerConfigValue repairTime, replaceLimit;
     private MaterialListValue replaceBlackList, griefPlaceList, protectList, replaceWhiteList;
@@ -127,7 +126,7 @@ public class WorldConfig
     /**
      * Load the config from the file.
      */
-    protected void load()
+    void load()
     {
         worldFolder.mkdirs();
         if (!configFile.exists())
@@ -144,15 +143,8 @@ public class WorldConfig
             advanced.load(advancedFile);
             grief.load(griefFile);
             replacement.load(replaceFile);
-        } catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-            return;
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-            return;
-        } catch (InvalidConfigurationException e)
+        }
+        catch (IOException | InvalidConfigurationException e)
         {
             e.printStackTrace();
             return;
@@ -168,20 +160,13 @@ public class WorldConfig
         griefPlaceList.load();
 
         if (isRepairTimed())
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(CreeperHeal.getInstance(), new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    checkReplaceTime();
-                }
-            }, 200, 1200);
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(CreeperHeal.getInstance(), this::checkReplaceTime, 200, 1200);
     }
 
     /*
      * Task to check if the explosions should be replaced.
      */
-    protected void checkReplaceTime()
+    private void checkReplaceTime()
     {
         long time = Bukkit.getServer().getWorld(getName()).getTime();
         if (((Math.abs(getRepairTime() - time) < 600) || (Math.abs(Math.abs(getRepairTime()
@@ -195,7 +180,7 @@ public class WorldConfig
     /**
      * Write the world's settings to the corresponding file.
      */
-    protected void save()
+    void save()
     {
         for (ConfigValue<Boolean> v : booleans.values())
             v.write();
@@ -291,7 +276,7 @@ public class WorldConfig
      */
     public boolean isProtected(Block block)
     {
-        return protectList.getValue().contains(block.getType().name())
+        return protectList.getValue().contains(block.getType())
                || (block.getState() instanceof InventoryHolder
                    && CreeperConfig.getBool(CfgVal.REPLACE_PROTECTED_CHESTS) && PluginHandler
                                .isProtected(block));
@@ -330,7 +315,7 @@ public class WorldConfig
      */
     public boolean isGriefBlackListed(Block block)
     {
-        return griefPlaceList.getValue().contains(block.getType().name());
+        return griefPlaceList.getValue().contains(block.getType());
     }
 
     /**
@@ -386,7 +371,7 @@ public class WorldConfig
         }
     }
 
-    protected void setList(WCfgVal val, HashSet<Material> value)
+    void setList(WCfgVal val, HashSet<Material> value)
     {
         switch (val)
         {
@@ -412,7 +397,7 @@ public class WorldConfig
      *
      * @return The time at which repairs are enforced, -1 if deactivated.
      */
-    public int getRepairTime()
+    private int getRepairTime()
     {
         return repairTime.getValue();
     }
@@ -428,9 +413,9 @@ public class WorldConfig
     public boolean isBlackListed(Material material)
     {
         if (getBool(WCfgVal.USE_REPLACE_WHITE_LIST))
-            return !replaceWhiteList.getValue().contains(material.name());
+            return !replaceWhiteList.getValue().contains(material);
         else
-            return replaceBlackList.getValue().contains(material.name());
+            return replaceBlackList.getValue().contains(material);
     }
 
     public void getReplacement(BlockState state)

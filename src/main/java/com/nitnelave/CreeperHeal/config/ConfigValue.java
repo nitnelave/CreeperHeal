@@ -8,12 +8,12 @@ abstract class ConfigValue<T>
 {
 
     private final String key;
-    protected T value;
+    T value;
     private final T defaultValue;
-    protected final YamlConfiguration config;
+    final YamlConfiguration config;
     protected final Logger log = Logger.getLogger("Minecraft");
 
-    protected ConfigValue(T value, YamlConfiguration config, String key)
+    ConfigValue(T value, YamlConfiguration config, String key)
     {
         defaultValue = value;
         this.config = config;
@@ -21,29 +21,29 @@ abstract class ConfigValue<T>
         this.value = value;
     }
 
-    protected T getValue()
+    T getValue()
     {
         return value;
     }
 
-    protected void setValue(T value)
+    void setValue(T value)
     {
         this.value = value;
     }
 
-    protected T getDefaultValue()
+    T getDefaultValue()
     {
         return defaultValue;
     }
 
-    protected String getKey()
+    String getKey()
     {
         return key;
     }
 
     protected abstract void load();
 
-    protected void write()
+    void write()
     {
         config.set(key, value);
     }

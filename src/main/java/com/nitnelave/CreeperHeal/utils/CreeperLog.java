@@ -27,7 +27,7 @@ public abstract class CreeperLog
     /*
      * Log file, for outputting warnings to a file.
      */
-    private static File logFile;
+    private static final File logFile;
     /*
      * Logger, for outputting to the console.
      */
@@ -40,7 +40,7 @@ public abstract class CreeperLog
     /*
      * Whether to output debug messages.
      */
-    private static boolean debug = false;
+    private static boolean debug;
 
     static
     {

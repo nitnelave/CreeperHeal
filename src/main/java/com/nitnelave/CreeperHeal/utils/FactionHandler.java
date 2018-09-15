@@ -73,7 +73,7 @@ public abstract class FactionHandler
      */
     public static boolean shouldIgnore(Block block, WorldConfig world)
     {
-        ArrayList<Block> l = new ArrayList<Block>();
+        ArrayList<Block> l = new ArrayList<>();
         l.add(block);
         return shouldIgnore(l, world);
     }

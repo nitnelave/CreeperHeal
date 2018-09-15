@@ -2,6 +2,7 @@ package com.nitnelave.CreeperHeal.block;
 
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
+import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -22,35 +23,26 @@ public abstract class CreeperMultiblock extends CreeperBlock
     CreeperMultiblock(BlockState blockState)
     {
         super(blockState);
-        this.dependents = new HashSet<BlockState>();
+        this.dependents = new HashSet<>();
     }
 
     @Override
     public void update()
     {
+        dependents.stream().map(BlockState::getChunk).distinct().forEach(Chunk::load);
         super.update();
-        for (BlockState dependent : dependents)
-        {
-            dependent.getChunk().load();
-            dependent.update(true, false);
-        }
+        dependents.forEach(state -> state.update(true, false));
     }
 
     @Override
     protected boolean checkForDrop()
     {
         if (checkForDropHelper(getBlock()))
-        {
             return true;
-        }
 
         for (BlockState dependent : dependents)
-        {
             if (checkForDropHelper(dependent.getBlock()))
-            {
                 return true;
-            }
-        }
 
         return false;
 
@@ -81,9 +73,7 @@ public abstract class CreeperMultiblock extends CreeperBlock
     public void remove() {
         this.blockState.getBlock().setType(Material.AIR, false);
         for (BlockState dependent : dependents)
-        {
             dependent.getBlock().setType(Material.AIR, false);
-        }
     }
 
 }

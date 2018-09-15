@@ -40,8 +40,7 @@ public class Point
         if (o instanceof Point)
         {
             Point p = (Point) o;
-            if (p.x == x && p.y == y)
-                return true;
+            return p.x == x && p.y == y;
         }
         return false;
     }

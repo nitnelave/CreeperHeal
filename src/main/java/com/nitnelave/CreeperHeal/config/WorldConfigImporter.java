@@ -113,7 +113,7 @@ abstract class WorldConfigImporter
 
     private static HashSet<Material> loadList(YamlConfiguration config, String key)
     {
-        HashSet<BlockId> set = new HashSet<BlockId>();
+        HashSet<Material> set = new HashSet<>();
         String tmp_str1 = config.getString(key, "").trim();
         String[] split = tmp_str1.split(",");
         for (String elem : split)
@@ -125,7 +125,7 @@ abstract class WorldConfigImporter
         return set;
     }
 
-    protected static WorldConfig importFrom(String name, int version)
+    static WorldConfig importFrom(String name, int version)
     {
         WorldConfig w = new WorldConfig(name);
         CreeperLog.logInfo("Importing settings for world : " + name, 1);
@@ -153,8 +153,7 @@ abstract class WorldConfigImporter
             config.load(configFile);
             advanced.load(advancedFile);
             grief.load(griefFile);
-        } catch (IOException ignored)
-        {} catch (InvalidConfigurationException ignored)
+        } catch (IOException | InvalidConfigurationException ignored)
         {}
         try
         {
@@ -170,7 +169,7 @@ abstract class WorldConfigImporter
     private static boolean getStringBoolean(String path, String defaultValue,
                                             YamlConfiguration configFile)
     {
-        String result = "";
+        String result;
         try
         {
             result = configFile.getString(path, defaultValue).trim().toLowerCase();

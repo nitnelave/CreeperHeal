@@ -19,7 +19,7 @@ import java.util.Collections;
 public class CreeperArmorStand implements Replaceable
 {
     private final ArmorStand stand;
-    private ArrayList<ItemStack> contents = new ArrayList<ItemStack>();
+    private final ArrayList<ItemStack> contents = new ArrayList<>();
     private boolean wasRemoved = false;
 
     public CreeperArmorStand(ArmorStand stand)

@@ -190,7 +190,7 @@ class ConfigUpdater
         advancedFile.delete();
     }
 
-    protected static void importFrom(int version)
+    static void importFrom(int version)
     {
         try
         {
