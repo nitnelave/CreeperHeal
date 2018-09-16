@@ -89,11 +89,12 @@ class MaterialListValue extends ConfigValue<HashSet<Material>>
             return null;
         }
 
-        for (int index = Material.LEGACY_AIR.ordinal(); index < Material.values().length; ++index)
+        for (Material legacy : Material.values())
         {
-            material = Material.values()[index];
-            if (material.getId() == id)
-                return material.getNewData(data).getItemType();
+            if (!legacy.name().startsWith("LEAGACY_"))
+                continue;
+            if (legacy.getId() == id)
+                return legacy.getNewData(data).getItemType();
         }
 
         return null;
