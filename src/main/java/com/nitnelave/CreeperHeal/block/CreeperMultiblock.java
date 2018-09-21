@@ -31,7 +31,6 @@ public abstract class CreeperMultiblock extends CreeperBlock
         super.update();
         for (BlockState dependent : dependents)
         {
-            dependent.getChunk().load();
             dependent.update(true, false);
         }
     }

@@ -27,19 +27,21 @@ class CreeperContainer extends CreeperMultiblock
 
         Inventory inv = ((InventoryHolder) blockState).getInventory();
         storedInventory = inv.getContents();
-        if (!(inv instanceof DoubleChestInventory))
-            return;
 
-        DoubleChestInventory doubleChest = ((DoubleChestInventory) inv);
+        if ((inv instanceof DoubleChestInventory))
+        {
 
-        BlockState right = doubleChest.getRightSide().getLocation().getBlock().getState();
+            DoubleChestInventory doubleChest = ((DoubleChestInventory) inv);
 
-        // Left side is primary chest inventory
-        this.blockState = doubleChest.getLeftSide().getLocation().getBlock().getState();
-        this.dependents.add(right);
+            BlockState right = doubleChest.getRightSide().getLocation().getBlock().getState();
 
-        this.storedInventory = doubleChest.getLeftSide().getContents();
-        this.neighborInventory = doubleChest.getRightSide().getContents();
+            // Left side is primary chest inventory
+            this.blockState = doubleChest.getLeftSide().getLocation().getBlock().getState();
+            this.dependents.add(right);
+
+            this.storedInventory = doubleChest.getLeftSide().getContents();
+            this.neighborInventory = doubleChest.getRightSide().getContents();
+        }
 
     }
 
