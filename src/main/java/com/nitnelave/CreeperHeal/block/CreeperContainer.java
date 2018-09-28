@@ -76,7 +76,8 @@ class CreeperContainer extends CreeperMultiblock
         return super.drop(forced);
     }
 
-    private ItemStack[] getTotalInventory() {
+    private ItemStack[] getTotalInventory()
+    {
         if (neighborInventory == null)
             return storedInventory;
 
@@ -84,7 +85,8 @@ class CreeperContainer extends CreeperMultiblock
     }
 
     @Override
-    public void update() {
+    public void update()
+    {
         super.update();
 
         if (CreeperConfig.getWorld(getWorld()).getBool(WCfgVal.DROP_CHEST_CONTENTS))
