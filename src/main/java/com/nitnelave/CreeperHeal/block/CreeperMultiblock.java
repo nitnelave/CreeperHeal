@@ -32,26 +32,18 @@ public abstract class CreeperMultiblock extends CreeperBlock
     {
         super.update();
         for (BlockState dependent : dependents)
-        {
             dependent.update(true, false);
-        }
     }
 
     @Override
     protected boolean checkForDrop()
     {
         if (checkForDropHelper(getBlock()))
-        {
             return true;
-        }
 
         for (BlockState dependent : dependents)
-        {
             if (checkForDropHelper(dependent.getBlock()))
-            {
                 return true;
-            }
-        }
 
         return false;
 
