@@ -306,8 +306,11 @@ public class CreeperExplosion
      */
     public void recordEntity(Replaceable replaceable)
     {
-        blockList.add(replaceable);
-        replaceable.remove();
+        if (replaceable != null)
+        {
+            blockList.add(replaceable);
+            replaceable.remove();
+        }
     }
 
     /**
