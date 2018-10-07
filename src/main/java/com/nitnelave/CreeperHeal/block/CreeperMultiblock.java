@@ -2,10 +2,12 @@ package com.nitnelave.CreeperHeal.block;
 
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
+import com.nitnelave.CreeperHeal.utils.ShortLocation;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -77,12 +79,18 @@ public abstract class CreeperMultiblock extends CreeperBlock
     }
 
     @Override
-    public void remove() {
+    public void remove()
+    {
         this.blockState.getBlock().setType(Material.AIR, false);
         for (BlockState dependent : dependents)
-        {
             dependent.getBlock().setType(Material.AIR, false);
-        }
     }
 
+    @Override
+    void record(Collection<ShortLocation> checked)
+    {
+        super.record(checked);
+        for (BlockState dependent : dependents)
+            checked.add(new ShortLocation(dependent.getLocation()));
+    }
 }

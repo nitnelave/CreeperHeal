@@ -217,7 +217,7 @@ public class ExplodedBlockManager
         cEx.addBlocks(processList, location);
 
         for (Replaceable h : brokenEntityList)
-            cEx.record(h);
+            cEx.recordEntity(h);
         brokenEntityList.clear();
 
         /*

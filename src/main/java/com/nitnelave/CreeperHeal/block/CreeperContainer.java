@@ -55,6 +55,7 @@ class CreeperContainer extends CreeperMultiblock
             for (ItemStack itemStack : ((InventoryHolder) blockState).getInventory().getContents())
                 if (itemStack != null)
                     world.dropItemNaturally(location, itemStack);
+            ((InventoryHolder) blockState).getInventory().clear();
         }
 
         ((InventoryHolder) blockState).getInventory().clear();

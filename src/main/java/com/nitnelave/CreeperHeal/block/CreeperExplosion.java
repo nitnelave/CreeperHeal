@@ -13,7 +13,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 
 import java.util.*;
 
@@ -205,12 +204,12 @@ public class CreeperExplosion
                 Block b = iter.next();
                 if (CreeperBlock.isDependent(b.getType()))
                 {
-                    record(b);
+                    recordBlock(b);
                     iter.remove();
                 }
             }
             for (Block b : blocks)
-                record(b);
+                recordBlock(b);
         }
     }
 
@@ -237,7 +236,7 @@ public class CreeperExplosion
                         continue;
                     Block b = l.getBlock();
                     if (isObsidianLike(b.getType(), table) && r.nextDouble() < chance)
-                        record(b);
+                        recordBlock(b);
                 }
     }
 
@@ -254,59 +253,28 @@ public class CreeperExplosion
      * @param block
      *            The block to record.
      */
-    public void record(Block block)
+    public void recordBlock(Block block)
     {
         if (block.getType() == Material.PORTAL || checked.contains(new ShortLocation(block)))
             return;
 
-        CreeperBlock cBlock = CreeperBlock.newBlock(block.getState());
+        CreeperBlock creeperBlock = CreeperBlock.newBlock(block.getState());
 
-        if (cBlock == null)
+        if (creeperBlock == null || creeperBlock.getType() == Material.PORTAL)
             return;
 
-        record(cBlock);
-    }
-
-    /**
-     * Add a Replaceable to the list, and remove it from the world.
-     *
-     * @param replaceable
-     *            The Replaceable to add.
-     */
-    public void record(Replaceable replaceable)
-    {
-        if (replaceable == null || replaceable.getType() == Material.PORTAL)
-            return;
-
-        ShortLocation location = new ShortLocation(replaceable.getLocation());
+        ShortLocation location = new ShortLocation(creeperBlock.getLocation());
 
         if (checked.contains(location))
             return;
 
-        checked.add(location);
+        creeperBlock.record(checked);
 
-        if (replaceable instanceof CreeperMultiblock)
-        {
-            for (BlockState dependent : ((CreeperMultiblock) replaceable).dependents)
-            {
-                checked.add(new ShortLocation(dependent.getLocation()));
-            }
-        }
-
-        if (!(replaceable instanceof CreeperBlock))
-        {
-            blockList.add(replaceable);
-            replaceable.remove();
-            return;
-        }
-
-        CreeperBlock creeperBlock = (CreeperBlock) replaceable;
-
-        if ((CreeperConfig.getBool(CfgVal.PREVENT_CHAIN_REACTION) && replaceable.getType().equals(Material.TNT))
-                || world.isProtected(replaceable.getBlock()))
+        if ((CreeperConfig.getBool(CfgVal.PREVENT_CHAIN_REACTION) && creeperBlock.getType().equals(Material.TNT))
+                || world.isProtected(creeperBlock.getBlock()))
         {
             ToReplaceList.addToReplace(creeperBlock);
-            replaceable.remove();
+            creeperBlock.remove();
             return;
         }
 
@@ -317,17 +285,29 @@ public class CreeperExplosion
 
             for (NeighborBlock neighborBlock : creeperBlock.getDependentNeighbors())
                 if (neighborBlock.isNeighbor())
-                    record(neighborBlock.getBlock());
+                    recordBlock(neighborBlock.getBlock());
 
-            blockList.add(replaceable);
-            replaceable.remove();
+            blockList.add(creeperBlock);
+            creeperBlock.remove();
         }
         else if (CreeperConfig.getBool(CfgVal.DROP_DESTROYED_BLOCKS))
         {
-            replaceable.drop(false);
-            replaceable.remove();
+            creeperBlock.drop(false);
+            creeperBlock.remove();
 
         }
+    }
+
+    /**
+     * Add a Replaceable to the list, and remove it from the world.
+     *
+     * @param replaceable
+     *            The Replaceable to add.
+     */
+    public void recordEntity(Replaceable replaceable)
+    {
+        blockList.add(replaceable);
+        replaceable.remove();
     }
 
     /**
