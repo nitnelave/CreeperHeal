@@ -92,13 +92,6 @@ class CreeperContainer extends CreeperMultiblock
         if (CreeperConfig.getWorld(getWorld()).getBool(WCfgVal.DROP_CHEST_CONTENTS))
             return;
 
-        Inventory inv = ((InventoryHolder) blockState).getInventory();
-        if (!(inv instanceof DoubleChestInventory))
-        {
-            inv.setContents(this.storedInventory);
-            return;
-        }
-
         // Hacky 1.11 workaround - stored BlockState does not properly update primary inventory.
         BlockState newState = blockState.getBlock().getState();
         if (newState instanceof InventoryHolder)
@@ -108,6 +101,12 @@ class CreeperContainer extends CreeperMultiblock
                 ((DoubleChestInventory) newInv).getLeftSide().setContents(storedInventory);
             else
                 newInv.setContents(storedInventory);
+        }
+
+        Inventory inv = ((InventoryHolder) blockState).getInventory();
+        if (!(inv instanceof DoubleChestInventory))
+        {
+            return;
         }
 
         // Setting secondary half is not problematic.
