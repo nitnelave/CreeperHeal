@@ -24,6 +24,7 @@ class CreeperPiston extends CreeperBlock
      */
     CreeperPiston(BlockState blockState)
     {
+        super(blockState);
         Block block = blockState.getBlock();
         if (blockState.getType().equals(Material.PISTON_EXTENSION))
             block = block.getRelative(castData(blockState, PistonExtensionMaterial.class).getAttachedFace());

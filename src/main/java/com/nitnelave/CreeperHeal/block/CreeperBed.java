@@ -28,6 +28,7 @@ class CreeperBed extends CreeperBlock
      */
     CreeperBed(BlockState blockState)
     {
+        super(blockState);
         Bed bedData = castData(blockState, Bed.class);
         orientation = bedData.getFacing();
         Block block = blockState.getBlock();

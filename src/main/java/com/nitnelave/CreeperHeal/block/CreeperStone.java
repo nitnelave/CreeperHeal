@@ -6,10 +6,10 @@ import org.bukkit.block.BlockState;
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 
-public class CreeperStone extends CreeperBlock
+class CreeperStone extends CreeperBlock
 {
 
-    protected CreeperStone(BlockState blockState)
+    CreeperStone(BlockState blockState)
     {
         super(blockState);
 

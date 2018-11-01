@@ -193,9 +193,11 @@ public class ExplodedBlockManager
         for(Block b : event.getProtectedBlocks())
         {
             CreeperBlock cb = CreeperBlock.newBlock(b.getState());
-            assert cb != null;
-            ToReplaceList.addToReplace(cb);
-            cb.remove();
+            if (cb != null)
+            {
+                ToReplaceList.addToReplace(cb);
+                cb.remove();
+            }
         }
 
         CreeperExplosion cEx = null;
@@ -215,7 +217,7 @@ public class ExplodedBlockManager
         cEx.addBlocks(processList, location);
 
         for (Replaceable h : brokenEntityList)
-            cEx.record(h);
+            cEx.recordEntity(h);
         brokenEntityList.clear();
 
         /*

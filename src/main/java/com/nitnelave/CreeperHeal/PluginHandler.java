@@ -21,8 +21,6 @@ public class PluginHandler
     private static MobArenaHandler maHandler = null;
     private static LWC lwc = null;
 
-    private static final boolean spout;
-
     static
     {
         Plugin lwcp = detectPlugin("LWC");
@@ -32,7 +30,6 @@ public class PluginHandler
         if (detectPlugin("MobArena") != null)
             maHandler = new MobArenaHandler();
 
-        spout = detectPlugin("Spout") != null;
     }
 
     /*
@@ -68,10 +65,7 @@ public class PluginHandler
      */
     public static boolean isInArena(Location location)
     {
-        if (maHandler != null)
-            if (maHandler.inRegion(location))
-                return true; //Explosion inside a mob arena
-        return false;
+        return maHandler != null && maHandler.inRegion(location);
     }
 
     /**
@@ -82,11 +76,6 @@ public class PluginHandler
     public static boolean isFactionsEnabled()
     {
         return detectPlugin("Factions") != null;
-    }
-
-    public static boolean isSpoutEnabled()
-    {
-        return spout;
     }
 
 }

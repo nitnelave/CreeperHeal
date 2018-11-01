@@ -147,8 +147,6 @@ public class CreeperExplosion
 
     /**
      * Replace the first block of the list.
-     * 
-     * @return False if the list is now empty.
      */
     private void replace_one_block()
     {
@@ -206,12 +204,12 @@ public class CreeperExplosion
                 Block b = iter.next();
                 if (CreeperBlock.isDependent(b.getType()))
                 {
-                    record(b);
+                    recordBlock(b);
                     iter.remove();
                 }
             }
             for (Block b : blocks)
-                record(b);
+                recordBlock(b);
         }
     }
 
@@ -238,7 +236,7 @@ public class CreeperExplosion
                         continue;
                     Block b = l.getBlock();
                     if (isObsidianLike(b.getType(), table) && r.nextDouble() < chance)
-                        record(b);
+                        recordBlock(b);
                 }
     }
 
@@ -255,59 +253,63 @@ public class CreeperExplosion
      * @param block
      *            The block to record.
      */
-    public void record(Block block)
+    public void recordBlock(Block block)
     {
-    	if (block.getType() == Material.PORTAL)
-    		return;
-    	
-        CreeperBlock cBlock = CreeperBlock.newBlock(block.getState());
-
-        if (cBlock == null || checked.contains(new ShortLocation(block)))
+        if (block.getType() == Material.PORTAL || checked.contains(new ShortLocation(block)))
             return;
 
-        checked.add(new ShortLocation(block));
+        CreeperBlock creeperBlock = CreeperBlock.newBlock(block.getState());
 
-        if ((CreeperConfig.getBool(CfgVal.PREVENT_CHAIN_REACTION) && block.getType().equals(Material.TNT))
-            || world.isProtected(block))
+        if (creeperBlock == null || creeperBlock.getType() == Material.PORTAL)
+            return;
+
+        ShortLocation location = new ShortLocation(creeperBlock.getLocation());
+
+        if (checked.contains(location))
+            return;
+
+        creeperBlock.record(checked);
+
+        if ((CreeperConfig.getBool(CfgVal.PREVENT_CHAIN_REACTION) && creeperBlock.getType().equals(Material.TNT))
+                || world.isProtected(creeperBlock.getBlock()))
         {
-            ToReplaceList.addToReplace(cBlock);
-            cBlock.remove();
+            ToReplaceList.addToReplace(creeperBlock);
+            creeperBlock.remove();
             return;
         }
 
-        BlockId id = new BlockId(block);
+        BlockId id = new BlockId(creeperBlock.getBlock());
         if (!world.isBlackListed(id))
         {
             // The block should be replaced.
 
-            for (NeighborBlock b : cBlock.getDependentNeighbors())
-                if (b.isNeighbor())
-                    record(b.getBlock());
+            for (NeighborBlock neighborBlock : creeperBlock.getDependentNeighbors())
+                if (neighborBlock.isNeighbor())
+                    recordBlock(neighborBlock.getBlock());
 
-            blockList.add(cBlock);
-            cBlock.remove();
+            blockList.add(creeperBlock);
+            creeperBlock.remove();
         }
         else if (CreeperConfig.getBool(CfgVal.DROP_DESTROYED_BLOCKS))
         {
-            cBlock.drop(false);
-            cBlock.remove();
+            creeperBlock.drop(false);
+            creeperBlock.remove();
 
         }
-
     }
 
     /**
      * Add a Replaceable to the list, and remove it from the world.
-     * 
-     * @param block
+     *
+     * @param replaceable
      *            The Replaceable to add.
      */
-    public void record(Replaceable block)
+    public void recordEntity(Replaceable replaceable)
     {
-        if (block != null)
+        if (replaceable != null)
         {
-            blockList.add(block);
-            block.remove();
+            blockList.add(replaceable);
+            replaceable.remove();
         }
     }
 

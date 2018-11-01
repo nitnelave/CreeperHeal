@@ -2,8 +2,8 @@ package com.nitnelave.CreeperHeal.block;
 
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
-import com.nitnelave.CreeperHeal.utils.CreeperLog;
 import com.nitnelave.CreeperHeal.utils.CreeperUtils;
+import com.nitnelave.CreeperHeal.utils.ShortLocation;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -85,10 +85,8 @@ public class CreeperBlock implements Replaceable
     public static CreeperBlock newBlock(BlockState state)
     {
         CreeperConfig.getWorld(state.getWorld()).getReplacement(state);
-        //if (PluginHandler.isSpoutEnabled () && SpoutBlock.isCustomBlock (blockState))
-        //    return new SpoutBlock (blockState);
         if (state instanceof InventoryHolder)
-            return new CreeperChest(state);
+            return new CreeperContainer(state);
         if (state.getType().hasGravity())
             return new CreeperPhysicsBlock(state);
         switch (state.getType())
@@ -96,7 +94,7 @@ public class CreeperBlock implements Replaceable
         case BED_BLOCK:
             return new CreeperBed(state);
         case DOUBLE_PLANT:
-        	return new CreeperFlower(state);
+            return new CreeperFlower(state);
         case RAILS:
         case POWERED_RAIL:
         case DETECTOR_RAIL:
@@ -156,14 +154,11 @@ public class CreeperBlock implements Replaceable
         this.blockState = blockState;
     }
 
-    protected CreeperBlock()
-    {}
-
     /*
      * Get whether the block is empty, i.e. if a player can breathe inside it
      * and if it can be replaced by other blocks (snow, water...)
      */
-    private static boolean isEmpty(Material type)
+    protected static boolean isEmpty(Material type)
     {
         return EMPTY_BLOCKS.contains(type);
     }
@@ -243,7 +238,6 @@ public class CreeperBlock implements Replaceable
      */
     public void update()
     {
-        getLocation().getChunk().load();
         blockState.update(true, false);
         getWorld().playSound(getLocation(), CreeperConfig.getSound(), CreeperConfig.getInt(CfgVal.SOUND_VOLUME) / 10F, random.nextFloat() * 2);
     }
@@ -257,16 +251,6 @@ public class CreeperBlock implements Replaceable
     public Material getType()
     {
         return blockState.getType();
-    }
-
-    /**
-     * Get the block's raw data.
-     *
-     * @return The block's raw data.
-     */
-    public byte getRawData()
-    {
-        return blockState.getRawData();
     }
 
     /**
@@ -302,7 +286,7 @@ public class CreeperBlock implements Replaceable
     @Override
     public final boolean replace(boolean shouldDrop)
     {
-        if (checkForDrop(getBlock()))
+        if (checkForDrop())
             return true;
 
         if (!shouldDrop && isDependent(getType())
@@ -327,8 +311,10 @@ public class CreeperBlock implements Replaceable
         return block.getType().isSolid();
     }
 
-    protected boolean checkForDrop(Block block)
+    protected boolean checkForDrop()
     {
+
+        Block block = blockState.getBlock();
         Material type = block.getType();
 
         if (!CreeperConfig.getBool(CfgVal.OVERWRITE_BLOCKS) && !isEmpty(type))
@@ -341,7 +327,7 @@ public class CreeperBlock implements Replaceable
         {
             CreeperBlock b = CreeperBlock.newBlock(block.getState());
             if (b == null)
-                throw new IllegalArgumentException("Null block for: " + block.getState().getType().toString());
+                throw new IllegalArgumentException("Null block for: " + block.getType().toString());
             b.drop(true);
             b.remove();
         }
@@ -425,6 +411,11 @@ public class CreeperBlock implements Replaceable
         for (BlockFace face : CARDINALS)
             neighbors.add(new NeighborBlock(block.getRelative(face), face));
         return neighbors;
+    }
+
+    void record(Collection<ShortLocation> checked)
+    {
+        checked.add(new ShortLocation(getLocation()));
     }
 
     protected <T extends MaterialData> T castData(BlockState b, Class<T> c)

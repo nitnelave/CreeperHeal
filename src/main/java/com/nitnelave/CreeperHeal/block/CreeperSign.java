@@ -14,7 +14,7 @@ class CreeperSign extends CreeperBlock
     /*
      * Constructor.
      */
-    protected CreeperSign(Sign sign)
+    CreeperSign(Sign sign)
     {
         super(sign);
     }
