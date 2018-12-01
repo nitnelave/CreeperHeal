@@ -36,8 +36,7 @@ public class CreeperArmorStand implements Replaceable
     @Override
     public boolean replace(boolean shouldDrop)
     {
-        ArmorStand s = getWorld()
-                .spawn(getLocation().getBlock().getRelative(BlockFace.DOWN).getLocation(), ArmorStand.class);
+        ArmorStand s = getWorld().spawn(getLocation(), ArmorStand.class);
         s.setArms(stand.hasArms());
         s.setBasePlate(stand.hasBasePlate());
         s.setBodyPose(stand.getBodyPose());
