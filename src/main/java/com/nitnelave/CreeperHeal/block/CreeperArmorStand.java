@@ -10,8 +10,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 
 /**
  * Represents an ArmorStand
@@ -19,40 +18,46 @@ import java.util.Collections;
 public class CreeperArmorStand implements Replaceable
 {
     private final ArmorStand stand;
-    private final ArrayList<ItemStack> contents = new ArrayList<>();
+    private final ItemStack[] contents;
     private boolean wasRemoved = false;
 
     public CreeperArmorStand(ArmorStand stand)
     {
         this.stand = stand;
-        Collections.addAll(contents,
-                           stand.getBoots(), stand.getChestplate(), stand.getHelmet(), stand.getItemInHand(),
-                           stand.getLeggings());
-        CreeperLog.debug("Armor: " + contents);
+        this.contents = new ItemStack[]
+                {
+                        stand.getHelmet(), stand.getChestplate(), stand.getLeggings(), stand.getBoots(),
+                        stand.getItemInHand()
+                };
+        CreeperLog.debug("Armor: " + Arrays.toString(contents));
         remove();
     }
 
     @Override
     public boolean replace(boolean shouldDrop)
     {
-        ArmorStand s = getWorld()
-                .spawn(getLocation().getBlock().getRelative(BlockFace.DOWN).getLocation(), ArmorStand.class);
+        ArmorStand s = getWorld().spawn(getLocation(), ArmorStand.class);
         s.setArms(stand.hasArms());
         s.setBasePlate(stand.hasBasePlate());
         s.setBodyPose(stand.getBodyPose());
-        s.setBoots(stand.getBoots());
-        s.setChestplate(stand.getChestplate());
+        s.setCustomName(stand.getCustomName());
+        s.setCustomNameVisible(stand.isCustomNameVisible());
+        s.setGlowing(stand.isGlowing());
+        s.setGravity(stand.hasGravity());
         s.setHeadPose(stand.getHeadPose());
-        s.setHelmet(stand.getHelmet());
-        s.setItemInHand(stand.getItemInHand());
         s.setLeftArmPose(stand.getLeftArmPose());
         s.setRightArmPose(stand.getRightArmPose());
         s.setLeftLegPose(stand.getLeftLegPose());
         s.setRightLegPose(stand.getRightLegPose());
-        s.setLeggings(stand.getLeggings());
         s.setMarker(stand.isMarker());
         s.setSmall(stand.isSmall());
         s.setVisible(stand.isVisible());
+
+        s.setHelmet(contents[0]);
+        s.setChestplate(contents[1]);
+        s.setLeggings(contents[2]);
+        s.setBoots(contents[3]);
+        s.setItemInHand(contents[4]);
 
         s.teleport(stand.getLocation());
         return true;
@@ -100,9 +105,9 @@ public class CreeperArmorStand implements Replaceable
         if (forced || CreeperConfig.shouldDrop())
         {
             getWorld().dropItemNaturally(getLocation(), new ItemStack(Material.ARMOR_STAND, 1));
-            for (ItemStack s : contents)
-                if (s.getType() != Material.AIR)
-                    getWorld().dropItemNaturally(getLocation(), s);
+            for (ItemStack itemStack : contents)
+                if (itemStack != null && itemStack.getType() != Material.AIR)
+                    getWorld().dropItemNaturally(getLocation(), itemStack);
             return true;
         }
         return false;
