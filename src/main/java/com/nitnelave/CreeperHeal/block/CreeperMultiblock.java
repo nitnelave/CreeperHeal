@@ -38,18 +38,18 @@ public abstract class CreeperMultiblock extends CreeperBlock
     @Override
     protected boolean checkForDrop()
     {
-        if (checkForDropHelper(getBlock()))
+        if (checkForDependentDrop(getBlock()))
             return true;
 
         for (BlockState dependent : dependents)
-            if (checkForDropHelper(dependent.getBlock()))
+            if (checkForDependentDrop(dependent.getBlock()))
                 return true;
 
         return false;
 
     }
 
-    private boolean checkForDropHelper(Block block)
+    private boolean checkForDependentDrop(Block block)
     {
         Material type = block.getType();
 
