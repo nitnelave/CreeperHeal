@@ -8,6 +8,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
@@ -18,17 +19,19 @@ import java.util.Arrays;
 public class CreeperArmorStand implements Replaceable
 {
     private final ArmorStand stand;
+    private final ItemStack mainHand, offHand;
     private final ItemStack[] contents;
     private boolean wasRemoved = false;
 
-    public CreeperArmorStand(ArmorStand stand)
+    CreeperArmorStand(ArmorStand stand)
     {
         this.stand = stand;
-        this.contents = new ItemStack[]
-                {
-                        stand.getHelmet(), stand.getChestplate(), stand.getLeggings(), stand.getBoots(),
-                        stand.getItemInHand()
-                };
+        EntityEquipment equipment = stand.getEquipment();
+        this.mainHand = equipment.getItemInMainHand();
+        this.offHand = equipment.getItemInOffHand();
+
+        this.contents = new ItemStack[equipment.getArmorContents().length];
+        System.arraycopy(equipment.getArmorContents(), 0, contents, 0, contents.length);
         CreeperLog.debug("Armor: " + Arrays.toString(contents));
         remove();
     }
@@ -53,11 +56,10 @@ public class CreeperArmorStand implements Replaceable
         s.setSmall(stand.isSmall());
         s.setVisible(stand.isVisible());
 
-        s.setHelmet(contents[0]);
-        s.setChestplate(contents[1]);
-        s.setLeggings(contents[2]);
-        s.setBoots(contents[3]);
-        s.setItemInHand(contents[4]);
+        EntityEquipment equipment = s.getEquipment();
+        equipment.setArmorContents(contents);
+        equipment.setItemInMainHand(this.mainHand);
+        equipment.setItemInOffHand(this.offHand);
 
         s.teleport(stand.getLocation());
         return true;
@@ -119,13 +121,7 @@ public class CreeperArmorStand implements Replaceable
         if (!wasRemoved)
         {
             wasRemoved = true;
-            ItemStack air = new ItemStack(Material.AIR);
-            stand.setChestplate(air);
-            stand.setHelmet(air);
-            stand.setLeggings(air);
-            stand.setBoots(air);
-            stand.setItemInHand(air);
-
+            stand.getEquipment().clear();
             CreeperLog.debug("Removing armor, chestplate = " + stand.getChestplate().getType());
             stand.remove();
         }
