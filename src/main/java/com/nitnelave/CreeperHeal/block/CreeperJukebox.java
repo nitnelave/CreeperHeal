@@ -29,6 +29,9 @@ public class CreeperJukebox extends CreeperBlock
     }
 
     /*
+     * In Minecraft 1.13, discs inserted into jukeboxes preserve item meta. Craftbukkit does not properly handle this.
+     * The only way to "prevent" the disc dropping is to remove it immediately after it spawns.
+     *
      * @see com.nitnelave.CreeperHeal.block.Replaceable#remove()
      */
     @Override

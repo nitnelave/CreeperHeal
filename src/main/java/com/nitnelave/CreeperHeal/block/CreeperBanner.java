@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.BannerMeta;
 /**
  * Banner implementation of CreeperBlock.
  *
+ * @author drexplosionpd
  * @author Jikoo
  */
 public class CreeperBanner extends CreeperBlock
@@ -17,7 +18,7 @@ public class CreeperBanner extends CreeperBlock
     /*
      * Constructor.
      */
-    protected CreeperBanner(Banner banner)
+    CreeperBanner(Banner banner)
     {
         super(banner);
     }

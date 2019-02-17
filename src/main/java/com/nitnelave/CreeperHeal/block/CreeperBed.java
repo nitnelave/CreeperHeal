@@ -10,6 +10,7 @@ import java.util.List;
 /**
  * Bed implementation of CreeperMultiblock.
  *
+ * @author nitnelave
  * @author Jikoo
  */
 class CreeperBed extends CreeperMultiblock

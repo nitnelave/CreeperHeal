@@ -4,6 +4,7 @@ import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperTag;
 import com.nitnelave.CreeperHeal.utils.CreeperUtils;
+import com.nitnelave.CreeperHeal.utils.ShortLocation;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -399,6 +400,11 @@ public class CreeperBlock implements Replaceable
         for (BlockFace face : CARDINALS)
             neighbors.add(new NeighborBlock(block.getRelative(face), face));
         return neighbors;
+    }
+
+    void record(Collection<ShortLocation> checked)
+    {
+        checked.add(new ShortLocation(getLocation()));
     }
 
 }

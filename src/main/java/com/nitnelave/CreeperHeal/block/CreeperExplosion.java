@@ -206,13 +206,13 @@ public class CreeperExplosion
             {
                 if (CreeperBlock.isDependent(block.getType()))
                 {
-                    record(block);
+                    recordBlock(block);
                     return true;
                 }
                 return false;
             });
 
-            blocks.forEach(this::record);
+            blocks.forEach(this::recordBlock);
         }
     }
 
@@ -238,7 +238,7 @@ public class CreeperExplosion
                         continue;
                     Block b = l.getBlock();
                     if (isObsidianLike(b.getType(), table) && ThreadLocalRandom.current().nextDouble() < chance)
-                        record(b);
+                        recordBlock(b);
                 }
     }
 
@@ -255,17 +255,47 @@ public class CreeperExplosion
      * @param block
      *            The block to record.
      */
-    public void record(Block block)
+    public void recordBlock(Block block)
     {
         if (block.getType() == Material.NETHER_PORTAL || checked.contains(new ShortLocation(block)))
             return;
 
-        CreeperBlock cBlock = CreeperBlock.newBlock(block.getState());
+        CreeperBlock creeperBlock = CreeperBlock.newBlock(block.getState());
 
-        if (cBlock == null)
+        if (creeperBlock == null)
             return;
 
-        record(cBlock);
+        ShortLocation location = new ShortLocation(creeperBlock.getLocation());
+
+        if (checked.contains(location))
+            return;
+
+        creeperBlock.record(checked);
+
+        if ((CreeperConfig.getBool(CfgVal.PREVENT_CHAIN_REACTION) && creeperBlock.getType().equals(Material.TNT))
+                || world.isProtected(creeperBlock.getBlock()))
+        {
+            ToReplaceList.addToReplace(creeperBlock);
+            creeperBlock.remove();
+            return;
+        }
+
+        if (!world.isBlackListed(creeperBlock.getType()))
+        {
+            // The block should be replaced.
+
+            creeperBlock.getDependentNeighbors().stream().filter(NeighborBlock::isNeighbor)
+                    .forEach(neighborBlock -> recordBlock(neighborBlock.getBlock()));
+
+            blockList.add(creeperBlock);
+            creeperBlock.remove();
+        }
+        else if (CreeperConfig.getBool(CfgVal.DROP_DESTROYED_BLOCKS))
+        {
+            creeperBlock.drop(false);
+            creeperBlock.remove();
+
+        }
     }
 
     /**
@@ -274,59 +304,12 @@ public class CreeperExplosion
      * @param replaceable
      *            The Replaceable to add.
      */
-    public void record(Replaceable replaceable)
+    public void recordEntity(Replaceable replaceable)
     {
-        if (replaceable == null || replaceable.getType() == Material.NETHER_PORTAL)
-            return;
-
-        ShortLocation location = new ShortLocation(replaceable.getLocation());
-
-        if (checked.contains(location))
-            return;
-
-        checked.add(location);
-
-        if (replaceable instanceof CreeperMultiblock)
-        {
-            for (BlockState dependent : ((CreeperMultiblock) replaceable).dependents)
-            {
-                checked.add(new ShortLocation(dependent.getLocation()));
-            }
-        }
-
-        if (!(replaceable instanceof CreeperBlock))
+        if (replaceable != null)
         {
             blockList.add(replaceable);
             replaceable.remove();
-            return;
-        }
-
-        CreeperBlock creeperBlock = (CreeperBlock) replaceable;
-
-        if ((CreeperConfig.getBool(CfgVal.PREVENT_CHAIN_REACTION) && replaceable.getType().equals(Material.TNT))
-                || world.isProtected(replaceable.getBlock()))
-        {
-            ToReplaceList.addToReplace(creeperBlock);
-            replaceable.remove();
-            return;
-        }
-
-        if (!world.isBlackListed(replaceable.getType()))
-        {
-            // The block should be replaced.
-
-            for (NeighborBlock neighborBlock : creeperBlock.getDependentNeighbors())
-                if (neighborBlock.isNeighbor())
-                    record(neighborBlock.getBlock());
-
-            blockList.add(replaceable);
-            replaceable.remove();
-        }
-        else if (CreeperConfig.getBool(CfgVal.DROP_DESTROYED_BLOCKS))
-        {
-            replaceable.drop(false);
-            replaceable.remove();
-
         }
     }
 

@@ -7,10 +7,11 @@ import org.bukkit.block.data.type.Piston;
 import org.bukkit.block.data.type.PistonHead;
 
 /**
- * Piston implementation of the CreeperMultiblock.
- *
+ * Piston implementation of CreeperBlock.
+ * 
+ * @author nitnelave
  * @author Jikoo
- *
+ * 
  */
 class CreeperPiston extends CreeperMultiblock {
 

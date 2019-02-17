@@ -3,7 +3,6 @@ package com.nitnelave.CreeperHeal.block;
 import com.nitnelave.CreeperHeal.config.CfgVal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.config.WCfgVal;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.BlockState;
@@ -73,7 +72,7 @@ class CreeperContainer extends CreeperMultiblock
         }
 
         ((Container) blockState).getInventory().clear();
-        for (BlockState dependent : dependents) 
+        for (BlockState dependent : dependents)
             if (dependent instanceof Container)
                 ((Container) dependent).getInventory().clear();
 
@@ -125,7 +124,6 @@ class CreeperContainer extends CreeperMultiblock
             ((Container) blockState).getSnapshotInventory().clear();
         blockState.update(true, false);
 
-        dependents.stream().map(BlockState::getChunk).distinct().forEach(Chunk::load);
         dependents.forEach(state ->
         {
             if (CreeperConfig.getWorld(getWorld()).getBool(WCfgVal.DROP_CHEST_CONTENTS) && state instanceof Container)

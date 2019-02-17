@@ -18,21 +18,17 @@ import org.bukkit.plugin.Plugin;
 public class PluginHandler
 {
 
-    private static final MobArenaHandler maHandler;
-    private static final LWC lwc;
+    private static MobArenaHandler maHandler = null;
+    private static LWC lwc = null;
 
     static
     {
         Plugin lwcp = detectPlugin("LWC");
         if (lwcp != null)
             lwc = ((LWCPlugin) lwcp).getLWC();
-        else
-            lwc = null;
 
         if (detectPlugin("MobArena") != null)
             maHandler = new MobArenaHandler();
-        else
-            maHandler = null;
 
     }
 
