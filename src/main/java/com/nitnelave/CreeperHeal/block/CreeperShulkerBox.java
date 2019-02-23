@@ -1,12 +1,12 @@
 package com.nitnelave.CreeperHeal.block;
 
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
-import org.bukkit.Bukkit;
+import com.nitnelave.CreeperHeal.config.WCfgVal;
 import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.ShulkerBox;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BlockStateMeta;
 
 /**
  * Shulker box implementation of CreeperBlock.
@@ -16,9 +16,12 @@ import org.bukkit.inventory.meta.BlockStateMeta;
 public class CreeperShulkerBox extends CreeperBlock
 {
 
+    private final ItemStack[] contents;
+
     CreeperShulkerBox(ShulkerBox blockState)
     {
         super(blockState);
+        this.contents = blockState.getInventory().getContents();
     }
 
     /*
@@ -27,25 +30,33 @@ public class CreeperShulkerBox extends CreeperBlock
     @Override
     public boolean drop(boolean forced)
     {
+        Location location = blockState.getLocation().add(0.5, 0.5, 0.5);
         if (forced || CreeperConfig.shouldDrop())
         {
             // Drop shulker with contents inside
             ItemStack itemStack = new ItemStack(blockState.getType());
-            BlockStateMeta blockStateMeta = ((BlockStateMeta) Bukkit.getItemFactory().getItemMeta(Material.PURPLE_SHULKER_BOX));
-            blockStateMeta.setBlockState(blockState);
-            itemStack.setItemMeta(blockStateMeta);
-            blockState.getWorld().dropItemNaturally(blockState.getLocation().add(0.5, 0.5, 0.5), itemStack);
-            return true;
+            blockState.getWorld().dropItemNaturally(location, itemStack);
         }
-        else
-        {
-            // Always drop container contents
-            Location location = blockState.getLocation().add(0.5, 0.5, 0.5);
-            for (ItemStack itemStack : ((ShulkerBox) blockState).getInventory().getContents()) {
-                blockState.getWorld().dropItemNaturally(location, itemStack);
-            }
+        // Always drop container contents
+        for (ItemStack itemStack : contents) {
+            if (itemStack == null)
+                continue;
+            blockState.getWorld().dropItemNaturally(location, itemStack);
         }
         return false;
+    }
+
+    @Override
+    public void update()
+    {
+        super.update();
+
+        if (CreeperConfig.getWorld(getWorld()).getBool(WCfgVal.DROP_CHEST_CONTENTS))
+            return;
+
+        BlockState newState = blockState.getBlock().getState();
+        if (newState instanceof InventoryHolder)
+            ((InventoryHolder) newState).getInventory().setContents(contents);
     }
 
 }
