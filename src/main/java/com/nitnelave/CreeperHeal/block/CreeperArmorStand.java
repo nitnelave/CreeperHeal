@@ -1,7 +1,9 @@
 package com.nitnelave.CreeperHeal.block;
 
+import com.nitnelave.CreeperHeal.CreeperHeal;
 import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.utils.CreeperLog;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -39,7 +41,7 @@ public class CreeperArmorStand implements Replaceable
     @Override
     public boolean replace(boolean shouldDrop)
     {
-        ArmorStand s = getWorld().spawn(getLocation(), ArmorStand.class);
+        final ArmorStand s = getWorld().spawn(stand.getLocation(), ArmorStand.class);
         s.setArms(stand.hasArms());
         s.setBasePlate(stand.hasBasePlate());
         s.setBodyPose(stand.getBodyPose());
@@ -61,7 +63,15 @@ public class CreeperArmorStand implements Replaceable
         equipment.setItemInMainHand(this.mainHand);
         equipment.setItemInOffHand(this.offHand);
 
-        s.teleport(stand.getLocation());
+        Bukkit.getScheduler().runTask(CreeperHeal.getInstance(), new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                s.teleport(stand.getLocation());
+            }
+        });
+
         return true;
     }
 
