@@ -3,45 +3,39 @@ package com.nitnelave.CreeperHeal.block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.material.Door;
+import org.bukkit.block.data.Bisected;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Door implementation of the CreeperBlock.
+ * Bisected block implementation of the CreeperBlock.
  *
  * @author nitnelave
  *
  */
-class CreeperDoor extends CreeperMultiblock
+class CreeperBisected extends CreeperMultiblock
 {
 
     /*
      * Constructor.
      */
-    CreeperDoor(BlockState blockState)
+    CreeperBisected(BlockState blockState, Bisected bisected)
     {
         super(blockState);
-        Door data = castData(blockState, Door.class);
-        
-        if (data.isTopHalf())
+
+        if (bisected.getHalf() == Bisected.Half.TOP)
         {
             BlockState bottom = blockState.getBlock().getRelative(BlockFace.DOWN).getState();
-            if (bottom.getData() instanceof Door && !((Door) bottom.getData()).isTopHalf())
-            {
-                this.blockState = bottom;
-                this.dependents.add(blockState);
-            }
+            this.blockState = bottom;
+            this.blockData = bottom.getBlockData();
+            addDependent(blockState);
         }
         else
         {
             BlockState top = blockState.getBlock().getRelative(BlockFace.UP).getState();
-            if (top.getData() instanceof Door && ((Door) top.getData()).isTopHalf())
-            {
-                this.blockState = blockState;
-                this.dependents.add(top);
-            }
-            
+            addDependent(top);
+
         }
     }
 

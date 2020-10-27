@@ -11,9 +11,10 @@ import org.bukkit.block.Banner;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Bisected;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.block.Jukebox;
-import org.bukkit.block.NoteBlock;
 import org.bukkit.block.ShulkerBox;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.InventoryHolder;
@@ -40,41 +41,187 @@ public class CreeperBlock implements Replaceable
     /*
      * Blocks a player can breathe in and that are replaced by other blocks.
      */
-    private final static Set<Material> EMPTY_BLOCKS =
-            CreeperUtils.createFinalHashSet(Material.AIR, Material.WATER, Material.STATIONARY_WATER,
-                                            Material.LAVA, Material.STATIONARY_LAVA, Material.FIRE, Material.SNOW);
+    private final static Set<Material> EMPTY_BLOCKS = CreeperUtils.createFinalHashSet(Material.AIR,
+        Material.WATER, Material.LAVA,  Material.FIRE, Material.SNOW);
     /*
      * These blocks (may) need a block under them not to drop.
      */
     private final static Set<Material> DEPENDENT_DOWN_BLOCKS =
-            CreeperUtils.createFinalHashSet(Material.SAPLING, Material.BED_BLOCK, Material.POWERED_RAIL,
-                                            Material.DETECTOR_RAIL, Material.LONG_GRASS, Material.DEAD_BUSH,
-                                            Material.YELLOW_FLOWER, Material.RED_ROSE, Material.BROWN_MUSHROOM,
+            CreeperUtils.createFinalHashSet(
+                Material.ACACIA_SAPLING,
+                Material.BAMBOO_SAPLING,
+                Material.BIRCH_SAPLING,
+                Material.DARK_OAK_SAPLING,
+                Material.JUNGLE_SAPLING,
+                Material.OAK_SAPLING,
+                Material.SPRUCE_SAPLING,
+                Material.POWERED_RAIL,
+
+                Material.WHITE_CARPET,
+                Material.ORANGE_CARPET,
+                Material.MAGENTA_CARPET,
+                Material.LIGHT_BLUE_CARPET,
+                Material.YELLOW_CARPET,
+                Material.LIME_CARPET,
+                Material.PINK_CARPET,
+                Material.GRAY_CARPET,
+                Material.LIGHT_GRAY_CARPET,
+                Material.CYAN_CARPET,
+                Material.PURPLE_CARPET,
+                Material.BLUE_CARPET,
+                Material.BROWN_CARPET,
+                Material.GREEN_CARPET,
+                Material.RED_CARPET,
+                Material.BLACK_CARPET,
+
+                Material.WHITE_BANNER,
+                Material.ORANGE_BANNER,
+                Material.MAGENTA_BANNER,
+                Material.LIGHT_BLUE_BANNER,
+                Material.YELLOW_BANNER,
+                Material.LIME_BANNER,
+                Material.PINK_BANNER,
+                Material.GRAY_BANNER,
+                Material.LIGHT_GRAY_BANNER,
+                Material.CYAN_BANNER,
+                Material.PURPLE_BANNER,
+                Material.BLUE_BANNER,
+                Material.BROWN_BANNER,
+                Material.GREEN_BANNER,
+                Material.RED_BANNER,
+                Material.BLACK_BANNER,
+
+                Material.DANDELION,
+                Material.POPPY,
+                Material.BLUE_ORCHID,
+                Material.ALLIUM,
+                Material.AZURE_BLUET,
+                Material.RED_TULIP,
+                Material.ORANGE_TULIP,
+                Material.WHITE_TULIP,
+                Material.PINK_TULIP,
+                Material.OXEYE_DAISY,
+                Material.CORNFLOWER,
+                Material.LILY_OF_THE_VALLEY,
+                Material.WITHER_ROSE,
+                Material.SUNFLOWER,
+                Material.LILAC,
+                Material.ROSE_BUSH,
+                Material.PEONY,
+
+                Material.ACACIA_SIGN,
+                Material.BIRCH_SIGN,
+                Material.DARK_OAK_SIGN,
+                Material.JUNGLE_SIGN,
+                Material.OAK_SIGN,
+                Material.SPRUCE_SIGN,
+                Material.WARPED_SIGN,
+                Material.CRIMSON_SIGN,
+
+                Material.ACACIA_PRESSURE_PLATE,
+                Material.BIRCH_PRESSURE_PLATE,
+                Material.DARK_OAK_PRESSURE_PLATE,
+                Material.JUNGLE_PRESSURE_PLATE,
+                Material.OAK_PRESSURE_PLATE,
+                Material.SPRUCE_PRESSURE_PLATE,
+                Material.WARPED_PRESSURE_PLATE,
+                Material.CRIMSON_PRESSURE_PLATE,
+
+                Material.ACACIA_DOOR,
+                Material.BIRCH_DOOR,
+                Material.DARK_OAK_DOOR,
+                Material.JUNGLE_DOOR,
+                Material.OAK_DOOR,
+                Material.SPRUCE_DOOR,
+                Material.WARPED_DOOR,
+                Material.CRIMSON_DOOR,
+                                            Material.DETECTOR_RAIL, Material.TALL_GRASS, Material.DEAD_BUSH,
+                                            Material.BROWN_MUSHROOM,
                                             Material.RED_MUSHROOM, Material.REDSTONE_WIRE, Material.WHEAT,
-                                            Material.SIGN_POST, Material.WOODEN_DOOR,
-                                            Material.RAILS, Material.STONE_PLATE,
-                                            Material.IRON_DOOR_BLOCK, Material.WOOD_PLATE, Material.SNOW,
-                                            Material.CACTUS, Material.SUGAR_CANE, Material.SUGAR_CANE_BLOCK,
-                                            Material.DIODE_BLOCK_OFF, Material.DIODE_BLOCK_ON, Material.PUMPKIN_STEM,
-                                            Material.MELON_STEM, Material.WATER_LILY, Material.NETHER_WART_BLOCK,
-                                            Material.NETHER_WARTS,
+
+                                            Material.RAIL, Material.POLISHED_BLACKSTONE_PRESSURE_PLATE, Material.STONE_PRESSURE_PLATE,
+                                            Material.IRON_DOOR, Material.SNOW,
+                                            Material.CACTUS, Material.SUGAR_CANE,
+                                            Material.REPEATER, Material.PUMPKIN_STEM,
+                                            Material.MELON_STEM, Material.LILY_PAD, Material.NETHER_WART_BLOCK,
+                                            Material.NETHER_WART,
                                             Material.BREWING_STAND, Material.TRIPWIRE, Material.FLOWER_POT,
-                                            Material.CARROT, Material.POTATO, Material.GOLD_PLATE, Material.IRON_PLATE,
-                                            Material.REDSTONE_COMPARATOR_OFF, Material.REDSTONE_COMPARATOR_ON,
-                                            Material.ACTIVATOR_RAIL, Material.CARPET, Material.DOUBLE_PLANT,
-                                            Material.STANDING_BANNER, Material.SPRUCE_DOOR, Material.BIRCH_DOOR,
-                                            Material.JUNGLE_DOOR, Material.ACACIA_DOOR, Material.DARK_OAK_DOOR,
+                                            Material.CARROT, Material.POTATO, Material.HEAVY_WEIGHTED_PRESSURE_PLATE, Material.LIGHT_WEIGHTED_PRESSURE_PLATE,
+                                            Material.COMPARATOR,
+                                            Material.ACTIVATOR_RAIL,
+
                                             Material.CHORUS_PLANT, Material.CHORUS_FLOWER,
-                                            Material.BEETROOT_BLOCK);
+                                            Material.BEETROOTS);
     /*
      * These blocks are dependent on another block
      */
     private final static Set<Material> DEPENDENT_BLOCKS =
-            CreeperUtils.createFinalHashSet(Material.TORCH, Material.LADDER, Material.WALL_SIGN, Material.LEVER,
-                                            Material.REDSTONE_TORCH_OFF, Material.REDSTONE_TORCH_ON,
-                                            Material.STONE_BUTTON, Material.TRAP_DOOR, Material.VINE, Material.COCOA,
-                                            Material.TRIPWIRE_HOOK, Material.WOOD_BUTTON, Material.IRON_TRAPDOOR,
-                                            Material.WALL_BANNER);
+            CreeperUtils.createFinalHashSet(Material.TORCH, Material.LADDER, Material.LEVER,
+                                            Material.REDSTONE_TORCH,
+                                            Material.STONE_BUTTON, Material.VINE, Material.COCOA,
+                Material.ACACIA_TRAPDOOR,
+                Material.BIRCH_TRAPDOOR,
+                Material.DARK_OAK_TRAPDOOR,
+                Material.JUNGLE_TRAPDOOR,
+                Material.OAK_TRAPDOOR,
+                Material.SPRUCE_TRAPDOOR,
+                Material.WARPED_TRAPDOOR,
+                Material.CRIMSON_TRAPDOOR,
+
+                Material.WHITE_BED,
+                Material.ORANGE_BED,
+                Material.MAGENTA_BED,
+                Material.LIGHT_BLUE_BED,
+                Material.YELLOW_BED,
+                Material.LIME_BED,
+                Material.PINK_BED,
+                Material.GRAY_BED,
+                Material.LIGHT_GRAY_BED,
+                Material.CYAN_BED,
+                Material.PURPLE_BED,
+                Material.BLUE_BED,
+                Material.BROWN_BED,
+                Material.GREEN_BED,
+                Material.RED_BED,
+                Material.BLACK_BED,
+
+                Material.ACACIA_WALL_SIGN,
+                Material.BIRCH_WALL_SIGN,
+                Material.DARK_OAK_WALL_SIGN,
+                Material.JUNGLE_WALL_SIGN,
+                Material.OAK_WALL_SIGN,
+                Material.SPRUCE_WALL_SIGN,
+                Material.WARPED_WALL_SIGN,
+                Material.CRIMSON_WALL_SIGN,
+                Material.ACACIA_BUTTON,
+                Material.BIRCH_BUTTON,
+                Material.DARK_OAK_BUTTON,
+                Material.JUNGLE_BUTTON,
+                Material.OAK_BUTTON,
+                Material.SPRUCE_BUTTON,
+                Material.WARPED_BUTTON,
+                Material.CRIMSON_BUTTON,
+
+                Material.WHITE_WALL_BANNER,
+                Material.ORANGE_WALL_BANNER,
+                Material.MAGENTA_WALL_BANNER,
+                Material.LIGHT_BLUE_WALL_BANNER,
+                Material.YELLOW_WALL_BANNER,
+                Material.LIME_WALL_BANNER,
+                Material.PINK_WALL_BANNER,
+                Material.GRAY_WALL_BANNER,
+                Material.LIGHT_GRAY_WALL_BANNER,
+                Material.CYAN_WALL_BANNER,
+                Material.PURPLE_WALL_BANNER,
+                Material.BLUE_WALL_BANNER,
+                Material.BROWN_WALL_BANNER,
+                Material.GREEN_WALL_BANNER,
+                Material.RED_WALL_BANNER,
+                Material.BLACK_WALL_BANNER,
+
+                Material.PISTON_HEAD,
+
+                                            Material.TRIPWIRE_HOOK, Material.IRON_TRAPDOOR);
 
     public final static BlockFace[] CARDINALS = { BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST,
                                                  BlockFace.NORTH, BlockFace.UP, BlockFace.DOWN };
@@ -85,6 +232,7 @@ public class CreeperBlock implements Replaceable
      * The block represented.
      */
     BlockState blockState;
+    BlockData blockData;
 
     /**
      * Create a new CreeperBlock of the right class. Factory method that should
@@ -100,65 +248,56 @@ public class CreeperBlock implements Replaceable
         if (state instanceof ShulkerBox)
             return new CreeperShulkerBox((ShulkerBox) state);
         if (state instanceof InventoryHolder)
-            return new CreeperContainer(state);
-        if (state instanceof Jukebox)
-            return new CreeperJukebox((Jukebox) state);
+            return new CreeperContainer((InventoryHolder)state);
+        //if (state instanceof Jukebox)
+        //    return new CreeperJukebox((Jukebox) state);
+        if (state.getBlockData() instanceof Bisected)
+            return new CreeperBisected(state, (Bisected) state.getBlockData());
         if (state.getType().hasGravity())
             return new CreeperPhysicsBlock(state);
         switch (state.getType())
         {
-        case BED_BLOCK:
+          case WHITE_BED:
+          case ORANGE_BED:
+          case MAGENTA_BED:
+          case LIGHT_BLUE_BED:
+          case YELLOW_BED:
+          case LIME_BED:
+          case PINK_BED:
+          case GRAY_BED:
+          case LIGHT_GRAY_BED:
+          case CYAN_BED:
+          case PURPLE_BED:
+          case BLUE_BED:
+          case BROWN_BED:
+          case GREEN_BED:
+          case RED_BED:
+          case BLACK_BED:
             return new CreeperBed(state);
-        case DOUBLE_PLANT:
-            return new CreeperFlower(state);
-        case RAILS:
-        case POWERED_RAIL:
-        case DETECTOR_RAIL:
-            return new CreeperRail(state);
-        case SKULL:
-            return new CreeperHead(state);
-        case PISTON_BASE:
-        case PISTON_STICKY_BASE:
-        case PISTON_EXTENSION:
-            return new CreeperPiston(state);
-        case WOODEN_DOOR:
-        case ACACIA_DOOR:
-        case BIRCH_DOOR:
-        case DARK_OAK_DOOR:
-        case JUNGLE_DOOR:
-        case SPRUCE_DOOR:
-        case IRON_DOOR_BLOCK:
-            return new CreeperDoor(state);
-        case NOTE_BLOCK:
-            return new CreeperNoteBlock((NoteBlock) state);
-        case SIGN_POST:
-        case WALL_SIGN:
-            return new CreeperSign((Sign) state);
-        case MOB_SPAWNER:
-            return new CreeperMonsterSpawner((CreatureSpawner) state);
-        case WOOD_PLATE:
-        case GOLD_PLATE:
-        case IRON_PLATE:
-        case STONE_PLATE:
-            return new CreeperPlate(state);
-        case GRASS:
-            return new CreeperGrass(state);
-        case SMOOTH_BRICK:
-        case SMOOTH_STAIRS:
-            return new CreeperBrick(state);
-        case WOOD_BUTTON:
-        case STONE_BUTTON:
-            return new CreeperButton(state);
-        case FIRE:
-        case AIR:
-            return null;
-        case STANDING_BANNER:
-        case WALL_BANNER:
-            return new CreeperBanner((Banner) state);
-        case STONE:
-            return new CreeperStone(state);
-        default:
-            return new CreeperBlock(state);
+          case RAIL:
+          case POWERED_RAIL:
+          case DETECTOR_RAIL:
+              return new CreeperRail(state);
+          case PISTON:
+          case PISTON_HEAD:
+          case STICKY_PISTON:
+              return new CreeperPiston(state);
+          case GRASS:
+              return new CreeperGrass(state);
+
+              /*
+          case SMOOTH_BRICK:
+          case SMOOTH_STAIRS:
+              return new CreeperBrick(state);
+              */
+          case STONE:
+              return new CreeperStone(state);
+          case FIRE:
+          case AIR:
+          case TNT:
+              return null;
+          default:
+              return new CreeperBlock(state);
         }
     }
 
@@ -168,6 +307,7 @@ public class CreeperBlock implements Replaceable
     CreeperBlock(BlockState blockState)
     {
         this.blockState = blockState;
+        this.blockData = blockState.getBlockData();
     }
 
     /*
@@ -176,7 +316,7 @@ public class CreeperBlock implements Replaceable
      */
     static boolean isEmpty(Material type)
     {
-        return EMPTY_BLOCKS.contains(type);
+        return type.isAir() || EMPTY_BLOCKS.contains(type);
     }
 
     /*
@@ -254,8 +394,18 @@ public class CreeperBlock implements Replaceable
      */
     public void update()
     {
+      update(true);
+    }
+
+    protected void update(boolean physics) {
+      update(blockData, physics);
+    }
+
+    protected void update(BlockData blockData, boolean physics)
+    {
         getLocation().getChunk().load();
-        blockState.update(true, false);
+        getBlock().setBlockData(blockData, physics);
+        if (physics) getBlock().getState().update(true);
         getWorld().playSound(getLocation(), CreeperConfig.getSound(), CreeperConfig.getInt(CfgVal.SOUND_VOLUME) / 10F, random.nextFloat() * 2);
     }
 

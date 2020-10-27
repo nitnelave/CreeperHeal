@@ -5,6 +5,7 @@ import com.nitnelave.CreeperHeal.config.CreeperConfig;
 import com.nitnelave.CreeperHeal.utils.ShortLocation;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.BlockState;
 
 import java.util.Collection;
@@ -19,20 +20,44 @@ import java.util.Set;
 public abstract class CreeperMultiblock extends CreeperBlock
 {
 
-    final Set<BlockState> dependents;
+    protected class BlockStateAndData {
+      public final BlockState state;
+      public final BlockData data;
+      public BlockStateAndData(BlockState state, BlockData data) {
+        this.state = state;
+        this.data = data.clone();
+      }
+    }
+
+    private final Set<BlockStateAndData> dependents;
+
 
     CreeperMultiblock(BlockState blockState)
     {
         super(blockState);
-        this.dependents = new HashSet<BlockState>();
+        this.dependents = new HashSet<BlockStateAndData>();
+    }
+
+    public void addDependent(BlockState state) {
+      dependents.add(new BlockStateAndData(state, state.getBlockData()));
+    }
+
+    protected Set<BlockStateAndData> getDependents() {
+      return dependents;
+    }
+
+    public void addDependent(BlockState state, BlockData data) {
+      dependents.add(new BlockStateAndData(state, data));
     }
 
     @Override
     public void update()
     {
         super.update();
-        for (BlockState dependent : dependents)
-            dependent.update(true, false);
+        for (BlockStateAndData dependent : dependents)
+            dependent.state.getBlock().setBlockData(dependent.data, false);
+        for (BlockStateAndData dependent : dependents)
+            dependent.state.getBlock().setBlockData(dependent.data, true);
     }
 
     @Override
@@ -41,8 +66,8 @@ public abstract class CreeperMultiblock extends CreeperBlock
         if (checkForDependentDrop(getBlock()))
             return true;
 
-        for (BlockState dependent : dependents)
-            if (checkForDependentDrop(dependent.getBlock()))
+        for (BlockStateAndData dependent : dependents)
+            if (checkForDependentDrop(dependent.state.getBlock()))
                 return true;
 
         return false;
@@ -74,15 +99,15 @@ public abstract class CreeperMultiblock extends CreeperBlock
     public void remove()
     {
         this.blockState.getBlock().setType(Material.AIR, false);
-        for (BlockState dependent : dependents)
-            dependent.getBlock().setType(Material.AIR, false);
+        for (BlockStateAndData dependent : dependents)
+            dependent.state.getBlock().setType(Material.AIR, false);
     }
 
     @Override
     void record(Collection<ShortLocation> checked)
     {
         super.record(checked);
-        for (BlockState dependent : dependents)
-            checked.add(new ShortLocation(dependent.getLocation()));
+        for (BlockStateAndData dependent : dependents)
+            checked.add(new ShortLocation(dependent.state.getLocation()));
     }
 }

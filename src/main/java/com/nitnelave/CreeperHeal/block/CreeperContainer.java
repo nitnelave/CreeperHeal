@@ -21,11 +21,11 @@ class CreeperContainer extends CreeperMultiblock
 
     private ItemStack[] storedInventory, neighborInventory = null;
 
-    CreeperContainer(BlockState blockState)
+    CreeperContainer(InventoryHolder blockState)
     {
-        super(blockState);
+        super((BlockState)blockState);
 
-        Inventory inv = ((InventoryHolder) blockState).getInventory();
+        Inventory inv = blockState.getInventory();
         storedInventory = inv.getContents();
 
         if ((inv instanceof DoubleChestInventory))
@@ -37,7 +37,7 @@ class CreeperContainer extends CreeperMultiblock
 
             // Left side is primary chest inventory
             this.blockState = doubleChest.getLeftSide().getLocation().getBlock().getState();
-            this.dependents.add(right);
+            addDependent(right);
 
             this.storedInventory = doubleChest.getLeftSide().getContents();
             this.neighborInventory = doubleChest.getRightSide().getContents();
@@ -58,7 +58,7 @@ class CreeperContainer extends CreeperMultiblock
         }
 
         ((InventoryHolder) blockState).getInventory().clear();
-        for (BlockState dependent : dependents)
+        for (BlockStateAndData dependent : getDependents())
             if (dependent instanceof InventoryHolder)
                 ((InventoryHolder) dependent).getInventory().clear();
 

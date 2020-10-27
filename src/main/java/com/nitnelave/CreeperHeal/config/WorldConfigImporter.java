@@ -116,19 +116,18 @@ abstract class WorldConfigImporter
         HashSet<BlockId> set = new HashSet<BlockId>();
         String tmp_str1 = config.getString(key, "").trim();
         String[] split = tmp_str1.split(",");
-        try
+        for (String elem : split)
         {
-            for (String elem : split)
+            try
             {
                 BlockId bId = new BlockId(elem);
-                if (bId.getId() != 0)
-                    set.add(bId);
+                set.add(bId);
+            } catch (NumberFormatException e)
+            {
+              System.err.printf("Invalid material: %s\n", elem);
             }
-            return set;
-        } catch (NumberFormatException e)
-        {
-            return new HashSet<BlockId>();
         }
+        return set;
     }
 
     protected static WorldConfig importFrom(String name, int version)

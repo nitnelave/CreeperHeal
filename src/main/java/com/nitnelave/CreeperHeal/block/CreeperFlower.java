@@ -22,12 +22,12 @@ class CreeperFlower extends CreeperMultiblock
         this.blockState = block.getState();
         BlockState relative = block.getRelative(BlockFace.UP).getState();
         if ((relative.getRawData() & 1) == 0)
-            this.dependents.add(relative);
+            addDependent(relative);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#getNeighbors()
      */
     @Override

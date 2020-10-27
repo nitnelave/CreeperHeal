@@ -20,19 +20,18 @@ class BlockIdListValue extends ConfigValue<HashSet<BlockId>>
         HashSet<BlockId> set = new HashSet<BlockId>();
         String tmp_str1 = config.getString(getKey(), "").trim();
         String[] split = tmp_str1.split(",");
-        try
+        for (String elem : split)
         {
-            for (String elem : split)
+            try
             {
                 BlockId bId = new BlockId(elem);
-                if (bId.getId() != 0)
-                    set.add(bId);
+                set.add(bId);
+            } catch (IllegalArgumentException e)
+            {
+                System.err.printf("Invalid material: %s\n", elem);
             }
-            setValue(set);
-        } catch (NumberFormatException e)
-        {
-            setValue(getDefaultValue());
         }
+        setValue(set);
     }
 
     @Override

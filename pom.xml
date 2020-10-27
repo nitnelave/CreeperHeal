@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.nitnelave.CreeperHeal</groupId>
   <artifactId>CreeperHeal</artifactId>
-  <version>7.0.5</version>
+  <version>8.0.0</version>
   <name>CreeperHeal</name>
 
   <licenses>
@@ -172,10 +172,10 @@
     </dependency>
     <!--Spigot API-->
     <dependency>
-        <groupId>org.spigotmc</groupId>
-        <artifactId>spigot-api</artifactId>
-        <version>1.11-R0.1-SNAPSHOT</version>
-        <scope>provided</scope>
+      <groupId>org.spigotmc</groupId>
+      <artifactId>spigot-api</artifactId>
+      <version>1.16.3-R0.1-SNAPSHOT</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>

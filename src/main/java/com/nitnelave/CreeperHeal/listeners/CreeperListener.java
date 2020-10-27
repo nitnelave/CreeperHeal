@@ -31,9 +31,9 @@ import java.util.Date;
 
 /**
  * Listener for the entity events.
- * 
+ *
  * @author nitnelave
- * 
+ *
  */
 public class CreeperListener implements Listener
 {
@@ -41,7 +41,7 @@ public class CreeperListener implements Listener
     /**
      * Listener for the EntityExplodeEvent. Record when appropriate the
      * explosion for later replacement.
-     * 
+     *
      * @param event
      *            The EntityExplode event.
      */
@@ -89,7 +89,7 @@ public class CreeperListener implements Listener
     /**
      * Listener for the HangingBreakEvent. If appropriate, the hanging is
      * recorded to be replaced later on.
-     * 
+     *
      * @param event
      *            The HangingBreakEvent.
      */
@@ -116,7 +116,7 @@ public class CreeperListener implements Listener
     /**
      * Listener for the EntityChangeBlockEvent. Check for Endermen picking up
      * blocks.
-     * 
+     *
      * @param event
      *            The EntityChangeBlock event.
      */
@@ -125,7 +125,7 @@ public class CreeperListener implements Listener
     {
         CreeperLog.debug("Entity change block event");
         if (event.getEntityType() == EntityType.SILVERFISH
-            && event.getBlock().getType() == Material.MONSTER_EGGS
+            && event.getBlock().getType().toString().startsWith("INFESTED_BLOCK")
             && CreeperConfig.getBool(CfgVal.REPLACE_SILVERFISH_BLOCKS))
             Bukkit.getScheduler().runTask(CreeperHeal.getInstance(), new ReplaceSilverfishBlock(event.getBlock()));
         else if (event.getEntity().getType() == EntityType.ENDERMAN)
@@ -159,7 +159,7 @@ public class CreeperListener implements Listener
 
     /**
      * Listener for the EntityBreakDoorEvent. Record doors broken by zombies.
-     * 
+     *
      * @param event
      *            The EntityBreakDoor event.
      */
@@ -181,17 +181,16 @@ public class CreeperListener implements Listener
 
         ReplaceSilverfishBlock(Block block)
         {
-            //noinspection deprecation
-            switch (block.getData())
+            switch (block.getType())
             {
-            case 0:
-                type = Material.STONE;
-                break;
-            case 1:
-                type = Material.COBBLESTONE;
-                break;
-            default:
-                type = Material.SMOOTH_BRICK;
+              case INFESTED_CHISELED_STONE_BRICKS: type = Material.CHISELED_STONE_BRICKS; break;
+              case INFESTED_COBBLESTONE: type = Material.COBBLESTONE; break;
+              case INFESTED_CRACKED_STONE_BRICKS: type = Material.CRACKED_STONE_BRICKS; break;
+              case INFESTED_MOSSY_STONE_BRICKS: type = Material.MOSSY_STONE_BRICKS; break;
+              case INFESTED_STONE: type = Material.STONE; break;
+              case INFESTED_STONE_BRICKS: type = Material.STONE_BRICKS; break;
+              default:
+                                          type = Material.AIR; break;
             }
             this.block = block;
         }

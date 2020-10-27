@@ -4,83 +4,42 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
-import org.bukkit.material.Bed;
+import org.bukkit.block.data.type.Bed;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Bed implementation of CreeperBlock.
- * 
+ *
  * @author nitnelave
- * 
+ *
  */
-class CreeperBed extends CreeperBlock
+class CreeperBed extends CreeperMultiblock
 {
-
-    /*
-     * The direction the bed is facing.
-     */
-    private final BlockFace orientation;
-
+    private final Bed bedData;
     /*
      * Constructor.
      */
     CreeperBed(BlockState blockState)
     {
         super(blockState);
-        Bed bedData = castData(blockState, Bed.class);
-        orientation = bedData.getFacing();
+        Bed bedData = (Bed) blockData;
         Block block = blockState.getBlock();
-        if (!bedData.isHeadOfBed())
-            block = block.getRelative(orientation);
+        if (bedData.getPart() == Bed.Part.FOOT) {
+            addDependent(block.getState());
+            block = block.getRelative(bedData.getFacing());
+        } else {
+            addDependent(block.getRelative(bedData.getFacing().getOppositeFace()).getState());
+        }
         this.blockState = block.getState();
+        this.blockData = block.getState().getBlockData();
+        this.bedData = (Bed)this.blockData;
     }
 
-    /**
-     * The blockstate is always the head of the bed, this gets the foot.
+    /*
+     * (non-Javadoc)
      *
-     * @return the foot of the bed.
-     */
-    public Block getFoot()
-    {
-        return getBlock().getRelative(orientation.getOppositeFace());
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.nitnelave.CreeperHeal.block.CreeperBlock#update()
-     */
-    @Override
-    public void update()
-    {
-        super.update();
-        Block foot = getFoot();
-        foot.setType(Material.BED_BLOCK, false);
-        BlockState fs = foot.getState();
-        Bed d = castData(blockState, Bed.class);
-        d.setHeadOfBed(false);
-        d.setFacingDirection(orientation);
-        fs.setData(d);
-        fs.update(true, false);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.nitnelave.CreeperHeal.block.CreeperBlock#remove()
-     */
-    @Override
-    public void remove()
-    {
-        getFoot().setType(Material.AIR, false);
-        getBlock().setType(Material.AIR, false);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see com.nitnelave.CreeperHeal.block.CreeperBlock#getNeighbors()
      */
     @Override

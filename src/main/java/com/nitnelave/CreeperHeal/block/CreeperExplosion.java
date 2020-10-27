@@ -19,9 +19,9 @@ import java.util.*;
 /**
  * Represents an explosion, with the list of blocks destroyed, the time of the
  * explosion, and the radius.
- * 
+ *
  * @author nitnelave
- * 
+ *
  */
 public class CreeperExplosion
 {
@@ -38,7 +38,7 @@ public class CreeperExplosion
 
     /**
      * Constructor.
-     * 
+     *
      * @param loc
      *            The location of the explosion.
      */
@@ -54,7 +54,7 @@ public class CreeperExplosion
     /**
      * Add blocks to an explosion, and reset the timer to the time of the last
      * explosion.
-     * 
+     *
      * @param blocks
      *            The list of blocks to add.
      */
@@ -79,7 +79,7 @@ public class CreeperExplosion
 
     /**
      * Get the time of the explosion.
-     * 
+     *
      * @return The time of the explosion.
      */
     public Date getTime()
@@ -103,7 +103,7 @@ public class CreeperExplosion
 
     /**
      * Get the location of the explosion.
-     * 
+     *
      * @return The location of the explosion.
      */
     public Location getLocation()
@@ -114,7 +114,7 @@ public class CreeperExplosion
     /**
      * Get the radius of the explosion (i.e. the distance between the location
      * and the furthest block).
-     * 
+     *
      * @return The radius of the explosion.
      */
     public double getRadius()
@@ -164,7 +164,7 @@ public class CreeperExplosion
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -182,7 +182,7 @@ public class CreeperExplosion
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -243,24 +243,24 @@ public class CreeperExplosion
     private boolean isObsidianLike(Material m, boolean table)
     {
         return m == Material.OBSIDIAN
-               || (table && (m == Material.ENCHANTMENT_TABLE || m == Material.ENDER_CHEST));
+               || (table && (m == Material.ENCHANTING_TABLE || m == Material.ENDER_CHEST));
     }
 
     /**
      * Record one block and remove it. If it is protected, add to the
      * replace-immediately list. Check for dependent blocks around.
-     * 
+     *
      * @param block
      *            The block to record.
      */
     public void recordBlock(Block block)
     {
-        if (block.getType() == Material.PORTAL || checked.contains(new ShortLocation(block)))
+        if (block.getType() == Material.NETHER_PORTAL || block.getType() == Material.END_PORTAL || checked.contains(new ShortLocation(block)))
             return;
 
         CreeperBlock creeperBlock = CreeperBlock.newBlock(block.getState());
 
-        if (creeperBlock == null || creeperBlock.getType() == Material.PORTAL)
+        if (creeperBlock == null)
             return;
 
         ShortLocation location = new ShortLocation(creeperBlock.getLocation());
@@ -316,7 +316,7 @@ public class CreeperExplosion
     /**
      * Check if the explosion has blocks to repair, and repair them (or one of
      * them in case of block per block).
-     * 
+     *
      * @return False if the explosion has not started its replacements yet
      *         because it is not time.
      */
@@ -339,7 +339,7 @@ public class CreeperExplosion
     /**
      * Get whether the explosion has started replacing (only in block per block
      * mode).
-     * 
+     *
      * @return True if the explosion has started replacing blocks
      */
     public boolean hasStartedReplacing()
@@ -351,7 +351,7 @@ public class CreeperExplosion
 
     /**
      * Get whether the list of blocks to be replaced is empty.
-     * 
+     *
      * @return Whether the list is empty.
      */
     public boolean isEmpty()
